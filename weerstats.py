@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Calculates weatherstatistics for dutch cities from knmi data
-    @Uitvoer:    $ python weerstats.py (3.7)
+    @Execute:    $ python weerstats.py (3.7)
     @Author:     Mark Zwaving
     @License:    Creative Commons Attribution 4.0 International Public License
 """
@@ -52,4 +52,4 @@ if __name__== "__main__":
             #if choice == '9':  testing.unzip_test()
             if choice == 'q':  break
 
-    print(c.ln + 'Tot ziens')
+    print(c.ln + 'Good bye')
