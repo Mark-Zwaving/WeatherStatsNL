@@ -1,0 +1,90 @@
+import os, threading, urllib, urllib.request, urllib.error, zipfile
+import config as c, knmi, write as w
+import datetime, time, math, locale
+
+def san( s ):
+    '''Functie verwijdert spaties veplaats naar lowercaes invoer'''
+    s = str(s).lower().strip()
+    if s == '' or not s:
+        #print('Invoer is leeg')
+        return False
+    else:
+        return s
+
+def unzip( zip_dir, zip_file, unzip_file ):
+    '''Functie unzipt een bestand. Returned True of False, gelukt of niet'''
+    oke, lock_zip = False, threading.Lock()
+    path, unzip = os.path.split(unzip_file)
+    with lock_zip:
+        start_ns = time.time_ns()
+        try:
+            with zipfile.ZipFile(zip_file, 'r') as zip:
+                zip.extract(unzip, zip_dir)
+        except zipfile.BadZipfile as e:
+            print(f"Unzippen van bestand: '{zip_file}' is mislukt.")
+            if c.log:
+                print(f'{e.reason}{c.ln}{e.strerror}')
+        else:
+            print(f"Uitpakken bestand: '{zip_file}'")
+            print(f"Naar: '{unzip_file}' is gelukt!")
+            w.write_process_time_s('Unzipping in ', start_ns)
+            oke = True
+    return oke
+
+def knmi_etmgeg_data ( station ):
+    '''Functie lees alle daggegevens van een station en returned een lijst met de gegegevens'''
+    if c.log: print("Functie: knmi_etmgeg_data ( station ) Bestand: 'fn.py'")
+    skip, knmi_etmgeg, lock_read, oke = station.skip_lines, [], threading.Lock(), False
+    naam = station.wmo+', '+station.plaats
+    with lock_read:
+        if c.log:
+            print(f"Lezen gegevens station {naam} ...")
+            print(f"Bestand is: '{station.file_etmgeg_txt}'")
+        try:
+            with open(station.file_etmgeg_txt, 'r') as f: # Lees file in array
+                data_file = f.readlines()
+        except IOError as e:
+            if c.log:
+                print(f"Lezen gegevens uit bestand '{station.file_etmgeg_txt}' mislukt")
+                print(f'{e.reason}{c.ln}{e.strerror}')
+        else:
+
+            if c.log:
+                print(f"Lezen gegevens uit bestand '{station.file_etmgeg_txt}' gelukt !")
+                print(f'Eerste waarden reeks ' + data_file[skip].strip())
+                print(f'Laatste waarden reeks ' + data_file[-1].strip())
+
+            print(f'Lezen gegevens station {naam} succesvol...')
+            for el in range(skip, len(data_file)): # Maak lijst met knmi gegevens
+                knmi_etmgeg.append( knmi.Etmgeg(data_file[el]) )
+
+            oke = True
+
+    return oke if oke == False else knmi_etmgeg
+
+def select_dates_from_list ( lijst_geg, start_datum, eind_datum ):
+    '''Functie maakt een nieuwe lijst met gegevens op basis van begin- en einddatum'''
+    l = []
+    for geg in lijst_geg:
+        if geg.YYYYMMDD >= start_datum and geg.YYYYMMDD <= eind_datum:
+            l.append(geg)
+    return l
+
+def search_station( naam ):
+    '''Functie vindtstation uit de lijst op basis van naam of wmonummer
+       en returned de station of false als niks wordt gevonden'''
+    naam = naam.lower()
+    for station in c.lijst_stations:
+        wmo, plaats = station.wmo, station.plaats.lower()
+        if wmo == naam or plaats == naam:
+            return station
+    return False
+
+def is_station_in_list(station, lijst):
+    for check in lijst:
+        if check.wmo == station.wmo and check.plaats == station.plaats:
+            return True
+    return False
+
+def mk_path(dir, add):
+    return os.path.abspath(os.path.join(dir, add))
