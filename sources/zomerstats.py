@@ -238,8 +238,8 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, type):
                 <tr>
                     <td> {g.plaats} </td> <td> {g.provincie} </td>
                     <td title="{datum_txt}"> {g.periode} </td> <td> {tg_gem} </td>
-                    <td> {html_warmte_getal} </td> <td> {html_tx_max} </td> <td> {html_tg_max} </td>
-                    <td> {html_tn_max} </td> <td> {html_tx_gte_20} </td> <td> {html_tx_gte_25} </td>
+                    <td> {html_warmte_getal} </td> <td> {html_tx_max}°C </td> <td> {html_tg_max}°C </td>
+                    <td> {html_tn_max}°C </td> <td> {html_tx_gte_20} </td> <td> {html_tx_gte_25} </td>
                     <td> {html_tx_gte_30} </td> <td> {html_tx_gte_35} </td> <td> {html_tg_gte_18} </td>
                     <td> {html_tg_gte_20} </td> <td> {html_tn_gte_20} </td> <td> {html_sq_tot} </td>
                     <td> {html_sq_gte_10} </td> <td> {html_rh_tot} </td> <td> {html_rh_gte_10} </td>
