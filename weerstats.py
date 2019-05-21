@@ -10,26 +10,26 @@ import config as c, fn_menu as menu, ask as a, testing
 
 # Hoofdprogramma
 if __name__== "__main__":
-    print("Welkom bij weerstats...")
+    print("Welcome to weatherstats NL...")
     if not c.lijst_stations:
-        print('Geen weerstations gevonden in de lijst')
-        print('Zie ook config.py ...')
-        input('Druk een toets om af te sluiten...')
+        print('No weatherstations found !')
+        print('Add a weatherstation in config.py ...')
+        input('Press a key to quit...')
     else:
         # Main menu
         while True:
             print(c.line)
-            print('HOOFDMENU')
-            print('Maak een keus uit de volgende opties:')
-            n  = 1;  print(f'{c.tab}{n}: Download daggegevens van alle knmi stations')
-            n += 1;  print(f'{c.tab}{n}: Download daggegevens van één knmi station')
+            print('MAIN MENU')
+            print('Choose one of the following options:')
+            n  = 1;  print(f'{c.tab}{n}: Download data of all knmi stations')
+            n += 1;  print(f'{c.tab}{n}: Download data of one knmi station')
             # n += 1;  print(f'{c.tab}{n}: Geef dagwaarden')
-            n += 1;  print(f'{c.tab}{n}: Bereken zomerstatistieken')
-            n += 1;  print(f'{c.tab}{n}: Bereken hittegolven')
-            n += 1;  print(f'{c.tab}{n}: Bereken winterstatistieken')
+            n += 1;  print(f'{c.tab}{n}: Calculate summerstatistics')
+            n += 1;  print(f'{c.tab}{n}: Calculate heatwaves')
+            n += 1;  print(f'{c.tab}{n}: Calculate winterstatistics')
             #n += 1;  print(f'{c.tab}{n}: Bereken koudegolven')
             #print(c.tab+'9: Testing')
-            print("Druk op 'q' om af te sluiten...")
+            print("Press 'q' to quit...")
             print(c.line)
 
             choice = a.ask(' ? ')  # Geef keuze op
