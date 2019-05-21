@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-""" Berekent weerstatistieken van Nederlands KNMI stations
+""" Calculates weatherstatistics for dutch cities from knmi data
     @Uitvoer:    $ python weerstats.py (3.7)
     @Author:     Mark Zwaving
-    @license:    Creative Commons Attribution 4.0 International Public License
+    @License:    Creative Commons Attribution 4.0 International Public License
 """
 #--------------------------------------------------------------------------------
 # import libraries
