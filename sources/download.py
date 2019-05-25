@@ -7,17 +7,17 @@ def download_http_data ( data_url, file_name ):
     with lock_http:
         start_ns = time.time_ns()
         if c.log:
-            print(f"Downloading url '{data_url}'")
-            print(f"Naar bestand '{file_name}'")
+            print(f"Start downloading url: '{data_url}'")
+            print(f"To file name: '{file_name}'")
         try:
             response = urllib.request.urlretrieve( data_url, file_name )
         except urllib.error.URLError as e:
-            print(f"Dowload '{data_url}' is mislukt")
+            print(f"Download url: '{data_url}' failed")
             if c.log:
                 print(f'{e.reason}{c.ln}{e.strerror}')
         else:
-            print(f'Dowloaden {data_url} gelukt !')
-            w.write_process_time_s('Download in ', start_ns)
+            print(f"Dowloading url: '{data_url}' succesfull !")
+            w.write_process_time_s('File downloaded in ', start_ns)
             oke = True
     return oke
 

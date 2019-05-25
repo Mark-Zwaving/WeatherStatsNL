@@ -8,10 +8,10 @@ def write_to_file(file_name, content):
             file_out.write(content)
     except IOError as e:
         if c.log:
-            print(f"Schrijven gegevens naar bestand '{file_name}' is mislukt."
+            print(f"Write to file: '{file_name}' failed."
                   f"{c.ln}{e.strerror}{c.ln}{e.errno}")
     else:
-        print(f"Schrijven van gegevens naar bestand '{file_name}' is gelukt!")
+        print(f"Write to file: '{file_name}' succesfull!")
         oke = True
 
     return oke
@@ -30,7 +30,7 @@ def write_stations(lijst, kol = 4, kol_width = ','):
     for i in range(cnt):
         station = lijst[i]
         if kol_width != ',':
-            content += f"{station.wmo + ' ' + station.plaats:{kol_width}}"
+            content += f'{station.wmo} {station.plaats:{kol_width}}'
             if (i+1) == cnt:
                 content += c.ln
             elif (i+1) % kol == 0:
@@ -46,13 +46,13 @@ def write_stations(lijst, kol = 4, kol_width = ','):
 
     print(content)
 #--------------------------------------------------------------------------------
-def write_process_time_ns(txt_in, start_ns):
+def write_process_time_ns(txt_in, time_ns):
     '''Functie berekent de rekentijd in nanoseconden! vanaf een starttijd'''
     dag_sec, uur_sec, min_sec = 86400, 3600, 60
-    delta_ns  = time.time_ns() - start_ns
-    delta_sec = delta_ns / 1000000000
+    delta_sec = time_ns / 1000000000
 
-    if c.log: print(f'Nano seconds: {delta_ns}')
+    if c.log:
+        print(f'Nano seconds: {time_ns}')
 
     rest, seco = math.modf( delta_sec )
     rest, mill = math.modf( rest * 1000 )

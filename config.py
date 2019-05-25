@@ -8,9 +8,9 @@ sys.path.append(dir_sources) # Python bestanden
 import knmi
 
 # Inits
-log = False # debugging modus
+log = True # debugging modus
 ln, tab = os.linesep, "\t"
-line = '----------' * 10
+line = '----------' * 8
 stop = 'q'
 max_value_geg, min_value_geg =  99999999, -99999999
 

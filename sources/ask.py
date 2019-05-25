@@ -8,15 +8,19 @@ def ask(s):
 def ask_stations( txt ):
     l = []
     while True:
-        print(txt)
-        w.write_stations(c.lijst_stations, 4, 25)
-        print(c.tab + 'Voor één station: geef het wmonummer of een plaatsnaam '
-                      'van een weerstation')
-        print(c.tab + 'Voor meerdere stations: geef het wmonummer of plaatsnaam '
-                      'gescheiden door een komma')
-        print(c.tab + "Toets een '*' voor het toevoegen van alle stations" )
-        if len(l) > 0: print(c.tab + "KIES 'd' om door te gaan !")
-        print(c.ln + "Druk op 'q' om terug te keren naar het hoofdmenu")
+        print(f'{txt}{c.ln}')
+        w.write_stations(c.lijst_stations, 3, 25)
+        text = '''
+For one station: give a wmo-number or a city name of a weatherstation
+For more stations: give wmo-number or a city name separated by a comma
+Press '*' to add all weather stations
+        '''
+        if len(l) > 0: text += f"{c.ln}Press 'd' to move on !"
+
+        text += f"{c.ln}Press 'q' to go back to main menu{c.ln}"
+
+        print(text)
+
         s_ask = ask(' ? ')
 
         if not s_ask: # Waarschijnlijk op de enter geramd zonder invoer...
@@ -29,34 +33,45 @@ def ask_stations( txt ):
             return l
         else:
             lt = []
+            info = ''
             if s_ask.find(',') != -1:
                 lt = s_ask.split(',')
             else:
-                lt.append(s_ask)
+                station = fn.search_station(s_ask.strip())
+                if station != False:
+                    lt.append(s_ask.strip())
+                else:
+                    info += 'Station {s_ask} onbekend !'
+
             for s_in in lt:
                 station = fn.search_station(s_in.strip())
+                info = ''
                 if station != False:
-                    s_info = station.wmo+' ' +station.plaats
+                    wmo = f'{station.wmo} {station.plaats} {station.provincie} '
                     if not fn.is_station_in_list(station, l):
                         l.append(station)
-                        print(f"Station: '{s_info}' toegevoegd...")
+                        info += f"Station: '{wmo}' added..."
                     else:
-                        print(f"Station: '{s_info}' was al toegevoegd...")
+                        info += f"Station: '{wmo}' already added..."
                 else:
-                    print(f"Station: '{s_in}' niet gevonden...")
+                    info += f"Station: '{s_in}' not found..."
+
+            print(info)
 
         if len(l) == len(c.lijst_stations):
-            print('Alle beschikbare stations zijn toegevoegd...')
+            print('All available stations added...')
             break
         elif len(l) > 0:
-            print(c.ln + 'Alle station(s) die zijn toegevoegd zijn:')
-            w.write_stations(l, 8)
+            print(f'{c.ln}All station(s) who were added are:')
+            for station in l:
+                print(f'{station.wmo}: {station.plaats} {station.provincie}')
+            print(' ')
 
     return l
 #--------------------------------------------------------------------------------
 def ask_date( txt ):
     while True:
-        print("Druk op 'q' om terug te keren naar het hoofdmenu")
+        print(f"Press 'q' to go back to main menu")
         print(txt)
         s_in = ask(' ? ')
         if s_in == c.stop:
@@ -67,10 +82,12 @@ def ask_date( txt ):
             print(f"Fout in datum: '{s_in}'. Probeer opnieuw...")
 #--------------------------------------------------------------------------------
 def ask_start_and_end_date():
-    start = ask_date("Geef startdatum [yyyymmdd] ? ")
-    if start == c.stop: return c.stop
-    einde = ask_date("Geef einddatum [yyyymmdd] ?")
-    if einde == c.stop: return c.stop
+    start = ask_date("Give start date <format:yyyymmdd> ? ")
+    if start == c.stop:
+        return c.stop
+    einde = ask_date("Give end date <format:yyyymmdd> ?")
+    if einde == c.stop:
+        return c.stop
 
     if int(start) > int(einde): # Keer om
         mem = start; start = einde; einde = mem
@@ -81,9 +98,8 @@ def ask_file_type(txt):
     s_in = False
     while True:
         print(txt)
-        print(c.tab + "Druk op 'q' om terug te keren naar het hoofdmenu")
-        print(c.tab + "Kies: 'txt' voor een tekstbestand of "
-              "'html' voor een htmlbestand ?")
+        print(f"Press 'q' to go back to main menu")
+        print("Choose: 'txt' for a text file or 'html' for a html file ?")
         s_in = ask(' ? ')
         if s_in == c.stop:
             return c.stop
@@ -95,12 +111,12 @@ def ask_file_type(txt):
 def ask_file_naam(txt):
     s_in = False
     print(txt)
-    print(c.tab + "Druk op 'q' om terug te keren naar het hoofdmenu")
-    print(c.tab + "Druk op <enter> om geen naam op te geven")
+    print("Press 'q' to go back to main menu")
+    print("Press '<enter>' for no name (default)")
     s_in = ask(' ? ')
     return s_in
 #--------------------------------------------------------------------------------
 def ask_enter_menu():
     print(' ')
-    input('Druk <enter> om terug te keren naar het hoofdmenu')
+    input(f"Press '<enter>' to go back to main menu")
     print(' ')

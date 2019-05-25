@@ -11,6 +11,69 @@ def san( s ):
     else:
         return s
 
+def fix( s, ent ):
+    s, ent = s.strip(), ent.lower()
+
+    if not s:
+        return ' '
+
+    temp = [ 'tx', 'tn', 'tg', 't10n' ]
+    prec = [ 'ev24', 'rh', 'rhx' ]
+    perc = [ 'ug', 'ux', 'un', 'sp' ]
+    wind = [ 'fhvec','fg','fhx','fhn','fxx' ]
+    hour = [ 'fhxh', 'fhnh', 'fxxh', 'tnh', 'txh', 'rhxh',
+             'pxh', 'vvnh', 'vvxh', 'uxh', 'unh', 'pnh' ]
+    hou6 = [ 't10nh' ]
+    pres = [ 'pg', 'pn', 'px' ]
+    duri = [ 'sq', 'dr' ]
+    radi = [ 'q' ]
+    dire = [ 'ddvec' ]
+    octa = [ 'ng' ]
+    view = [ 'vvn', 'vvx' ]
+
+    if   ent in temp: return f'{float(s)/10:0.1F} °C'
+    elif ent in temp: return f'{float(s)/10:0.1F} m/s'
+    elif ent in pres: return f'{float(s)/10:0.1F} hPa'
+    elif ent in radi: return f'{s} J/cm2'
+    elif ent in perc: return f'{s} %'
+    elif ent in hour: i2 = int(s); i1 = i2 - 1; return f'{i1}-{i2} uur'
+    elif ent in hou6: i2 = int(s); i1 = i2 - 6; return f'{i1}-{i2} UT'
+    elif ent in octa: return s
+    elif ent in prec:
+        return '<0.05' if s == '-1' else f'{float(s)/10:0.1F}' + ' mm'
+    elif ent in duri:
+        return '<0.05' if s == '-1' else f'{float(s)/10:0.1F}' + ' hour'
+    elif ent in dire:
+        if s == '0':
+            return f'{s} variable'
+        else:
+            # From degrees to direction
+            # Source: https://www.campbellsci.com/blog/convert-wind-directions
+            ldir = [ 'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
+                     'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N' ]
+            indx = int( round( float(s) % 360 / 22.5, 0 ) + 1 )
+            print(f's={s} || ndx:{indx}')
+            sdir = ldir[indx]
+            return f'{s} {sdir}'
+    elif ent in view:
+        if s == '0': return '<100 m'
+        else:
+            i = int(s)
+            if i < 49:
+                i2 = i + 1
+                return f'{i*100}-{i2*100} m'
+            elif i == 50:
+                return '5-6 km'
+            elif i <= 79:
+                i1, i2 = i - 50, i - 49
+                return f'{i1}-{i2} km'
+            elif i <= 89:
+                i1, i2 = i - 50, i - 45
+                return f'{i1}-{i2} km'
+            else:
+                return '>70km'
+    return s
+
 def unzip( zip_dir, zip_file, unzip_file ):
     '''Functie unzipt een bestand. Returned True of False, gelukt of niet'''
     oke, lock_zip = False, threading.Lock()
