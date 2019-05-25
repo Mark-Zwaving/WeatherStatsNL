@@ -22,7 +22,7 @@ if __name__== "__main__":
         # Main menu
         while True:
             print( f'''
-            MAIN MENU
+            MAIN MENU EDIT
 
             Choose one of the following options:
                 1: Download data all knmi stations
