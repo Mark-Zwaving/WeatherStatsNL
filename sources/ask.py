@@ -12,10 +12,10 @@ def ask_stations( txt ):
         w.write_stations(c.lijst_stations, 3, 25)
         text = '''
 For one station: give a wmo-number or a city name of a weatherstation
-For more stations: give wmo-number or a city name separated by a comma
-Press '*' to add all weather stations
+For more stations: give a wmo-number or a city name separated by a comma
+Press '*' to add all available weather stations
         '''
-        if len(l) > 0: text += f"{c.ln}Press 'd' to move on !"
+        if len(l) > 0: text += f"{c.ln}Press 'd' to move to the next !"
 
         text += f"{c.ln}Press 'q' to go back to main menu{c.ln}"
 
@@ -41,7 +41,7 @@ Press '*' to add all weather stations
                 if station != False:
                     lt.append(s_ask.strip())
                 else:
-                    info += 'Station {s_ask} onbekend !'
+                    info += 'Station {s_ask} unknown !'
 
             for s_in in lt:
                 station = fn.search_station(s_in.strip())
@@ -59,10 +59,10 @@ Press '*' to add all weather stations
             print(info)
 
         if len(l) == len(c.lijst_stations):
-            print('All available stations added...')
+            print('All available weatherstations added...')
             break
         elif len(l) > 0:
-            print(f'{c.ln}All station(s) who were added are:')
+            print(f'{c.ln}All weatherstation(s) who were added are:')
             for station in l:
                 print(f'{station.wmo}: {station.plaats} {station.provincie}')
             print(' ')
@@ -71,15 +71,15 @@ Press '*' to add all weather stations
 #--------------------------------------------------------------------------------
 def ask_date( txt ):
     while True:
-        print(f"Press 'q' to go back to main menu")
         print(txt)
+        print(f"Press 'q' to go back to the main menu")
         s_in = ask(' ? ')
         if s_in == c.stop:
             return c.stop
         elif check.check_date(s_in):
             return s_in
         else:
-            print(f"Fout in datum: '{s_in}'. Probeer opnieuw...")
+            print(f"Error in date: '{s_in}'. Try again...")
 #--------------------------------------------------------------------------------
 def ask_start_and_end_date():
     start = ask_date("Give start date <format:yyyymmdd> ? ")
@@ -96,27 +96,39 @@ def ask_start_and_end_date():
 #--------------------------------------------------------------------------------
 def ask_file_type(txt):
     s_in = False
+    types = ['txt', 'html', 'cmd']
     while True:
-        print(txt)
-        print(f"Press 'q' to go back to main menu")
-        print("Choose: 'txt' for a text file or 'html' for a html file ?")
+        print(f'''
+{txt}
+Type:
+ - 'txt' for a text file
+ - 'html' for a html file
+ - 'cmd' for commandline only
+Press 'q' to go back to the main menu
+        ''')
         s_in = ask(' ? ')
         if s_in == c.stop:
             return c.stop
-        elif s_in == 'txt' or s_in == 'html':
+        elif s_in in types:
             break
+        else:
+            print(f"Unknown option <{s_in}>. Try again.")
 
     return s_in
 #--------------------------------------------------------------------------------
 def ask_file_naam(txt):
     s_in = False
-    print(txt)
-    print("Press 'q' to go back to main menu")
-    print("Press '<enter>' for no name (default)")
+    print(f'''
+{txt}
+Press '<enter>' for no name. Default name will be used
+Press 'q' to go back to main menu
+    ''')
     s_in = ask(' ? ')
     return s_in
 #--------------------------------------------------------------------------------
 def ask_enter_menu():
-    print(' ')
-    input(f"Press '<enter>' to go back to main menu")
-    print(' ')
+    print('''
+
+Press '<enter>' to go back to main menu
+
+    ''')

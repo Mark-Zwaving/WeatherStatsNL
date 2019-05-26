@@ -181,7 +181,7 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, type):
                                                  len(g.tn_lt__20['lijst']), '°C')
 
             d_l = g.periode.split('-')
-            dat_txt = datum.Datum(d_l[0]).tekst() + '-' + datum.Datum(d_l[1]).tekst()
+            dat_txt = f'{datum.Datum(d_l[0]).tekst()} - {datum.Datum(d_l[1]).tekst()}'
             table += f'''
                 <tr>
                     <td> {g.plaats} </td> <td> {g.provincie} </td>

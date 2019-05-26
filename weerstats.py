@@ -7,32 +7,33 @@
 #--------------------------------------------------------------------------------
 # import libraries
 import config as c, fn_menu as menu, ask as a, testing
+import translate as t
 
 # Hoofdprogramma
 if __name__== "__main__":
-    print(f"{c.ln}Welcome to WeatherStats NL...")
+    print(f"{c.ln}{t.tr('Welcome to WeatherStats NL')}")
     if not c.lijst_stations:
         print('''
-        No weatherstations found !
-        Add one or more weatherstation(s) in config.py.
-        Press a key to quit...
+        {t.tr('No weatherstations found !')}
+        {t.tr('Add one or more weatherstations in config.py')}
+        {t.tr('Press a key to quit...')}
         ''')
         input(' ')
     else:
         # Main menu
         while True:
             print( f'''
-            MAIN MENU
+            {t.tr('MAIN MENU')}
 
-            Choose one of the following options:
-                1: Download data all knmi stations
-                2: Download data one or more knmi station(s)
-                3: Get weather day values of a day
-                4: Calculate summer statistics
-                5: Calculate heatwaves
-                6: Calculate winter statistics
+            {t.tr('Choose one of the following options:')}
+                1: {t.tr('Download data all knmi stations')}
+                2: {t.tr('Download data of one or more knmi stations')}
+                3: {t.tr('Get weather day values of a day')}
+                4: {t.tr('Calculate summer statistics')}
+                5: {t.tr('Calculate heatwaves')}
+                6: {t.tr('Calculate winter statistics')}
 
-                Press 'q' to quit...
+                {t.tr("Press 'q' to quit...")}
             ''')
             choice = a.ask(' ? ')  # Make a choice
 
@@ -44,4 +45,5 @@ if __name__== "__main__":
             if choice == '6':  menu.calc_winterstats()
             if choice == 'q':  break
 
-    print(f'{c.ln}Good bye{c.ln}')
+
+    print(f"{c.ln}{t.tr('Good bye')}{c.ln}")

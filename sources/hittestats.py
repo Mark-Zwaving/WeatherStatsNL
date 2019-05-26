@@ -215,7 +215,7 @@ def gen_calc_heat_waves(lijst_station, start_datum, eind_datum, type, name):
                 tx_gte_35 = f"{st.cnt_day(heatwave.etmgeg_list,'TX','>=',350)['tel']}"
 
                 per = periode.split('-')
-                datum_txt = f"{d.Datum(per[0]).tekst()}-{d.Datum(per[1]).tekst()}"
+                datum_txt = f"{d.Datum(per[0]).tekst()} - {d.Datum(per[1]).tekst()}"
                 content += f'''
                     <tr>
                         <td> {plaats} </td> <td title="{datum_txt}"> {periode} </td> <td> {tg_ave} </td>
@@ -224,7 +224,7 @@ def gen_calc_heat_waves(lijst_station, start_datum, eind_datum, type, name):
                     </tr>
                     '''
 
-            content += '''
+            content += f'''
                 </tbody>
                 <tfoot>
                     <tr> <td colspan="9"> {bronvermelding} </td> </tr>

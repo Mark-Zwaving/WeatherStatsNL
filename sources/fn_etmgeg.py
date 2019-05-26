@@ -18,35 +18,33 @@ def get_list_day_values( station ):
 def get_day_values_by_station_and_date( station, yyyymmdd ):
     '''Function: gets the weatherdata from a station at a given date'''
     if c.log:
-        out = f'Function:get_knmi_etmgeg_by_station_and_date(station,yyyymmdd) in file:etmgeg.py'
-        print(out)
+        print(
+        f'Function:get_knmi_etmgeg_by_station_and_date(station,yyyymmdd) in file:etmgeg.py'
+        )
 
-    skip = station.skip_lines
-
-    skip, knmi_etmgeg, lock_read, oke = , [], threading.Lock(),
-    False
+    knmi_etmgeg = []
+    oke = False
+    sid = f'{station.wmo} {station.plaats}'
+    lock_read = threading.Lock(),
     with lock_read:
         if c.log:
-            name = station.wmo + ', ' + station.plaats
-            print(f"Read data station {naam} ...")
+            print(f"Read data station {sid} ...")
             print(f"Filename:'{station.file_etmgeg_txt}'")
         try:
             get_list_day_values(station)
         except IOError as e:
             if c.log:
-                print(f"Read data file:'{station.file_etmgeg_txt}' failed")
+                print(f"Read data from file: '{station.file_etmgeg_txt}' failed")
                 print(f'{e.reason}{c.ln}{e.strerror}')
         else:
-
+            print(f'Read data from: {sid} succesful')
             if c.log:
-                print(f"Lezen gegevens uit bestand '{station.file_etmgeg_txt}' gelukt !")
-                print(f'Eerste waarden reeks ' + data_file[skip].strip())
-                print(f'Laatste waarden reeks ' + data_file[-1].strip())
+                print(f'First date data: {data_file[station.skip_lines]}')
+                print(f'Last date data: {data_file[-1]}')
 
-            print(f'Lezen gegevens station {naam} succesvol...')
-            for el in range(skip, len(data_file)): # Maak lijst met knmi gegevens
+            for el in range( station.skip_lines , len(data_file) ):
                 knmi_etmgeg.append( knmi.Etmgeg(data_file[el]) )
 
             oke = True
 
-    return oke if oke == False else knmi_etmgeg
+    return  knmi_etmgegoke if oke else False

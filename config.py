@@ -8,7 +8,8 @@ sys.path.append(dir_sources) # Python bestanden
 import knmi
 
 # Inits
-log = True # debugging modus
+language = 'EN' # NL for Nederlands, EN for English, Default English
+log = False # debugging modus
 ln, tab = os.linesep, "\t"
 line = '----------' * 8
 stop = 'q'

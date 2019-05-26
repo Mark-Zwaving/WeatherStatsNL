@@ -8,10 +8,10 @@ def write_to_file(file_name, content):
             file_out.write(content)
     except IOError as e:
         if c.log:
-            print(f"Write to file: '{file_name}' failed."
+            print(f"Write to file: '{file_name}' failed"
                   f"{c.ln}{e.strerror}{c.ln}{e.errno}")
     else:
-        print(f"Write to file: '{file_name}' succesfull!")
+        print(f"Write to file: '{file_name}' succesful")
         oke = True
 
     return oke
@@ -51,8 +51,7 @@ def write_process_time_ns(txt_in, time_ns):
     dag_sec, uur_sec, min_sec = 86400, 3600, 60
     delta_sec = time_ns / 1000000000
 
-    if c.log:
-        print(f'Nano seconds: {time_ns}')
+    if c.log: print(f'Nano seconds: {time_ns}')
 
     rest, seco = math.modf( delta_sec )
     rest, mill = math.modf( rest * 1000 )
@@ -86,7 +85,7 @@ def write_process_time_ns(txt_in, time_ns):
 
 #--------------------------------------------------------------------------------
 def write_process_time_s( txt_start, start_ns ):
-    print(f"{txt_start}{(time.time_ns() - start_ns) / 1000000000:.4f} seconden")
+    print(f"{txt_start}{(time.time_ns() - start_ns) / 1000000000:.4f} seconds")
 #--------------------------------------------------------------------------------
 def write_html_count(l, tel, n, ad):
     html = str(tel)

@@ -1,9 +1,9 @@
 import os, threading, urllib, urllib.request, urllib.error, zipfile
-import config as c, knmi, write as w
+import config as c, knmi, write as w, convert as cvt
 import datetime, time, math, locale
 
 def san( s ):
-    '''Functie verwijdert spaties veplaats naar lowercaes invoer'''
+    '''Functie verwijdert spaties zetomS naar lowercase invoer'''
     s = str(s).lower().strip()
     if s == '' or not s:
         #print('Invoer is leeg')
@@ -32,13 +32,17 @@ def fix( s, ent ):
     view = [ 'vvn', 'vvx' ]
 
     if   ent in temp: return f'{float(s)/10:0.1F} °C'
-    elif ent in temp: return f'{float(s)/10:0.1F} m/s'
     elif ent in pres: return f'{float(s)/10:0.1F} hPa'
     elif ent in radi: return f'{s} J/cm2'
     elif ent in perc: return f'{s} %'
     elif ent in hour: i2 = int(s); i1 = i2 - 1; return f'{i1}-{i2} uur'
     elif ent in hou6: i2 = int(s); i1 = i2 - 6; return f'{i1}-{i2} UT'
     elif ent in octa: return s
+    elif ent in wind:
+        ms = float(s) / 10
+        bft = cvt.ms_to_bft(ms)
+        return f'{ms:0.1F} m/s | {bft}bft'
+
     elif ent in prec:
         return '<0.05' if s == '-1' else f'{float(s)/10:0.1F}' + ' mm'
     elif ent in duri:
@@ -52,9 +56,8 @@ def fix( s, ent ):
             ldir = [ 'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
                      'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N' ]
             indx = int( round( float(s) % 360 / 22.5, 0 ) + 1 )
-            print(f's={s} || ndx:{indx}')
             sdir = ldir[indx]
-            return f'{s} {sdir}'
+            return f'{s}° {sdir}'
     elif ent in view:
         if s == '0': return '<100 m'
         else:
@@ -84,41 +87,42 @@ def unzip( zip_dir, zip_file, unzip_file ):
             with zipfile.ZipFile(zip_file, 'r') as zip:
                 zip.extract(unzip, zip_dir)
         except zipfile.BadZipfile as e:
-            print(f"Unzippen van bestand: '{zip_file}' is mislukt.")
-            if c.log:
-                print(f'{e.reason}{c.ln}{e.strerror}')
+            print(f"Unzipping file: '{zip_file}' failed")
+            if c.log: print(f'{e.reason}{c.ln}{e.strerror}')
         else:
-            print(f"Uitpakken bestand: '{zip_file}'")
-            print(f"Naar: '{unzip_file}' is gelukt!")
-            w.write_process_time_s('Unzipping in ', start_ns)
+            print(f"Unzipping zipfile: '{zip_file}'")
+            print(f"To file: '{unzip_file}' succesful")
+            w.write_process_time_s('Time to unzip is: ', start_ns)
             oke = True
     return oke
 
 def knmi_etmgeg_data ( station ):
     '''Functie lees alle daggegevens van een station en returned een lijst met de gegegevens'''
-    if c.log: print("Functie: knmi_etmgeg_data ( station ) Bestand: 'fn.py'")
-    skip, knmi_etmgeg, lock_read, oke = station.skip_lines, [], threading.Lock(), False
-    naam = station.wmo+', '+station.plaats
+    if c.log:
+        print("Functie: knmi_etmgeg_data ( station ) Bestand: 'fn.py'")
+    knmi_etmgeg = []
+    oke = False
+    sid = f'{station.wmo} {station.plaats}'
+    lock_read = threading.Lock()
     with lock_read:
         if c.log:
-            print(f"Lezen gegevens station {naam} ...")
-            print(f"Bestand is: '{station.file_etmgeg_txt}'")
+            print(f"Reading data station: {sid}")
+            print(f"From file: '{station.file_etmgeg_txt}'")
         try:
             with open(station.file_etmgeg_txt, 'r') as f: # Lees file in array
                 data_file = f.readlines()
         except IOError as e:
             if c.log:
-                print(f"Lezen gegevens uit bestand '{station.file_etmgeg_txt}' mislukt")
+                print(f"Read data from file: '{station.file_etmgeg_txt}' failed")
                 print(f'{e.reason}{c.ln}{e.strerror}')
         else:
-
             if c.log:
-                print(f"Lezen gegevens uit bestand '{station.file_etmgeg_txt}' gelukt !")
-                print(f'Eerste waarden reeks ' + data_file[skip].strip())
-                print(f'Laatste waarden reeks ' + data_file[-1].strip())
+                print(f"Readdata from file: '{station.file_etmgeg_txt}' succesful")
+                print(f'First date data: {data_file[station.skip_lines]}')
+                print(f'Last date data: {data_file[-1]}')
 
-            print(f'Lezen gegevens station {naam} succesvol...')
-            for el in range(skip, len(data_file)): # Maak lijst met knmi gegevens
+            print(f'Read data fromm station: {sid} succesful')
+            for el in range(station.skip_lines, len(data_file)): # Maak lijst met knmi gegevens
                 knmi_etmgeg.append( knmi.Etmgeg(data_file[el]) )
 
             oke = True

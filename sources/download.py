@@ -12,13 +12,14 @@ def download_http_data ( data_url, file_name ):
         try:
             response = urllib.request.urlretrieve( data_url, file_name )
         except urllib.error.URLError as e:
-            print(f"Download url: '{data_url}' failed")
+            print(f"Error downloading url: '{data_url}'")
             if c.log:
                 print(f'{e.reason}{c.ln}{e.strerror}')
         else:
-            print(f"Dowloading url: '{data_url}' succesfull !")
+            print(f"Dowloading url: '{data_url}' succesful !")
             w.write_process_time_s('File downloaded in ', start_ns)
             oke = True
+
     return oke
 
 def download_and_unzip_etmgeg_station ( station ):

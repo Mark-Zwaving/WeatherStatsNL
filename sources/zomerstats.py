@@ -76,7 +76,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, type):
     bronvermelding = cfg.lijst_stations[0].bronvermelding
     if type == 'html': path = cfg.lijst_stations[0].dir_html
     elif type == 'txt': path = cfg.lijst_stations[0].dir_text
-    file_name = fn.mk_path(path, f'{periode}-zomerstatistieken.{type}') # Bepaal naam
+    file_name = fn.mk_path(path, f'{periode}-summerstatistics.{type}') # Bepaal naam
 
     if cfg.log: print(f'start:{datum_start}|eind:{datum_eind}|type:{type}')
 
@@ -144,7 +144,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, type):
         content += bronvermelding
 
     elif type == 'html':
-        titel = 'zomerstatistieken ' + periode
+        titel = 'Summerstatistics ' + periode
         content  = f'''
         <table>
             <thead>
@@ -233,7 +233,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, type):
                               else f"{g.rh_tot['som']:0.1f}<sub>mm</sub>"
 
             per = g.periode.split('-')
-            datum_txt = f"{datum.Datum(per[0]).tekst()}-{datum.Datum(per[1]).tekst()}"
+            datum_txt = f"{datum.Datum(per[0]).tekst()} - {datum.Datum(per[1]).tekst()}"
             content += f'''
                 <tr>
                     <td> {g.plaats} </td> <td> {g.provincie} </td>
