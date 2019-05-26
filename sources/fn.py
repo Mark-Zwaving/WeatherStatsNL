@@ -41,7 +41,7 @@ def fix( s, ent ):
     elif ent in wind:
         ms = float(s) / 10
         bft = cvt.ms_to_bft(ms)
-        return f'{ms:0.1F} m/s | {bft}bft'
+        return f'{ms:0.1F} m/s {bft}bft'
 
     elif ent in prec:
         return '<0.05' if s == '-1' else f'{float(s)/10:0.1F}' + ' mm'
