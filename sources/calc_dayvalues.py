@@ -1,6 +1,15 @@
-import os, threading, urllib, urllib.request, urllib.error, zipfile
-import config as c, knmi, write as w, fn, fn_html
-import datetime, time, math, locale, datum
+# -*- coding: utf-8 -*-
+'''Library contains functions for grabbing and searching dayvalues from a file'''
+
+__author__     =  "Mark Zwaving"
+__email__      =  "markzwaving@gmail.com"
+__copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
+__license__    =  "GNU Lesser General Public License (LGPL)"
+__version__    =  "0.1"
+__maintainer__ =  "Mark Zwaving"
+__status__     =  "Development"
+
+import os, threading, config as c, knmi, write as w, fn, fn_html, dates as d
 
 def get_list_day_values_by_station( station ):
     l, name = [], station.file_etmgeg_txt
@@ -60,7 +69,7 @@ def prepare_day_values( l_stations, yyyymmdd, name, type ):
 
     content = ''
     if dayvalues is not '':
-        d = knmi.Etmgeg(dayvalues)
+        day = knmi.Etmgeg(dayvalues)
 
         if type == 'html':
             title = f'{station.plaats}-{yyyymmdd}'
@@ -70,7 +79,7 @@ def prepare_day_values( l_stations, yyyymmdd, name, type ):
             <header>
                 <h3>
                     {station.wmo} - {station.plaats} {station.provincie} -
-                    {datum.Datum(d.YYYYMMDD).tekst()}
+                    {d.Datum(day.YYYYMMDD).tekst()}
                 </h3>
             </header>
             '''
@@ -81,7 +90,7 @@ def prepare_day_values( l_stations, yyyymmdd, name, type ):
                 </footer>
             '''
 
-            data = fn_html.div_entities( d )
+            data = fn_html.div_entities( day )
             html = header + data + footer
             content = fn_html.pagina(title, css, html)
 

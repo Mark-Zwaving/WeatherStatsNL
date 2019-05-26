@@ -1,4 +1,15 @@
-import config as c, write as w, fn, check, ask as a
+'''Library contains functions for asking questions and to deal with the input
+given by a user'''
+
+__author__     =  "Mark Zwaving"
+__email__      =  "markzwaving@gmail.com"
+__copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
+__license__    =  "GNU Lesser General Public License (LGPL)"
+__version__    =  "0.1"
+__maintainer__ =  "Mark Zwaving"
+__status__     =  "Development"
+
+import config as c, write as w, fn, validate as v, ask as a
 #--------------------------------------------------------------------------------
 def ask(s):
     s = fn.san(input(s))
@@ -76,7 +87,7 @@ def ask_date( txt ):
         s_in = ask(' ? ')
         if s_in == c.stop:
             return c.stop
-        elif check.check_date(s_in):
+        elif v.check_date(s_in):
             return s_in
         else:
             print(f"Error in date: '{s_in}'. Try again...")

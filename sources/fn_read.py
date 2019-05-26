@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+'''Library contains a function to read from a file and returns a object with the
+data of a date'''
+
+__author__     =  "Mark Zwaving"
+__email__      =  "markzwaving@gmail.com"
+__copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
+__license__    =  "GNU Lesser General Public License (LGPL)"
+__version__    =  "0.1"
+__maintainer__ =  "Mark Zwaving"
+__status__     =  "Development"
+
 import os, threading, urllib, urllib.request, urllib.error, zipfile
 import config as c, knmi, write as w
 import datetime, time, math, locale

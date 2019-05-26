@@ -1,6 +1,17 @@
-import time, fn, config as c, download as d, write as w, ask as a
-import zomerstats as zs, winterstats as ws, hittestats as hs
-import fn_dayvalues as fn_day
+# -*- coding: utf-8 -*-
+'''Library contains functions to handle with menu options'''
+
+__author__     =  "Mark Zwaving"
+__email__      =  "markzwaving@gmail.com"
+__copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
+__license__    =  "GNU Lesser General Public License (LGPL)"
+__version__    =  "0.1"
+__maintainer__ =  "Mark Zwaving"
+__status__     =  "Development"
+
+import time, fn, config as c, fn_download as d, write as w, ask as a
+import calc_sommerstats as zs, calc_winterstats as ws, calc_heatwaves as hs
+import calc_dayvalues as day
 
 # Menu choice 1
 def download_etmgeg_all_stations():
@@ -43,7 +54,7 @@ def get_dayvalues():
                 if name != c.stop:
                     # Bereken hittegolven
                     start_ns = time.time_ns()
-                    fn_day.prepare_day_values( l, yyyymmdd, name, type )
+                    day.prepare_day_values( l, yyyymmdd, name, type )
                     end_ns = time.time_ns()
                     # dayvalues
                     w.write_process_time_ns( 'Total calculation time: ', (end_ns-start_ns) )
@@ -64,7 +75,7 @@ def calc_winterstats():
                 if name != c.stop:
                     # Bereken winterstats
                     start_ns = time.time_ns()
-                    ws.alg_winterstats(l, dates['start'], dates['einde'], type, name)
+                    ws.alg_winterstats(l, dates['start'], dates['einde'], name, type)
                     end_ns = time.time_ns()
                     w.write_process_time_ns( 'Total calculation time: ', (end_ns-start_ns) )
     print(f'{c.ln}END CALCULATE WINTER STATISTICS...{c.ln}{c.line}')
@@ -83,7 +94,7 @@ def calc_zomerstats():
                 if name != c.stop:
                     # Calculate sommer statistics
                     start_ns = time.time_ns()
-                    zs.alg_zomerstats(l, dates['start'], dates['einde'], type)
+                    zs.alg_zomerstats(l, dates['start'], dates['einde'], name, type)
                     end_ns = time.time_ns()
                     w.write_process_time_ns('Total calculation time: ', (end_ns-start_ns) )
     print(f'{c.ln}END CALCULATE SOMMER STATISTICS...{c.ln}{c.line}')

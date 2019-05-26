@@ -1,5 +1,16 @@
+# -*- coding: utf-8 -*-
+'''Library contains functions for writing output to screen or to a file'''
+
+__author__     =  "Mark Zwaving"
+__email__      =  "markzwaving@gmail.com"
+__copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
+__license__    =  "GNU Lesser General Public License (LGPL)"
+__version__    =  "0.1"
+__maintainer__ =  "Mark Zwaving"
+__status__     =  "Development"
+
 import config as c, math, time, fn_html as h
-#--------------------------------------------------------------------------------
+
 def write_to_file(file_name, content):
     '''Functie schrijft gegevens naar een bestand'''
     oke = False
@@ -8,14 +19,14 @@ def write_to_file(file_name, content):
             file_out.write(content)
     except IOError as e:
         if c.log:
-            print(f"Write to file: '{file_name}' failed"
+            print(f"Write data to file: '{file_name}' failed"
                   f"{c.ln}{e.strerror}{c.ln}{e.errno}")
     else:
-        print(f"Write to file: '{file_name}' succesful")
+        print(f"Write data to file: '{file_name}' succesful")
         oke = True
 
     return oke
-#--------------------------------------------------------------------------------
+
 def write_zero_less_ten ( d ):
     '''Functie voegt een leading zero toe, mits nodig'''
     return '0' + str(d) if d < 10 else str(d)
@@ -45,7 +56,7 @@ def write_stations(lijst, kol = 4, kol_width = ','):
                 content += ', '
 
     print(content)
-#--------------------------------------------------------------------------------
+
 def write_process_time_ns(txt_in, time_ns):
     '''Functie berekent de rekentijd in nanoseconden! vanaf een starttijd'''
     dag_sec, uur_sec, min_sec = 86400, 3600, 60
@@ -64,13 +75,13 @@ def write_process_time_ns(txt_in, time_ns):
     min, sec = int(rest_sec // min_sec), int(rest_sec % min_sec)
 
     # Maak uitvoer. Geef een lege string bij 0. Anders kijk voor enkelvoud of meervoudige tekst
-    dag_txt = f"{dag} {'dagen'    if dag > 1 else 'dag'} "
-    uur_txt = f"{uur} {'uren'     if uur > 1 else 'uur'} "
-    min_txt = f"{min} {'minuten'  if min > 1 else 'minuut'} "
-    sec_txt = f"{sec} {'seconden' if sec > 1 else 'seconde'} "
-    mil_txt = f"{mill} {'milliseconden' if mill > 1 else 'milliseconde'} "
-    mic_txt = f"{micr} {'microseconden' if micr > 1 else 'microseconde'} "
-    nan_txt = f"{nano} {'nanoseconden'  if nano > 1 else 'nanoseconde'} "
+    dag_txt = f"{dag} {'days'    if dag > 1 else 'day'} "
+    uur_txt = f"{uur} {'hours'     if uur > 1 else 'hour'} "
+    min_txt = f"{min} {'minutes'  if min > 1 else 'minute'} "
+    sec_txt = f"{sec} {'seconds' if sec > 1 else 'second'} "
+    mil_txt = f"{mill} {'milliseconds' if mill > 1 else 'millisecond'} "
+    mic_txt = f"{micr} {'microseconds' if micr > 1 else 'microsecond'} "
+    nan_txt = f"{nano} {'nanoseconds'  if nano > 1 else 'nanosecond'} "
 
     txt = ''
     if dag  > 0: txt += dag_txt
@@ -81,19 +92,24 @@ def write_process_time_ns(txt_in, time_ns):
     if micr > 0: txt += mic_txt
     if nano > 0: txt += nan_txt
 
-    print(f'{txt_in}{txt}')
+    print(f'''
+{txt_in} {txt}
+    ''')
 
-#--------------------------------------------------------------------------------
 def write_process_time_s( txt_start, start_ns ):
-    print(f"{txt_start}{(time.time_ns() - start_ns) / 1000000000:.4f} seconds")
-#--------------------------------------------------------------------------------
+    print(f'''
+
+{txt_start} {(time.time_ns() - start_ns) / 1000000000:.4f} seconds
+
+    ''')
+
 def write_html_count(l, tel, n, ad):
     html = str(tel)
     # Add table html if count != 0
     if tel is not 0:
         html += h.table_count(l, n, ad)
     return html
-#--------------------------------------------------------------------------------
+
 def write_html_extremes(l, tel, n, ad):
     html = str(tel)
     # Add table html if count != 0

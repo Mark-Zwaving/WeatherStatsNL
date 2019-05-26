@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+'''Library made to translate text from English into one or more other languages'''
+
+__author__     =  "Mark Zwaving"
+__email__      =  "markzwaving@gmail.com"
+__copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
+__license__    =  "GNU Lesser General Public License (LGPL)"
+__version__    =  "0.1"
+__maintainer__ =  "Mark Zwaving"
+__status__     =  "Development"
+
 import config as cfg
 
 class Languages:
@@ -11,7 +22,7 @@ class Languages:
         if s == self.EN:
             return True
         elif s == self.NL:
-            return False
+            return True
 
         return False
 
@@ -39,7 +50,6 @@ translate_pool = [
     Languages('Calculate winter statistics', 'Bereken winterstatistieken'),
     Languages("Press 'q' to quit...", "Druk op 'q' om af te sluiten")
 ]
-
 
 def tr(s):
     for l in translate_pool:

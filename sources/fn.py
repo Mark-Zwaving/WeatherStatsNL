@@ -1,6 +1,16 @@
-import os, threading, urllib, urllib.request, urllib.error, zipfile
-import config as c, knmi, write as w, convert as cvt
-import datetime, time, math, locale
+# -*- coding: utf-8 -*-
+'''Library contains casual functions for different purposes'''
+
+__author__     =  "Mark Zwaving"
+__email__      =  "markzwaving@gmail.com"
+__copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
+__license__    =  "GNU Lesser General Public License (LGPL)"
+__version__    =  "0.1"
+__maintainer__ =  "Mark Zwaving"
+__status__     =  "Development"
+
+import os, threading, time, zipfile, config as c, write as w, convert as cvt
+import knmi
 
 def san( s ):
     '''Functie verwijdert spaties zetomS naar lowercase invoer'''
@@ -117,17 +127,17 @@ def knmi_etmgeg_data ( station ):
                 print(f'{e.reason}{c.ln}{e.strerror}')
         else:
             if c.log:
-                print(f"Readdata from file: '{station.file_etmgeg_txt}' succesful")
+                print(f"Read data from file: '{station.file_etmgeg_txt}' succesful")
                 print(f'First date data: {data_file[station.skip_lines]}')
                 print(f'Last date data: {data_file[-1]}')
 
-            print(f'Read data fromm station: {sid} succesful')
+            print(f'Read data from station: {sid} succesful')
             for el in range(station.skip_lines, len(data_file)): # Maak lijst met knmi gegevens
                 knmi_etmgeg.append( knmi.Etmgeg(data_file[el]) )
 
             oke = True
 
-    return oke if oke == False else knmi_etmgeg
+    return knmi_etmgeg if oke else false
 
 def select_dates_from_list ( lijst_geg, start_datum, eind_datum ):
     '''Functie maakt een nieuwe lijst met gegevens op basis van begin- en einddatum'''
