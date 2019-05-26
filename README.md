@@ -1,2 +1,2 @@
 # WeatherstatsNL
-commandline python program to calculate weather statistics from knmi data
+Commandline python program to calculate weather statistics from knmi data
