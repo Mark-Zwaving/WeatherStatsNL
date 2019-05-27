@@ -89,7 +89,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
 
     # Filename
     if not name:
-        name = f'{datum_start}-{datum_eind}-sommerstats'
+        name = f'sommerstats {datum_start}-{datum_eind}'
 
     title = name
 
