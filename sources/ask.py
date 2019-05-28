@@ -5,21 +5,49 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1"
+__version__    =  "0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config as c, write as w, fn, validate as v, ask as a
-#--------------------------------------------------------------------------------
+
 def ask(s):
     s = fn.san(input(s))
-    print(' ')
     return s
-#--------------------------------------------------------------------------------
+
+def ask_open_url(txt):
+    allow = ['Y','y']
+    print(txt)
+    print(f"Press 'Y' or 'y' to open in a browser")
+    print("Press a another key to skip opening in a browser")
+    yn = ask(" ? ")
+    if yn in allow:
+        return True
+    else:
+        return False
+
+def ask_station(txt):
+    while True:
+        fn.println(txt)
+        w.write_stations(c.lijst_stations, 3, 25)
+        print('Give a wmo-number or a city name of a weatherstation ?')
+        fn.println("Press 'q' to go back to the main menu")
+
+        s_ask = ask(' ? ')
+        if s_ask == c.stop:
+            return c.stop
+        else:
+            station = fn.search_station(s_ask)
+            if station != False:
+                return station
+            else:
+                fn.println(f'Station: {s_ask} unknown !')
+                ask("Press a key to try again...")
+
 def ask_stations( txt ):
     l = []
     while True:
-        print(f'{txt}{c.ln}')
+        fn.println(txt)
         w.write_stations(c.lijst_stations, 3, 25)
         text = '''
 For one station: give a wmo-number or a city name of a weatherstation
@@ -28,10 +56,8 @@ Press '*' to add all available weather stations
         '''
         if len(l) > 0: text += f"{c.ln}Press 'd' to move to the next !"
 
-        text += f"{c.ln}Press 'q' to go back to main menu{c.ln}"
-
-        print(text)
-
+        text += f"{c.ln}Press 'q' to go back to main menu"
+        fn.println(text)
         s_ask = ask(' ? ')
 
         if not s_ask: # Waarschijnlijk op de enter geramd zonder invoer...
@@ -52,7 +78,7 @@ Press '*' to add all available weather stations
                 if station != False:
                     lt.append(s_ask.strip())
                 else:
-                    info += 'Station {s_ask} unknown !'
+                    info += f'Station: {s_ask} unknown !'
 
             for s_in in lt:
                 station = fn.search_station(s_in.strip())
@@ -79,7 +105,7 @@ Press '*' to add all available weather stations
             print(' ')
 
     return l
-#--------------------------------------------------------------------------------
+
 def ask_date( txt ):
     while True:
         print(txt)
@@ -90,8 +116,9 @@ def ask_date( txt ):
         elif v.check_date(s_in):
             return s_in
         else:
-            print(f"Error in date: '{s_in}'. Try again...")
-#--------------------------------------------------------------------------------
+            print(f'Error in date: {s_in}')
+            ask('Press a key to try again...')
+
 def ask_start_and_end_date():
     start = ask_date("Give start date <format:yyyymmdd> ? ")
     if start == c.stop:
@@ -104,42 +131,35 @@ def ask_start_and_end_date():
         mem = start; start = einde; einde = mem
 
     return { 'start': start, 'einde': einde }
-#--------------------------------------------------------------------------------
+
 def ask_file_type(txt):
-    s_in = False
     types = ['txt', 'html', 'cmd']
     while True:
-        print(f'''
+        fn.println(f'''
 {txt}
 Type:
  - 'txt' for a text file
  - 'html' for a html file
  - 'cmd' for commandline only
-Press 'q' to go back to the main menu
-        ''')
+Press 'q' to go back to the main menu''')
+
         s_in = ask(' ? ')
         if s_in == c.stop:
             return c.stop
         elif s_in in types:
-            break
+            return s_in
         else:
-            print(f"Unknown option <{s_in}>. Try again.")
+            print(f'Unknown option: {s_in}')
+            ask('Press a key to try again...')
 
-    return s_in
-#--------------------------------------------------------------------------------
 def ask_file_naam(txt):
     s_in = False
-    print(f'''
+    fn.println(f'''
 {txt}
 Press '<enter>' for no name. Default name will be used
-Press 'q' to go back to main menu
-    ''')
+Press 'q' to go back to main menu''')
     s_in = ask(' ? ')
     return s_in
-#--------------------------------------------------------------------------------
+
 def ask_enter_menu():
-    print('''
-
-Press '<enter>' to go back to main menu
-
-    ''')
+    input(f"{c.ln}Press a 'key' to go back to the main menu ...{c.ln}")

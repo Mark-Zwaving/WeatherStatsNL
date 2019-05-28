@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1"
+__version__    =  "0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -13,38 +13,42 @@ import config as c
 
 class EtmgegGem():
     '''Klasse berekent gemiddelde waarden bestaande uit som en aantal in een reeks van dagen'''
-    def __init__(self, datum, waarde, som, aantal):
+    def __init__(self, datum, waarde, som, aantal, ent):
         self.datum  = datum
-        self.waarde = waarde / 10
-        self.som    = som    / 10
+        self.waarde = waarde
+        self.som    = som
         self.aantal = aantal
         self.gem    = self.som / self.aantal
+        self.ent    = ent
 
 class EtmgegExtreem():
     '''Klasse voor het opslaan van een maximum of minimum extreem'''
-    def __init__(self, datum, tijd, extreem ):
+    def __init__(self, datum, tijd, extreem, ent ):
         self.datum   = datum
         self.tijd    = tijd
-        self.extreem = extreem / 10
+        self.extreem = extreem
+        self.ent     = ent
 
 class EtmgegCount():
     '''Klasse voor het opslaan van een maximum of minimum extreem'''
-    def __init__(self, datum, tijd, waarde, oper, val, tel ):
+    def __init__(self, datum, tijd, waarde, oper, eis, tel, ent ):
         self.datum   = datum
         self.tijd    = tijd
-        self.waarde  = waarde / 10
+        self.waarde  = waarde
         self.oper    = oper
-        self.val     = val / 10
+        self.eis     = eis
         self.tel     = tel
+        self.ent     = ent
 
 class EtmgegSom():
     '''Klasse voor het opslaan van som extreem'''
-    def __init__(self, datum, tijd, waarde, som, tel ):
+    def __init__(self, datum, tijd, waarde, som, tel, ent ):
         self.datum   = datum
         self.tijd    = tijd
-        self.waarde  = waarde / 10
-        self.som     = som / 10
+        self.waarde  = waarde
+        self.som     = som
         self.tel     = tel
+        self.ent     = ent
 
 def etmgeg ( geg, entity ):
     ent = entity.upper()
@@ -107,6 +111,25 @@ def etmgeg_t ( geg, entity ):
     elif ent == 'UN':   return geg.UNH     #UNH   = Uurvak waarin UN is gemeten / Hourly division in which UN was measured
     else: return False
 
+
+def ent_to_t_ent( ent ):
+    ent = ent.upper()
+    if   ent == 'FHX':  return 'FHXH'    #FHXH  = Uurvak waarin FHX is gemeten / Hourly division in which FHX was measured
+    elif ent == 'FHN':  return 'FHNH'    #FHNH  = Uurvak waarin FHN is gemeten / Hourly division in which FHN was measured
+    elif ent == 'FXX':  return 'FXXH'    #FXXH  = Uurvak waarin FXX is gemeten / Hourly division in which FXX was measured
+    elif ent == 'TN':   return 'TNH '    #TNH   = Uurvak waarin TN is gemeten / Hourly division in which TN was measured
+    elif ent == 'TX':   return 'TXH '    #TXH   = Uurvak waarin TX is gemeten / Hourly division in which TX was measured
+    elif ent == 'T10N': return 'T10NH'   #T10NH = 6-uurs tijdvak waarin T10N is gemeten / 6-hourly division in which T10N was measured; 6=0-6 UT, 12=6-12 UT, 18=12-18 UT, 24=18-24 UT
+    elif ent == 'RHX':  return 'RHXH'    #RHXH  = Uurvak waarin RHX is gemeten / Hourly division in which RHX was measured
+    elif ent == 'PX':   return 'PXH '    #PXH   = Uurvak waarin PX is gemeten / Hourly division in which PX was measured
+    elif ent == 'PN':   return 'PNH '    #PNH   = Uurvak waarin PN is gemeten / Hourly division in which PN was measured
+    elif ent == 'VVN':  return 'VVNH'    #VVNH  = Uurvak waarin VVN is gemeten / Hourly division in which VVN was measured
+    elif ent == 'VVX':  return 'VVXH'    #VVXH  = Uurvak waarin VVX is gemeten / Hourly division in which VVX was measured
+    elif ent == 'UX':   return 'UXH '    #UXH   = Uurvak waarin UX is gemeten / Hourly division in which UX was measured
+    elif ent == 'UN':   return 'UNH '    #UNH   = Uurvak waarin UN is gemeten / Hourly division in which UN was measured
+    else:
+        return False # No
+
 # Som
 def som_val(lijst_geg, ent):
     '''Functie somt alle waarden van een reeks'''
@@ -117,7 +140,7 @@ def som_val(lijst_geg, ent):
             i_etm = int(etm); som += i_etm; tel += 1 # Convert to int en telop
             etm_t = etmgeg_t(geg,ent) # Check tijd
             tijd = etm_t if etm_t != geg.empthy and etm_t != False else -1 # Geef tijd mits aanwezig
-            l.append(EtmgegSom(geg.YYYYMMDD, tijd, i_etm, som, tel)) # Bewaar som in dag object
+            l.append(EtmgegSom(geg.YYYYMMDD, tijd, i_etm, som, tel, ent)) # Bewaar som in dag object
     # Return false als niks is gevonden anders geef waarde met tijdstip lus de lijst met gevonden extremen
     return { 'som': False, 'lijst':l} if not l \
              else {'som':l[-1].som,'lijst':l }
@@ -131,7 +154,7 @@ def gem_val ( lijst_geg, ent ):
         if etm != geg.empthy: # Leeg veld overslaan
             datum = geg.YYYYMMDD; i_etm = int(etm); som += i_etm; tel += 1 # verwerk gegevens
             if c.log: print('GEM|datum:{0}|i_etm:{1}|som:{2}|tel:{3}'.format(datum,i_etm,som,tel))
-            l.append(EtmgegGem(datum, i_etm, som, tel))
+            l.append(EtmgegGem(datum, i_etm, som, tel, ent))
     # Return false als geen waarden zijn gevonden anders geef het gemiddelde en de lijst met waarden
     return { 'gem':False, 'lijst':l } if not l \
               else { 'gem':l[-1].gem, 'lijst': l }
@@ -147,7 +170,7 @@ def min_val(lijst_geg, ent):
             if i_etm < min: # Waarde kleiner dan min dan een nieuw min
                 min  = i_etm; etm_t = etmgeg_t(geg,ent)
                 tijd = etm_t if etm_t != geg.empthy and etm_t != False else -1 # Geef tijd mits aanwezig
-                l.append(EtmgegExtreem(geg.YYYYMMDD,tijd,min)) # Bewaar extreem in dag object
+                l.append(EtmgegExtreem(geg.YYYYMMDD,tijd,min,ent)) # Bewaar extreem in dag object
     # Return false als niks is gevonden anders geef waarde met tijdstip lus de lijst met gevonden extremen
     return { 'min':False,'tijd':0,'lijst':l} if not l \
              else {'min':l[-1].extreem,'tijd':l[-1].tijd,'lijst':l}
@@ -163,43 +186,11 @@ def max_val(lijst_geg, ent):
             if i_etm > max: # Waarde groter dan max, dan een nieuw max
                 max  = i_etm; etm_t = etmgeg_t(geg,ent) # Bepaal nieuwe waarden
                 tijd = etm_t if etm_t != geg.empthy and etm_t != False else -1 # Geef tijd mits aanwezig
-                l.append(EtmgegExtreem(geg.YYYYMMDD,tijd,max)) # Bewaar extreem in dag object
+                l.append(EtmgegExtreem(geg.YYYYMMDD,tijd,max,ent)) # Bewaar extreem in dag object
     # Return false als niks is gevonden anders geef de gevonden waarde met eventuele tijdstip
     # Plus de hele lijst met gevonden extremen
     return { 'max':False,'tijd':0,'lijst':l} if not l \
              else {'max':l[-1].extreem,'tijd':l[-1].tijd,'lijst':l}
-
-# Counter voorwaardelijk
-def counter(lijst_geg, ent, oper, val):
-    '''Functie bepaalt het aantal dagen onder de gestelde voorwaarden'''
-    tel, tijd, l = 0, -1, [] # Hoogst mogelijke waarde
-
-    for geg in lijst_geg: # Doorloop lijst
-        etm = etmgeg(geg,ent)
-        if etm != geg.empthy: # Leeg veld skippen
-            i_etm, oke = int(etm), True
-
-            if   oper  == '<'  and i_etm  <  val: tel += 1
-            elif (oper == '<=' or  oper  ==  '≤') and i_etm <= val: tel += 1
-            elif oper  == '>'  and i_etm  >  val: tel += 1
-            elif (oper == '>=' or  oper  == ' ≥') and i_etm >= val: tel += 1
-            elif (oper == '<>' or  oper  == '!=') and i_etm is not val: tel += 1
-            elif oper  == '==' and i_etm ==  val: tel += 1
-            else: oke = False
-
-            if c.log: print("CNT|oke:{0}|getal:{1}|oper:{2}|val:{3}|tel:{4}|ent:{5}".format(oke,i_etm,oper,val,tel,ent))
-
-            if oke:
-                datum = geg.YYYYMMDD; etm_t = etmgeg_t(geg,ent) # Bepaal nieuwe waarden
-                tijd = etm_t.strip() if etm_t != geg.empthy and etm_t != False else -1 # Geef tijd mits aanwezig
-                if c.log: print("OKE|tijd:{0}".format(tijd))
-                l.append(EtmgegCount(datum, tijd, i_etm, oper, val, tel)) # Bewaar in count object
-
-    # Return tel en geef de lijst met de extremen
-    return { 'tel':0,'tijd':tijd,'lijst':l} if not l \
-             else {'tel':l[-1].tel,'tijd':l[-1].tijd,'lijst':l}
-
-
 
 # Counter voorwaardelijk
 def cnt_day(lijst_geg, ent, oper, val):
@@ -219,13 +210,14 @@ def cnt_day(lijst_geg, ent, oper, val):
             elif oper == '==' and i_etm == val: tel += 1
             else: oke = False
 
-            if c.log: print("CNT|oke:{0}|getal:{1}|oper:{2}|val:{3}|tel:{4}|ent:{5}".format(oke,i_etm,oper,val,tel,ent))
+            if c.log:
+                print("CNT|oke:{0}|getal:{1}|oper:{2}|val:{3}|tel:{4}|ent:{5}".format(oke,i_etm,oper,val,tel,ent))
 
             if oke:
                 datum = geg.YYYYMMDD; etm_t = etmgeg_t(geg,ent) # Bepaal nieuwe waarden
                 tijd = etm_t.strip() if etm_t != geg.empthy and etm_t != False else -1 # Geef tijd mits aanwezig
                 if c.log: print("OKE|tijd:{0}".format(tijd))
-                l.append(EtmgegCount(datum, tijd, i_etm, oper, val, tel)) # Bewaar in count object
+                l.append(EtmgegCount(datum, tijd, i_etm, oper, val, tel, ent)) # Bewaar in count object
 
     # Return tel en geef de lijst met de extremen
     return { 'tel':0,'tijd':tijd,'lijst':l} if not l \

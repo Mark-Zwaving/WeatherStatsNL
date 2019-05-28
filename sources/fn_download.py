@@ -5,13 +5,13 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1"
+__version__    =  "0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import time, urllib.request, urllib.error, threading
 import fn, config as c, write as w, ask as a
-#--------------------------------------------------------------------------------
+
 def download_http_data ( data_url, file_name ):
     '''Functie download een bestand van het internet'''
     oke, lock_http = False, threading.Lock()
@@ -38,6 +38,4 @@ def download_and_unzip_etmgeg_station ( station ):
     lock_down_zip = threading.Lock()
     with lock_down_zip:
         if download_http_data( station.url_etmgeg, station.file_etmgeg_zip ):
-            print(' ')
             fn.unzip( station.dir_data, station.file_etmgeg_zip, station.file_etmgeg_txt )
-    print(' ')

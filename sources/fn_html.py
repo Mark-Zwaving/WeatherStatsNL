@@ -5,11 +5,11 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1"
+__version__    =  "0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config as c, datetime, dates as d, fn
+import config as c, datetime, dates as d, fn, calc_stats as stat
 
 def pagina(title, style, content):
     return f'''<!DOCTYPE html>
@@ -138,70 +138,134 @@ def div_entities( day_values ):
 
     return html
 
-def table_extremes ( l, x, p ):
-    l.reverse()
-    cnt = len(l); x = cnt if x > cnt else x # check bereik
-    t  = '<table class="popup">'
-    t += '<thead><tr><th>datum</th><th>waarde</th><th>tijd</th><tr></thead><tbody>'
-    for e in l[:x]:
-        t += f'<tr> <td title="{d.Datum(e.datum).tekst()}">{e.datum}</td> ' \
-             f'<td>{e.extreem:0.1f}{p}</td> <td>{e.tijd}</td> </tr>'
-    t += '</tbody></table>'
-    return t
+def table_count(l, max):
+    html = ''
+    if l:
+        if max is not 0:
+            l.reverse() # Last count is last. Make first
+            cnt = len(l)
+            max = cnt if max == -1 else max # -1 for all!
+            end = cnt if max > cnt else max # check bereik
+            html += '<table class="popup">'
+            html += '<thead><tr><th>datum</th><th>tijd</th><th>waarde</th>'
+            html += '<th>eis</th><th>aantal</th></tr></thead>'
+            html += '<tbody>'
 
-def table_hellmann ( l, x ):
-    l.reverse()
-    cnt = len(l); x = cnt if x > cnt else x # check bereik
-    t  = '<table class="popup">'
-    t += '<thead><tr><th>datum</th><th>getal</th><th>totaal</th><th>aantal</th></tr></thead>'
-    t += '<tbody>'
-    for e in l:
-        t += f'<tr> <td title="{d.Datum(e.datum).tekst()}">{e.datum}</td> ' \
-             f'<td>{e.getal:0.1f}</td> <td>{e.som:0.1f}</td> <td>{e.aantal}</td> </tr>'
-    t += '</tbody></table>'
-    return t
+            for e in l[:end]:
+                sdt = d.Datum(e.datum).tekst()
+                val = fn.rm_s( fn.fix( e.waarde, e.ent ) )
+                eis = fn.rm_s( fn.fix( e.eis, e.ent ) )
+                t_ent = stat.ent_to_t_ent( e.ent )
+                tme = fn.rm_s(fn.fix(e.tijd, t_ent)) if t_ent is not False else '.'
+                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{tme}</td>'\
+                        f'<td>{val}</td><td>{e.oper}{eis}</td><td>{e.tel}</td></tr>'
 
-def table_warmte_getal( l, x ):
-    l.reverse()
-    cnt = len(l); x = cnt if x > cnt else x # check bereik
-    t  = '<table class="popup">'
-    t += '<thead><tr><th>datum</th><th>tg</th><th>getal</th>' \
-         '<th>totaal</th><th>aantal</tr></thead><tbody>'
-    for e in l:
-        t += f'<tr> <td title="{d.Datum(e.datum).tekst()}">{e.datum}</td> ' \
-             f'<td>{e.tg:0.1f}</td> <td>{e.getal:0.1f}</td> ' \
-             f'<td>{e.totaal:0.1f}</td> <td>{e.aantal}</td></tr>'
-    t += '</tbody></table>'
-    return t
+            html += '</tbody>'
+            html += '</table>'
 
-def table_count ( l, x, p ):
-    l.reverse()
-    cnt = len(l); x = cnt if x > cnt else x # check bereik
-    t  = '<table class="popup">'
-    t += '<thead><tr><th>datum</th><th>tijd</th><th>waarde</th>' \
-         '<th>eis</th><th>aantal</th></tr></thead><tbody>'
-    for e in l[:x]:
-        t += f'<tr><td title="{d.Datum(e.datum).tekst()}">{e.datum}</td> ' \
-             f'<td>{e.tijd}</td><td>{e.waarde:0.1f}{p}</td>' \
-             f'<td>{e.oper}{e.val:0.1f}{p}</td><td>{e.tel}</td></tr>'
-    t += '</tbody></table>'
-    return t
+    return html
 
-def table_days_heat_waves( l, x ):
-    cnt = len(l); x = cnt if x > cnt else x # check bereik
-    h  = '<table class="popup">'
-    h += '<thead><tr><th>datum</th><th>tx</th><th>tg</th><th>tn</th>' \
-         '<th>sq</th><th>rh</th></tr></thead><tbody>'
-    for e in l[:x]:
-        h += f'<tr><td title="{d.Datum(e.YYYYMMDD).tekst()}">{e.datum}</td> ' \
-             f'<td title="Maximum temperatuur">{e.TX:0.1f}°C</td>' \
-             f'<td title="Gemiddelde temperatuur">{e.TG:0.1f}°C</td>' \
-             f'<td title="Minimum temperatuur">{e.TN:0.1f}°C</td>' \
-             f'<td title="Aantal uren zon">{e.SQ:0.1f}uur</td>' \
-             f'<td title="Aantal mm regen">{e.RS:0.1f}mm</td></tr>'
-    h += '</tbody></table>'
-    return h
+def table_extremes(l, max):
+    html = ''
+    if l:
+        if max is not 0:
+            l.reverse() # Most extreme is last. Make first
+            cnt = len(l)
+            max = cnt if max == -1 else max # -1 for all!
+            end = cnt if max > cnt else max # check bereik
+            html += '<table class="popup">'
+            html += '<thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead>'
+            html += '<tbody>'
 
+            for e in l[:end]:
+                sdt  = d.Datum( e.datum ).tekst()
+                val = fn.rm_s( fn.fix( e.extreem, e.ent) )
+                t_ent = stat.ent_to_t_ent( e.ent )
+                tme = fn.rm_s(fn.fix(e.tijd, t_ent)) if t_ent is not False else '.'
+                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{val}</td><td>{tme}</td></tr>'
+
+            html += '</tbody>'
+            html += '</table>'
+
+    return html
+
+def table_hellmann ( l, max ):
+    html = ''
+    if l:
+        if max is not 0:
+            l.reverse()
+            cnt = len(l)
+            max = cnt if max == -1 else max # -1 for all!
+            end = cnt if max > cnt else max # check bereik
+            html += '<table class="popup">'
+            html += '<thead><tr><th>datum</th><th>getal</th><th>totaal</th><th>aantal</th></tr></thead>'
+            html += '<tbody>'
+
+            for e in l[:end]:
+                sdt = d.Datum(e.datum).tekst()
+                get = fn.rm_s(fn.fix(e.getal, 'hellmann'))
+                som = fn.rm_s(fn.fix(e.som, 'hellmann'))
+                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{get}</td>'
+                html += f'<td>{som}</td><td>{e.aantal}</td></tr>'
+
+            html += '</tbody>'
+            html += '</table>'
+
+    return html
+
+def table_heat_ndx( l, max ):
+    html = ''
+    if l:
+        if max is not 0:
+            l.reverse()
+            cnt = len(l)
+            max = cnt if max == -1 else max # -1 for all!
+            end = cnt if max > cnt else max # check bereik
+            html += '<table class="popup">'
+            html += '<thead><tr><th>datum</th><th>tg</th><th>getal</th>'
+            html += '<th>totaal</th><th>aantal</tr></thead>'
+            html += '<tbody>'
+
+            for e in l[:end]:
+                sdt = d.Datum(e.datum).tekst()
+                tg  = fn.rm_s(fn.fix(e.tg, 'tg'))
+                get = fn.rm_s(fn.fix(e.getal, 'heat_ndx'))
+                som = fn.rm_s(fn.fix(e.totaal, 'heat_ndx'))
+                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{tg}</td>'
+                html += f'<td>{get}</td><td>{som}</td><td>{e.aantal}</td></tr>'
+
+            html += '</tbody>'
+            html += '</table>'
+
+    return html
+
+def table_heatwaves( l, max ):
+    html = ''
+    if l:
+        if max is not 0:
+            cnt = len(l)
+            max = cnt if max == -1 else max # -1 for all!
+            end = cnt if max > cnt else max # check bereik
+            html += '<table class="popup">'
+            html += '<thead><tr><th>datum</th><th>tx</th><th>tg</th>'
+            html += '<th>tn</th><th>sq</th><th>rh</th></tr></thead>'
+            html += '<tbody>'
+
+            for e in l[:end]:
+                sdt = d.Datum(e.YYYYMMDD).tekst()
+                tx = fn.fix(e.TX,"tx")
+                tg = fn.rm_s(fn.fix(e.TG,"tg"))
+                tn = fn.rm_s(fn.fix(e.TN,"tn"))
+                sq = fn.rm_s(fn.fix(e.SQ,'sq'))
+                rs = fn.rm_s(fn.fix(e.RS,'rs'))
+                html += f'<tr><td title="{sdt}">{e.datum}</td><td title="Maximum temperatuur">{tx}</td>'
+                html += f'<td title="Gemiddelde temperatuur">{tg}</td><td title="Minimum temperatuur">{tn}</td>'
+                html += f'<td title="Aantal uren zon">{sq}</td><td title="Aantal mm regen">{rs}</td></tr>'
+
+            html += '</tbody>'
+            html += '</table>'
+
+    return html
 
 def css_day_values ():
     return '''

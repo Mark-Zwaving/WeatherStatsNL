@@ -5,11 +5,11 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1"
+__version__    =  "0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config as c, math, time, fn_html as h
+import config as c, math, time, fn
 
 def write_to_file(file_name, content):
     '''Functie schrijft gegevens naar een bestand'''
@@ -92,27 +92,7 @@ def write_process_time_ns(txt_in, time_ns):
     if micr > 0: txt += mic_txt
     if nano > 0: txt += nan_txt
 
-    print(f'''
-{txt_in} {txt}
-    ''')
+    fn.println(f'{txt_in} {txt}')
 
 def write_process_time_s( txt_start, start_ns ):
-    print(f'''
-
-{txt_start} {(time.time_ns() - start_ns) / 1000000000:.4f} seconds
-
-    ''')
-
-def write_html_count(l, tel, n, ad):
-    html = str(tel)
-    # Add table html if count != 0
-    if tel is not 0:
-        html += h.table_count(l, n, ad)
-    return html
-
-def write_html_extremes(l, tel, n, ad):
-    html = str(tel)
-    # Add table html if count != 0
-    if tel is not 0:
-        html += h.table_extremes(l, n, ad)
-    return html
+    fn.println(f'{txt_start} {(time.time_ns() - start_ns) / 1000000000:.4f} seconds')

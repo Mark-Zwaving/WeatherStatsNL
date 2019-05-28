@@ -5,12 +5,12 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1"
+__version__    =  "0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import ask, config as cfg, fn, calc_stats as st, calc_sommerstats as zs
-import write as wr, fn_html as h, dates as d
+import write as wr, fn_html as h, dates as d, fn_read as r
 
 class Heatwave:
     def __init__(self, station, etmgeg_list):
@@ -123,138 +123,136 @@ def list_heatwaves_station( station, etmgeg_list ):
 
     return heatwave_list
 
-def gen_calc_heat_waves(lijst_station, start_datum, eind_datum, type, name):
+def gen_calc_heat_waves(lijst_station, ymd_s, ymd_e, type, name):
     '''Main function calculating heatwaves'''
-    heatwave_list, periode, path, content = [], f'{start_datum}-{eind_datum}', '', ''
+    heatwave_list, periode, path, content = [], f'{ymd_s}-{ymd_e}', '', ''
     bronvermelding = cfg.lijst_stations[0].bronvermelding
 
     # Name
-    if not name:
-        name = f'heatwaves {periode}'
+    if not name: name = f'heatwaves {periode}'
 
     title = name
+    file_name = ''
 
     if type == 'html':
         name = f'{name}.html'
         path = cfg.lijst_stations[0].dir_html
-    elif type == 'txt':
+    if type == 'txt':
         name = f'{name}.txt'
         path = cfg.lijst_stations[0].dir_text
 
-    file_name = fn.mk_path(path, name) # Make file name
-
     # Vul heat list met hittegolven
     for station in lijst_station:
-        l = fn.select_dates_from_list( fn.knmi_etmgeg_data(station),
-                                       start_datum, eind_datum )
+        l = fn.select_dates_from_list(r.knmi_etmgeg_data(station), ymd_s, ymd_e)
         if not l:
             continue
         else:
+            print(f"Calculate heatwave statistics for station: {station.wmo} {station.plaats}")
             # Fill Heatwave object with values if there and add to list
             heat_list = list_heatwaves_station(station, l)
             if heat_list:
                 for heat in heat_list:
                     heatwave_list.append(heat)
 
+    print(f"{cfg.ln}...Preparing output...{cfg.ln}")
+
     # Check eerst of er überhaupt hittegolven zijn
     if heatwave_list:
         heatwave_list = sort_heatstats(heatwave_list, '+') # Sort on warmtegetal
 
-        # Maak content op basis van type uitvoer html of text
-        if type == 'txt':
-            print(f"Maken {type}-betand met de hittegolven")
-
-            # Maak titel
-            content  = f"PLAATS{' ':24} PERIODE{' ':10} ∑WARMTE ∑DAG TG{' ':4} " \
-                      f"TX MAX TX≥30 TX≥35 ZON GEM   "
-            # content += f"DATUMS & TEMPS "
-            content += cfg.ln
-            # Doorloop alle hittegolven
-            for heatwave in heatwave_list:
-                plaats    = f'{heatwave.station.plaats}, ' \
-                            f'{heatwave.station.provincie}'
-                periode   = f'{heatwave.etmgeg_list[0].YYYYMMDD}-' \
-                            f'{heatwave.etmgeg_list[-1].YYYYMMDD}'
-                tg_ave    = f"{st.gem_val(heatwave.etmgeg_list,'TG')['gem']:.1f}°C"
-                sq_sum    = f"{st.som_val(heatwave.etmgeg_list,'SQ')['som']:.1f}uur"
-                tx_max    = f"{st.max_val(heatwave.etmgeg_list,'TX')['max']:.1f}°C"
-                tx_gte_30 = f"{st.cnt_day(heatwave.etmgeg_list,'TX','>=',300)['tel']}"
-                tx_gte_35 = f"{st.cnt_day(heatwave.etmgeg_list,'TX','>=',350)['tel']}"
-
-                txt_datum_temps = ''
-                # Make txt dates with T values
-                for etmgeg in heatwave.etmgeg_list:
-                    txt_datum_temps += f'{etmgeg.YYYYMMDD[-4:]}|' \
-                                       f'TX:{int(etmgeg.TX)/10:0.1f}°C '
-                                       # f'TG:{int(etmgeg.TG)/10:0.1f}°C|' \
-                                       # f'TN:{int(etmgeg.TN)/10:0.1f}°C '
-
-                content += f"{plaats:<30} {periode:<17} {heatwave.tot_heat_sum:^7.1f} " \
-                           f"{heatwave.day_count:^4} {tg_ave:^6} {tx_max:^6} {tx_gte_30:^5} " \
-                           f"{tx_gte_35:^5} {sq_sum:<9} "
-                # content += txt_datum_temps
-                content += cfg.ln
-
-            content += bronvermelding
-
-        # TODO TODO TODO
-        elif type == 'html':
+        content = ''
+        # Make start/header of content
+        if type == 'html':
             content  = f'''
             <table>
                 <thead>
-                <tr> <th colspan="9"> {title} </th> </tr>
+                <tr> <th colspan="12"> {title} </th> </tr>
                 <tr>
                     <th> plaats </th>
                     <th title="Periode hittegolf"> periode </th>
                     <th title="Aantal dagen"> ∑dagen </th>
                     <th title="Warmte getal: totaal en gemiddelde"> ∑warmte </th>
                     <th title="Warmste dag"> tx max </th>
+                    <th title="Warmste nacht"> tn max </th>
+                    <th title="Gemiddelde maximum temperatuur"> tx ave </th>
                     <th title="Gemiddelde temperatuur"> tg </th>
+                    <th title="Gemiddelde minimum temperatuur"> tn ave </th>
                     <th title="Aantal tropische dagen"> tx&ge;30 </th>
                     <th title="Aantal tropische dagen"> tx&ge;35 </th>
-                    <th title="Aantal zonuren"> ∑zon </th>4
+                    <th title="Aantal zonuren"> ∑zon </th>
                 </tr>
                 </thead>
                 <tbody>
             '''
-            for heatwave in heatwave_list:
-                plaats    = f'{heatwave.station.plaats}, ' \
-                            f'{heatwave.station.provincie}'
-                periode   = f'{heatwave.etmgeg_list[0].YYYYMMDD}-' \
-                            f'{heatwave.etmgeg_list[-1].YYYYMMDD}'
-                tg_ave    = f"{st.gem_val(heatwave.etmgeg_list,'TG')['gem']:.1f}°C"
-                sq_sum    = f"{st.som_val(heatwave.etmgeg_list,'SQ')['som']:.1f}uur"
-                tx_max    = f"{st.max_val(heatwave.etmgeg_list,'TX')['max']:.1f}°C"
-                tx_gte_30 = f"{st.cnt_day(heatwave.etmgeg_list,'TX','>=',300)['tel']}"
-                tx_gte_35 = f"{st.cnt_day(heatwave.etmgeg_list,'TX','>=',350)['tel']}"
 
-                per = periode.split('-')
-                datum_txt = f"{d.Datum(per[0]).tekst()} - {d.Datum(per[1]).tekst()}"
+        if type =='txt' or type == 'cmd':
+            content  = f"PLAATS{' ':24} PERIODE{' ':10} ∑WARMTE ∑DAG  TX MAX    TN MAX   " \
+                        "TX GEM   TG       TN GEM TX≥30  TX≥35 ZON TOT\n"
+            # content += f"DATUMS & TEMPS "
+            #content += cfg.ln
+
+        # Calculate heatwaves and fill content
+        for heatwave in heatwave_list:
+            etm_l = heatwave.etmgeg_list
+            ymds = etm_l[0].YYYYMMDD
+            ymde = etm_l[-1].YYYYMMDD
+            plaats    = f'{heatwave.station.plaats}, ' \
+                        f'{heatwave.station.provincie}'
+            periode   = f'{ymds}-{ymde}'
+            tn_ave    = fn.rm_s(fn.fix(st.gem_val(etm_l,'TN')['gem'], 'tn'))
+            tg_ave    = fn.rm_s(fn.fix(st.gem_val(etm_l,'TG')['gem'], 'tg'))
+            tx_ave    = fn.rm_s(fn.fix(st.gem_val(etm_l,'TX')['gem'], 'tx'))
+            sq_sum    = fn.rm_s(fn.fix(st.som_val(etm_l,'SQ')['som'], 'sq'))
+            tx_max    = fn.rm_s(fn.fix(st.max_val(etm_l,'TX')['max'], 'tx'))
+            tn_max    = fn.rm_s(fn.fix(st.max_val(etm_l,'TN')['max'], 'tn'))
+            tx_gte_30 = f"{st.cnt_day(etm_l,'TX','>=',300)['tel']}"
+            tx_gte_35 = f"{st.cnt_day(etm_l,'TX','>=',350)['tel']}"
+            datum_txt = f"{d.Datum(ymds).tekst()} - {d.Datum(ymde).tekst()}"
+            heat_ndx  = fn.rm_s(fn.fix(heatwave.tot_heat_sum, 'heat_ndx'))
+
+            if type == 'html':
                 content += f'''
                     <tr>
-                        <td> {plaats} </td> <td title="{datum_txt}"> {periode} </td> <td> {tg_ave} </td>
-                        <td> {heatwave.tot_heat_sum} </td> <td> {tx_max} </td> <td> {tg_ave} </td>
-                        <td> {tx_gte_30} </td> <td> {tx_gte_35} </td> <td> {sq_sum} </td>
-                    </tr>
-                    '''
+                        <td> {plaats} </td> <td title="{datum_txt}"> {periode} </td>
+                        <td> {heatwave.day_count} </td> <td> {heat_ndx} </td>
+                        <td> {tx_max} </td> <td> {tn_max} </td> <td> {tx_ave} </td> <td> {tg_ave} </td>
+                        <td> {tn_ave} </td> <td> {tx_gte_30} </td> <td> {tx_gte_35} </td> <td> {sq_sum} </td>
+                    </tr> '''
 
+            if type =='txt' or type == 'cmd':
+                txt_datum_temps = ''
+                for etm in etm_l:
+                    txt_datum_temps += f"{etm.YYYYMMDD[-4:]}|TX:{fn.fix(etm.TX,'tx')}"
+
+                content += f"{plaats:<30} {periode:<17} {heat_ndx:^7} {heatwave.day_count:^4} "
+                content += f"{tx_max:^8}  {tn_max:^8} {tx_ave:^8} {tg_ave:^8} {tn_ave:^8} "
+                content += f"{tx_gte_30:^5} {tx_gte_35:^5} {sq_sum:<9}\n"
+                # content += txt_datum_temps
+                #content += cfg.ln
+
+        # Close of content
+        if type =='html':
             content += f'''
                 </tbody>
-                <tfoot>
-                    <tr> <td colspan="9"> {bronvermelding} </td> </tr>
-                </tfoot>
+                <tfoot> <tr> <td colspan="12"> {bronvermelding} </td> </tr> </tfoot>
             </table> '''
 
             content = h.pagina(title, h.style_winterstats_table(), content)
 
+        if type =='txt' or type == 'cmd':
+            content += bronvermelding
+
     else: # No heatwaves found
-        content = f'Voor {lijst_station[0].plaats} in {periode} zijn geen hittegolven gevonden...'
+        content = f'Voor {periode} zijn geen hittegolven gevonden...'
         if type =='txt':
             pass
-        elif type == 'html':
-            content = h.pagina('Geen hittegolven', '', '<p>' + content + '</p>')
+        if type == 'html':
+            content = h.pagina('Geen hittegolven', '', '<p>{content}</p>')
 
-    if type == 'txt':
-        print(cfg.line + cfg.ln + content + cfg.ln + cfg.line)
+    if type != 'cmd':
+        file_name = fn.mk_path(path, name) # Make file name
+        wr.write_to_file(file_name, content) # Schrijf naar bestand
+        return file_name
 
-    wr.write_to_file(file_name, content) # Schrijf naar bestand
+    if type == 'cmd':
+        print(content)

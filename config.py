@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1"
+__version__    =  "0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -28,7 +28,6 @@ max_value_geg, min_value_geg =  99999999, -99999999
 
 # De lijst met weerstations
 lijst_stations = []
-lijst_stations.append( knmi.Station('210', 'Valkenburg Zh', 'Zuid-Holland', '') )
 lijst_stations.append( knmi.Station('215', 'Voorschoten', 'Zuid-Holland', '') )
 lijst_stations.append( knmi.Station('235', 'De Kooy', 'Noord-Holland', '') )
 lijst_stations.append( knmi.Station('240', 'Schiphol', 'Noord-Holland', '') )
@@ -51,7 +50,6 @@ lijst_stations.append( knmi.Station('283', 'Hupsel', 'Gelderland', '') )
 lijst_stations.append( knmi.Station('286', 'Nieuw Beerta', 'Groningen', '') )
 lijst_stations.append( knmi.Station('290', 'Twenthe', 'Overijssel', '') )
 lijst_stations.append( knmi.Station('310', 'Vlissingen', 'Zeeland', '') )
-lijst_stations.append( knmi.Station('311', 'Hoofdplaat', 'Zeeland', '') )
 lijst_stations.append( knmi.Station('319', 'Westdorpe', 'Zeeland', '') )
 lijst_stations.append( knmi.Station('323', 'Wilhelminadorp', 'Zeeland', '') )
 lijst_stations.append( knmi.Station('330', 'Hoek van Holland', 'Zuid-Holland', '') )
@@ -66,6 +64,8 @@ lijst_stations.append( knmi.Station('377', 'Ell', 'Limburg', '') )
 lijst_stations.append( knmi.Station('380', 'Maastricht', 'Limburg', '') )
 lijst_stations.append( knmi.Station('391', 'Arcen', 'Limburg', '') )
 
+#lijst_stations.append( knmi.Station('311', 'Hoofdplaat', 'Zeeland', '') )
+#lijst_stations.append( knmi.Station('210', 'Valkenburg Zh', 'Zuid-Holland', '') )
 #lijst_stations.append( knmi.Station('209', 'IJmond', 'Noord-Holland', '') )
 #lijst_stations.append( knmi.Station('248', 'Wijdenes', 'Noord-Holland', '') )
 #lijst_stations.append( knmi.Station('258', 'Houtribdijk', 'Noord-Holland', '') )

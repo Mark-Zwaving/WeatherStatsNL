@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-'''Library contains a function to read from a file and returns a object with the
-data of a date'''
+'''Library contains functions for reading from files'''
 
 __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1"
+__version__    =  "0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -14,36 +13,60 @@ import os, threading, urllib, urllib.request, urllib.error, zipfile
 import config as c, knmi, write as w
 import datetime, time, math, locale
 
+def get_list_day_values_by_station( station ):
+    data = []
+    name = station.file_etmgeg_txt
+    lock = threading.Lock()
+    with lock:
+        try:
+            with open(name, 'r') as f:
+                data = f.readlines()
+        except IOError as e:
+            if c.log:
+                print (f'''
+    Read data from file: '{name}' failed"
+    {c.ln}{e.reason}{c.ln}{e.strerror} ''')
+        else:
+            if c.log:
+                print(f"Read data from file: '{name}' succesful")
+            data = data[station.skip_lines:] # Only real data in list
+
+    return data
+
+def knmi_etmgeg_data ( station ):
+    '''Functie lees alle daggegevens van een station en returned een lijst met de gegegevens'''
+    if c.log: print("Functie: knmi_etmgeg_data ( station ) Bestand: 'fn.py'")
+
+    etmgeg = []
+    data = get_list_day_values_by_station( station )
+    if data:
+        for el in range(station.skip_lines, len(data)):
+            etmgeg.append(knmi.Etmgeg(data[el]))
+
+    return etmgeg
+
+def get_string_day_values_by_station_and_date( station, yyyymmdd ):
+    '''Function: gets the weatherdata from a station at a given date'''
+
+    sid = f'{station.wmo} {station.plaats}'
+    data = get_list_day_values_by_station(station)
+    if data:
+        for day in data:
+            if day[6:14] == yyyymmdd:
+                if c.log:
+                    print(f"Read data station: {sid} at date: {yyyymmdd} succes!")
+                return day
+
+    if c.log:
+        print(f"Read data station: {sid} failed !")
+
+    return False
+
 def get_knmi_etmgeg_by_station_and_date ( station, yyyymmdd ):
     '''Function: gets the weatherdata from a station at a given date'''
-    if c.log:
-        print(f'''
-Function:get_knmi_etmgeg_by_station_and_date('{station}','{yyyymmdd}')\nFile:etmgeg.py
-        ''')
-    oke = False
-    knmi_etmgeg = []
-    sid = station.wmo + ', ' + station.plaats
-    lock_read = threading.Lock()
-    with lock_read:
-        if c.log:
-            print(f"Read data station: '{sid}'")
-            print(f"Filenames: '{station.file_etmgeg_txt}'")
-        try:
-            with open(station.file_etmgeg_txt, 'r') as f: # Lees file in array
-                data_file = f.readlines()
-        except IOError as e:
-            if c.log:s
-                print(f"Failed to read data from file: '{station.file_etmgeg_txt}' ")
-                print(f'{e.reason}{c.ln}{e.strerror}')
-        else:
-            print(f"Read data from station: '{sid}' succesful !")
-            if c.log:
-                print(f"Data first date: '{data_file[station.skip_lines]}")
-                print(f"Data last date: {data_file[-1]}")
-            # Make list with knmi data
-            for el in range( station.skip_lines, len(data_file) ):
-                knmi_etmgeg.append( knmi.Etmgeg(data_file[el]) )
 
-            oke = True
+    day = get_string_day_values_by_station_and_date( station, yyyymmdd )
+    if day:
+        return knmi.Etmgeg( day )
 
-    return knmi_etmgeg if oke else False;
+    return False
