@@ -5,11 +5,11 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.3"
+__version__    =  "0.4"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import os, threading, config as c, knmi, write as w, fn, fn_html, dates as d
+import os, threading, config as c, knmi, write as w, fn, fn_html as h, dates as d
 import fn_read as r
 
 def prepare_day_values( station, yyyymmdd, name, type ):
@@ -29,9 +29,6 @@ def prepare_day_values( station, yyyymmdd, name, type ):
 
         content = ''
         if type == 'html':
-            title = f'{station.plaats}-{yyyymmdd}'
-            css   = fn_html.css_day_values ()
-
             header = f'''
             <header>
                 <h3>
@@ -43,9 +40,11 @@ def prepare_day_values( station, yyyymmdd, name, type ):
 
             footer = f'<footer> {station.bronvermelding} </footer>'
 
-            data = fn_html.div_entities( day )
-            html = header + data + footer
-            content = fn_html.pagina(title, css, html)
+            title = f'{station.plaats}-{yyyymmdd}'
+            css     = r.get_string_css_from_file( 'default-dayvalues.css' ) # Get css from file
+            content = header + h.div_entities(day) + footer
+            content = h.pagina(title, css, content) # Make html page
+            content = fn.clean_s(content) # Remove unnecessary whitespace
 
         if type == 'txt' or type == 'cmd':
             content = 'TODO'

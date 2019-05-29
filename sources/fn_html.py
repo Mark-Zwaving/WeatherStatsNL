@@ -5,14 +5,15 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9"
+__version__    =  "0.9.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config as c, datetime, dates as d, fn, calc_stats as stat
 
 def pagina(title, style, content):
-    return f'''<!DOCTYPE html>
+    return f'''<!-- Created by WeatherstatsNL at {datetime.datetime.now()} //-->
+    <!DOCTYPE html>
     <html>
         <head>
             <title> {title} </title>
@@ -20,20 +21,21 @@ def pagina(title, style, content):
             <meta name="author" content="WeatherstatsNL">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style> {style} </style>
-            <link rel="stylesheet" type="text/css" href="css/default.css">
-            <script src="js/default.js"></script>
+            <link rel="stylesheet" type="text/css" href="css/default_1.css">
+            <link rel="stylesheet" type="text/css" href="css/default_2.css">
+            <script src="js/default_1.js"></script>
+            <script src="js/default_2.js"></script>
         </head>
         <body>
             <header>
                 <!-- here you can add your own menu //-->
-            </heeader>
+            </header>
             <article>
                 {content}
             </article>
             <footer>
                 <!-- here you can add your own footer //-->
             </footer>
-        <!-- Created by WeatherstatsNL at {datetime.datetime.now()} //-->
         </body>
     </html>
     '''
@@ -266,109 +268,3 @@ def table_heatwaves( l, max ):
             html += '</table>'
 
     return html
-
-def css_day_values ():
-    return '''
-		* {
-			margin: 0;
-			padding: 0;
-			border: 0;
-		}
-        body {
-            color: gray;
-            font: normal normal normal 0.9rem/1rem Calibri;
-        }
-        article {
-            margin: 2rem;
-			padding: 1rem;
-            background: #eee;
-            border: 1px solid gray;
-            border-radius: 2rem;
-        }
-        header, footer {
-            color: gray;
-            font: normal normal normal 1.2rem/1rem Calibri;
-			margin: 0.5rem 3rem;
-        }
-		header > h3 {
-			letter-spacing: 0.1rem;
-		}
-        #container {
-			margin: 0.5rem 1rem;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-auto-rows: minmax(100px, auto);
-            border: 1px solid gray;
-            border-radius: 1rem;
-            background-color: beige;
-        }
-        #container > .entity {
-			margin: 1rem;
-			padding:1rem;
-            color: black;
-            font: normal normal normal 0.9rem/1rem Calibri;
-            border: 1px solid black;
-            border-radius: 0.4rem;
-            background-color: #eee;
-			text-align: center;
-			background-color: white;
-        }
-        #container > .entity > .title {
-			margin: 0.2rem;
-			letter-spacing: 0.1rem;
-            font: normal normal normal 1rem/1rem Calibri;
-        }
-        #container > .entity > .data {
-            font: bold normal normal 1.2rem/1rem Calibri;
-        }
-        #container > .entity > .data > .hour {
-            font: normal normal normal 0.8rem/1rem Calibri;
-        }
-		footer {
-            color: #777;
-            font: normal normal normal 0.7rem/1rem Calibri;
-		}
-    '''
-
-def style_winterstats_table ( ):
-    return '''
-        body { color: black; font: normal normal normal 0.9rem/1rem Calibri; }
-        table { margin: 1rem auto; border-spacing: 4px; border-collapse: separate; }
-        th { padding: 3px; text-transform: uppercase; }
-        td { padding: 1px 4px; }
-        thead tr:first-child th {
-            color: #eeeeee; background: #777777;
-            font-size: 1rem;
-            text-transform: uppercase;
-        }
-		td:nth-child(1), td:nth-child(2) { font-style: italic }
-		td:nth-child(n+3) { text-align: center; }
-        tr:nth-child(odd) { background: #eeeeee; }
-        tr:nth-child(even) { background: #dddddd; }
-		tr:hover { background:beige; font-weight:bold }
-        td:hover { font-weight:bold; cursor: pointer; color: green }
-        .popup {
-            position: absolute;
-            display: inline-block;
-            background: #777777;
-            transition: opacity 500ms;
-            visibility: hidden;
-            opacity: 0;
-            box-shadow: 0px 0px 2px 1px gray;
-            border-spacing: 2px;
-        }
-        .popup th { padding: 1px 3px 0px 3px; }
-        .popup td {
-			color: black; font-style: normal; font-weight: normal;
-            text-align: center; padding: 1px 2px 1px 2px;
-        }
-        td:hover .popup { visibility: visible; opacity: 1; }
-        tfoot tr td {
-            font-size: 0.8rem;
-            color: #cccccc; background: none;
-            text-transform: lowercase;
-            font-style: italic;
-        }
-        tfoot tr td:hover { font-weight: normal; text-decoration: none; cursor: cursor; }
-        sub { font-size: 0.5rem; }
-    '''

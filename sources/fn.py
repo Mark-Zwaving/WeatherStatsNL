@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9"
+__version__    =  "0.9.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -35,6 +35,9 @@ def rm_lr( s ):
         while '\r' in s:
             s = s.replace('\r', '')
     return s
+
+def clean_s( s ):
+    return rm_double_space(rm_lr(rm_ln(rm_tab(s))))
 
 def rm_s( s ):
     if ' ' in s:

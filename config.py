@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9"
+__version__    =  "0.9.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -13,6 +13,8 @@ __status__     =  "Development"
 import os, sys
 dir_app = os.path.dirname(os.path.abspath(__file__))
 dir_sources = os.path.abspath(os.path.join(dir_app, 'sources'))
+dir_css = os.path.abspath(os.path.join(dir_app, 'css'))
+
 sys.path.append(dir_app) # Dit bestand
 sys.path.append(dir_sources) # Python bestanden
 

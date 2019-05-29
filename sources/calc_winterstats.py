@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9"
+__version__    =  "0.9.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -205,6 +205,7 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
             content += f"{tx_lt_0:^5} {tg_lt_0:^5} {tn_lt_0:^5} {tn_lt__5:^6} "
             content += f"{tn_lt__10:^6} {tn_lt__15:^6} {tn_lt__20:^6} \n"
 
+    # Close of content
     if type == 'txt' or type == 'cmd':
         content += bronvermelding
 
@@ -214,7 +215,9 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
             <tfoot> <tr> <td colspan="15"> {bronvermelding} </td> </tr> </tfoot>
         </table> '''
 
-        content = h.pagina(title, h.style_winterstats_table(), content)
+        css = r.get_string_css_from_file( 'default-table-statistics.css' ) # Get css from file
+        content = h.pagina(title, css, content) # Make html page
+        content = fn.clean_s(content) # Remove unnecessary whitespace
 
     if type == 'cmd':
         print(cfg.line + cfg.ln + content + cfg.ln + cfg.line)

@@ -5,13 +5,29 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9"
+__version__    =  "0.9.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import os, threading, urllib, urllib.request, urllib.error, zipfile
-import config as c, knmi, write as w
-import datetime, time, math, locale
+import threading, config as c, knmi, write as w, fn
+
+def get_string_css_from_file( name ):
+    file = fn.mk_path(c.dir_css, name)
+    lock = threading.Lock()
+    data = ' '
+    with lock:
+        try:
+            with open(file, 'r') as f:
+                data = f.read().replace('\n', '')
+        except IOError as e:
+            if c.log:
+                print(f"Read css data from file: {name} failed")
+                print(f"{c.ln}{e.reason}{c.ln}{e.strerror}")
+        else:
+            if c.log:
+                print(f"Read css data from file: {name} succesful")
+
+    return data
 
 def get_list_day_values_by_station( station ):
     data = []
@@ -23,19 +39,19 @@ def get_list_day_values_by_station( station ):
                 data = f.readlines()
         except IOError as e:
             if c.log:
-                print (f'''
-    Read data from file: '{name}' failed"
-    {c.ln}{e.reason}{c.ln}{e.strerror} ''')
+                print(f"Read data from file: {name} failed")
+                print(f"{c.ln}{e.reason}{c.ln}{e.strerror}")
         else:
             if c.log:
-                print(f"Read data from file: '{name}' succesful")
+                print(f"Read data from file: {name} succesful")
             data = data[station.skip_lines:] # Only real data in list
 
     return data
 
-def knmi_etmgeg_data ( station ):
+def get_list_knmi_etmgeg_data ( station ):
     '''Functie lees alle daggegevens van een station en returned een lijst met de gegegevens'''
-    if c.log: print("Functie: knmi_etmgeg_data ( station ) Bestand: 'fn.py'")
+    if c.log:
+        print("Functie: knmi_etmgeg_data ( station ) Bestand: 'fn.py'")
 
     etmgeg = []
     data = get_list_day_values_by_station( station )
@@ -44,6 +60,9 @@ def knmi_etmgeg_data ( station ):
             etmgeg.append(knmi.Etmgeg(data[el]))
 
     return etmgeg
+
+def knmi_etmgeg_data ( station ): # Old function, for delete later
+    return get_list_knmi_etmgeg_data ( station )
 
 def get_string_day_values_by_station_and_date( station, yyyymmdd ):
     '''Function: gets the weatherdata from a station at a given date'''

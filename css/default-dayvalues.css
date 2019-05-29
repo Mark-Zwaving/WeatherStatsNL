@@ -1,0 +1,59 @@
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+body {
+	color: gray;
+	font: normal normal normal 0.9rem/1rem Calibri;
+}
+article {
+	margin: 2rem;
+	padding: 1rem;
+	background: #eee;
+	border: 1px solid gray;
+	border-radius: 2rem;
+}
+header, footer {
+	color: gray;
+	font: normal normal normal 1.2rem/1rem Calibri;
+	margin: 0.5rem 3rem;
+}
+header > h3 {
+	letter-spacing: 0.1rem;
+}
+#container {
+	margin: 0.5rem 1rem;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-auto-rows: minmax(100px, auto);
+	border: 1px solid gray;
+	border-radius: 1rem;
+	background-color: beige;
+}
+#container > .entity {
+	margin: 1rem;
+	padding:1rem;
+	color: black;
+	font: normal normal normal 0.9rem/1rem Calibri;
+	border: 1px solid black;
+	border-radius: 0.4rem;
+	background-color: #eee;
+	text-align: center;
+	background-color: white;
+}
+#container > .entity > .title {
+	margin: 0.2rem;
+	letter-spacing: 0.1rem;
+	font: normal normal normal 1rem/1rem Calibri;
+}
+#container > .entity > .data {
+	font: bold normal normal 1.2rem/1rem Calibri;
+}
+#container > .entity > .data > .hour {
+	font: normal normal normal 0.8rem/1rem Calibri;
+}
+footer {
+	color: #777;
+	font: normal normal normal 0.7rem/1rem Calibri;
+}
