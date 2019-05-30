@@ -57,7 +57,7 @@ def san( s ):
 def fix( s, ent ):
     ent = ent.lower()
 
-    if not s:
+    if not s or s == '     ':
         return '.'
 
     temp = [ 'tx', 'tn', 'tg', 't10n' ]

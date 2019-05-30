@@ -10,6 +10,7 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config as c, datetime, dates as d, fn, calc_stats as stat
+import calc_sommerstats as cs, knmi
 
 def pagina(title, style, content):
     return f'''<!-- Created by WeatherstatsNL at {datetime.datetime.now()} //-->
@@ -157,7 +158,7 @@ def table_count(l, max):
                 sdt = d.Datum(e.datum).tekst()
                 val = fn.rm_s( fn.fix( e.waarde, e.ent ) )
                 eis = fn.rm_s( fn.fix( e.eis, e.ent ) )
-                t_ent = stat.ent_to_t_ent( e.ent )
+                t_ent = knmi.ent_to_t_ent( e.ent )
                 tme = fn.rm_s(fn.fix(e.tijd, t_ent)) if t_ent is not False else '.'
                 html += f'<tr><td title="{sdt}">{e.datum}</td><td>{tme}</td>'\
                         f'<td>{val}</td><td>{e.oper}{eis}</td><td>{e.tel}</td></tr>'
@@ -182,7 +183,7 @@ def table_extremes(l, max):
             for e in l[:end]:
                 sdt  = d.Datum( e.datum ).tekst()
                 val = fn.rm_s( fn.fix( e.extreem, e.ent) )
-                t_ent = stat.ent_to_t_ent( e.ent )
+                t_ent = knmi.ent_to_t_ent( e.ent )
                 tme = fn.rm_s(fn.fix(e.tijd, t_ent)) if t_ent is not False else '.'
                 html += f'<tr><td title="{sdt}">{e.datum}</td><td>{val}</td><td>{tme}</td></tr>'
 
@@ -225,7 +226,7 @@ def table_heat_ndx( l, max ):
             end = cnt if max > cnt else max # check bereik
             html += '<table class="popup">'
             html += '<thead><tr><th>datum</th><th>tg</th><th>getal</th>'
-            html += '<th>totaal</th><th>aantal</tr></thead>'
+            html += '<th>totaal</th><th>aantal</th></tr></thead>'
             html += '<tbody>'
 
             for e in l[:end]:
@@ -240,6 +241,46 @@ def table_heat_ndx( l, max ):
             html += '</table>'
 
     return html
+
+def table_list_heatwave_days( l, max ):
+    html = ''
+    if l:
+        if max is not 0:
+            l.reverse()
+            cnt = len(l)
+            max = cnt if max == -1 else max # -1 for all!
+            end = cnt if max > cnt else max # check bereik
+            html += '''<table class="popup">
+                       <thead>
+                       <tr><th>datum</th><th>∑warmte</th><th>∑dag</th>
+                           <th>warmte</th><th>tx</th><th>tg</th><th>tn</th></tr>
+                       </thead>
+                       <tbody>'''
+            cnt = len(l[:end])
+            for e in l[:end]:
+                sdt = d.Datum(e.YYYYMMDD).tekst()
+                tx  = fn.rm_s(fn.fix(e.TX, 'tx'))
+                tn  = fn.rm_s(fn.fix(e.TN, 'tn'))
+                tg  = fn.rm_s(fn.fix(e.TG, 'tg'))
+
+                # Migt be buggy tg < 18 will cause a error
+                l_act = l[:cnt]
+                tot_warm = fn.rm_s(fn.fix(cs.warmte_getal(l_act)['getal'],'heat_ndx')) # Calculate total warmth ndx at this moment
+                g_warm = fn.rm_s(fn.fix(stat.get_heat_ndx_of_etm_geg(e),'heat_ndx'))
+
+                html += f'''<tr>
+                            <td title="{sdt}">{e.YYYYMMDD}</td><td>{tot_warm}</td>
+                            <td>{cnt}</td><td>{g_warm}</td><td>{tx}</td><td>{tg}</td>
+                            <td>{tn}</td>
+                            </tr>'''
+
+                cnt -= 1 # Less one day for next
+
+            html += '</tbody>'
+            html += '</table>'
+
+    return html
+
 
 def table_heatwaves( l, max ):
     html = ''

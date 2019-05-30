@@ -154,11 +154,11 @@ def gen_calc_heat_waves(lijst_station, ymd_s, ymd_e, type, name):
                 for heat in heat_list:
                     heatwave_list.append(heat)
 
-    print(f"{cfg.ln}...Preparing output...{cfg.ln}")
-
     # Check eerst of er überhaupt hittegolven zijn
     if heatwave_list:
         heatwave_list = sort_heatstats(heatwave_list, '+') # Sort on warmtegetal
+
+        print(f"{cfg.ln}...Preparing output ({type})...{cfg.ln}")
 
         content = ''
         # Make start/header of content
@@ -166,9 +166,10 @@ def gen_calc_heat_waves(lijst_station, ymd_s, ymd_e, type, name):
             content  = f'''
             <table>
                 <thead>
-                <tr> <th colspan="12"> {title} </th> </tr>
+                <tr> <th colspan="13"> {title} </th> </tr>
                 <tr>
                     <th> plaats </th>
+                    <th> provincie </th>
                     <th title="Periode hittegolf"> periode </th>
                     <th title="Aantal dagen"> ∑dagen </th>
                     <th title="Warmte getal: totaal en gemiddelde"> ∑warmte </th>
@@ -196,28 +197,47 @@ def gen_calc_heat_waves(lijst_station, ymd_s, ymd_e, type, name):
             etm_l = heatwave.etmgeg_list
             ymds = etm_l[0].YYYYMMDD
             ymde = etm_l[-1].YYYYMMDD
-            plaats    = f'{heatwave.station.plaats}, ' \
-                        f'{heatwave.station.provincie}'
+            plaats    = f'{heatwave.station.plaats}'
+            province  = f' {heatwave.station.provincie}'
             periode   = f'{ymds}-{ymde}'
             tn_ave    = fn.rm_s(fn.fix(st.gem_val(etm_l,'TN')['gem'], 'tn'))
             tg_ave    = fn.rm_s(fn.fix(st.gem_val(etm_l,'TG')['gem'], 'tg'))
             tx_ave    = fn.rm_s(fn.fix(st.gem_val(etm_l,'TX')['gem'], 'tx'))
             sq_sum    = fn.rm_s(fn.fix(st.som_val(etm_l,'SQ')['som'], 'sq'))
-            tx_max    = fn.rm_s(fn.fix(st.max_val(etm_l,'TX')['max'], 'tx'))
-            tn_max    = fn.rm_s(fn.fix(st.max_val(etm_l,'TN')['max'], 'tn'))
-            tx_gte_30 = f"{st.cnt_day(etm_l,'TX','>=',300)['tel']}"
-            tx_gte_35 = f"{st.cnt_day(etm_l,'TX','>=',350)['tel']}"
+
+            tx_max    = st.max_val(etm_l,'TX')
+            tn_max    = st.max_val(etm_l,'TN')
+            tx_max_val = fn.rm_s(fn.fix(tx_max['max'],'tx'))
+            tn_max_val = fn.rm_s(fn.fix(tn_max['max'],'tn'))
+
+            tx_gte_30 = st.cnt_day(etm_l,'TX','>=',300)
+            tx_gte_35 = st.cnt_day(etm_l,'TX','>=',350)
+            cnt_tx_gte_30 = str(tx_gte_30['tel'])
+            cnt_tx_gte_35 = str(tx_gte_35['tel'])
+
             datum_txt = f"{d.Datum(ymds).tekst()} - {d.Datum(ymde).tekst()}"
             heat_ndx  = fn.rm_s(fn.fix(heatwave.tot_heat_sum, 'heat_ndx'))
 
+
             if type == 'html':
+                heatwave.etmgeg_list
+                html_days = str(heatwave.day_count) + h.table_list_heatwave_days( heatwave.etmgeg_list, -1 )
+                html_tx_gte_30 = cnt_tx_gte_30 + h.table_count(tx_gte_30['lijst'], -1)
+                html_tx_gte_35 = cnt_tx_gte_35 + h.table_count(tx_gte_35['lijst'], -1)
+                html_tx_max = tx_max_val + h.table_extremes(tx_max['lijst'][-1:], -1)
+                html_tn_max = tn_max_val + h.table_extremes(tn_max['lijst'][-1:], -1)
+
                 content += f'''
                     <tr>
-                        <td> {plaats} </td> <td title="{datum_txt}"> {periode} </td>
-                        <td> {heatwave.day_count} </td> <td> {heat_ndx} </td>
-                        <td> {tx_max} </td> <td> {tn_max} </td> <td> {tx_ave} </td> <td> {tg_ave} </td>
-                        <td> {tn_ave} </td> <td> {tx_gte_30} </td> <td> {tx_gte_35} </td> <td> {sq_sum} </td>
-                    </tr> '''
+                        <td> {plaats} </td> <td> {province} </td>
+                        <td title="{datum_txt}"> {periode} </td>
+                        <td> {html_days} </td> <td> {heat_ndx} </td>
+                        <td> {html_tx_max} </td> <td> {html_tn_max} </td>
+                        <td> {tx_ave} </td> <td> {tg_ave} </td>
+                        <td> {tn_ave} </td> <td> {html_tx_gte_30} </td>
+                        <td> {html_tx_gte_35} </td> <td> {sq_sum} </td>
+                    </tr>
+                '''
 
             if type =='txt' or type == 'cmd':
                 txt_datum_temps = ''
@@ -225,8 +245,8 @@ def gen_calc_heat_waves(lijst_station, ymd_s, ymd_e, type, name):
                     txt_datum_temps += f"{etm.YYYYMMDD[-4:]}|TX:{fn.fix(etm.TX,'tx')}"
 
                 content += f"{plaats:<30} {periode:<17} {heat_ndx:^7} {heatwave.day_count:^4} "
-                content += f"{tx_max:^8}  {tn_max:^8} {tx_ave:^8} {tg_ave:^8} {tn_ave:^8} "
-                content += f"{tx_gte_30:^5} {tx_gte_35:^5} {sq_sum:<9}\n"
+                content += f"{tx_max_val:^8}  {tn_max_val:^8} {tx_ave:^8} {tg_ave:^8} {tn_ave:^8} "
+                content += f"{cnt_tx_gte_30:^5} {cnt_tx_gte_35:^5} {sq_sum:<9}\n"
                 # content += txt_datum_temps
                 #content += cfg.ln
 
@@ -234,7 +254,7 @@ def gen_calc_heat_waves(lijst_station, ymd_s, ymd_e, type, name):
         if type =='html':
             content += f'''
                 </tbody>
-                <tfoot> <tr> <td colspan="12"> {bronvermelding} </td> </tr> </tfoot>
+                <tfoot> <tr> <td colspan="13"> {bronvermelding} </td> </tr> </tfoot>
             </table> '''
 
             css = r.get_string_css_from_file( 'default-table-statistics.css' ) # Get css from file

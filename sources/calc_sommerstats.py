@@ -10,16 +10,17 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config as cfg, fn, fn_html as h, calc_stats as st, dates as d
-import write as wr, ask, fn_read as r
+import write as wr, ask, fn_read as r, knmi
 
 class Warmte_getal:
     '''Deze klasse bewaart gegevens warmte getal dagen'''
-    def __init__(self, datum, tg, getal, totaal, aantal):
+    def __init__(self, datum, tg, getal, totaal, aantal, ent):
         self.datum  = datum
         self.tg     = tg
         self.getal  = getal
         self.totaal = totaal
         self.aantal = aantal
+        self.ent    = ent
 
 def warmte_getal(lijst_geg):
     som, tel, l = 0, 0, []
@@ -30,12 +31,12 @@ def warmte_getal(lijst_geg):
                 getal = iTG - 180
                 som += getal
                 tel += 1
-                l.append( Warmte_getal(geg.YYYYMMDD, iTG, getal, som, tel) )
+                l.append( Warmte_getal(geg.YYYYMMDD, iTG, getal, som, tel, 'TG') )
 
     return {'getal': som, 'lijst':l}
 
 class Zomer_Stats:
-    '''Deze klasse bewaart algemene gegevens winterstatistieken
+    '''Deze klasse bewaart algemene gegevens zomer statistieken
        van een station in een bepaalde periode'''
     def __init__(self, wmo, plaats, provincie, periode, tg_gem, tx_max, tg_max,
                        tn_max, warmte_getal, tx_gte_20, tx_gte_25, tx_gte_30,
@@ -135,7 +136,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
                 )
             )
 
-    print(f"{cfg.ln}...Preparing output...{cfg.ln}")
+    print(f"{cfg.ln}...Preparing output ({type})...{cfg.ln}")
 
     zomer_geg = sort_zomerstats_num(zomer_geg,'+') # Sorteer op tg
 
@@ -179,14 +180,14 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
 
     # Walkthrough all cities
     for g in zomer_geg:
+        warm = g.warmte_getal['getal']
+        heat_ndx = '.' if not warm else fn.rm_s(fn.fix(warm, 'heat_ndx'))
         tg_gem = '.' if not g.tg_gem['gem'] else fn.rm_s(fn.fix(g.tg_gem['gem'],'tg'))
         tx_max = '.' if not g.tx_max['max'] else fn.rm_s(fn.fix(g.tx_max['max'],'tx'))
         tg_max = '.' if not g.tg_max['max'] else fn.rm_s(fn.fix(g.tg_max['max'],'tg'))
         tn_max = '.' if not g.tn_max['max'] else fn.rm_s(fn.fix(g.tn_max['max'],'tn'))
         rh_tot = '.' if not g.rh_tot['som'] else fn.rm_s(fn.fix(g.rh_tot['som'],'rh'))
         sq_tot = '.' if not g.sq_tot['som'] else fn.rm_s(fn.fix(g.sq_tot['som'],'sq'))
-        heat_ndx = '.' if not g.warmte_getal['getal'] \
-                       else fn.rm_s(fn.fix(g.warmte_getal['getal'], 'heat_ndx'))
         tx_gte_20 = str(g.tx_gte_20['tel'])
         tx_gte_25 = str(g.tx_gte_25['tel'])
         tx_gte_35 = str(g.tx_gte_35['tel'])
@@ -206,9 +207,9 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
 
         if type == 'html':
             html_warmte_getal = heat_ndx + h.table_heat_ndx(g.warmte_getal['lijst'], -1) # -1 for all values
-            html_tx_max = tx_max + h.table_extremes(g.tx_max['lijst'], -1)
-            html_tg_max = tg_max + h.table_extremes(g.tg_max['lijst'], -1)
-            html_tn_max = tn_max + h.table_extremes(g.tn_max['lijst'], -1)
+            html_tx_max = tx_max + h.table_extremes(g.tx_max['lijst'][-1:], -1)
+            html_tg_max = tg_max + h.table_extremes(g.tg_max['lijst'][-1:], -1)
+            html_tn_max = tn_max + h.table_extremes(g.tn_max['lijst'][-1:], -1)
             html_tg_gte_20 = tg_gte_20 + h.table_count(g.tg_gte_20['lijst'], -1)
             html_tx_gte_20 = tx_gte_20 + h.table_count(g.tx_gte_20['lijst'], -1)
             html_tx_gte_25 = tx_gte_25 + h.table_count(g.tx_gte_25['lijst'], -1)

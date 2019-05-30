@@ -16,15 +16,12 @@ def ask(s):
     return s
 
 def ask_open_url(txt):
-    allow = ['Y','y']
     print(txt)
-    print(f"Press 'Y' or 'y' to open in a browser")
-    print("Press a another key to skip opening in a browser")
+    print(f"Press 'Y' or 'y' to open the file in your (default) program")
+    print("Press a another key to skip opening your file")
+
     yn = ask(" ? ")
-    if yn in allow:
-        return True
-    else:
-        return False
+    return True if yn in ['Y','y'] else False
 
 def ask_station(txt):
     while True:

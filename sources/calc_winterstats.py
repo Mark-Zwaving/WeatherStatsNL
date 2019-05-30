@@ -122,7 +122,7 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
                 )
             )
 
-    print(f"{cfg.ln}...Preparing output...{cfg.ln}")
+    print(f"{cfg.ln}...Preparing output ({type})...{cfg.ln}")
 
     winter_geg = sort_winterstats_num(winter_geg,'+') # Sorteer, alleen op hellmann
 
@@ -174,9 +174,10 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
         hellmann  = fn.rm_s(fn.fix(g.hellmann['getal'], 'hellmann'))  # hellmann
 
         if type == 'html':
-            html_tx_min    = tx_min + h.table_extremes(g.tx_min['lijst'], -1)
-            html_tg_min    = tg_min + h.table_extremes(g.tg_min['lijst'], -1)
-            html_tn_min    = tn_min + h.table_extremes(g.tn_min['lijst'], -1)
+            html_tx_min    = tx_min + h.table_extremes(g.tx_min['lijst'][-1:], -1)
+            html_tg_min    = tg_min + h.table_extremes(g.tg_min['lijst'][-1:], -1)
+            html_tn_min    = tn_min + h.table_extremes(g.tn_min['lijst'][-1:], -1)
+
             html_tx_lt_0   = tx_lt_0 + h.table_count(g.tx_lt_0['lijst'], -1)
             html_tg_lt_0   = tg_lt_0 + h.table_count(g.tg_lt_0['lijst'],  -1)
             html_tn_lt_0   = tn_lt_0 + h.table_count(g.tn_lt_0['lijst'],  -1)

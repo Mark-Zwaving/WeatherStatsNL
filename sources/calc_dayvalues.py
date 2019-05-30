@@ -16,6 +16,7 @@ def prepare_day_values( station, yyyymmdd, name, type ):
     day = r.get_knmi_etmgeg_by_station_and_date( station, yyyymmdd )
     file_name = ''
     if day:
+        print(f"{c.ln}...Preparing dayvalues ({type}): {station.wmo} {station.plaats} ...{c.ln}")
         # Prepare a default name
         if not name: name = f'{station.wmo}-{yyyymmdd}'
 
