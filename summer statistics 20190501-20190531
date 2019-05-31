@@ -1,0 +1,705 @@
+
+                <tr>
+                    <td> Vlissingen </td>
+                    <td> Zeeland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 12.0°C </td>
+                    <td> .   </td>
+                    <td> 21.9°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>21.9°C</td><td>16</td></tr></tbody></table> </td>
+                    <td> 16.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.3°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 13.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>13.3°C</td><td>2</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 2 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>14</td><td>20.5°C</td><td>>=200</td><td>2</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>16</td><td>21.9°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 240.0hour </td>
+                    <td> 12 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>10.0hour</td><td>>=100</td><td>12</td></tr><tr><td title="monday, 27 may 2019">20190527</td><td>.</td><td>11.0hour</td><td>>=100</td><td>11</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>12.8hour</td><td>>=100</td><td>10</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>10.6hour</td><td>>=100</td><td>9</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>.</td><td>13.5hour</td><td>>=100</td><td>8</td></tr><tr><td title="thursday, 16 may 2019">20190516</td><td>.</td><td>14.3hour</td><td>>=100</td><td>7</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.3hour</td><td>>=100</td><td>6</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.2hour</td><td>>=100</td><td>5</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>14.3hour</td><td>>=100</td><td>4</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>12.5hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>13.2hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>10.5hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 29.4mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Eindhoven </td>
+                    <td> Noord-Brabant </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.9°C </td>
+                    <td> .   </td>
+                    <td> 24.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="friday, 24 may 2019">20190524</td><td>24.3°C</td><td>13</td></tr></tbody></table> </td>
+                    <td> 17.4°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17.4°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.8°C</td><td>5</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 8 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>15</td><td>22.6°C</td><td>>=200</td><td>8</td></tr><tr><td title="wednesday, 29 may 2019">20190529</td><td>16</td><td>20.1°C</td><td>>=200</td><td>7</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>17</td><td>22.4°C</td><td>>=200</td><td>6</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>13</td><td>24.3°C</td><td>>=200</td><td>5</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>15</td><td>23.0°C</td><td>>=200</td><td>4</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>15</td><td>21.5°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>13</td><td>22.8°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>17</td><td>22.1°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 193.5hour </td>
+                    <td> 8 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>13.0hour</td><td>>=100</td><td>8</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>12.6hour</td><td>>=100</td><td>7</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.0hour</td><td>>=100</td><td>6</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.4hour</td><td>>=100</td><td>5</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.7hour</td><td>>=100</td><td>4</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.4hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>10.9hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>11.1hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 34.2mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>11.7mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Arcen </td>
+                    <td> Limburg </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.9°C </td>
+                    <td> .   </td>
+                    <td> 25.0°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>25.0°C</td><td>16</td></tr></tbody></table> </td>
+                    <td> 17.4°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17.4°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 13.4°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>13.4°C</td><td>7</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 9 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17</td><td>22.1°C</td><td>>=200</td><td>9</td></tr><tr><td title="wednesday, 29 may 2019">20190529</td><td>16</td><td>20.2°C</td><td>>=200</td><td>8</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>14</td><td>22.0°C</td><td>>=200</td><td>7</td></tr><tr><td title="saturday, 25 may 2019">20190525</td><td>14</td><td>21.5°C</td><td>>=200</td><td>6</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>16</td><td>25.0°C</td><td>>=200</td><td>5</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>15</td><td>23.7°C</td><td>>=200</td><td>4</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>15</td><td>21.1°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>16</td><td>25.0°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>15</td><td>22.8°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 2 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="friday, 24 may 2019">20190524</td><td>16</td><td>25.0°C</td><td>>=250</td><td>2</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>16</td><td>25.0°C</td><td>>=250</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 177.0hour </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>12.7hour</td><td>>=100</td><td>6</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>11.1hour</td><td>>=100</td><td>5</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>12.2hour</td><td>>=100</td><td>4</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.3hour</td><td>>=100</td><td>3</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.5hour</td><td>>=100</td><td>2</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>12.9hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 34.6mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Westdorpe </td>
+                    <td> Zeeland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.9°C </td>
+                    <td> .   </td>
+                    <td> 22.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>22.8°C</td><td>15</td></tr></tbody></table> </td>
+                    <td> 17.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17.3°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.5°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.5°C</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 7 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>15</td><td>22.0°C</td><td>>=200</td><td>7</td></tr><tr><td title="wednesday, 29 may 2019">20190529</td><td>15</td><td>20.4°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>10</td><td>20.9°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>13</td><td>21.2°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>15</td><td>22.8°C</td><td>>=200</td><td>3</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>12</td><td>20.5°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>16</td><td>20.0°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 211.5hour </td>
+                    <td> 8 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>13.2hour</td><td>>=100</td><td>8</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>.</td><td>12.3hour</td><td>>=100</td><td>7</td></tr><tr><td title="thursday, 16 may 2019">20190516</td><td>.</td><td>14.2hour</td><td>>=100</td><td>6</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.3hour</td><td>>=100</td><td>5</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>14.0hour</td><td>>=100</td><td>4</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>14.3hour</td><td>>=100</td><td>3</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>10.7hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>11.9hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 36.1mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Gilze-Rijen </td>
+                    <td> Noord-Brabant </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.9°C </td>
+                    <td> .   </td>
+                    <td> 23.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="friday, 24 may 2019">20190524</td><td>23.8°C</td><td>13</td></tr></tbody></table> </td>
+                    <td> 17.5°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17.5°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.9°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.9°C</td><td>3</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 8 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>14</td><td>23.1°C</td><td>>=200</td><td>8</td></tr><tr><td title="wednesday, 29 may 2019">20190529</td><td>17</td><td>20.0°C</td><td>>=200</td><td>7</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>13</td><td>22.0°C</td><td>>=200</td><td>6</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>13</td><td>23.8°C</td><td>>=200</td><td>5</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>14</td><td>22.9°C</td><td>>=200</td><td>4</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>14</td><td>20.5°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>21.8°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>14</td><td>22.8°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 205.2hour </td>
+                    <td> 9 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>10.1hour</td><td>>=100</td><td>9</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>13.4hour</td><td>>=100</td><td>8</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.2hour</td><td>>=100</td><td>7</td></tr><tr><td title="thursday, 16 may 2019">20190516</td><td>.</td><td>10.3hour</td><td>>=100</td><td>6</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.2hour</td><td>>=100</td><td>5</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.7hour</td><td>>=100</td><td>4</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.3hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.5hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>11.2hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 21.1mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Volkel </td>
+                    <td> Noord-Brabant </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.8°C </td>
+                    <td> .   </td>
+                    <td> 24.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>24.3°C</td><td>13</td></tr></tbody></table> </td>
+                    <td> 17.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17.3°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 13.2°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>13.2°C</td><td>6</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 8 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16</td><td>22.8°C</td><td>>=200</td><td>8</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>16</td><td>22.6°C</td><td>>=200</td><td>7</td></tr><tr><td title="saturday, 25 may 2019">20190525</td><td>14</td><td>20.0°C</td><td>>=200</td><td>6</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>13</td><td>24.3°C</td><td>>=200</td><td>5</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>13</td><td>23.3°C</td><td>>=200</td><td>4</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>15</td><td>20.8°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>13</td><td>24.3°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>15</td><td>22.6°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 192.5hour </td>
+                    <td> 7 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>13.7hour</td><td>>=100</td><td>7</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>11.7hour</td><td>>=100</td><td>6</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>12.7hour</td><td>>=100</td><td>5</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.9hour</td><td>>=100</td><td>4</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>11.8hour</td><td>>=100</td><td>3</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.6hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>11.5hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 14.9mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Ell </td>
+                    <td> Limburg </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.7°C </td>
+                    <td> .   </td>
+                    <td> 24.0°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="friday, 24 may 2019">20190524</td><td>24.0°C</td><td>13</td></tr></tbody></table> </td>
+                    <td> 17.1°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17.1°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 13.0°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>13.0°C</td><td>6</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 7 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16</td><td>21.9°C</td><td>>=200</td><td>7</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>17</td><td>21.4°C</td><td>>=200</td><td>6</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>13</td><td>24.0°C</td><td>>=200</td><td>5</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>15</td><td>22.9°C</td><td>>=200</td><td>4</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>16</td><td>20.7°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>22.9°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>14</td><td>22.0°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 182.6hour </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>14.1hour</td><td>>=100</td><td>6</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>10.5hour</td><td>>=100</td><td>5</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>11.9hour</td><td>>=100</td><td>4</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.4hour</td><td>>=100</td><td>3</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.6hour</td><td>>=100</td><td>2</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.4hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 53.5mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>16.7mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Wilhelminadorp </td>
+                    <td> Zeeland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.6°C </td>
+                    <td> .   </td>
+                    <td> 21.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>21.3°C</td><td>15</td></tr></tbody></table> </td>
+                    <td> 16.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.8°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.5°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.5°C</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 3 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>15</td><td>21.2°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>15</td><td>20.1°C</td><td>>=200</td><td>2</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>15</td><td>21.3°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 229.3hour </td>
+                    <td> 11 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="monday, 27 may 2019">20190527</td><td>.</td><td>10.9hour</td><td>>=100</td><td>11</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>12.5hour</td><td>>=100</td><td>10</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>10.8hour</td><td>>=100</td><td>9</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>.</td><td>12.4hour</td><td>>=100</td><td>8</td></tr><tr><td title="thursday, 16 may 2019">20190516</td><td>.</td><td>14.1hour</td><td>>=100</td><td>7</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.3hour</td><td>>=100</td><td>6</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.3hour</td><td>>=100</td><td>5</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>14.1hour</td><td>>=100</td><td>4</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>12.1hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>13.7hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>11.0hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 55.2mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>24.1mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Lelystad </td>
+                    <td> Flevoland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.6°C </td>
+                    <td> .   </td>
+                    <td> 22.2°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>22.2°C</td><td>13</td></tr></tbody></table> </td>
+                    <td> 16.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.8°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.5°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.5°C</td><td>4</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>15</td><td>21.2°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>12</td><td>21.4°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>13</td><td>20.8°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>13</td><td>22.2°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>12</td><td>20.8°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>12</td><td>20.5°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 214.2hour </td>
+                    <td> 10 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>14.4hour</td><td>>=100</td><td>10</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>14.2hour</td><td>>=100</td><td>9</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>14.3hour</td><td>>=100</td><td>8</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.3hour</td><td>>=100</td><td>7</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.7hour</td><td>>=100</td><td>6</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>14.3hour</td><td>>=100</td><td>5</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>10.7hour</td><td>>=100</td><td>4</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.4hour</td><td>>=100</td><td>3</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>11.4hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>10.2hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 29.0mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Hoek van Holland </td>
+                    <td> Zuid-Holland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.6°C </td>
+                    <td> .   </td>
+                    <td> 20.5°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>20.5°C</td><td>15</td></tr></tbody></table> </td>
+                    <td> 16.1°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>16.1°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.5°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.5°C</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 3 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17</td><td>20.1°C</td><td>>=200</td><td>3</td></tr><tr><td title="wednesday, 29 may 2019">20190529</td><td>15</td><td>20.5°C</td><td>>=200</td><td>2</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>15</td><td>20.0°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 235.4hour </td>
+                    <td> 13 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>12.0hour</td><td>>=100</td><td>13</td></tr><tr><td title="monday, 27 may 2019">20190527</td><td>.</td><td>12.1hour</td><td>>=100</td><td>12</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>13.3hour</td><td>>=100</td><td>11</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.2hour</td><td>>=100</td><td>10</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>.</td><td>12.9hour</td><td>>=100</td><td>9</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>.</td><td>10.0hour</td><td>>=100</td><td>8</td></tr><tr><td title="thursday, 16 may 2019">20190516</td><td>.</td><td>11.5hour</td><td>>=100</td><td>7</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.3hour</td><td>>=100</td><td>6</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.8hour</td><td>>=100</td><td>5</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>14.1hour</td><td>>=100</td><td>4</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>12.1hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>13.2hour</td><td>>=100</td><td>2</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>11.6hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 29.7mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Maastricht </td>
+                    <td> Limburg </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.5°C </td>
+                    <td> .   </td>
+                    <td> 23.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="friday, 24 may 2019">20190524</td><td>23.6°C</td><td>13</td></tr></tbody></table> </td>
+                    <td> 16.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="friday, 24 may 2019">20190524</td><td>16.8°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.8°C</td><td>5</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17</td><td>21.5°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>14</td><td>22.2°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>13</td><td>23.6°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>14</td><td>22.5°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>13</td><td>21.8°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>13</td><td>20.3°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 179.7hour </td>
+                    <td> 5 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>13.9hour</td><td>>=100</td><td>5</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>11.8hour</td><td>>=100</td><td>4</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.4hour</td><td>>=100</td><td>3</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.6hour</td><td>>=100</td><td>2</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.0hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 53.2mm </td>
+                    <td> 2 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>16.4mm</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>10.7mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> De Bilt </td>
+                    <td> Utrecht </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.5°C </td>
+                    <td> .   </td>
+                    <td> 21.9°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="friday, 24 may 2019">20190524</td><td>21.9°C</td><td>12</td></tr></tbody></table> </td>
+                    <td> 16.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.8°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.8°C</td><td>3</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16</td><td>21.9°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>16</td><td>20.6°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>12</td><td>21.9°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>15</td><td>21.6°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>15</td><td>21.0°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>14</td><td>21.1°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 220.3hour </td>
+                    <td> 12 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>13.3hour</td><td>>=100</td><td>12</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>13.0hour</td><td>>=100</td><td>11</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>14.5hour</td><td>>=100</td><td>10</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>.</td><td>10.3hour</td><td>>=100</td><td>9</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>.</td><td>10.1hour</td><td>>=100</td><td>8</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.0hour</td><td>>=100</td><td>7</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.9hour</td><td>>=100</td><td>6</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.4hour</td><td>>=100</td><td>5</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>12.6hour</td><td>>=100</td><td>4</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.2hour</td><td>>=100</td><td>3</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>11.0hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>10.2hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 40.2mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>15.0mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Rotterdam </td>
+                    <td> Zuid-Holland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.5°C </td>
+                    <td> .   </td>
+                    <td> 21.0°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>21.0°C</td><td>16</td></tr></tbody></table> </td>
+                    <td> 16.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.8°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.6°C</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 5 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16</td><td>21.0°C</td><td>>=200</td><td>5</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>14</td><td>20.4°C</td><td>>=200</td><td>4</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>12</td><td>20.3°C</td><td>>=200</td><td>3</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>16</td><td>21.0°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>13</td><td>20.1°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 223.2hour </td>
+                    <td> 11 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>11.8hour</td><td>>=100</td><td>11</td></tr><tr><td title="monday, 27 may 2019">20190527</td><td>.</td><td>12.2hour</td><td>>=100</td><td>10</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>13.6hour</td><td>>=100</td><td>9</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.6hour</td><td>>=100</td><td>8</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>.</td><td>12.5hour</td><td>>=100</td><td>7</td></tr><tr><td title="thursday, 16 may 2019">20190516</td><td>.</td><td>11.6hour</td><td>>=100</td><td>6</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.4hour</td><td>>=100</td><td>5</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.5hour</td><td>>=100</td><td>4</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.8hour</td><td>>=100</td><td>3</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>10.4hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>13.0hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 45.6mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>14.1mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Schiphol </td>
+                    <td> Noord-Holland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.5°C </td>
+                    <td> .   </td>
+                    <td> 21.2°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 26 may 2019">20190526</td><td>21.2°C</td><td>14</td></tr></tbody></table> </td>
+                    <td> 16.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.8°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.7°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.7°C</td><td>2</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16</td><td>20.8°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>14</td><td>21.2°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>11</td><td>20.0°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>11</td><td>20.4°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>15</td><td>20.3°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>13</td><td>20.4°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 215.2hour </td>
+                    <td> 11 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>12.1hour</td><td>>=100</td><td>11</td></tr><tr><td title="monday, 27 may 2019">20190527</td><td>.</td><td>11.3hour</td><td>>=100</td><td>10</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>14.5hour</td><td>>=100</td><td>9</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>14.5hour</td><td>>=100</td><td>8</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>.</td><td>10.1hour</td><td>>=100</td><td>7</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.7hour</td><td>>=100</td><td>6</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.6hour</td><td>>=100</td><td>5</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>12.3hour</td><td>>=100</td><td>4</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>10.0hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.7hour</td><td>>=100</td><td>2</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>11.8hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 30.6mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>13.6mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Cabauw Mast </td>
+                    <td> Utrecht </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.5°C </td>
+                    <td> .   </td>
+                    <td> 21.7°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="saturday, 18 may 2019">20190518</td><td>21.7°C</td><td>14</td></tr></tbody></table> </td>
+                    <td> 16.7°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.7°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.7°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.7°C</td><td>2</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>15</td><td>21.7°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>12</td><td>20.6°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>12</td><td>20.9°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>14</td><td>20.6°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>20.8°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>14</td><td>21.7°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 215.9hour </td>
+                    <td> 10 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>12.2hour</td><td>>=100</td><td>10</td></tr><tr><td title="monday, 27 may 2019">20190527</td><td>.</td><td>10.6hour</td><td>>=100</td><td>9</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>12.9hour</td><td>>=100</td><td>8</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.2hour</td><td>>=100</td><td>7</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>.</td><td>10.8hour</td><td>>=100</td><td>6</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>.</td><td>11.0hour</td><td>>=100</td><td>5</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.2hour</td><td>>=100</td><td>4</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.6hour</td><td>>=100</td><td>3</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.0hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>13.1hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 23.5mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Herwijnen </td>
+                    <td> Gelderland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.4°C </td>
+                    <td> .   </td>
+                    <td> 22.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="friday, 24 may 2019">20190524</td><td>22.8°C</td><td>13</td></tr></tbody></table> </td>
+                    <td> 17.0°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17.0°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 13.1°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>13.1°C</td><td>3</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>15</td><td>22.4°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>13</td><td>20.5°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>13</td><td>22.8°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>16</td><td>21.4°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>22.4°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>14</td><td>21.9°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 199.0hour </td>
+                    <td> 8 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>11.9hour</td><td>>=100</td><td>8</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.4hour</td><td>>=100</td><td>7</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>.</td><td>10.4hour</td><td>>=100</td><td>6</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.6hour</td><td>>=100</td><td>5</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.9hour</td><td>>=100</td><td>4</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.2hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.3hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>11.5hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 19.9mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Heino </td>
+                    <td> Overijssel </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.4°C </td>
+                    <td> .   </td>
+                    <td> 24.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>24.3°C</td><td>14</td></tr></tbody></table> </td>
+                    <td> 16.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.6°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 13.4°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>13.4°C</td><td>7</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>18</td><td>20.2°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>15</td><td>20.9°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>12</td><td>21.7°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>14</td><td>22.3°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>24.3°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>14</td><td>22.8°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 201.0hour </td>
+                    <td> 9 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>14.7hour</td><td>>=100</td><td>9</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>13.9hour</td><td>>=100</td><td>8</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.8hour</td><td>>=100</td><td>7</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>.</td><td>10.3hour</td><td>>=100</td><td>6</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.6hour</td><td>>=100</td><td>5</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.8hour</td><td>>=100</td><td>4</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.7hour</td><td>>=100</td><td>3</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>11.1hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>11.5hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 52.1mm </td>
+                    <td> 2 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>.</td><td>11.2mm</td><td>>=100</td><td>2</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>16.3mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Hupsel </td>
+                    <td> Gelderland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.3°C </td>
+                    <td> .   </td>
+                    <td> 25.4°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>25.4°C</td><td>15</td></tr></tbody></table> </td>
+                    <td> 16.5°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.5°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.6°C</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 7 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17</td><td>20.5°C</td><td>>=200</td><td>7</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>15</td><td>21.0°C</td><td>>=200</td><td>6</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>14</td><td>24.5°C</td><td>>=200</td><td>5</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>14</td><td>23.1°C</td><td>>=200</td><td>4</td></tr><tr><td title="monday, 20 may 2019">20190520</td><td>13</td><td>20.0°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>15</td><td>25.4°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>16</td><td>23.2°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>15</td><td>25.4°C</td><td>>=250</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 183.7hour </td>
+                    <td> 7 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>14.2hour</td><td>>=100</td><td>7</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>11.6hour</td><td>>=100</td><td>6</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>12.9hour</td><td>>=100</td><td>5</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.7hour</td><td>>=100</td><td>4</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>14.0hour</td><td>>=100</td><td>3</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.8hour</td><td>>=100</td><td>2</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>10.4hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 33.9mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>14.6mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Lauwersoog </td>
+                    <td> Groningen </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.3°C </td>
+                    <td> .   </td>
+                    <td> 20.4°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>20.4°C</td><td>13</td></tr></tbody></table> </td>
+                    <td> 16.1°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.1°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.7°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.7°C</td><td>4</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>13</td><td>20.4°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 208.6hour </td>
+                    <td> 11 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>11.0hour</td><td>>=100</td><td>11</td></tr><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>12.0hour</td><td>>=100</td><td>10</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>12.1hour</td><td>>=100</td><td>9</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>12.8hour</td><td>>=100</td><td>8</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>.</td><td>11.4hour</td><td>>=100</td><td>7</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.9hour</td><td>>=100</td><td>6</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.6hour</td><td>>=100</td><td>5</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.0hour</td><td>>=100</td><td>4</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>13.1hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.7hour</td><td>>=100</td><td>2</td></tr><tr><td title="friday, 10 may 2019">20190510</td><td>.</td><td>10.3hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 20.7mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 26 may 2019">20190526</td><td>.</td><td>12.0mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Twenthe </td>
+                    <td> Overijssel </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.3°C </td>
+                    <td> .   </td>
+                    <td> 25.0°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>25.0°C</td><td>14</td></tr></tbody></table> </td>
+                    <td> 16.5°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.5°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 13.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>13.3°C</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 7 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17</td><td>20.3°C</td><td>>=200</td><td>7</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>13</td><td>21.5°C</td><td>>=200</td><td>6</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>13</td><td>24.4°C</td><td>>=200</td><td>5</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>15</td><td>22.8°C</td><td>>=200</td><td>4</td></tr><tr><td title="monday, 20 may 2019">20190520</td><td>14</td><td>20.7°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>25.0°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>16</td><td>23.2°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>25.0°C</td><td>>=250</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 190.7hour </td>
+                    <td> 7 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>14.3hour</td><td>>=100</td><td>7</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>11.8hour</td><td>>=100</td><td>6</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>12.1hour</td><td>>=100</td><td>5</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.2hour</td><td>>=100</td><td>4</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>14.0hour</td><td>>=100</td><td>3</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.7hour</td><td>>=100</td><td>2</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>10.0hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 27.5mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Hoogeveen </td>
+                    <td> Drenthe </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.2°C </td>
+                    <td> .   </td>
+                    <td> 24.9°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>24.9°C</td><td>15</td></tr></tbody></table> </td>
+                    <td> 16.4°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>16.4°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.6°C</td><td>6</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17</td><td>20.6°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>14</td><td>21.1°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>12</td><td>22.6°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>16</td><td>22.6°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>15</td><td>24.9°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>15</td><td>23.4°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 209.4hour </td>
+                    <td> 9 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>14.8hour</td><td>>=100</td><td>9</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>14.0hour</td><td>>=100</td><td>8</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>12.8hour</td><td>>=100</td><td>7</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.6hour</td><td>>=100</td><td>6</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.5hour</td><td>>=100</td><td>5</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.7hour</td><td>>=100</td><td>4</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>13.5hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.6hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>10.1hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 28.9mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Marknesse </td>
+                    <td> Flevoland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.2°C </td>
+                    <td> .   </td>
+                    <td> 22.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>22.6°C</td><td>14</td></tr></tbody></table> </td>
+                    <td> 16.4°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.4°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 13.0°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>13.0°C</td><td>4</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 5 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16</td><td>20.2°C</td><td>>=200</td><td>5</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>13</td><td>20.2°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>12</td><td>21.1°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>22.6°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>15</td><td>21.8°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 221.1hour </td>
+                    <td> 10 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>14.5hour</td><td>>=100</td><td>10</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>14.1hour</td><td>>=100</td><td>9</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.7hour</td><td>>=100</td><td>8</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.0hour</td><td>>=100</td><td>7</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.6hour</td><td>>=100</td><td>6</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>14.0hour</td><td>>=100</td><td>5</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>11.3hour</td><td>>=100</td><td>4</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>14.1hour</td><td>>=100</td><td>3</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>10.0hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>11.7hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 30.2mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 26 may 2019">20190526</td><td>.</td><td>10.4mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Deelen </td>
+                    <td> Gelderland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.2°C </td>
+                    <td> .   </td>
+                    <td> 24.5°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>24.5°C</td><td>14</td></tr></tbody></table> </td>
+                    <td> 16.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.6°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.9°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.9°C</td><td>5</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16</td><td>21.5°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>17</td><td>21.6°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>13</td><td>24.1°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>13</td><td>22.7°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>24.5°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>15</td><td>22.6°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 180.1hour </td>
+                    <td> 7 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>11.6hour</td><td>>=100</td><td>7</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>10.1hour</td><td>>=100</td><td>6</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.4hour</td><td>>=100</td><td>5</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.7hour</td><td>>=100</td><td>4</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.6hour</td><td>>=100</td><td>3</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.2hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>11.6hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 39.3mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>16.7mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Stavoren </td>
+                    <td> Friesland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.1°C </td>
+                    <td> .   </td>
+                    <td> 19.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>19.6°C</td><td>12</td></tr></tbody></table> </td>
+                    <td> 16.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.3°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.9°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.9°C</td><td>3</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 232.5hour </td>
+                    <td> 11 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>14.3hour</td><td>>=100</td><td>11</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>12.9hour</td><td>>=100</td><td>10</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.9hour</td><td>>=100</td><td>9</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.3hour</td><td>>=100</td><td>8</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.4hour</td><td>>=100</td><td>7</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.7hour</td><td>>=100</td><td>6</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>13.7hour</td><td>>=100</td><td>5</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.5hour</td><td>>=100</td><td>4</td></tr><tr><td title="friday, 10 may 2019">20190510</td><td>.</td><td>10.9hour</td><td>>=100</td><td>3</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>10.5hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>10.9hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 20.5mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 26 may 2019">20190526</td><td>.</td><td>10.6mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> De Kooy </td>
+                    <td> Noord-Holland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 11.0°C </td>
+                    <td> .   </td>
+                    <td> 18.1°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>18.1°C</td><td>10</td></tr></tbody></table> </td>
+                    <td> 14.9°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>14.9°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.4°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.4°C</td><td>2</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 228.3hour </td>
+                    <td> 12 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>12.8hour</td><td>>=100</td><td>12</td></tr><tr><td title="saturday, 25 may 2019">20190525</td><td>.</td><td>11.0hour</td><td>>=100</td><td>11</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>13.8hour</td><td>>=100</td><td>10</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.2hour</td><td>>=100</td><td>9</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.3hour</td><td>>=100</td><td>8</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.3hour</td><td>>=100</td><td>7</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.3hour</td><td>>=100</td><td>6</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>10.8hour</td><td>>=100</td><td>5</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>13.5hour</td><td>>=100</td><td>4</td></tr><tr><td title="friday, 10 may 2019">20190510</td><td>.</td><td>10.1hour</td><td>>=100</td><td>3</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>13.0hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>10.2hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 26.5mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 26 may 2019">20190526</td><td>.</td><td>15.4mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Voorschoten </td>
+                    <td> Zuid-Holland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 10.9°C </td>
+                    <td> .   </td>
+                    <td> 19.9°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>19.9°C</td><td>16</td></tr></tbody></table> </td>
+                    <td> 16.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.3°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.3°C</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 218.4hour </td>
+                    <td> 14 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>10.7hour</td><td>>=100</td><td>14</td></tr><tr><td title="monday, 27 may 2019">20190527</td><td>.</td><td>11.2hour</td><td>>=100</td><td>13</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>13.3hour</td><td>>=100</td><td>12</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.1hour</td><td>>=100</td><td>11</td></tr><tr><td title="wednesday, 22 may 2019">20190522</td><td>.</td><td>11.2hour</td><td>>=100</td><td>10</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>.</td><td>10.2hour</td><td>>=100</td><td>9</td></tr><tr><td title="thursday, 16 may 2019">20190516</td><td>.</td><td>11.0hour</td><td>>=100</td><td>8</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.5hour</td><td>>=100</td><td>7</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.3hour</td><td>>=100</td><td>6</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.5hour</td><td>>=100</td><td>5</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>11.6hour</td><td>>=100</td><td>4</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.5hour</td><td>>=100</td><td>3</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>11.1hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>10.3hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 35.9mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Berkhout </td>
+                    <td> Noord-Holland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 10.9°C </td>
+                    <td> .   </td>
+                    <td> 20.7°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="saturday, 18 may 2019">20190518</td><td>20.7°C</td><td>13</td></tr></tbody></table> </td>
+                    <td> 16.1°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.1°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.2°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.2°C</td><td>2</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="saturday, 18 may 2019">20190518</td><td>13</td><td>20.7°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 213.6hour </td>
+                    <td> 10 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>11.3hour</td><td>>=100</td><td>10</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>14.6hour</td><td>>=100</td><td>9</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.5hour</td><td>>=100</td><td>8</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.2hour</td><td>>=100</td><td>7</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.8hour</td><td>>=100</td><td>6</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.0hour</td><td>>=100</td><td>5</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>11.9hour</td><td>>=100</td><td>4</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>13.2hour</td><td>>=100</td><td>3</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>12.1hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>10.9hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 23.0mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 26 may 2019">20190526</td><td>.</td><td>11.6mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Wijk aan Zee </td>
+                    <td> Noord-Holland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 10.9°C </td>
+                    <td> .   </td>
+                    <td> 18.1°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 16 may 2019">20190516</td><td>18.1°C</td><td>15</td></tr></tbody></table> </td>
+                    <td> 15.1°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>15.1°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.6°C</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 228.8hour </td>
+                    <td> 11 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>12.3hour</td><td>>=100</td><td>11</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>14.7hour</td><td>>=100</td><td>10</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.6hour</td><td>>=100</td><td>9</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>.</td><td>10.2hour</td><td>>=100</td><td>8</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>13.8hour</td><td>>=100</td><td>7</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.0hour</td><td>>=100</td><td>6</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.4hour</td><td>>=100</td><td>5</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>12.0hour</td><td>>=100</td><td>4</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>13.5hour</td><td>>=100</td><td>3</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>12.0hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>11.2hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 17.2mm </td>
+                    <td> 0  </td>
+                </tr>
+                
+                <tr>
+                    <td> Eelde </td>
+                    <td> Drenthe </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 10.8°C </td>
+                    <td> .   </td>
+                    <td> 23.0°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="saturday, 18 may 2019">20190518</td><td>23.0°C</td><td>15</td></tr></tbody></table> </td>
+                    <td> 16.3°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="saturday, 18 may 2019">20190518</td><td>16.3°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.7°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.7°C</td><td>6</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16</td><td>20.3°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>13</td><td>20.7°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>12</td><td>21.6°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>15</td><td>21.9°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>22.4°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>15</td><td>23.0°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 203.3hour </td>
+                    <td> 9 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>12.0hour</td><td>>=100</td><td>9</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>12.7hour</td><td>>=100</td><td>8</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.5hour</td><td>>=100</td><td>7</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.3hour</td><td>>=100</td><td>6</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.2hour</td><td>>=100</td><td>5</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.3hour</td><td>>=100</td><td>4</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>13.0hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.6hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>10.2hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 34.1mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 26 may 2019">20190526</td><td>.</td><td>11.6mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Leeuwarden </td>
+                    <td> Friesland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 10.6°C </td>
+                    <td> .   </td>
+                    <td> 21.1°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="saturday, 18 may 2019">20190518</td><td>21.1°C</td><td>12</td></tr></tbody></table> </td>
+                    <td> 16.0°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>16.0°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.7°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.7°C</td><td>3</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 2 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 23 may 2019">20190523</td><td>13</td><td>20.2°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>12</td><td>21.1°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 211.5hour </td>
+                    <td> 11 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>12.6hour</td><td>>=100</td><td>11</td></tr><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>11.9hour</td><td>>=100</td><td>10</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>11.8hour</td><td>>=100</td><td>9</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.1hour</td><td>>=100</td><td>8</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.1hour</td><td>>=100</td><td>7</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.6hour</td><td>>=100</td><td>6</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.2hour</td><td>>=100</td><td>5</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>10.3hour</td><td>>=100</td><td>4</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.0hour</td><td>>=100</td><td>3</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>10.1hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>11.3hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 23.6mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 26 may 2019">20190526</td><td>.</td><td>12.7mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Nieuw Beerta </td>
+                    <td> Groningen </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 10.5°C </td>
+                    <td> .   </td>
+                    <td> 23.5°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="sunday, 19 may 2019">20190519</td><td>23.5°C</td><td>14</td></tr></tbody></table> </td>
+                    <td> 15.9°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>15.9°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.8°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.8°C</td><td>7</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 6 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>17</td><td>20.6°C</td><td>>=200</td><td>6</td></tr><tr><td title="sunday, 26 may 2019">20190526</td><td>14</td><td>20.5°C</td><td>>=200</td><td>5</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>11</td><td>21.0°C</td><td>>=200</td><td>4</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>15</td><td>21.2°C</td><td>>=200</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>14</td><td>23.5°C</td><td>>=200</td><td>2</td></tr><tr><td title="saturday, 18 may 2019">20190518</td><td>14</td><td>23.0°C</td><td>>=200</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 197.8hour </td>
+                    <td> 9 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>10.0hour</td><td>>=100</td><td>9</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>13.0hour</td><td>>=100</td><td>8</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>12.1hour</td><td>>=100</td><td>7</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.6hour</td><td>>=100</td><td>6</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>13.4hour</td><td>>=100</td><td>5</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>13.4hour</td><td>>=100</td><td>4</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>13.4hour</td><td>>=100</td><td>3</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>13.2hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>11.7hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 43.8mm </td>
+                    <td> 3 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 26 may 2019">20190526</td><td>.</td><td>10.0mm</td><td>>=100</td><td>3</td></tr><tr><td title="sunday, 19 may 2019">20190519</td><td>.</td><td>10.3mm</td><td>>=100</td><td>2</td></tr><tr><td title="monday, 06 may 2019">20190506</td><td>.</td><td>10.2mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                
+                <tr>
+                    <td> Hoorn Terschelling </td>
+                    <td> Friesland </td>
+                    <td title="wednesday, 01 may 2019 - thursday, 30 may 2019"> 20190501-20190530 </td>
+                    <td> 10.4°C </td>
+                    <td> .   </td>
+                    <td> 18.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>18.6°C</td><td>14</td></tr></tbody></table> </td>
+                    <td> 15.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>15.6°C</td><td>.</td></tr></tbody></table> </td>
+                    <td> 12.6°C    <table class="popup"><thead><tr><th>datum</th><th>value</th><th>time</th><tr></thead><tbody><tr><td title="thursday, 30 may 2019">20190530</td><td>12.6°C</td><td>1</td></tr></tbody></table> </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 0  </td>
+                    <td> 213.1hour </td>
+                    <td> 11 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="wednesday, 29 may 2019">20190529</td><td>.</td><td>13.2hour</td><td>>=100</td><td>11</td></tr><tr><td title="tuesday, 28 may 2019">20190528</td><td>.</td><td>13.1hour</td><td>>=100</td><td>10</td></tr><tr><td title="friday, 24 may 2019">20190524</td><td>.</td><td>11.8hour</td><td>>=100</td><td>9</td></tr><tr><td title="thursday, 23 may 2019">20190523</td><td>.</td><td>13.3hour</td><td>>=100</td><td>8</td></tr><tr><td title="wednesday, 15 may 2019">20190515</td><td>.</td><td>14.4hour</td><td>>=100</td><td>7</td></tr><tr><td title="tuesday, 14 may 2019">20190514</td><td>.</td><td>12.7hour</td><td>>=100</td><td>6</td></tr><tr><td title="monday, 13 may 2019">20190513</td><td>.</td><td>12.9hour</td><td>>=100</td><td>5</td></tr><tr><td title="sunday, 12 may 2019">20190512</td><td>.</td><td>13.4hour</td><td>>=100</td><td>4</td></tr><tr><td title="saturday, 11 may 2019">20190511</td><td>.</td><td>12.7hour</td><td>>=100</td><td>3</td></tr><tr><td title="thursday, 09 may 2019">20190509</td><td>.</td><td>10.8hour</td><td>>=100</td><td>2</td></tr><tr><td title="saturday, 04 may 2019">20190504</td><td>.</td><td>11.4hour</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                    <td> 28.2mm </td>
+                    <td> 1 <table class="popup"><thead><tr><th>datum</th><th>tijd</th><th>waarde</th><th>eis</th><th>aantal</th></tr></thead><tbody><tr><td title="sunday, 26 may 2019">20190526</td><td>.</td><td>12.7mm</td><td>>=100</td><td>1</td></tr></tbody></table> </td>
+                </tr>
+                

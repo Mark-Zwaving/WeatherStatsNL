@@ -180,7 +180,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
     if type in ['txt','cmd']:
         content += bronvermelding
 
-    if type is 'html':
+    if type == 'html':
         content += f'''
             </tbody>
             <tfoot> <tr> <td colspan="19"> {bronvermelding} </td> </tr> </tfoot>
@@ -190,7 +190,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
         content = h.pagina(title, css, content) # Make html page
         content = fn.clean_s(content) # Remove unnecessary whitespace
 
-    if type is 'cmd':
+    if type == 'cmd':
         fn.lnprintln(cfg.line + cfg.ln + content + cfg.ln + cfg.line)
 
     if type in ['html','txt']:
