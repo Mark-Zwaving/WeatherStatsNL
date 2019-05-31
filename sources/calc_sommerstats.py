@@ -42,16 +42,11 @@ class Zomer_Stats:
 
 def sort_zomerstats_num(lijst, pm = '+'):
     sorted = []
-    if not lijst and cfg.log:
-        print("ZOSO|Lijst is leeg !")
     while lijst:
         max, key = cfg.min_value_geg, 0
         # Haal key minimum waarde uit lijst
         for i in range(len(lijst)):
             val = lijst[i].tg_gem['gem']
-            if cfg.log:
-                print(f'ZOSO|val:{val}|type(val):{type(val)}|max:{max}|'
-                      f'type(max):{type(max)}')
             if val > max:
                 max = val; key = i
         sorted.append(lijst[key]) # Voeg waarde toe
@@ -69,16 +64,13 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
     title = name
     file_name = ''
 
-    if type == 'html':
+    if type is 'html':
         name = f'{name}.html'
         path = cfg.lijst_stations[0].dir_html
 
-    if type == 'txt':
+    if type is 'txt':
         name = f'{name}.txt'
         path = cfg.lijst_stations[0].dir_text
-
-    if cfg.log:
-        print(f'start:{datum_start}|eind:{datum_eind}|type:{type}')
 
     for station in lijst_stations:
         l = fn.select_dates_from_list( r.knmi_etmgeg_data(station),
@@ -119,13 +111,13 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
 
     # Maak content op basis van type uitvoer html of text
     # Maak titel
-    if type == 'txt' or type == 'cmd':
+    if type in ['txt','cmd']:
         s = ' '
         content = f'PLAATS{s:15} PROVINCIE{s:7} PERIODE{s:11} TG      ∑WARMTE ' \
                   f'TX MAX  TG MAX  TN MAX  ∑TX≥20 ∑TX≥25 ∑TX≥30 ∑TX≥35 ' \
                   f'∑TG≥18 ∑TG≥20 ∑TN≥20 ∑ZON≥10 ∑ZON       ∑REGEN≥10 ∑REGEN  \n'
 
-    if type == 'html':
+    if type is 'html':
         content  = f'''
         <table>
             <thead>
@@ -175,14 +167,14 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
         sq_gte_10 = str(g.sq_gte_10['tel'])
         rh_gte_10 = str(g.rh_gte_10['tel'])
 
-        if type == 'txt' or type == 'cmd':
+        if type in ['txt','cmd']:
             content += f"{g.plaats:<21} {g.provincie:<16} {g.periode:<18} " \
                        f"{tg_gem:<7} {heat_ndx:<7} {tx_max:<7} {tg_max:<7} " \
                        f"{tn_max:<7} {tx_gte_20:^6} {tx_gte_25:^6} {tx_gte_30:^6} " \
                        f"{tx_gte_35:^6} {tg_gte_18:^6} {tg_gte_20:^6} {tn_gte_20:^6} " \
                        f"{sq_gte_10:^7} {sq_tot:<10} {rh_gte_10:^9} {rh_tot:<11} \n"
 
-        if type == 'html':
+        if type is 'html':
             html_warmte_getal = heat_ndx + h.table_heat_ndx(g.warmte_getal['lijst'], -1) # -1 for all values
             html_tx_max = tx_max + h.table_extremes(g.tx_max['lijst'][-1:], -1)
             html_tg_max = tg_max + h.table_extremes(g.tg_max['lijst'][-1:], -1)
@@ -211,10 +203,10 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
                 </tr>
                 '''
 
-    if type == 'txt' or type == 'cmd':
+    if type in ['txt','cmd']:
         content += bronvermelding
 
-    if type == 'html':
+    if type is 'html':
         content += f'''
             </tbody>
             <tfoot> <tr> <td colspan="19"> {bronvermelding} </td> </tr> </tfoot>
@@ -224,10 +216,10 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
         content = h.pagina(title, css, content) # Make html page
         content = fn.clean_s(content) # Remove unnecessary whitespace
 
-    if type == 'cmd':
+    if type is 'cmd':
         fn.lnprintln(cfg.line + cfg.ln + content + cfg.ln + cfg.line)
 
-    if type == 'html' or type == 'txt':
+    if type in ['html','txt']:
         file_name = fn.mk_path(path, name) # Make file name
         wr.write_to_file(file_name, content) # Schrijf naar bestand
 
