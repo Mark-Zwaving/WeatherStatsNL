@@ -64,11 +64,11 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
     title = name
     file_name = ''
 
-    if type is 'html':
+    if type == 'html':
         name = f'{name}.html'
         path = cfg.lijst_stations[0].dir_html
 
-    if type is 'txt':
+    if type == 'txt':
         name = f'{name}.txt'
         path = cfg.lijst_stations[0].dir_text
 
@@ -94,7 +94,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
                   f'TX MAX  TG MAX  TN MAX  ∑TX≥20 ∑TX≥25 ∑TX≥30 ∑TX≥35 ' \
                   f'∑TG≥18 ∑TG≥20 ∑TN≥20 ∑ZON≥10 ∑ZON       ∑REGEN≥10 ∑REGEN  \n'
 
-    if type is 'html':
+    if type == 'html':
         content  = f'''
         <table>
             <thead>
