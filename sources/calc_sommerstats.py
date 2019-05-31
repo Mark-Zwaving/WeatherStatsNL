@@ -12,29 +12,6 @@ __status__     =  "Development"
 import config as cfg, fn, fn_html as h, calc_stats as st, dates as d
 import write as wr, ask, fn_read as r, knmi
 
-class Warmte_getal:
-    '''Deze klasse bewaart gegevens warmte getal dagen'''
-    def __init__(self, datum, tg, getal, totaal, aantal, ent):
-        self.datum  = datum
-        self.tg     = tg
-        self.getal  = getal
-        self.totaal = totaal
-        self.aantal = aantal
-        self.ent    = ent
-
-def warmte_getal(lijst_geg):
-    som, tel, l = 0, 0, []
-    for geg in lijst_geg:
-        if geg.TG != geg.empthy:
-            iTG = int(geg.TG)
-            if iTG >= 180:
-                getal = iTG - 180
-                som += getal
-                tel += 1
-                l.append( Warmte_getal(geg.YYYYMMDD, iTG, getal, som, tel, 'TG') )
-
-    return {'getal': som, 'lijst':l}
-
 class Zomer_Stats:
     '''Deze klasse bewaart algemene gegevens zomer statistieken
        van een station in een bepaalde periode'''
@@ -121,7 +98,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
                     st.max_val(l,'TX'),
                     st.max_val(l,'TG'),
                     st.max_val(l,'TN'),
-                    warmte_getal(l),
+                    st.warmte_getal(l),
                     st.cnt_day(l,'TX','>=',200),  # Warme dag
                     st.cnt_day(l,'TX','>=',250),  # Zomerse dag
                     st.cnt_day(l,'TX','>=',300),  # Tropische dag
@@ -136,7 +113,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
                 )
             )
 
-    print(f"{cfg.ln}...Preparing output ({type})...{cfg.ln}")
+    fn.lnprintln(f'...Preparing output ({type})...')
 
     zomer_geg = sort_zomerstats_num(zomer_geg,'+') # Sorteer op tg
 
@@ -248,7 +225,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
         content = fn.clean_s(content) # Remove unnecessary whitespace
 
     if type == 'cmd':
-        print(cfg.line + cfg.ln + content + cfg.ln + cfg.line)
+        fn.lnprintln(cfg.line + cfg.ln + content + cfg.ln + cfg.line)
 
     if type == 'html' or type == 'txt':
         file_name = fn.mk_path(path, name) # Make file name
