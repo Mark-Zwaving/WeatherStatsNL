@@ -22,7 +22,8 @@ import knmi
 
 # Inits
 language = 'EN' # NL for Nederlands, EN for English, Default English
-log = False # debugging modus
+debug = False
+log   = False # log modus
 ln, tab = os.linesep, "\t"
 line = '----------' * 8
 stop = 'q'
