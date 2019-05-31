@@ -10,122 +10,60 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import ask, config as cfg, fn, calc_stats as st, calc_sommerstats as zs
-import write as wr, fn_html as h, dates as d, fn_read as r
+import write as wr, fn_html as h, dates as d, fn_read as r, ask as a
 
-class Heatwave:
-    def __init__(self, station, etmgeg_list):
-        self.station      = station
-        self.etmgeg_list  = etmgeg_list
-        self.tot_heat_sum = zs.warmte_getal(self.etmgeg_list)['getal']
-        self.day_count    = len(self.etmgeg_list)
-
-def sort_heatstats(lijst, pm = '+'):
+def sort_heatwave_list(heatwaves, pm = '+'):
+    if cfg.debug:
+        a.pause(f'''
+        sort_heatwave_list(heatwaves, pm = '+'):
+        ''')
     sorted = []
-    while lijst:
-        max, key = cfg.min_value_geg, 0
+    while heatwaves: # Check alle hittegolven
+        days_max = 0
+        heat_max = cfg.min_value_geg
+        key = 0
 
-        # Haal key maximum waarde uit lijst
-        for i in range(len(lijst)):
-            val = lijst[i].tot_heat_sum
-            if val > max:
-                max = val; key = i
+        # Doorloop de hele lijst en haal de key van maximum waarde uit de lijst
+        for ndx in range(len(heatwaves)):
+            days_act = heatwaves[ndx].day_count
+            heat_act = heatwaves[ndx].tot_heat_sum
+            if cfg.debug:
+                a.pause(f'''
+                days_act: {days_act}
+                heat_act: {heat_act}
+                ''')
 
-        sorted.append(lijst[key]) # Voeg maximum waarde toe
-        del lijst[key] # Verwijder min waarde uit lijst
+            if days_act > days_max:
+                days_max = days_act
+                heat_act = heat_max
+                key = ndx
+            # else:
+            #     if days_act == days_max:
+            #         if heat_act >= heat_max:
+            #             heat_act = heat_max
+            #             days_max = days_act
+            #             key = ndx
+            #     elif days_act < days_max:
+            #         if heat_act >= heat_max:
+            #             heat_act = heat_max
+            #             days_max = days_act
+            #             key = ndx
 
-    return sorted if pm == '+' else sorted.reverse()
+        if cfg.debug:
+            a.pause(f'''
+            key = {key}
+            days_act: {heatwaves[key].day_count}
+            heat_act: {heatwaves[key].tot_heat_sum}
+            ''')
 
-def list_heatwaves_station( station, etmgeg_list ):
-    heatwave_list, mem_etmgeg_list = [], []
-    day_count, day_heat_num = 0, 5
-    day_30_1, day_30_2, day_30_3, heat = False, False, False, False
+        sorted.append(heatwaves[key]) # Voeg maximum waarde toe
+        del heatwaves[key] # Verwijder max waarde uit lijst
 
-    for etmgeg in etmgeg_list:
-        if etmgeg.TX != etmgeg.empthy:
-            iTX = int(etmgeg.TX)
-            # Check only 25+
-            if iTX >= 250:
-                day_count += 1 # Count 25+
-                mem_etmgeg_list.append(etmgeg) # Save 25+
-                if not heat: # No heatwave yet, check for it
-                    # Check for 3 times 30+
-                    if iTX >= 300:
-                        if   not day_30_1: day_30_1 = True # First 30 true
-                        elif not day_30_2: day_30_2 = True # Second 30 true
-                        elif not day_30_3: day_30_3 = True # third 30 true
+    return sorted
 
-                        if day_30_3 and day_count >= day_heat_num:
-                            heat = True # Heatwave !
-
-                if cfg.log:
-                    print( f"PLAATS:{station.plaats}|DATUM:{etmgeg.YYYYMMDD}|"
-                           f"iTX(25+):{iTX}|TEL:{day_count}|HEAT:{heat}" )
-            else:
-                if heat == True: # Heatwave
-                    # Add closed heatwave to list
-                    heat_day = Heatwave( station, mem_etmgeg_list )
-                    heatwave_list.append( heat_day )
-                    if cfg.log:
-                        heat_day = heatwave_list[-1] # last added
-                        out  = 'Hittegolf afgelopen: Heatwave toegevoegd !' + cfg.ln
-                        out += f'Station:{heat_day.station.plaats}' + cfg.ln
-                        out += f'Start datum:{heat_day.etmgeg_list[0].YYYYMMDD}' + cfg.ln
-                        out += f'Eind datum:{heat_day.etmgeg_list[-1].YYYYMMDD}' + cfg.ln
-                        out += f'Tot_heat_sum:{heat_day.tot_heat_sum}' + cfg.ln
-                        out += f'Day_count:{heat_day.day_count}' + cfg.ln
-                        ask.ask(out)
-
-                # Reset heatwave values
-                day_count, day_30_1, day_30_2, day_30_3, heat = 0, False, False, False, False
-                mem_etmgeg_list = []
-
-        else: # Data cannot be checked.
-            if heat: # Oke stop heatwave, add to list and reset values
-                heat_day = Heatwave( station, mem_etmgeg_list )
-                heatwave_list.append( heat_day )
-                if cfg.log:
-                    heat_day = heatwave_list[-1] # Last added
-                    out  = 'Fout in data: heatwave geeindigd en toegevoegd' + cfg.ln
-                    out += f'Station:{heat_day.station.plaats}' + cfg.ln
-                    out += f'Start datum:{heat_day.etmgeg_list[0].YYYYMMDD}' + cfg.ln
-                    out += f'Eind datum:{heat_day.etmgeg_list[-1].YYYYMMDD}' + cfg.ln
-                    out += f'Tot_heat_sum:{heat_day.tot_heat_sum}' + cfg.ln
-                    out += f'Day_count:{heat_day.day_count}' + cfg.ln
-                    ask.ask(out)
-
-            # Reset heatwave values
-            day_count, day_30_1, day_30_2, day_30_3, heat = 0, False, False, False, False
-            mem_etmgeg_list = []
-
-    if heat: #Voeg hittegolf toe en is nog niet ten einde
-        heat_day = Heatwave( station, mem_etmgeg_list )
-        heatwave_list.append ( heat_day )
-        if cfg.log:
-            heat_day = heatwave_list[-1]
-            out  = 'Hittegolf not niet geëindigd: Heatwave toegevoegd !' + cfg.ln
-            out += f'Station:{heat_day.station.plaats}' + cfg.ln
-            out += f'Start datum:{heat_day.etmgeg_list[0].YYYYMMDD}' + cfg.ln
-            out += f'Eind datum:{heat_day.etmgeg_list[-1].YYYYMMDD}' + cfg.ln
-            out += f'Tot_heat_sum:{heat_day.tot_heat_sum}' + cfg.ln
-            out += f'Day_count:{heat_day.day_count}' + cfg.ln
-            ask.ask(out)
-
-    if cfg.log:
-        ask.ask(f'Aantal gevonden hittegolven: {len(heatwave_list)}')
-        print("Doorloop gevonden hittegolven")
-        for heat_day in heatwave_list:
-            out  = f'Start datum:{heat_day.etmgeg_list[0].YYYYMMDD}' + cfg.ln
-            out += f'Eind datum:{heat_day.etmgeg_list[-1].YYYYMMDD}' + cfg.ln
-            out += f'Station:{heat_day.station.plaats}' + cfg.ln
-            out += f'Tot_heat_sum:{heat_day.tot_heat_sum}' + cfg.ln
-            out += f'Day_count:{heat_day.day_count}'+ cfg.ln
-            ask.ask(out)
-
-    return heatwave_list
-
-def gen_calc_heat_waves(lijst_station, ymd_s, ymd_e, type, name):
+def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
     '''Main function calculating heatwaves'''
-    heatwave_list, periode, path, content = [], f'{ymd_s}-{ymd_e}', '', ''
+    heatwave_lists, heatwaves, periode, path, content = [] ,[], f'{ymd_s}-{ymd_e}', '', ''
     bronvermelding = cfg.lijst_stations[0].bronvermelding
 
     # Name
@@ -148,17 +86,30 @@ def gen_calc_heat_waves(lijst_station, ymd_s, ymd_e, type, name):
             continue
         else:
             print(f"Calculate heatwave statistics for station: {station.wmo} {station.plaats}")
-            # Fill Heatwave object with values if there and add to list
-            heat_list = list_heatwaves_station(station, l)
-            if heat_list:
-                for heat in heat_list:
-                    heatwave_list.append(heat)
+            # Check for heatwaves
+            heatwave_lists.append(st.get_list_heatwaves(station, l))
+
+    if cfg.debug:
+        a.pause(f'Count heatwaves: {len(heatwave_lists)}')
+        for lists in heatwave_lists: # contains lists with heatwave
+            for heat in lists: # get the Heatwaves
+                a.pause(f'''
+    Station: {heat.station.plaats}
+    Heatsum: {heat.tot_heat_sum}
+    Day count: {heat.day_count}
+                ''')
+                a.stop()
+
+    heatwaves = []
+    for heatwavelists in heatwave_lists:
+        for heatwave in heatwavelists:
+            heatwaves.append(heatwave)
 
     # Check eerst of er überhaupt hittegolven zijn
-    if heatwave_list:
-        heatwave_list = sort_heatstats(heatwave_list, '+') # Sort on warmtegetal
+    if heatwaves:
+        heatwaves = sort_heatwave_list(heatwaves, '+') # Sort on warmtegetal and count
 
-        print(f"{cfg.ln}...Preparing output ({type})...{cfg.ln}")
+        fn.lnprintln(f"...Preparing output ({type})...")
 
         content = ''
         # Make start/header of content
@@ -192,8 +143,8 @@ def gen_calc_heat_waves(lijst_station, ymd_s, ymd_e, type, name):
             # content += f"DATUMS & TEMPS "
             #content += cfg.ln
 
-        # Calculate heatwaves and fill content
-        for heatwave in heatwave_list:
+        for heatwave in heatwaves:
+
             etm_l = heatwave.etmgeg_list
             ymds = etm_l[0].YYYYMMDD
             ymde = etm_l[-1].YYYYMMDD
@@ -218,10 +169,8 @@ def gen_calc_heat_waves(lijst_station, ymd_s, ymd_e, type, name):
             datum_txt = f"{d.Datum(ymds).tekst()} - {d.Datum(ymde).tekst()}"
             heat_ndx  = fn.rm_s(fn.fix(heatwave.tot_heat_sum, 'heat_ndx'))
 
-
             if type == 'html':
-                heatwave.etmgeg_list
-                html_days = str(heatwave.day_count) + h.table_list_heatwave_days( heatwave.etmgeg_list, -1 )
+                html_days = f'{heatwave.day_count}{h.table_list_heatwave_days(heatwave.etmgeg_list, -1)}'
                 html_tx_gte_30 = cnt_tx_gte_30 + h.table_count(tx_gte_30['lijst'], -1)
                 html_tx_gte_35 = cnt_tx_gte_35 + h.table_count(tx_gte_35['lijst'], -1)
                 html_tx_max = tx_max_val + h.table_extremes(tx_max['lijst'][-1:], -1)
