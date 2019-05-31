@@ -9,16 +9,25 @@ __version__    =  "0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config as c, write as w, fn, validate as v, ask as a
+import sys, config as c, write as w, fn, validate as v, ask as a
 
 def ask(s):
     s = fn.san(input(s))
     return s
 
+def pause( s ):
+    input(s)
+
+def stop():
+    y = ['Q', 'q']
+    s = f"Exit program ? Press 'q' or 'Q' to exit..."
+    if ask(s) in y:
+        sys.exit('Programm stopped...')
+
 def ask_open_url(txt):
     print(txt)
-    print(f"Press 'Y' or 'y' to open the file in your (default) program")
-    print("Press a another key to skip opening your file")
+    print(f"Press 'Y' or 'y' to open the file ")
+    print("Or press 'any other key' to skip opening the file")
 
     yn = ask(" ? ")
     return True if yn in ['Y','y'] else False
