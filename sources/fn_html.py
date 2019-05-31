@@ -216,32 +216,6 @@ def table_hellmann ( l, max ):
 
     return html
 
-def table_heat_ndx( l, max ):
-    html = ''
-    if l:
-        if max is not 0:
-            l.reverse()
-            cnt = len(l)
-            max = cnt if max == -1 else max # -1 for all!
-            end = cnt if max > cnt else max # check bereik
-            html += '<table class="popup">'
-            html += '<thead><tr><th>datum</th><th>tg</th><th>getal</th>'
-            html += '<th>totaal</th><th>aantal</th></tr></thead>'
-            html += '<tbody>'
-
-            for e in l[:end]:
-                sdt = d.Datum(e.datum).tekst()
-                tg  = fn.rm_s(fn.fix(e.tg, 'tg'))
-                get = fn.rm_s(fn.fix(e.getal, 'heat_ndx'))
-                som = fn.rm_s(fn.fix(e.totaal, 'heat_ndx'))
-                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{tg}</td>'
-                html += f'<td>{get}</td><td>{som}</td><td>{e.aantal}</td></tr>'
-
-            html += '</tbody>'
-            html += '</table>'
-
-    return html
-
 def table_list_heatwave_days( l, max ):
     html = ''
     if l:
@@ -277,6 +251,7 @@ def table_list_heatwave_days( l, max ):
 
                 # Minus act day heatndx for the total heatndx of the day before
                 warm_sum -= act_warm
+                cnt -= 1
 
             html += '</tbody>'
             html += '</table>'
