@@ -157,11 +157,10 @@ def table_count(l, max):
             for e in l[:end]:
                 sdt = d.Datum(e.datum).tekst()
                 val = fn.rm_s( fn.fix( e.waarde, e.ent ) )
-                eis = fn.rm_s( fn.fix( e.eis, e.ent ) )
                 t_ent = knmi.ent_to_t_ent( e.ent )
                 tme = fn.rm_s(fn.fix(e.tijd, t_ent)) if t_ent is not False else '.'
                 html += f'<tr><td title="{sdt}">{e.datum}</td><td>{tme}</td>'\
-                        f'<td>{val}</td><td>{e.oper}{eis}</td><td>{e.tel}</td></tr>'
+                        f'<td>{val}</td><td>{e.oper}{e.eis}</td><td>{e.tel}</td></tr>'
 
             html += '</tbody>'
             html += '</table>'
