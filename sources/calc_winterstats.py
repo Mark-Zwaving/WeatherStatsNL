@@ -12,30 +12,6 @@ __status__     =  "Development"
 import write as wr, fn, calc_stats as st, config as cfg, fn_html as h
 import dates as dat, fn_read as r
 
-class Hellmann:
-    '''Deze klasse bewaart gegevens hellman dagen'''
-    def __init__(self, datum, getal, som, aantal):
-        self.datum  = datum
-        self.getal  = getal
-        self.som    = som
-        self.aantal = aantal
-
-def hellmann_getal(lijst_geg):
-    som, aantal, l = 0, 0, []
-    for geg in lijst_geg:
-        if geg.TG != geg.empthy:
-            iTG = int(geg.TG)
-            if iTG < 0:
-                datum = geg.YYYYMMDD
-                getal = abs(iTG)
-                som += getal
-                aantal += 1 # Verwerk nieuw getal
-                if cfg.log:
-                    print(f"HLM|datum:{datum}sgetal:{getal}|som:{som}|aantal:{aantal}")
-                l.append(Hellmann(datum, getal, som, aantal))
-
-    return {'getal':som, 'lijst':l}
-
 class AlgemeneWinterStats:
     '''Deze klasse bewaart algemene gegevens winterstatistieken van een station
        in een bepaalde periode'''
@@ -111,7 +87,7 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
                     st.min_val(l,'TG'),
                     st.min_val(l,'TN'),
                     st.gem_val(l,'TG'),
-                    hellmann_getal(l),
+                    st.hellmann_getal(l),
                     st.cnt_day(l,'TX','<',0),    # Ijsdagen
                     st.cnt_day(l,'TG','<',0),    # Hellmanndagen
                     st.cnt_day(l,'TN','<',0),    # Vorstdagen
@@ -122,7 +98,7 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
                 )
             )
 
-    print(f"{cfg.ln}...Preparing output ({type})...{cfg.ln}")
+    fn.lnprintln(f'...Preparing output ({type})...')
 
     winter_geg = sort_winterstats_num(winter_geg,'+') # Sorteer, alleen op hellmann
 
@@ -221,7 +197,7 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
         content = fn.clean_s(content) # Remove unnecessary whitespace
 
     if type == 'cmd':
-        print(cfg.line + cfg.ln + content + cfg.ln + cfg.line)
+        fn.lnprintln(cfg.line + cfg.ln + content + cfg.ln + cfg.line)
 
     if type == 'txt' or type == 'html':
         file_name = fn.mk_path(path, name) # Make file name
