@@ -12,6 +12,15 @@ __status__     =  "Development"
 import os, threading, time, zipfile, config as c, write as w, convert as cvt
 import knmi
 
+def ln_s_ln(s):
+    return f'{c.ln}{s}{c.ln}'
+
+def println(s):
+    print(f'{s}{c.ln}')
+
+def lnprintln(s):
+    print(ln_s_ln(s))
+
 def rm_double_space(s):
     if '  ' in s:
         while '  ' in s:
@@ -121,9 +130,6 @@ def fix( s, ent ):
             else:
                 return '>70km'
     return s
-
-def println(s):
-    print(f'{s}{c.ln}')
 
 def unzip( zip_dir, zip_file, unzip_file ):
     '''Functie unzipt een bestand. Returned True of False, gelukt of niet'''
