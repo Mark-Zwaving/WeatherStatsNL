@@ -250,31 +250,33 @@ def table_list_heatwave_days( l, max ):
             cnt = len(l)
             max = cnt if max == -1 else max # -1 for all!
             end = cnt if max > cnt else max # check bereik
+            warm_sum = stat.warmte_getal(l)['getal'] # Total heat ndx
             html += '''<table class="popup">
                        <thead>
-                       <tr><th>datum</th><th>∑warmte</th><th>∑dag</th>
+                       <tr><th>datum</th><th>∑dag</th><th>∑warmte</th>
                            <th>warmte</th><th>tx</th><th>tg</th><th>tn</th></tr>
                        </thead>
-                       <tbody>'''
-            cnt = len(l[:end])
+                       '''
+
             for e in l[:end]:
                 sdt = d.Datum(e.YYYYMMDD).tekst()
                 tx  = fn.rm_s(fn.fix(e.TX, 'tx'))
                 tn  = fn.rm_s(fn.fix(e.TN, 'tn'))
                 tg  = fn.rm_s(fn.fix(e.TG, 'tg'))
 
-                # Migt be buggy tg < 18 will cause a error
-                l_act = l[:cnt]
-                tot_warm = fn.rm_s(fn.fix(cs.warmte_getal(l_act)['getal'],'heat_ndx')) # Calculate total warmth ndx at this moment
-                g_warm = fn.rm_s(fn.fix(stat.get_heat_ndx_of_etm_geg(e),'heat_ndx'))
+                tot_warm = fn.rm_s(fn.fix(warm_sum,'heat_ndx'))
+                act_warm = stat.get_heat_ndx_of_etm_geg(e)
+                g_warm = fn.rm_s(fn.fix(act_warm,'heat_ndx'))
 
                 html += f'''<tr>
-                            <td title="{sdt}">{e.YYYYMMDD}</td><td>{tot_warm}</td>
-                            <td>{cnt}</td><td>{g_warm}</td><td>{tx}</td><td>{tg}</td>
-                            <td>{tn}</td>
-                            </tr>'''
+                            <td title="{sdt}">{e.YYYYMMDD}</td><td>{cnt}</td>
+                            <td>{tot_warm}</td><td>{g_warm}</td><td>{tx}</td>
+                            <td>{tg}</td><td>{tn}</td>
+                            </tr>
+                        '''
 
-                cnt -= 1 # Less one day for next
+                # Minus act day heatndx for the total heatndx of the day before
+                warm_sum -= act_warm
 
             html += '</tbody>'
             html += '</table>'
