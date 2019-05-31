@@ -216,6 +216,32 @@ def table_hellmann ( l, max ):
 
     return html
 
+def table_heat_ndx( l, max ):
+    html = ''
+    if l:
+        if max is not 0:
+            l.reverse()
+            cnt = len(l)
+            max = cnt if max == -1 else max # -1 for all!
+            end = cnt if max > cnt else max # check bereik
+            html += '<table class="popup">'
+            html += '<thead><tr><th>datum</th><th>tg</th><th>getal</th>'
+            html += '<th>totaal</th><th>aantal</th></tr></thead>'
+            html += '<tbody>'
+
+            for e in l[:end]:
+                sdt = d.Datum(e.datum).tekst()
+                tg  = fn.rm_s(fn.fix(e.tg, 'tg'))
+                get = fn.rm_s(fn.fix(e.getal, 'heat_ndx'))
+                som = fn.rm_s(fn.fix(e.totaal, 'heat_ndx'))
+                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{tg}</td>'
+                html += f'<td>{get}</td><td>{som}</td><td>{e.aantal}</td></tr>'
+
+            html += '</tbody>'
+            html += '</table>'
+
+    return html
+
 def table_list_heatwave_days( l, max ):
     html = ''
     if l:
@@ -252,35 +278,6 @@ def table_list_heatwave_days( l, max ):
                 # Minus act day heatndx for the total heatndx of the day before
                 warm_sum -= act_warm
                 cnt -= 1
-
-            html += '</tbody>'
-            html += '</table>'
-
-    return html
-
-
-def table_heatwaves( l, max ):
-    html = ''
-    if l:
-        if max is not 0:
-            cnt = len(l)
-            max = cnt if max == -1 else max # -1 for all!
-            end = cnt if max > cnt else max # check bereik
-            html += '<table class="popup">'
-            html += '<thead><tr><th>datum</th><th>tx</th><th>tg</th>'
-            html += '<th>tn</th><th>sq</th><th>rh</th></tr></thead>'
-            html += '<tbody>'
-
-            for e in l[:end]:
-                sdt = d.Datum(e.YYYYMMDD).tekst()
-                tx = fn.fix(e.TX,"tx")
-                tg = fn.rm_s(fn.fix(e.TG,"tg"))
-                tn = fn.rm_s(fn.fix(e.TN,"tn"))
-                sq = fn.rm_s(fn.fix(e.SQ,'sq'))
-                rs = fn.rm_s(fn.fix(e.RS,'rs'))
-                html += f'<tr><td title="{sdt}">{e.datum}</td><td title="Maximum temperatuur">{tx}</td>'
-                html += f'<td title="Gemiddelde temperatuur">{tg}</td><td title="Minimum temperatuur">{tn}</td>'
-                html += f'<td title="Aantal uren zon">{sq}</td><td title="Aantal mm regen">{rs}</td></tr>'
 
             html += '</tbody>'
             html += '</table>'
