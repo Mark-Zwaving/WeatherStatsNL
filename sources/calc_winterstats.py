@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9.1"
+__version__    =  "0.9.2"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -13,26 +13,28 @@ import write as wr, fn, calc_stats as st, config as cfg, fn_html as h
 import dates as dat, fn_read as r
 
 class AlgemeneWinterStats:
-    '''Deze klasse bewaart algemene gegevens winterstatistieken van een station
-       in een bepaalde periode'''
-    def __init__(self, wmo, plaats, provincie, periode, tx_min, tg_min, tn_min, tg_gem, hellmann,
-                       tx_lt_0, tg_lt_0, tn_lt_0, tn_lt__5, tn_lt__10, tn_lt__15, tn_lt__20 ):
-        self.wmo       =  wmo
-        self.plaats    =  plaats
-        self.provincie =  provincie
-        self.periode   =  periode
-        self.tg_gem    =  tg_gem
-        self.hellmann  =  hellmann
-        self.tx_min    =  tx_min
-        self.tg_min    =  tg_min
-        self.tn_min    =  tn_min
-        self.tx_lt_0   =  tx_lt_0    # Ijsdagen
-        self.tg_lt_0   =  tg_lt_0    # Hellmanndagen
-        self.tn_lt_0   =  tn_lt_0    # Lichte vorst
-        self.tn_lt__5  =  tn_lt__5   # Matige vorst
-        self.tn_lt__10 =  tn_lt__10  # Strenge vort
-        self.tn_lt__15 =  tn_lt__15  # Zeer strenge vorst
-        self.tn_lt__20 =  tn_lt__20
+    '''Class stores and saves winter statistics of a station in a given period'''
+    def __init__(self, station, etm_l ):
+        self.station    =  station
+        self.etm_l      =  etm_l
+        self.wmo        =  station.wmo
+        self.place      =  station.plaats
+        self.province   =  station.provincie
+        self.date_start =  etm_l[0].YYYYMMDD
+        self.date_end   =  etm_l[-1].YYYYMMDD
+        self.period     =  f'{self.date_start}-{self.date_end}'
+        self.tg_gem     =  st.gem_val(etm_l,'TG')
+        self.hellmann   =  st.hellmann_getal(etm_l)
+        self.tx_min     =  st.min_val(etm_l,'TX')
+        self.tg_min     =  st.min_val(etm_l,'TG')
+        self.tn_min     =  st.min_val(etm_l,'TN')
+        self.tx_lt_0    =  st.cnt_day(etm_l,'TX','<',0)     # Ijsdagen
+        self.tg_lt_0    =  st.cnt_day(etm_l,'TG','<',0)     # Hellmanndagen
+        self.tn_lt_0    =  st.cnt_day(etm_l,'TN','<',0)     # Lichte vorst
+        self.tn_lt__5   =  st.cnt_day(etm_l,'TN','<',-50)   # Matige vorst
+        self.tn_lt__10  =  st.cnt_day(etm_l,'TN','<',-100)  # Strenge vort
+        self.tn_lt__15  =  st.cnt_day(etm_l,'TN','<',-150)  # Zeer strenge vorst
+        self.tn_lt__20  =  st.cnt_day(etm_l,'TN','<',-200)
 
 def sort_winterstats_num(lijst, pm = '+'):
     sorted = []
@@ -77,33 +79,14 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
         else:
             print(f"Calculate winter statistics for station: {station.wmo} {station.plaats}")
             # Vul Winterstats object met berekende waarden toe aan lijst met gegevens
-            winter_geg.append (
-                AlgemeneWinterStats (
-                    station.wmo,
-                    station.plaats,
-                    station.provincie,
-                    l[0].YYYYMMDD + '-' + l[-1].YYYYMMDD,   # Periode
-                    st.min_val(l,'TX'),
-                    st.min_val(l,'TG'),
-                    st.min_val(l,'TN'),
-                    st.gem_val(l,'TG'),
-                    st.hellmann_getal(l),
-                    st.cnt_day(l,'TX','<',0),    # Ijsdagen
-                    st.cnt_day(l,'TG','<',0),    # Hellmanndagen
-                    st.cnt_day(l,'TN','<',0),    # Vorstdagen
-                    st.cnt_day(l,'TN','<',-50),  # Matige vorst
-                    st.cnt_day(l,'TN','<',-100), # Strenge vorst
-                    st.cnt_day(l,'TN','<',-150), # Zeer strenge vorst
-                    st.cnt_day(l,'TN','<',-200),
-                )
-            )
+            winter_geg.append( AlgemeneWinterStats( station, l ) )
 
     fn.lnprintln(f'...Preparing output ({type})...')
 
     winter_geg = sort_winterstats_num(winter_geg,'+') # Sorteer, alleen op hellmann
 
     # Head of tables
-    if type == 'txt' or type == 'cmd':
+    if type in ['txt','cmd']:
         s, path = ' ', lijst_stations[0].dir_text
         content  = f'PLAATS{s:17} PROVINCIE         PERIODE{s:11} TG{s:5} HELLMANN TX MIN  ' \
                    f'TG MIN  TN MIN  TX<0  TG<0  TN<0  TN<-5  TX<-10 ' \
@@ -150,40 +133,34 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
         hellmann  = fn.rm_s(fn.fix(g.hellmann['getal'], 'hellmann'))  # hellmann
 
         if type == 'html':
-            html_tx_min    = tx_min + h.table_extremes(g.tx_min['lijst'][-1:], -1)
-            html_tg_min    = tg_min + h.table_extremes(g.tg_min['lijst'][-1:], -1)
-            html_tn_min    = tn_min + h.table_extremes(g.tn_min['lijst'][-1:], -1)
-
-            html_tx_lt_0   = tx_lt_0 + h.table_count(g.tx_lt_0['lijst'], -1)
-            html_tg_lt_0   = tg_lt_0 + h.table_count(g.tg_lt_0['lijst'],  -1)
-            html_tn_lt_0   = tn_lt_0 + h.table_count(g.tn_lt_0['lijst'],  -1)
-            html_tn_lt__5  = tn_lt__5 + h.table_count(g.tn_lt__5['lijst'], -1)
-            html_tn_lt__10 = tn_lt__10 + h.table_count(g.tn_lt__10['lijst'], -1)
-            html_tn_lt__15 = tn_lt__15 + h.table_count(g.tn_lt__15['lijst'], -1)
-            html_tn_lt__20 = tn_lt__20 + h.table_count(g.tn_lt__20['lijst'], -1)
-            html_hellmann  = hellmann + h.table_hellmann(g.hellmann['lijst'], -1)
-
-            d_l = g.periode.split('-')
-            dat_txt = f'{dat.Datum(d_l[0]).tekst()} - {dat.Datum(d_l[1]).tekst()}'
-
+            dat_txt = f'{dat.Datum(g.date_start).tekst()} - {dat.Datum(g.date_end).tekst()}'
             content += f'''
                 <tr>
-                    <td> {g.plaats} </td> <td> {g.provincie} </td>
-                    <td title="{dat_txt}"> {g.periode} </td> <td> {tg_gem} </td>
-                    <td> {html_hellmann} </td> <td> {html_tx_min} </td> <td> {html_tg_min} </td>
-                    <td> {html_tn_min} </td> <td> {html_tx_lt_0} </td> <td> {html_tg_lt_0} </td>
-                    <td> {html_tn_lt_0} </td> <td> {html_tn_lt__5} </td> <td> {html_tn_lt__10} </td>
-                    <td> {html_tn_lt__15} </td> <td> {html_tn_lt__20} </td>
+                    <td> {g.place} </td>
+                    <td> {g.province} </td>
+                    <td title="{dat_txt}"> {g.period} </td>
+                    <td> {tg_gem} </td>
+                    <td> {hellmann}  {h.table_hellmann(g.hellmann['lijst'], -1)} </td>
+                    <td> {tx_min}    {h.table_extremes(g.tx_min['lijst'][-1:], -1)} </td>
+                    <td> {tg_min}    {h.table_extremes(g.tg_min['lijst'][-1:], -1)} </td>
+                    <td> {tn_min}    {h.table_extremes(g.tn_min['lijst'][-1:], -1)} </td>
+                    <td> {tx_lt_0}   {h.table_count(g.tx_lt_0['lijst'], -1)} </td>
+                    <td> {tg_lt_0}   {h.table_count(g.tg_lt_0['lijst'], -1)} </td>
+                    <td> {tn_lt_0}   {h.table_count(g.tn_lt_0['lijst'], -1)} </td>
+                    <td> {tn_lt__5}  {h.table_count(g.tn_lt__5['lijst'], -1)} </td>
+                    <td> {tn_lt__10} {h.table_count(g.tn_lt__10['lijst'], -1)} </td>
+                    <td> {tn_lt__15} {h.table_count(g.tn_lt__15['lijst'], -1)} </td>
+                    <td> {tn_lt__20} {h.table_count(g.tn_lt__20['lijst'], -1)} </td>
                 </tr> '''
 
-        if type == 'txt' or type == 'cmd':
-            content += f"{g.plaats:<23} {g.provincie:17} {g.periode:18} {tg_gem:7} "
+        if type in ['txt','cmd']:
+            content += f"{g.place:<23} {g.province:17} {g.period:18} {tg_gem:7} "
             content += f"{hellmann:^8} {tx_min:<7} {tg_min:<7} {tn_min:<7} "
             content += f"{tx_lt_0:^5} {tg_lt_0:^5} {tn_lt_0:^5} {tn_lt__5:^6} "
             content += f"{tn_lt__10:^6} {tn_lt__15:^6} {tn_lt__20:^6} \n"
 
     # Close of content
-    if type == 'txt' or type == 'cmd':
+    if type in ['txt','cmd']:
         content += bronvermelding
 
     if type == 'html':
@@ -199,7 +176,7 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
     if type == 'cmd':
         fn.lnprintln(cfg.line + cfg.ln + content + cfg.ln + cfg.line)
 
-    if type == 'txt' or type == 'html':
+    if type in ['txt','html']:
         file_name = fn.mk_path(path, name) # Make file name
         wr.write_to_file(file_name, content) # Schrijf naar bestand
 

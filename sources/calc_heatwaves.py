@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9.1"
+__version__    =  "0.9.2"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -137,7 +137,7 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
                 <tbody>
             '''
 
-        if type =='txt' or type == 'cmd':
+        if type in ['txt','cmd']:
             content  = f"PLAATS{' ':24} PERIODE{' ':10} ∑WARMTE ∑DAG  TX MAX    TN MAX   " \
                         "TX GEM   TG       TN GEM TX≥30  TX≥35 ZON TOT\n"
             # content += f"DATUMS & TEMPS "
@@ -170,21 +170,21 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
             heat_ndx  = fn.rm_s(fn.fix(heatwave.tot_heat_sum, 'heat_ndx'))
 
             if type == 'html':
-                html_days = f'{heatwave.day_count}{h.table_list_heatwave_days(heatwave.etmgeg_list, -1)}'
-                html_tx_gte_30 = cnt_tx_gte_30 + h.table_count(tx_gte_30['lijst'], -1)
-                html_tx_gte_35 = cnt_tx_gte_35 + h.table_count(tx_gte_35['lijst'], -1)
-                html_tx_max = tx_max_val + h.table_extremes(tx_max['lijst'][-1:], -1)
-                html_tn_max = tn_max_val + h.table_extremes(tn_max['lijst'][-1:], -1)
-
                 content += f'''
                     <tr>
-                        <td> {plaats} </td> <td> {province} </td>
+                        <td> {plaats} </td>
+                        <td> {province} </td>
                         <td title="{datum_txt}"> {periode} </td>
-                        <td> {html_days} </td> <td> {heat_ndx} </td>
-                        <td> {html_tx_max} </td> <td> {html_tn_max} </td>
-                        <td> {tx_ave} </td> <td> {tg_ave} </td>
-                        <td> {tn_ave} </td> <td> {html_tx_gte_30} </td>
-                        <td> {html_tx_gte_35} </td> <td> {sq_sum} </td>
+                        <td> {heatwave.day_count} {h.table_list_heatwave_days(heatwave.etmgeg_list, -1)} </td>
+                        <td> {heat_ndx} </td>
+                        <td> {tx_max_val} {h.table_extremes(tx_max['lijst'][-1:], -1)} </td>
+                        <td> {tn_max_val} {h.table_extremes(tn_max['lijst'][-1:], -1)} </td>
+                        <td> {tx_ave} </td>
+                        <td> {tg_ave} </td>
+                        <td> {tn_ave} </td>
+                        <td> {cnt_tx_gte_30} {h.table_count(tx_gte_30['lijst'], -1)} </td>
+                        <td> {cnt_tx_gte_35} {h.table_count(tx_gte_35['lijst'], -1)} </td>
+                        <td> {sq_sum} </td>
                     </tr>
                 '''
 
@@ -200,7 +200,7 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
                 #content += cfg.ln
 
         # Close of content
-        if type =='html':
+        if type == 'html':
             content += f'''
                 </tbody>
                 <tfoot> <tr> <td colspan="13"> {bronvermelding} </td> </tr> </tfoot>
@@ -210,17 +210,17 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
             content = h.pagina(title, css, content) # Make html page
             content = fn.clean_s(content) # Remove unnecessary whitespace
 
-        if type =='txt' or type == 'cmd':
+        if type in ['txt','cmd']:
             content += bronvermelding
 
     else: # No heatwaves found
-        content = f'Voor {periode} zijn geen hittegolven gevonden...'
+        content = f'Voor de opgegeven {periode} zijn geen hittegolven gevonden...'
         if type =='txt':
             pass
         if type == 'html':
-            content = h.pagina('Geen hittegolven', '', '<p>{content}</p>')
+            content = h.pagina('Geen hittegolven', '', f'<p>{content}</p>')
 
-    if type != 'cmd':
+    if type in ['html','txt']:
         file_name = fn.mk_path(path, name) # Make file name
         wr.write_to_file(file_name, content) # Schrijf naar bestand
         return file_name
