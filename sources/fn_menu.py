@@ -16,36 +16,36 @@ import calc_dayvalues as day, dates as dat, webbrowser
 # Menu choice 1
 def download_etmgeg_all_stations():
     '''Functie downloadt (en unzipt) alle knmi stations in de lijst'''
-    fn.println(f'{c.line}{c.ln}START DOWNLOADING ALL STATIONS KNMI DATA DAY VALUES...')
+    fn.lnprintln(f'{c.line}{c.ln}START DOWNLOADING ALL STATIONS KNMI DATA DAY VALUES...')
     start_ns = time.time_ns()
     for station in c.lijst_stations:
         d.download_and_unzip_etmgeg_station ( station )
     end_ns = time.time_ns()
     w.write_process_time_ns( 'Total calculation time: ', (end_ns-start_ns) )
 
-    fn.println(f'{c.ln}END DOWNLOADING ALL STATIONS KNMI DATA DAY VALUES...{c.ln}{c.line}')
+    fn.lnprintln(f'END DOWNLOADING ALL STATIONS KNMI DATA DAY VALUES...{c.ln}{c.line}')
 
     a.ask(f"Press a 'key' to go back to the main menu{c.ln}")
 
 # Menu choice 2
 def download_etmgeg_station():
     '''Functie vraagt eerst om één of meerdere stations en downloadt ze daarna '''
-    fn.println(f'{c.line}{c.ln}START DOWNLOAD STATION KNMI DATA DAY VALUES...')
+    fn.lnprintln(f'{c.line}{c.ln}START DOWNLOAD STATION KNMI DATA DAY VALUES...')
     l = a.ask_stations('Select one or more stations ? ' )
     if l != c.stop:
-        fn.println(f'...DOWNLOADING STARTED...')
+        fn.lnprintln(f'...DOWNLOADING STARTED...')
         start_ns = time.time_ns()
         for station in l: d.download_and_unzip_etmgeg_station ( station )
         end_ns = time.time_ns()
         w.write_process_time_ns( 'Total calculation time: ', (end_ns-start_ns) )
-    fn.println(f'{c.ln}END DOWNLOAD STATION KNMI DATA DAY VALUES...{c.ln}{c.line}')
+    fn.lnprintln(f'END DOWNLOAD STATION KNMI DATA DAY VALUES...{c.ln}{c.line}')
 
     a.ask(f"Press a 'key' to go back to the main menu{c.ln}")
 
 #Menu choice 3 get_dagwaarden
 def get_dayvalues():
     '''Funtion gets day values from data knmi '''
-    fn.println(f'{c.line}{c.ln}START: SEARCHING AND PREPARING DAY VALUES...')
+    fn.lnprintln(f'{c.line}{c.ln}START: SEARCHING AND PREPARING DAY VALUES...')
     yyyymmdd = a.ask_date('Give the date <yyyymmdd> you look for ? ')
     if yyyymmdd != c.stop:
         station = a.ask_station('Select a weather station ? ')
@@ -58,7 +58,7 @@ def get_dayvalues():
                     if name == c.stop:
                         oke = False
                 if oke:
-                    fn.println('...SEARCHING FOR AND PREPARING DAY VALUES...')
+                    fn.lnprintln('...SEARCHING FOR AND PREPARING DAY VALUES...')
                     print(f'Station: {station.wmo} {station.plaats}')
                     fn.println(f'DATE: {dat.Datum(yyyymmdd).tekst()}')
                     start_ns = time.time_ns()
@@ -67,18 +67,18 @@ def get_dayvalues():
                     w.write_process_time_ns('Total calculation time: ', (end_ns-start_ns) )
 
                     if type != 'cmd':
-                        oke = a.ask_open_url("Open the file in your (default) browser ?")
+                        oke = a.ask_open_url("Open the file with your (default) app ?")
                         if oke:
                             webbrowser.open_new(file_name) # Opens in default browser
 
-    fn.println(f'{c.ln}END SEARCHING AND PREPARING DAY VALUES...{c.ln}{c.line}')
+    fn.lnprintln(f'END SEARCHING AND PREPARING DAY VALUES...{c.ln}{c.line}')
 
     a.ask(f"Press a 'key' to go back to the main menu{c.ln}")
 
 # Menu choice
 def calc_winterstats():
     '''Functie regelt berekeningen voor de winterstats'''
-    fn.println(f'{c.line}{c.ln}START CALCULATE WINTER STATISTICS')
+    fn.lnprintln(f'{c.line}{c.ln}START CALCULATE WINTER STATISTICS')
     dates = a.ask_start_and_end_date() # Ask start and end date
     if dates != c.stop:
         l = a.ask_stations('Select one or more stations ? ' )
@@ -91,7 +91,7 @@ def calc_winterstats():
                     if name == c.stop:
                         oke = False
                 if oke:
-                    fn.println(f'...CALCULATING WINTER STATISTICS...')
+                    fn.lnprintln(f'...CALCULATING WINTER STATISTICS...')
                     start_ns = time.time_ns()
                     file_name = ws.alg_winterstats(l, dates['start'], dates['einde'], name, type)
                     end_ns = time.time_ns()
@@ -102,13 +102,13 @@ def calc_winterstats():
                         if oke:
                             webbrowser.open_new(file_name) # Opens in default browser
 
-    fn.println(f'{c.ln}END CALCULATE WINTER STATISTICS...{c.ln}{c.line}')
+    fn.lnprintln(f'END CALCULATE WINTER STATISTICS...{c.ln}{c.line}')
 
     a.ask(f"Press a 'key' to go back to the main menu{c.ln}")
 
 # Menu choice
 def calc_zomerstats():
-    fn.println(f'{c.line}{c.ln}START CALCULATE SUMMER STATISTICS...')
+    fn.lnprintln(f'{c.line}{c.ln}START CALCULATE SUMMER STATISTICS...')
     dates = a.ask_start_and_end_date() # Ask start and end date
     if dates != c.stop:
         l = a.ask_stations('Select one or more stations ? ' )
@@ -121,7 +121,7 @@ def calc_zomerstats():
                     if name == c.stop:
                         oke = False
                 if oke:
-                    fn.println(f'...CALCULATING SUMMERSTATS...')
+                    fn.lnprintln(f'...CALCULATING SUMMERSTATS...')
                     start_ns = time.time_ns()
                     file_name = zs.alg_zomerstats(l, dates['start'], dates['einde'], name, type)
                     end_ns = time.time_ns()
@@ -132,13 +132,13 @@ def calc_zomerstats():
                         if oke:
                             webbrowser.open_new(file_name) # Opens in default browser
 
-    fn.println(f'{c.ln}END CALCULATE SUMMER STATISTICS...{c.ln}{c.line}')
+    fn.lnprintln(f'END CALCULATE SUMMER STATISTICS...{c.ln}{c.line}')
 
     a.ask(f"Press a 'key' to go back to the main menu{c.ln}")
 
 # Menu choice
 def calc_heat_waves():
-    fn.println(f'{c.line}{c.ln}START CALCULATE HEATWAVES...')
+    fn.lnprintln(f'{c.line}{c.ln}START CALCULATE HEATWAVES...')
     dates = a.ask_start_and_end_date() # Ask start and end date
     if dates != c.stop:
         l = a.ask_stations('Select one or more stations ? ' )
@@ -151,9 +151,9 @@ def calc_heat_waves():
                     if name == c.stop:
                         oke = False
                 if oke:
-                    fn.println(f'...CALCULATING HEATWAVES...')
+                    fn.lnprintln(f'...CALCULATING HEATWAVES...')
                     start_ns = time.time_ns()
-                    file_name = hs.gen_calc_heat_waves(l, dates['start'], dates['einde'], type, name)
+                    file_name = hs.alg_heatwaves(l, dates['start'], dates['einde'], type, name)
                     end_ns = time.time_ns()
                     w.write_process_time_ns('Total calculation time: ', (end_ns-start_ns) )
 
@@ -162,6 +162,6 @@ def calc_heat_waves():
                         if oke:
                             webbrowser.open_new(file_name) # Opens in default browser
 
-    fn.println(f'{c.ln}END CALCULATE HEATWAVES...{c.ln}{c.line}')
+    fn.lnprintln(f'END CALCULATE HEATWAVES...{c.ln}{c.line}')
 
     a.ask(f"Press a 'key' to go back to the main menu{c.ln}")
