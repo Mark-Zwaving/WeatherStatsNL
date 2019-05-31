@@ -145,38 +145,14 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
         rh_gte_10 = str(g.rh_gte_10['tel'])
 
         if type in ['txt','cmd']:
-<<<<<<< HEAD
-            content += f"{g.plaats:<21} {g.provincie:<16} {g.periode:<18} " \
-=======
             content += f"{g.place:<21} {g.province:<16} {g.period:<18} " \
->>>>>>> Update-winterstats-and-summerstats-classes-and-functions
                        f"{tg_gem:<7} {heat_ndx:<7} {tx_max:<7} {tg_max:<7} " \
                        f"{tn_max:<7} {tx_gte_20:^6} {tx_gte_25:^6} {tx_gte_30:^6} " \
                        f"{tx_gte_35:^6} {tg_gte_18:^6} {tg_gte_20:^6} {tn_gte_20:^6} " \
                        f"{sq_gte_10:^7} {sq_tot:<10} {rh_gte_10:^9} {rh_tot:<11} \n"
 
-<<<<<<< HEAD
-        if type is 'html':
-            html_warmte_getal = heat_ndx + h.table_heat_ndx(g.warmte_getal['lijst'], -1) # -1 for all values
-            html_tx_max = tx_max + h.table_extremes(g.tx_max['lijst'][-1:], -1)
-            html_tg_max = tg_max + h.table_extremes(g.tg_max['lijst'][-1:], -1)
-            html_tn_max = tn_max + h.table_extremes(g.tn_max['lijst'][-1:], -1)
-            html_tg_gte_20 = tg_gte_20 + h.table_count(g.tg_gte_20['lijst'], -1)
-            html_tx_gte_20 = tx_gte_20 + h.table_count(g.tx_gte_20['lijst'], -1)
-            html_tx_gte_25 = tx_gte_25 + h.table_count(g.tx_gte_25['lijst'], -1)
-            html_tx_gte_30 = tx_gte_30 + h.table_count(g.tx_gte_30['lijst'], -1)
-            html_tx_gte_35 = tx_gte_35 + h.table_count(g.tx_gte_35['lijst'], -1)
-            html_tg_gte_18 = tg_gte_18 + h.table_count(g.tg_gte_18['lijst'], -1)
-            html_tn_gte_20 = tn_gte_20 + h.table_count(g.tn_gte_20['lijst'], -1)
-            html_sq_gte_10 = sq_gte_10 + h.table_count(g.sq_gte_10['lijst'], -1)
-            html_rh_gte_10 = rh_gte_10 + h.table_count(g.rh_gte_10['lijst'], -1)
-
-            per = g.periode.split('-')
-            datum_txt = f"{d.Datum(per[0]).tekst()} - {d.Datum(per[1]).tekst()}"
-=======
         if type == 'html':
             date_txt = f"{d.Datum(g.date_start).tekst()} - {d.Datum(g.date_end).tekst()}"
->>>>>>> Update-winterstats-and-summerstats-classes-and-functions
             content += f'''
                 <tr>
                     <td> {g.place} </td>
