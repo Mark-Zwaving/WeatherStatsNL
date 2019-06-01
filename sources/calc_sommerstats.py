@@ -28,16 +28,16 @@ class SummerStats:
         self.tg_max       =  st.max_val(etm_l,'TG')
         self.tn_max       =  st.max_val(etm_l,'TN')
         self.warmte_getal =  st.warmte_getal(etm_l)
-        self.tx_gte_20    =  st.cnt_day(etm_l,'TX','>=',200)  # Warme dag
-        self.tx_gte_25    =  st.cnt_day(etm_l,'TX','>=',250)  # Zomerse dag
-        self.tx_gte_30    =  st.cnt_day(etm_l,'TX','>=',300)  # Tropische dag
-        self.tx_gte_35    =  st.cnt_day(etm_l,'TX','>=',350)  # Tropische
-        self.tg_gte_18    =  st.cnt_day(etm_l,'TG','>=',180)  # Warmte getal dag
-        self.tg_gte_20    =  st.cnt_day(etm_l,'TG','>=',200)  # Warme gemiddelde
-        self.tn_gte_20    =  st.cnt_day(etm_l,'TN','>=',200)  # Tropen nacht
-        self.sq_gte_10    =  st.cnt_day(etm_l,'SQ','>=',100)  # Zonuren > 10
+        self.tx_gte_20    =  st.cnt_day(etm_l,'TX','≥',200)  # Warme dag
+        self.tx_gte_25    =  st.cnt_day(etm_l,'TX','≥',250)  # Zomerse dag
+        self.tx_gte_30    =  st.cnt_day(etm_l,'TX','≥',300)  # Tropische dag
+        self.tx_gte_35    =  st.cnt_day(etm_l,'TX','≥',350)  # Tropische
+        self.tg_gte_18    =  st.cnt_day(etm_l,'TG','≥',180)  # Warmte getal dag
+        self.tg_gte_20    =  st.cnt_day(etm_l,'TG','≥',200)  # Warme gemiddelde
+        self.tn_gte_20    =  st.cnt_day(etm_l,'TN','≥',200)  # Tropen nacht
+        self.sq_gte_10    =  st.cnt_day(etm_l,'SQ','≥',100)  # Zonuren > 10
         self.sq_tot       =  st.som_val(etm_l,'SQ')           # Som zonuren
-        self.rh_gte_10    =  st.cnt_day(etm_l,'RH','>=',100)  # Regen > 10mm
+        self.rh_gte_10    =  st.cnt_day(etm_l,'RH','≥',100)  # Regen > 10mm
         self.rh_tot       =  st.som_val(etm_l,'RH')           # Som regen mm
 
 def sort_zomerstats_num(lijst, pm = '+'):
@@ -92,13 +92,13 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
         s = ' '
         content = f'PLAATS{s:15} PROVINCIE{s:7} PERIODE{s:11} TG      ∑WARMTE ' \
                   f'TX MAX  TG MAX  TN MAX  ∑TX≥20 ∑TX≥25 ∑TX≥30 ∑TX≥35 ' \
-                  f'∑TG≥18 ∑TG≥20 ∑TN≥20 ∑ZON≥10 ∑ZON       ∑REGEN≥10 ∑REGEN  \n'
+                  f'∑TG≥20 ∑TG≥18 ∑TN≥20 ∑ZON≥10 ∑ZON       ∑REGEN≥10 ∑REGEN  \n'
 
     if type == 'html':
         content  = f'''
         <table>
             <thead>
-            <tr> <th colspan="19"> {title} </th> </tr>
+            <tr> <th colspan="18"> {title} </th> </tr>
             <tr>
                 <th> plaats </th>
                 <th> provincie </th>
@@ -112,9 +112,8 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
                 <th title="Aantal zomers dagen"> ∑tx&ge;25 </th>
                 <th title="Aantal tropische dagen"> ∑tx&ge;30 </th>
                 <th title="Aantal tropische dagen"> ∑tx&ge;35 </th>
-                <th title="Warmte getal dagen"> tg&ge;18 </th>
-                <th title="Dagen met een hoog gemiddelde"> tg&ge;20 </th>
                 <th title="Aantal tropennachten"> ∑tn&ge;20 </th>
+                <th title="Warmte getal dagen"> tg&ge;18 </th>
                 <th title="Totaal aantal uren zon"> ∑zon </th>
                 <th title="Dagen met meer dan tien uur zon"> ∑zon&ge;10hour</th>
                 <th title="Totaal aantal mm regen"> ∑regen </th>
@@ -148,7 +147,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
             content += f"{g.place:<21} {g.province:<16} {g.period:<18} " \
                        f"{tg_gem:<7} {heat_ndx:<7} {tx_max:<7} {tg_max:<7} " \
                        f"{tn_max:<7} {tx_gte_20:^6} {tx_gte_25:^6} {tx_gte_30:^6} " \
-                       f"{tx_gte_35:^6} {tg_gte_18:^6} {tg_gte_20:^6} {tn_gte_20:^6} " \
+                       f"{tx_gte_35:^6} {tg_gte_20:^6} {tg_gte_18:^6} {tn_gte_20:^6} " \
                        f"{sq_gte_10:^7} {sq_tot:<10} {rh_gte_10:^9} {rh_tot:<11} \n"
 
         if type == 'html':
@@ -163,13 +162,12 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
                     <td> {tx_max}    {h.table_extremes(g.tx_max['lijst'][-1:], -1)} </td>
                     <td> {tg_max}    {h.table_extremes(g.tg_max['lijst'][-1:], -1)} </td>
                     <td> {tn_max}    {h.table_extremes(g.tn_max['lijst'][-1:], -1)} </td>
-                    <td> {tg_gte_20} {h.table_count(g.tg_gte_20['lijst'], -1)} </td>
                     <td> {tx_gte_20} {h.table_count(g.tx_gte_20['lijst'], -1)} </td>
                     <td> {tx_gte_25} {h.table_count(g.tx_gte_25['lijst'], -1)} </td>
                     <td> {tx_gte_30} {h.table_count(g.tx_gte_30['lijst'], -1)} </td>
                     <td> {tx_gte_35} {h.table_count(g.tx_gte_35['lijst'], -1)} </td>
+                    <td> {tg_gte_20} {h.table_count(g.tg_gte_20['lijst'], -1)} </td>
                     <td> {tg_gte_18} {h.table_count(g.tg_gte_18['lijst'], -1)} </td>
-                    <td> {tn_gte_20} {h.table_count(g.tn_gte_20['lijst'], -1)} </td>
                     <td> {sq_tot} </td>
                     <td> {sq_gte_10} {h.table_count(g.sq_gte_10['lijst'], -1)} </td>
                     <td> {rh_tot} </td>
@@ -183,7 +181,7 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
     if type == 'html':
         content += f'''
             </tbody>
-            <tfoot> <tr> <td colspan="19"> {bronvermelding} </td> </tr> </tfoot>
+            <tfoot> <tr> <td colspan="18"> {bronvermelding} </td> </tr> </tfoot>
         </table>'''
 
         css = r.get_string_css_from_file( 'default-table-statistics.css' ) # Get css from file

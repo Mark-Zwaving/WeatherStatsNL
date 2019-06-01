@@ -12,47 +12,29 @@ __status__     =  "Development"
 import os, threading, time, zipfile, config as c, write as w, convert as cvt
 import knmi
 
-def ln_s_ln(s):
-    return f'{c.ln}{s}{c.ln}'
-
-def println(s):
-    print(f'{s}{c.ln}')
-
-def lnprintln(s):
-    print(ln_s_ln(s))
-
-def rm_double_space(s):
-    if '  ' in s:
-        while '  ' in s:
-            s = s.replace('  ', ' ')
+# Some quick,short functions
+s_add        = lambda s,a:      f'{s}{a}'
+add_s        = lambda a,s:      f'{a}{s}'
+add_s_add    = lambda a1,s,a2:  s_add( add_s( a1, s ), a2 )
+s_nl         = lambda s:        s_add( s, c.ln )
+ln_s_ln      = lambda s:        add_s_add( c.ln, s, c.ln )
+div_10       = lambda s:        f'{float(s)/10:0.1F}'
+div_10_add   = lambda s,a:      f'{div_10(s)}{a}'
+mk_path      = lambda dir,add:  os.path.abspath( os.path.join( dir, add ) )
+def println(s):                 print( s_nl(s) )
+def lnprintln(s):               print( ln_s_ln(s) )
+def replace_s_by_s(f,r,s):
+    if f in s:
+        while f in s:
+            s = s.replace(f, r);
     return s
-
-def rm_tab( s ):
-    if '\t' in s:
-        while '\t' in s:
-            s = s.replace('\t', '')
-    return s
-
-def rm_ln( s ):
-    if '\n' in s:
-        while '\n' in s:
-            s = s.replace('\n', '')
-    return s
-
-def rm_lr( s ):
-    if '\r' in s:
-        while '\r' in s:
-            s = s.replace('\r', '')
-    return s
-
-def clean_s( s ):
-    return rm_double_space(rm_lr(rm_ln(rm_tab(s))))
-
-def rm_s( s ):
-    if ' ' in s:
-        while ' ' in s:
-            s = s.replace(' ', '')
-    return s
+rm_s_from_s  = lambda rs,s:     replace_s_by_s( rs,'',s )
+rm_tab       = lambda s:        rm_s_from_s( '\t', s )
+rm_ln        = lambda s:        rm_s_from_s( '\n', s )
+rm_lr        = lambda s:        rm_s_from_s( '\r', s )
+rm_double_space = lambda s:     replace_s_by_s ( '  ', ' ', s )
+clean_s      = lambda s:        rm_double_space( rm_lr( rm_ln( rm_tab( s ) )))
+rm_s         = lambda s:        replace_s_by_s( ' ',  '', s )
 
 def san( s ):
     '''Function sanitizes input for use'''
@@ -84,11 +66,11 @@ def fix( s, ent ):
     view = [ 'vvn', 'vvx' ]
     indx = [ 'heat_ndx', 'hellmann']
 
-    if   ent in indx: return f'{float(s)/10:0.1F}'
-    elif ent in temp: return f'{float(s)/10:0.1F} °C'
-    elif ent in pres: return f'{float(s)/10:0.1F} hPa'
-    elif ent in radi: return f'{s} J/cm2'
-    elif ent in perc: return f'{s} %'
+    if   ent in indx: return div_10( s )
+    elif ent in temp: return div_10_add( s, ' °C' )
+    elif ent in pres: return div_10_add( s, ' hPa' )
+    elif ent in radi: return div_10_add( s, ' J/cm2' )
+    elif ent in perc: return div_10_add( s, ' %' )
     elif ent in hour: i2 = s; i1 = int(i2) - 1; return f'{i1}-{i2} uur'
     elif ent in hou6: i2 = s; i1 = int(i2) - 6; return f'{i1}-{i2} UT'
     elif ent in octa: return s
@@ -98,9 +80,9 @@ def fix( s, ent ):
         return f'{ms:0.1F} m/s {bft}bft'
 
     elif ent in prec:
-        return '<0.05' if s == '-1' else f'{float(s)/10:0.1F}' + ' mm'
+        return '<0.05' if s == '-1' else div_10_add( s, ' mm' )
     elif ent in duri:
-        return '<0.05' if s == '-1' else f'{float(s)/10:0.1F}' + ' hour'
+        return '<0.05' if s == '-1' else div_10_add( s, ' hour' )
     elif ent in dire:
         if s == '0':
             return f'{s} variable'
@@ -173,6 +155,3 @@ def is_station_in_list(station, lijst):
         if check.wmo == station.wmo and check.plaats == station.plaats:
             return True
     return False
-
-def mk_path(dir, add):
-    return os.path.abspath(os.path.join(dir, add))

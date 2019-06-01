@@ -68,14 +68,6 @@ class Hellmann:
         self.aantal = aantal
         self.ent    = ent
 
-class Heatwave:
-    '''Klasse voor het opslaan van hittegolf dagen'''
-    def __init__(self, station, etmgeg_list ):
-        self.station      = station
-        self.etmgeg_list  = etmgeg_list
-        self.tot_heat_sum = warmte_getal(self.etmgeg_list)['getal']
-        self.day_count    = len(self.etmgeg_list)
-
 # Som
 def som_val(lijst_geg, ent):
     '''Functie somt alle waarden van een reeks'''
@@ -230,8 +222,9 @@ def rearrange_heat_sum_for_period(l):
 
     pass
 
-def get_list_heatwaves( station, etmgeg_list ):
-    heatwave_list, mem_etmgeg_list = [], []
+def get_list_etmgeg_heatwaves( etmgeg_list ):
+    heatwave_etmgeg_list = []
+    heatwave_result_list = []
     day_cnt_num = 5
     day_cnt_25  = 0
     day_cnt_30  = 0
@@ -246,7 +239,7 @@ def get_list_heatwaves( station, etmgeg_list ):
 
             if iTX >= 250: # Check only 25+
                 day_cnt_25 += 1 # Count 25+
-                etmgeg_list.append(e) # Save 25+
+                heatwave_etmgeg_list.append(e) # Save 25+
                 if c.debug: a.pause(f'Counting for heatwave: {station.plaats}')
 
                 if not heatwave: # No heatwave yet, check for it
@@ -276,8 +269,7 @@ def get_list_heatwaves( station, etmgeg_list ):
                     heatwave = False
                     if c.debug: a.pause('Heatwave stopped')
                     # Add closed heatwave to list
-                    heatdays = Heatwave( station, etmgeg_list )
-                    heatwave_list.append( heatdays )
+                    heatwave_result_list.append( heatwave_etmgeg_list )
                 else:
                     pass # No heatwave ended, just pass
 
@@ -288,13 +280,12 @@ def get_list_heatwaves( station, etmgeg_list ):
                 day_cnt_30_2 = False
                 day_cnt_30_3 = False
                 heatwave = False
-                etmgeg_list = []
+                heatwave_etmgeg_list = []
 
         else: # Data cannot be checked.
             if c.debug: a.pause('Wrong data')
             if heatwave: # Oke stop heatwave, add to list and reset values
-                heatdays = Heatwave( station, etmgeg_list )
-                heatwave_list.append( heatdays )
+                heatwave_list.append( heatwave_etmgeg_list )
 
             # No 25+, reset heatwave values
             day_cnt_25 = 0
@@ -303,11 +294,10 @@ def get_list_heatwaves( station, etmgeg_list ):
             day_cnt_30_2 = False
             day_cnt_30_3 = False
             heatwave = False
-            etmgeg_list = []
+            heatwave_etmgeg_list = []
 
     # No more data
     if heatwave: # Add heatwave to list, heatwave is not ended yet
-        heatdays = Heatwave( station, etmgeg_list )
-        heatwave_list.append ( heatdays )
+        heatwave_result_list.append( heatwave_etmgeg_list )
 
-    return heatwave_list
+    return heatwave_result_list

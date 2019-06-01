@@ -158,9 +158,10 @@ def table_count(l, max):
                 sdt = d.Datum(e.datum).tekst()
                 val = fn.rm_s( fn.fix( e.waarde, e.ent ) )
                 t_ent = knmi.ent_to_t_ent( e.ent )
+                eis = fn.div_10(e.eis)
                 tme = fn.rm_s(fn.fix(e.tijd, t_ent)) if t_ent is not False else '.'
                 html += f'<tr><td title="{sdt}">{e.datum}</td><td>{tme}</td>'\
-                        f'<td>{val}</td><td>{e.oper}{e.eis}</td><td>{e.tel}</td></tr>'
+                        f'<td>{val}</td><td>{e.oper}{eis}</td><td>{e.tel}</td></tr>'
 
             html += '</tbody>'
             html += '</table>'
