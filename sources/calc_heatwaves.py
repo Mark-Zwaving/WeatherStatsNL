@@ -190,7 +190,7 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
             content += bronvermelding
 
     else: # No heatwaves found
-        content = f'Voor de opgegeven {periode} zijn geen hittegolven gevonden...'
+        content = f'Voor de opgegeven periode: {periode} zijn geen hittegolven gevonden...'
         if type =='txt':
             pass
         if type == 'html':
