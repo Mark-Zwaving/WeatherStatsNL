@@ -56,7 +56,7 @@ def sort_zomerstats_num(lijst, pm = '+'):
 def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
     '''Hoofdfunctie voor het berekenen van de zomerstats'''
     zomer_geg, periode, path, content = [], f'{datum_start}-{datum_eind}', '', ''
-    bronvermelding = cfg.lijst_stations[0].bronvermelding
+    bronvermelding = cfg.lijst_stations[0].notification
     max_rows = cfg.html_popup_table_max_rows
 
     # Filename
@@ -67,11 +67,11 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
 
     if type == 'html':
         name = f'{name}.html'
-        path = cfg.lijst_stations[0].dir_html
+        path = cfg.dir_html
 
     if type == 'txt':
         name = f'{name}.txt'
-        path = cfg.lijst_stations[0].dir_text
+        path = cfg.dir_text
 
     for station in lijst_stations:
         l = fn.select_dates_from_list( r.knmi_etmgeg_data(station),
@@ -127,7 +127,6 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
     # Walkthrough all cities
     for g in zomer_geg:
         warm = g.warmte_getal['getal']
-        ask.pause(f'Warmte getal is:{warm}')
         heat_ndx = fn.rm_s(fn.fix(warm, 'heat_ndx'))
         tg_gem   = fn.rm_s(fn.fix(g.tg_gem['gem'],'tg'))
         tx_max   = fn.rm_s(fn.fix(g.tx_max['max'],'tx'))

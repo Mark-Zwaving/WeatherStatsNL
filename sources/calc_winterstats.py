@@ -54,7 +54,7 @@ def sort_winterstats_num(lijst, pm = '+'):
 
 def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
     '''Hoofdfunctie voor het berekenen van de winterstatistieken'''
-    bronvermelding = cfg.lijst_stations[0].bronvermelding
+    bronvermelding = cfg.lijst_stations[0].notification
     winter_geg, periode, path, content = [], f'{datum_start}-{datum_eind}', '', ''
     max_rows = cfg.html_popup_table_max_rows
 
@@ -66,11 +66,11 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
 
     if type == 'html':
         name = f'{name}.html'
-        path = cfg.lijst_stations[0].dir_html
+        path = cfg.dir_html
 
     if type == 'txt':
         name = f'{name}.txt'
-        path = cfg.lijst_stations[0].dir_text
+        path = cfg.dir_text
 
     for station in lijst_stations:
         l = fn. select_dates_from_list(r.knmi_etmgeg_data(station),
