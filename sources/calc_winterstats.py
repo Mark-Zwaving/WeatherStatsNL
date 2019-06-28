@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9.2"
+__version__    =  "0.9.3"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -56,6 +56,7 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
     '''Hoofdfunctie voor het berekenen van de winterstatistieken'''
     bronvermelding = cfg.lijst_stations[0].bronvermelding
     winter_geg, periode, path, content = [], f'{datum_start}-{datum_eind}', '', ''
+    max_rows = cfg.html_popup_table_max_rows
 
     # Name
     if not name: name = f'winter statistics {periode}'
@@ -119,10 +120,10 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
 
     # Calculate values
     for g in winter_geg:
-        tg_gem = '.' if not g.tg_gem['gem'] else fn.rm_s(fn.fix(g.tg_gem['gem'],'tg'))
-        tx_min = '.' if not g.tx_min['min'] else fn.rm_s(fn.fix(g.tx_min['min'],'tx'))
-        tg_min = '.' if not g.tg_min['min'] else fn.rm_s(fn.fix(g.tg_min['min'],'tg'))
-        tn_min = '.' if not g.tn_min['min'] else fn.rm_s(fn.fix(g.tn_min['min'],'tn'))
+        tg_gem    = fn.rm_s(fn.fix(g.tg_gem['gem'],'tg'))
+        tx_min    = fn.rm_s(fn.fix(g.tx_min['min'],'tx'))
+        tg_min    = fn.rm_s(fn.fix(g.tg_min['min'],'tg'))
+        tn_min    = fn.rm_s(fn.fix(g.tn_min['min'],'tn'))
         tx_lt_0   = str(g.tx_lt_0['tel'])    # Ijsdagen
         tn_lt_0   = str(g.tn_lt_0['tel'])    # Lichte vorst
         tg_lt_0   = str(g.tg_lt_0['tel'])    # Hellmanndagen
@@ -140,17 +141,17 @@ def alg_winterstats(lijst_stations, datum_start, datum_eind, name, type):
                     <td> {g.province} </td>
                     <td title="{dat_txt}"> {g.period} </td>
                     <td> {tg_gem} </td>
-                    <td> {hellmann}  {h.table_hellmann(g.hellmann['lijst'], -1)} </td>
-                    <td> {tx_min}    {h.table_extremes(g.tx_min['lijst'][-1:], -1)} </td>
-                    <td> {tg_min}    {h.table_extremes(g.tg_min['lijst'][-1:], -1)} </td>
-                    <td> {tn_min}    {h.table_extremes(g.tn_min['lijst'][-1:], -1)} </td>
-                    <td> {tx_lt_0}   {h.table_count(g.tx_lt_0['lijst'], -1)} </td>
-                    <td> {tg_lt_0}   {h.table_count(g.tg_lt_0['lijst'], -1)} </td>
-                    <td> {tn_lt_0}   {h.table_count(g.tn_lt_0['lijst'], -1)} </td>
-                    <td> {tn_lt__5}  {h.table_count(g.tn_lt__5['lijst'], -1)} </td>
-                    <td> {tn_lt__10} {h.table_count(g.tn_lt__10['lijst'], -1)} </td>
-                    <td> {tn_lt__15} {h.table_count(g.tn_lt__15['lijst'], -1)} </td>
-                    <td> {tn_lt__20} {h.table_count(g.tn_lt__20['lijst'], -1)} </td>
+                    <td> {hellmann}  {h.table_hellmann(g.hellmann['lijst'], max_rows)} </td>
+                    <td> {tx_min}    {h.table_extremes(g.tx_min['lijst'][-1:], max_rows)} </td>
+                    <td> {tg_min}    {h.table_extremes(g.tg_min['lijst'][-1:], max_rows)} </td>
+                    <td> {tn_min}    {h.table_extremes(g.tn_min['lijst'][-1:], max_rows)} </td>
+                    <td> {tx_lt_0}   {h.table_count(g.tx_lt_0['lijst'], max_rows)} </td>
+                    <td> {tg_lt_0}   {h.table_count(g.tg_lt_0['lijst'], max_rows)} </td>
+                    <td> {tn_lt_0}   {h.table_count(g.tn_lt_0['lijst'], max_rows)} </td>
+                    <td> {tn_lt__5}  {h.table_count(g.tn_lt__5['lijst'], max_rows)} </td>
+                    <td> {tn_lt__10} {h.table_count(g.tn_lt__10['lijst'], max_rows)} </td>
+                    <td> {tn_lt__15} {h.table_count(g.tn_lt__15['lijst'], max_rows)} </td>
+                    <td> {tn_lt__20} {h.table_count(g.tn_lt__20['lijst'], max_rows)} </td>
                 </tr> '''
 
         if type in ['txt','cmd']:

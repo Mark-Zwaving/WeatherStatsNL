@@ -41,18 +41,27 @@ def pagina(title, style, content):
     </html>
     '''
 
-def div_entity( title, data, time = '' ):
-    return f'''
-        <div class="entity">
-            <div class="title">
-                {title}
+def div_day_entity( station, title, val, ent, t_val, t_ent ):
+    if val == station.empthy:
+        return ''
+    else:
+        val, time = fn.fix(val, ent), ''
+        if t_val not in [station.empthy, '']:
+            time = div_hour(fn.fix(t_val, t_ent))
+
+        return f'''
+            <div class="entity">
+                <div class="title">
+                    {title}
+                </div>
+                <div class="data">
+                    {val}
+                    {time}
+                </div>
             </div>
-            <div class="data">
-                {data}
-                {time}
-            </div>
-        </div>
-    '''
+        '''
+
+    return ''
 
 def div_hour( data ):
     return f'''
@@ -61,82 +70,36 @@ def div_hour( data ):
         </div>
     '''
 
-def div_entities( day_values ):
-    d = day_values
-    html = '<div id="container">'
-
-    if d.TX is not d.empthy:
-        t = div_hour( fn.fix(d.TXH,"TXH") ) if d.TXH is not d.empthy else ''
-        html += div_entity( 'Maximum temperature', fn.fix(d.TX,"TX"), t)
-    if d.TG is not d.empthy:
-        html += div_entity( 'Mean temperature', fn.fix(d.TG,"TG") )
-    if d.TN is not d.empthy:
-        t = div_hour( fn.fix(d.TNH,"TNH") ) if d.TNH is not d.empthy else ''
-        html += div_entity( 'Minimum temperature', fn.fix(d.TN,"TN"), t)
-    if d.T10N is not d.empthy:
-        t = div_hour( fn.fix(d.T10NH,"T10NH") ) if d.T10NH is not d.empthy else ''
-        html += div_entity( 'Minimum temperature (10cm)', fn.fix(d.T10N,"T10N"), t)
-
-    if d.DDVEC is not d.empthy:
-        html += div_entity( 'Wind direction', fn.fix(d.DDVEC,"DDVEC") )
-    if d.SQ is not d.empthy:
-        html += div_entity( 'Sunshine duration (hourly)', fn.fix(d.SQ,"SQ") )
-    if d.PG is not d.empthy:
-        html += div_entity( 'Mean pressure', fn.fix(d.PG,"PG") )
-    if d.UG is not d.empthy:
-        html += div_entity( 'Mean atmospheric humidity', fn.fix(d.UG,"UG") )
-
-    if d.FG is not d.empthy:
-        html += div_entity( 'Mean windspeed (daily)', fn.fix(d.FG,"FG") )
-    if d.SP is not d.empthy:
-        html += div_entity( 'Sunshine duration (maximum potential)', fn.fix(d.SP,"SP") )
-    if d.NG is not d.empthy:
-        html += div_entity( 'Mean cloud cover', fn.fix(d.NG,"NG") )
-    if d.RH is not d.empthy:
-        html += div_entity( 'Precipitation amount', fn.fix(d.RH,"RH") )
-
-    if d.FXX is not d.empthy:
-        t = div_hour( fn.fix(d.FXXH,"FXXH") ) if d.FXXH is not d.empthy else ''
-        html += div_entity( 'Maximum wind (gust)', fn.fix(d.FXX,"FXX"), t)
-    if d.Q is not d.empthy:
-        html += div_entity( 'Radiation (global)', fn.fix(d.Q,"Q") )
-    if d.EV24 is not d.empthy:
-        html += div_entity( 'Evapotranspiration (potential)', fn.fix(d.EV24,"EV24") )
-    if d.DR is not d.empthy:
-        html += div_entity( 'Precipitation duration', fn.fix(d.DR,"DR") )
-
-    if d.FHVEC is not d.empthy:
-        html += div_entity( 'Mean windspeed (vector)', fn.fix(d.FHVEC,"FHVEC") )
-    if d.UX is not d.empthy:
-        t = div_hour( fn.fix(d.UXH,"UXH") ) if d.UXH is not d.empthy else ''
-        html += div_entity( 'Maximum humidity', fn.fix(d.UX,"UX"), t )
-    if d.PX is not d.empthy:
-        t = div_hour( fn.fix(d.PXH,"PXH") ) if d.PXH is not d.empthy else ''
-        html += div_entity( 'Maximum pressure (hourly)', fn.fix(d.PX,"PX"), t )
-    if d.RHX is not d.empthy:
-        t = div_hour( fn.fix(d.RHXH,"RHXH") ) if d.RHXH is not d.empthy else ''
-        html += div_entity( 'Maximum precipitation (hourly)', fn.fix(d.RHX,"RHX"), t )
-
-    if d.FHX is not d.empthy:
-        t = div_hour( fn.fix(d.FHXH,"FHXH") ) if d.FHXH is not d.empthy else ''
-        html += div_entity( 'Maximum mean windspeed (hourly)', fn.fix(d.FHX,"FHX"), t )
-    if d.VVX is not d.empthy:
-        t = div_hour( fn.fix(d.VVXH,"VVXH") ) if d.VVXH is not d.empthy else ''
-        html += div_entity( 'Maximum visibility', fn.fix(d.VVX,"VVX"), t )
-    if d.PN is not d.empthy:
-        t = div_hour( fn.fix(d.PNH,"PNH") ) if d.PNH is not d.empthy else ''
-        html += div_entity( 'Minimum pressure (hourly)', fn.fix(d.PN,"PN"), t )
-    if d.UN is not d.empthy:
-        t = div_hour( fn.fix(d.UNH,"UNH") ) if d.UNH is not d.empthy else ''
-        html += div_entity( 'Minimum humidity', fn.fix(d.UN,"UN"), t )
-
-    if d.FHN is not d.empthy:
-        t = div_hour( fn.fix(d.FHNH,"FHNH") ) if d.FHNH is not d.empthy else ''
-        html += div_entity( 'Minimum mean windspeed (hourly)', fn.fix(d.FHN,"FHN"), t)
-    if d.VVN is not d.empthy:
-        t = div_hour( fn.fix(d.VVNH,"VVNH") ) if d.VVNH is not d.empthy else ''
-        html += div_entity( 'Minimum visibility', fn.fix(d.VVN,"VVN"), t )
-
+def html_dayvalues( station, day_values ):
+    d, s = day_values, station
+    html  = '<div id="container">'
+    html += div_day_entity( s, 'Maximum temperature', d.TX,'TX',d.TXH,'TXH' )
+    html += div_day_entity( s, 'Gemiddelde temperature', d.TG,'TG','','' )
+    html += div_day_entity( s, 'Minimum temperature', d.TN,'TN',d.TNH,'TNH' )
+    html += div_day_entity( s, 'Minimum temperature (10cm)', d.T10N,'TN',d.T10NH,'TNH' )
+    html += div_day_entity( s, 'Wind direction', d.DDVEC,'DDVEC','','' )
+    html += div_day_entity( s, 'Sunshine duration (hourly)',d.SQ,'SQ','','' )
+    html += div_day_entity( s, 'Mean pressure', d.PG,'PG','','' )
+    html += div_day_entity( s, 'Mean atmospheric humidity', d.UG,'UG','','' )
+    html += div_day_entity( s, 'Mean windspeed (daily)', d.FG,'FG','','' )
+    html += div_day_entity( s, 'Sunshine duration (maximum potential)', d.SP,'SP','','' )
+    html += div_day_entity( s, 'Mean cloud cover', d.NG,'NG','','' )
+    html += div_day_entity( s, 'Precipitation amount', d.RH,'RH','','' )
+    html += div_day_entity( s, 'Maximum wind (gust)', d.FXX,'FXX',d.FXXH,'FXXH' )
+    html += div_day_entity( s, 'Radiation (global)', d.Q,'Q','','' )
+    html += div_day_entity( s, 'Evapotranspiration (potential)', d.EV24,'EV24','','' )
+    html += div_day_entity( s, 'Precipitation duration', d.DR,'DR','','' )
+    html += div_day_entity( s, 'Mean windspeed (vector)', d.FHVEC,'FHVEC','','' )
+    html += div_day_entity( s, 'Maximum wind (gust)', d.FXX,'FXX',d.FXXH,'FXXH' )
+    html += div_day_entity( s, 'Maximum humidity', d.UX,'UX',d.UXH,'UXH' )
+    html += div_day_entity( s, 'Maximum pressure (hourly)', d.PX,'PX',d.PXH,'PXH' )
+    html += div_day_entity( s, 'Maximum precipitation (hourly)', d.RHX,'RHX',d.RHXH,'RHXH' )
+    html += div_day_entity( s, 'Maximum mean windspeed (hourly)', d.FHX,'FHX',d.FHXH,'FHXH' )
+    html += div_day_entity( s, 'Maximum visibility', d.VVX,'VVX',d.VVXH,'VVXH' )
+    html += div_day_entity( s, 'Minimum pressure (hourly)', d.PN,'PN',d.PNH,'PNH' )
+    html += div_day_entity( s, 'Minimum humidity', d.UN,'UN',d.UNH,'UNH' )
+    html += div_day_entity( s, 'Minimum mean windspeed (hourly)', d.FHN,'FHN',d.FHNH,'FHNH' )
+    html += div_day_entity( s, 'Minimum visibility', d.VVN,'VVN',d.VVNH,'VVNH' )
     html += '</div>'
 
     return html
@@ -208,8 +171,8 @@ def table_hellmann ( l, max ):
                 sdt = d.Datum(e.datum).tekst()
                 get = fn.rm_s(fn.fix(e.getal, 'hellmann'))
                 som = fn.rm_s(fn.fix(e.som, 'hellmann'))
-                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{get}</td>'
-                html += f'<td>{som}</td><td>{e.aantal}</td></tr>'
+                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{som}</td>'
+                html += f'<td>{get}</td><td>{e.aantal}</td></tr>'
 
             html += '</tbody>'
             html += '</table>'

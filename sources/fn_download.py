@@ -38,4 +38,4 @@ def download_and_unzip_etmgeg_station ( station ):
     lock_down_zip = threading.Lock()
     with lock_down_zip:
         if download_http_data( station.url_etmgeg, station.file_etmgeg_zip ):
-            fn.unzip( station.dir_data, station.file_etmgeg_zip, station.file_etmgeg_txt )
+            fn.unzip( c.dir_data, station.file_etmgeg_zip, station.file_etmgeg_txt )

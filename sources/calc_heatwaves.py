@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9.2"
+__version__    =  "0.9.3"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -65,7 +65,8 @@ def sort_heatwave_list(heatwaves, pm = '+'):
 def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
     '''Main function calculating heatwaves'''
     heatwave_lists, heatwaves, periode, path, content = [] ,[], f'{ymd_s}-{ymd_e}', '', ''
-    bronvermelding = cfg.lijst_stations[0].bronvermelding
+    bronvermelding = cfg.lijst_stations[0].notification
+    max_rows = cfg.html_popup_table_max_rows
 
     # Name
     if not name: name = f'heatwaves {periode}'
@@ -75,10 +76,10 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
 
     if type == 'html':
         name = f'{name}.html'
-        path = cfg.lijst_stations[0].dir_html
+        path = cfg.dir_html
     if type == 'txt':
         name = f'{name}.txt'
-        path = cfg.lijst_stations[0].dir_text
+        path = cfg.dir_text
 
     # Vul heat list met hittegolven
     for station in lijst_station:
@@ -133,14 +134,14 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
             #content += cfg.ln
 
         for heatwave in heatwave_lists:
-            heat_ndx   =  '.' if not heatwave.tot_heat_sum  else fn.rm_s(fn.fix(heatwave.tot_heat_sum, 'heat_ndx'))
-            tn_ave     =  '.' if not heatwave.tn_ave['gem'] else fn.rm_s(fn.fix(heatwave.tn_ave['gem'],'tg'))
-            tg_ave     =  '.' if not heatwave.tg_ave['gem'] else fn.rm_s(fn.fix(heatwave.tg_ave['gem'],'tg'))
-            tx_ave     =  '.' if not heatwave.tx_ave['gem'] else fn.rm_s(fn.fix(heatwave.tx_ave['gem'],'tx'))
-            tx_max     =  '.' if not heatwave.tx_max['max'] else fn.rm_s(fn.fix(heatwave.tx_max['max'],'tx'))
-            tg_max     =  '.' if not heatwave.tg_max['max'] else fn.rm_s(fn.fix(heatwave.tg_max['max'],'tg'))
-            tn_max     =  '.' if not heatwave.tn_max['max'] else fn.rm_s(fn.fix(heatwave.tn_max['max'],'tn'))
-            sq_sum     =  '.' if not heatwave.sq_sum['som'] else fn.rm_s(fn.fix(heatwave.sq_sum['som'],'sq'))
+            heat_ndx   =  fn.rm_s(fn.fix(heatwave.tot_heat_sum,'heat_ndx'))
+            tn_ave     =  fn.rm_s(fn.fix(heatwave.tn_ave['gem'],'tg'))
+            tg_ave     =  fn.rm_s(fn.fix(heatwave.tg_ave['gem'],'tg'))
+            tx_ave     =  fn.rm_s(fn.fix(heatwave.tx_ave['gem'],'tx'))
+            tx_max     =  fn.rm_s(fn.fix(heatwave.tx_max['max'],'tx'))
+            tg_max     =  fn.rm_s(fn.fix(heatwave.tg_max['max'],'tg'))
+            tn_max     =  fn.rm_s(fn.fix(heatwave.tn_max['max'],'tn'))
+            sq_sum     =  fn.rm_s(fn.fix(heatwave.sq_sum['som'],'sq'))
             tx_gte_30  =  str(heatwave.tx_gte_30['tel'])
             tx_gte_35  =  str(heatwave.tx_gte_35['tel'])
 
@@ -151,16 +152,16 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
                         <td> {heatwave.place} </td>
                         <td> {heatwave.province} </td>
                         <td title="{date_txt}"> {heatwave.period} </td>
-                        <td> {heatwave.day_count} {h.table_list_heatwave_days(heatwave.etm_l, -1)} </td>
+                        <td> {heatwave.day_count} {h.table_list_heatwave_days(heatwave.etm_l, max_rows)} </td>
                         <td> {heat_ndx} </td>
-                        <td> {tx_max} {h.table_extremes(heatwave.tx_max['lijst'][-1:], -1)} </td>
-                        <td> {tg_max} {h.table_extremes(heatwave.tg_max['lijst'][-1:], -1)} </td>
-                        <td> {tn_max} {h.table_extremes(heatwave.tn_max['lijst'][-1:], -1)} </td>
+                        <td> {tx_max} {h.table_extremes(heatwave.tx_max['lijst'][-1:], max_rows)} </td>
+                        <td> {tg_max} {h.table_extremes(heatwave.tg_max['lijst'][-1:], max_rows)} </td>
+                        <td> {tn_max} {h.table_extremes(heatwave.tn_max['lijst'][-1:], max_rows)} </td>
                         <td> {tx_ave} </td>
                         <td> {tg_ave} </td>
                         <td> {tn_ave} </td>
-                        <td> {tx_gte_30} {h.table_count(heatwave.tx_gte_30['lijst'], -1)} </td>
-                        <td> {tx_gte_35} {h.table_count(heatwave.tx_gte_35['lijst'], -1)} </td>
+                        <td> {tx_gte_30} {h.table_count(heatwave.tx_gte_30['lijst'], max_rows)} </td>
+                        <td> {tx_gte_35} {h.table_count(heatwave.tx_gte_35['lijst'], max_rows)} </td>
                         <td> {sq_sum} </td>
                     </tr> '''
 

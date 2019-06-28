@@ -5,14 +5,14 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9.3"
+__version__    =  "0.9.2"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config as cfg, fn, fn_html as h, calc_stats as st, dates as d
 import write as wr, ask, fn_read as r, knmi
 
-class SummerStats:
+class AllStats:
     '''Class saves en stores summer statistics of a station in a given period'''
     def __init__(self, station, etm_l):
         self.station      =  station
@@ -24,6 +24,7 @@ class SummerStats:
         self.province     =  station.provincie
         self.wmo          =  station.wmo
         self.tg_gem       =  st.gem_val(etm_l,'TG')
+
         self.tx_max       =  st.max_val(etm_l,'TX')
         self.tg_max       =  st.max_val(etm_l,'TG')
         self.tn_max       =  st.max_val(etm_l,'TN')
@@ -35,6 +36,18 @@ class SummerStats:
         self.tg_gte_18    =  st.cnt_day(etm_l,'TG','≥',180)  # Warmte getal dag
         self.tg_gte_20    =  st.cnt_day(etm_l,'TG','≥',200)  # Warme gemiddelde
         self.tn_gte_20    =  st.cnt_day(etm_l,'TN','≥',200)  # Tropen nacht
+
+        self.tx_min       =  st.min_val(etm_l,'TX')
+        self.tg_min       =  st.min_val(etm_l,'TG')
+        self.tn_min       =  st.min_val(etm_l,'TN')
+        self.hellmann_getal = st.hellmann_getal(etm_l)
+        self.tx_lt_0     =  st.cnt_day(etm_l,'TX','<',0)  # IJsdag
+        self.tg_lt_0     =  st.cnt_day(etm_l,'TG','<',0)  #
+        self.tn_lt_0     =  st.cnt_day(etm_l,'TN','<',0)  # Vorstdag
+        self.tn_lt__5    =  st.cnt_day(etm_l,'TN','<',-50)  # Matige vorst
+        self.tn_lt__10   =  st.cnt_day(etm_l,'TN','<',-100)  # Strenge vorst
+        self.tn_lt__10   =  st.cnt_day(etm_l,'TN','<',-1050)  # Zeer strenge vorst
+
         self.sq_gte_10    =  st.cnt_day(etm_l,'SQ','≥',100)  # Zonuren > 10
         self.sq_tot       =  st.som_val(etm_l,'SQ')           # Som zonuren
         self.rh_gte_10    =  st.cnt_day(etm_l,'RH','≥',100)  # Regen > 10mm
@@ -127,14 +140,13 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
     # Walkthrough all cities
     for g in zomer_geg:
         warm = g.warmte_getal['getal']
-        ask.pause(f'Warmte getal is:{warm}')
-        heat_ndx = fn.rm_s(fn.fix(warm, 'heat_ndx'))
-        tg_gem   = fn.rm_s(fn.fix(g.tg_gem['gem'],'tg'))
-        tx_max   = fn.rm_s(fn.fix(g.tx_max['max'],'tx'))
-        tg_max   = fn.rm_s(fn.fix(g.tg_max['max'],'tg'))
-        tn_max   = fn.rm_s(fn.fix(g.tn_max['max'],'tn'))
-        rh_tot   = fn.rm_s(fn.fix(g.rh_tot['som'],'rh'))
-        sq_tot   = fn.rm_s(fn.fix(g.sq_tot['som'],'sq'))
+        heat_ndx = '.' if not warm else fn.rm_s(fn.fix(warm, 'heat_ndx'))
+        tg_gem = '.' if not g.tg_gem['gem'] else fn.rm_s(fn.fix(g.tg_gem['gem'],'tg'))
+        tx_max = '.' if not g.tx_max['max'] else fn.rm_s(fn.fix(g.tx_max['max'],'tx'))
+        tg_max = '.' if not g.tg_max['max'] else fn.rm_s(fn.fix(g.tg_max['max'],'tg'))
+        tn_max = '.' if not g.tn_max['max'] else fn.rm_s(fn.fix(g.tn_max['max'],'tn'))
+        rh_tot = '.' if not g.rh_tot['som'] else fn.rm_s(fn.fix(g.rh_tot['som'],'rh'))
+        sq_tot = '.' if not g.sq_tot['som'] else fn.rm_s(fn.fix(g.sq_tot['som'],'sq'))
         tx_gte_20 = str(g.tx_gte_20['tel'])
         tx_gte_25 = str(g.tx_gte_25['tel'])
         tx_gte_35 = str(g.tx_gte_35['tel'])
@@ -160,10 +172,10 @@ def alg_zomerstats(lijst_stations, datum_start, datum_eind, name, type):
                     <td> {g.province} </td>
                     <td title="{date_txt}"> {g.period} </td>
                     <td> {tg_gem} </td>
-                    <td> {heat_ndx} {h.table_heat_ndx(g.warmte_getal['lijst'], max_rows)} </td>
-                    <td> {tx_max} {h.table_extremes(g.tx_max['lijst'][-1:], max_rows)} </td>
-                    <td> {tg_max} {h.table_extremes(g.tg_max['lijst'][-1:], max_rows)} </td>
-                    <td> {tn_max} {h.table_extremes(g.tn_max['lijst'][-1:], max_rows)} </td>
+                    <td> {heat_ndx}  {h.table_heat_ndx(g.warmte_getal['lijst'], max_rows)} </td>
+                    <td> {tx_max}    {h.table_extremes(g.tx_max['lijst'][-1:], max_rows)} </td>
+                    <td> {tg_max}    {h.table_extremes(g.tg_max['lijst'][-1:], max_rows)} </td>
+                    <td> {tn_max}    {h.table_extremes(g.tn_max['lijst'][-1:], max_rows)} </td>
                     <td> {tx_gte_20} {h.table_count(g.tx_gte_20['lijst'], max_rows)} </td>
                     <td> {tx_gte_25} {h.table_count(g.tx_gte_25['lijst'], max_rows)} </td>
                     <td> {tx_gte_30} {h.table_count(g.tx_gte_30['lijst'], max_rows)} </td>

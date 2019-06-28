@@ -68,51 +68,70 @@ class Hellmann:
         self.aantal = aantal
         self.ent    = ent
 
+def fix_val(val, ent):
+    ival = int(val)
+    if ent in ['RH','RHX','SQ']: # Precipation and sunshine
+        if ival == -1: # Ignore for now
+            return 0
+    return ival
+
+def is_perc_data_errors(lijst_geg, errors):
+    threshold_errors = int(len(lijst_geg)/c.allowed_perc_data_errors)
+    if errors > threshold_errors:
+        return True
+    return False
+
 # Som
 def som_val(lijst_geg, ent):
     '''Functie somt alle waarden van een reeks'''
-    som, tel, tijd, l = 0, 0, -1, []
+    som, tel, tijd, l, errors = 0, 0, -1, [], 0
     for geg in lijst_geg: # Doorloop lijst
         etm = knmi.etmgeg(geg, ent)
         if etm != geg.empthy: # Leeg veld skippen
-            i_etm = int(etm)
+            i_etm = fix_val(etm, ent)
             som += i_etm
             etm_t = knmi.etmgeg_t( geg, ent ) # Check tijd
             tijd = etm_t if etm_t != geg.empthy and etm_t != False else -1 # Geef tijd mits aanwezig
 
             etmSom = EtmgegSom(geg.YYYYMMDD, tijd, i_etm, som, ent)
             l.append(etmSom) # Bewaar som in som object
+        else:
+            errors += 1
 
-    # Return false als niks wordt gevonden anders geef som
-    return { 'som': False if not l else l[-1].som,
-             'lijst':l }
+    if is_perc_data_errors(lijst_geg, errors): # Data error >= 10% wrong
+        som = False
+
+    return { 'som': som, 'lijst': l }
 
 # Gemiddelden
 def gem_val ( lijst_geg, ent ):
     '''Functie berekent gemiddelde van een ent uit de reeks'''
-    som, tel, l = 0, 0, [] # Begin op 0 en teller op 0
+    som, tel, gem, l, errors = 0, 0, False, [], 0 # Begin op 0 en teller op 0
     for geg in lijst_geg: # Doorloop de lijst
         etm = knmi.etmgeg(geg,ent)
         if etm != geg.empthy: # Leeg veld overslaan
-            i_etm = int(etm)
+            i_etm = fix_val(etm, ent)
             som += i_etm
             tel += 1
 
             etmGem = EtmgegGem(geg.YYYYMMDD, i_etm, som, tel, ent)
             l.append(etmGem)
+        else:
+            errors += 1
 
-    # Return false als niks wordt gevonden
-    return { 'gem': False if not l else l[-1].gem,
-             'lijst': l }
+    if tel > 0 and not is_perc_data_errors(lijst_geg, errors):
+        gem = som / tel
+
+    return { 'gem': gem, 'lijst': l }
 
 # Minimum extremen
 def min_val(lijst_geg, ent):
     '''Functie bepaalt de minimum waarde van TX uit de reeks plus tijdstip mits aanwezig'''
-    min, tijd, l = c.max_value_geg, -1, [] # Hoogst mogelijke waarde
+    min, tijd, l, errors = c.max_value_geg, -1, [], 0 # Hoogst mogelijke waarde
     for geg in lijst_geg: # Doorloop lijst
         etm = knmi.etmgeg(geg,ent)
         if etm != geg.empthy: # Leeg veld skippen
-            i_etm = int(etm) # Convert naar int
+            i_etm = fix_val(etm, ent) # # Check en convert naar int
             if i_etm < min: # Waarde kleiner dan min dan een nieuw min
                 min  = i_etm;
                 etm_t = knmi.etmgeg_t( geg, ent )
@@ -120,19 +139,22 @@ def min_val(lijst_geg, ent):
 
                 etmExtreem = EtmgegExtreem( geg.YYYYMMDD, tijd, min, ent )
                 l.append(etmExtreem)
+        else:
+            errors += 1
 
-    # Return false als niks is gevonden
-    return { 'min': False if not l else l[-1].extreem,
-             'lijst': l }
+    if is_perc_data_errors(lijst_geg, errors) or min == c.max_value_geg:
+        min = false
+
+    return { 'min': min, 'lijst': l }
 
 # Maximum extremen
 def max_val(lijst_geg, ent):
     '''Functie bepaalt de minimum waarde van TX uit de reeks plus tijdstip mits aanwezig'''
-    max, tijd, l = c.min_value_geg, -1, [] # Hoogst mogelijke waarde
+    max, tijd, l, errors = c.min_value_geg, -1, [], 0 # Hoogst mogelijke waarde
     for geg in lijst_geg: # Doorloop lijst
         etm = knmi.etmgeg(geg,ent)
         if etm != geg.empthy: # Leeg veld skippen
-            i_etm = int(etm) # Convert naar int
+            i_etm = fix_val(etm, ent) # Convert naar int
             if i_etm > max: # Waarde groter dan max, dan een nieuw max
                 max  = i_etm;
                 etm_t = knmi.etmgeg_t( geg, ent ) # Bepaal nieuwe waarden
@@ -141,15 +163,18 @@ def max_val(lijst_geg, ent):
 
                 etmExtreem = EtmgegExtreem( geg.YYYYMMDD, tijd, max, ent )
                 l.append(etmExtreem)
+        else:
+            errors += 1
 
-    # Return false als niks is gevonden
-    return { 'max': False if max == c.min_value_geg else l[-1].extreem,
-             'lijst': l }
+    if is_perc_data_errors(lijst_geg, errors) or max == c.min_value_geg:
+        max = False
+
+    return { 'max': max, 'lijst': l }
 
 # Counter voorwaardelijk
 def cnt_day(lijst_geg, ent, oper, val):
     '''Functie bepaalt het aantal dagen onder de gestelde voorwaarden'''
-    tel, tijd, l = 0, -1, []
+    tel, tijd, l, errors = 0, -1, [], 0
 
     for geg in lijst_geg: # Doorloop lijst
         etm = knmi.etmgeg( geg, ent )
@@ -177,12 +202,17 @@ def cnt_day(lijst_geg, ent, oper, val):
 
                 etmCount = EtmgegCount(geg.YYYYMMDD, tijd, i_etm, oper, val, tel, ent)
                 l.append(etmCount)
+        else:
+            errors += 1
+
+    if is_perc_data_errors(lijst_geg, errors):
+        tel = False
 
     # Return tel en geef de lijst met de extremen
     return { 'tel': tel, 'lijst': l }
 
 def hellmann_getal(lijst_geg):
-    som, aantal, l = 0, 0, []
+    som, aantal, l, errors = 0, 0, [], 0
     for geg in lijst_geg:
         if geg.TG != geg.empthy:
             iTG = int(geg.TG)
@@ -193,11 +223,52 @@ def hellmann_getal(lijst_geg):
 
                 hellman = Hellmann(geg.YYYYMMDD, getal, som, aantal, 'TG')
                 l.append(hellman)
+        else:
+            errors += 1
+
+    if is_perc_data_errors(lijst_geg, errors):
+        som = False
+
+    return { 'getal': som, 'lijst': l }
+
+def vorst_som(lijst_geg):
+    '''negatieve minimum- en maximumtemperaturen, met weglating van het minteken'''
+    totaal, l, errors = 0, [], 0
+    for geg in lijst_geg:
+        bTX, bTN, dag_som = False, False, 0
+
+        if geg.TX != geg.empthy: # Check TX < 0
+            iTX = int(geg.TX)
+            if iTX < 0:
+                bTX = true
+                getal = abs(iTX)
+                dag_som += getal
+                totaal  += getal
+        else:
+            errors += 1
+
+        if geg.TN != geg.empthy: # Check TN < 0
+            iTN = int(geg.TN)
+            if iTN < 0:
+                bTN = true
+                getal = abs(iTN)
+                dag_som += getal
+                totaal  += getal
+        else:
+            errors += 1
+
+        if bTX or bTN:
+            vorstsom = Vorstsom(geg.YYYYMMDD, dagsom, totaal, 'TX')
+            l.append(vorstsom)
+
+    errors = int(errors/2)
+    if is_perc_data_errors(lijst_geg,  errors):
+        som = False
 
     return { 'getal': som, 'lijst': l }
 
 def warmte_getal(lijst_geg):
-    som, aantal, l, cummula = 0, 0, [], []
+    som, aantal, l, cummula, errors = 0, 0, [], [], 0
     for geg in lijst_geg:
         if geg.TG != geg.empthy:
             iTG = int(geg.TG)
@@ -208,23 +279,41 @@ def warmte_getal(lijst_geg):
 
                 warm = WarmteGetal(geg.YYYYMMDD, iTG, getal, som, aantal, 'TG')
                 l.append( warm )
+        else:
+            errors += 1
+
+    if is_perc_data_errors(lijst_geg,  errors):
+        som = False
 
     return { 'getal': som, 'lijst': l }
 
 def get_heat_ndx_of_etm_geg(etm_geg):
-    getal = 0
     if etm_geg.TG != etm_geg.empthy:
         iTG = int(etm_geg.TG)
         if iTG >= 180:
             return iTG - 180
+        return 0
+    else:
+        return False
+
+def get_mean_in_periode( lijst_geg, ent, type ):
+    normal_options = [ '1981-2010','1971-2000','1961-1990','1951-1980',
+                       '1941-1970','1931-1960','1921-1950','1911-1940',
+                       '1901-1930', '*' ]
+
+    # 10% misses allowed
+    max_miss = int(len(lijst_geg)/100)
+    cnt_miss = 0
+
+    return result
 
 def rearrange_heat_sum_for_period(l):
-
     pass
 
 def get_list_etmgeg_heatwaves( etmgeg_list ):
     heatwave_etmgeg_list = []
     heatwave_result_list = []
+    errors = 0
     day_cnt_num = 5
     day_cnt_25  = 0
     day_cnt_30  = 0
@@ -283,6 +372,7 @@ def get_list_etmgeg_heatwaves( etmgeg_list ):
                 heatwave_etmgeg_list = []
 
         else: # Data cannot be checked.
+            errors += 1
             if c.debug: a.pause('Wrong data')
             if heatwave: # Oke stop heatwave, add to list and reset values
                 heatwave_list.append( heatwave_etmgeg_list )
@@ -299,5 +389,8 @@ def get_list_etmgeg_heatwaves( etmgeg_list ):
     # No more data
     if heatwave: # Add heatwave to list, heatwave is not ended yet
         heatwave_result_list.append( heatwave_etmgeg_list )
+
+    if is_perc_data_errors(etmgeg_list,  errors):
+        heatwave_result_list = False
 
     return heatwave_result_list
