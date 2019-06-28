@@ -43,7 +43,7 @@ def prepare_day_values( station, yyyymmdd, name, type ):
 
             title = f'{station.plaats}-{yyyymmdd}'
             css     = r.get_string_css_from_file( 'default-dayvalues.css' ) # Get css from file
-            content = header + h.div_entities(day) + footer
+            content = header + h.html_dayvalues(station, day) + footer
             content = h.pagina(title, css, content) # Make html page
             content = fn.clean_s(content) # Remove unnecessary whitespace
 

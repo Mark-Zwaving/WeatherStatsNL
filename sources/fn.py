@@ -35,6 +35,7 @@ rm_lr        = lambda s:        rm_s_from_s( '\r', s )
 rm_double_space = lambda s:     replace_s_by_s ( '  ', ' ', s )
 clean_s      = lambda s:        rm_double_space( rm_lr( rm_ln( rm_tab( s ) )))
 rm_s         = lambda s:        replace_s_by_s( ' ',  '', s )
+false_and_not_0  = lambda val:  val if val != False or val == 0 else False
 
 def san( s ):
     '''Function sanitizes input for use'''
@@ -48,7 +49,7 @@ def san( s ):
 def fix( s, ent ):
     ent = ent.lower()
 
-    if not s or s == '     ':
+    if (s == False or s == '     ') and s != 0: # Letop 0 == False (-;
         return '.'
 
     temp = [ 'tx', 'tn', 'tg', 't10n' ]
