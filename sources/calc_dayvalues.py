@@ -22,11 +22,11 @@ def prepare_day_values( station, yyyymmdd, name, type ):
 
         if type == 'html':
             name = f'{name}.html'
-            path = station.dir_html
+            path = c.dir_html
 
         if type == 'txt':
             name = f'{name}.txt'
-            path = station.dir_text
+            path = c.dir_text
 
         content = ''
         if type == 'html':
@@ -39,7 +39,7 @@ def prepare_day_values( station, yyyymmdd, name, type ):
             </header>
             '''
 
-            footer = f'<footer> {station.bronvermelding} </footer>'
+            footer = f'<footer> {station.notification} </footer>'
 
             title = f'{station.plaats}-{yyyymmdd}'
             css     = r.get_string_css_from_file( 'default-dayvalues.css' ) # Get css from file
