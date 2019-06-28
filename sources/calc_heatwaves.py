@@ -49,11 +49,11 @@ def sort_heatwave_list(heatwaves, pm = '+'):
 
             if days_act > days_max:
                 days_max = days_act
-                heat_act = heat_max
+                heat_max = heat_act
                 key = ndx
             elif days_act == days_max:
-                if heat_act >= heat_max:
-                    heat_act = heat_max
+                if heat_act > heat_max:
+                    heat_max = heat_act
                     days_max = days_act
                     key = ndx
 
