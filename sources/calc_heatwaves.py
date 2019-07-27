@@ -34,6 +34,7 @@ class HeatwaveStats:
         self.tn_max       =  st.max_val(etm_l,'TN')
         self.tx_gte_30    =  st.cnt_day(etm_l,'TX','>=',300)
         self.tx_gte_35    =  st.cnt_day(etm_l,'TX','>=',350)
+        self.tx_gte_40    =  st.cnt_day(etm_l,'TX','>=',400)
 
 def sort_heatwave_list(heatwaves, pm = '+'):
     sorted = []
@@ -103,10 +104,11 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
         content = ''
         # Make start/header of content
         if type == 'html':
-            content  = f'''
+            colspan = 15
+            content = f'''
             <table>
                 <thead>
-                <tr> <th colspan="14"> {title} </th> </tr>
+                <tr> <th colspan="{colspan}"> {title} </th> </tr>
                 <tr>
                     <th> plaats </th>
                     <th> provincie </th>
@@ -120,7 +122,8 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
                     <th title="Gemiddelde temperatuur"> tg </th>
                     <th title="Gemiddelde minimum temperatuur"> tn ave </th>
                     <th title="Aantal tropische dagen"> tx&ge;30 </th>
-                    <th title="Aantal tropische dagen"> tx&ge;35 </th>
+                    <th title="Aantal 35 plus dagen"> tx&ge;35 </th>
+                    <th title="Aantal 40 plus dagen"> tx&ge;40</th>
                     <th title="Aantal zonuren"> ∑zon </th>
                 </tr>
                 </thead>
@@ -129,7 +132,7 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
 
         if type in ['txt','cmd']:
             content  = f"PLAATS{' ':24} PERIODE{' ':10} ∑WARMTE ∑DAG  TX MAX    TN MAX   " \
-                        "TX GEM   TG       TN GEM TX≥30  TX≥35 ZON TOT\n"
+                        "TX GEM   TG       TN GEM TX≥30  TX≥35  TX≥40 ZON TOT\n"
             # content += f"DATUMS & TEMPS "
             #content += cfg.ln
 
@@ -144,6 +147,7 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
             sq_sum     =  fn.rm_s(fn.fix(heatwave.sq_sum['som'],'sq'))
             tx_gte_30  =  str(heatwave.tx_gte_30['tel'])
             tx_gte_35  =  str(heatwave.tx_gte_35['tel'])
+            tx_gte_40  =  str(heatwave.tx_gte_40['tel'])
 
             if type == 'html':
                 date_txt = f"{d.Datum(heatwave.date_start).tekst()} - {d.Datum(heatwave.date_end).tekst()}"
@@ -162,6 +166,7 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
                         <td> {tn_ave} </td>
                         <td> {tx_gte_30} {h.table_count(heatwave.tx_gte_30['lijst'], max_rows)} </td>
                         <td> {tx_gte_35} {h.table_count(heatwave.tx_gte_35['lijst'], max_rows)} </td>
+                        <td> {tx_gte_40} {h.table_count(heatwave.tx_gte_40['lijst'], max_rows)} </td>
                         <td> {sq_sum} </td>
                     </tr> '''
 
@@ -172,7 +177,7 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
 
                 content += f"{heatwave.place:<30} {heatwave.period:<17} {heat_ndx:^7} {heatwave.day_count:^4} "
                 content += f"{tx_max:^8}  {tn_max:^8} {tn_max:^8} {tx_ave:^8} {tg_ave:^8} "
-                content += f"{tn_ave:^8} {tx_gte_30:^5} {tx_gte_35:^5} {sq_sum:<9}\n"
+                content += f"{tn_ave:^8} {tx_gte_30:^5} {tx_gte_35:^5} {tx_gte_40:^5} {sq_sum:<9}\n"
                 # content += txt_datum_temps
                 #content += cfg.ln
 
@@ -180,7 +185,7 @@ def alg_heatwaves(lijst_station, ymd_s, ymd_e, type, name):
         if type == 'html':
             content += f'''
                 </tbody>
-                <tfoot> <tr> <td colspan="14"> {bronvermelding} </td> </tr> </tfoot>
+                <tfoot> <tr> <td colspan="{colspan}"> {bronvermelding} </td> </tr> </tfoot>
             </table> '''
 
             css = r.get_string_css_from_file( 'default-table-statistics.css' ) # Get css from file
