@@ -10,19 +10,20 @@ __status__     =  "Development"
 
 import config, math, time, os
 import view.log as log
+from pathlib import Path
 
 def check(file_name):
     '''Function checks a file'''
     ok = False
     try:
-        path = os.Path(file_name)  # Python 3.4
-        if os.path.exists():  # Check if is there file
+        path = Path(file_name)  # Python 3.4
+        if Path(path).exists():  # Check if is there file
             log.console(f'Check file {file_name} succesful')
             ok = True
         else:
             raise ValueError( f'File {file_name} does not exist' )
     except ValueError as e:
-        log.console(f'Check file {file_name} failed\n{e.reason}\n{e.strerror}')
+        log.console(f'Check file {file_name} failed\n{e}')
 
     return ok
 
@@ -33,7 +34,7 @@ def write(file_name='dummy.txt', content='', prefix='w', encoding='utf-8'):
         with open( file_name, prefix, encoding=encoding ) as file_out:
             file_out.write(content)
     except Exception as e:
-        log.console(f"Create/Write file: {file_name} failed\n{e.strerror}\n{e.errno}")
+        log.console(f"Create/Write file: {file_name} failed\n{e}")
     else:
         log.console(f"Create/Write file: {file_name} succesful")
         ok = True
@@ -59,9 +60,9 @@ def read(file_name):
     if check(file_name):
         try:
             with open(file_name, 'r') as f:
-                content = f.read()
+                txt = f.read()
         except Exception as e:
-            log.console(f"Read file: {file_name} failed\n{e.strerror}\n{e.errno}")
+            log.console(f"Read file: {file_name} failed\n{e}")
         else:
             log.console(f"Read file: {file_name} succesful")
             ok = True
@@ -75,7 +76,7 @@ def delete(file_name):
         try:
             Path(file_name).unlink()  # Remove file
         except Exception as e:
-            log.console(f"Delete file: {file_name} failed\n{e.strerror}\n{e.errno}")
+            log.console(f"Delete file: {file_name} failed\n{e}")
         else:
             log.console(f"Delete file: {file_name} succesful")
             ok = True

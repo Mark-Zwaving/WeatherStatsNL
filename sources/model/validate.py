@@ -27,7 +27,7 @@ def yyyymmdd( ymd ):
             y, m, d = int(ymd[:4]), int(ymd[4:6]), int(ymd[6:8])
             date = datetime.datetime(y, m, d)
         except Exception as e:
-            log.console(f"Error: {ymd}\n{e.reason}\n{e.strerror}")
+            log.console(f"Error: {ymd} {e}")
         else:
             # Geen datum in de toekomst
             if date > datetime.datetime.now():

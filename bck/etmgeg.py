@@ -41,7 +41,7 @@ def unzip( stn ):
             with zipfile.ZipFile(zip) as z:
                 z.extract(txt)
         except zipfile.BadZipfile as e:
-            log.console(f"Failed to unzip file: '{zip_file}'\n{e.reason}\n{e.strerror}")
+            log.console(f"Failed to unzip file: '{zip_file}'\n{e}")
         else:
             t_txt = write_process_time_ns('Time to unzip ', t_st)
             log.console( f"Unzip: '{zip}'\nTo file: '{txt}' succesful\n{t_txt}" )

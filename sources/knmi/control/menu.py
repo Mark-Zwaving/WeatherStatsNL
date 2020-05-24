@@ -8,7 +8,7 @@ __version__    =  "0.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import os, time, config, html, webbrowser, subprocess
+import os, time, config, webbrowser, subprocess
 import knmi.model.daydata as daydata
 import knmi.view.dayvalues as view_dayvalues
 import model.utils as utils
@@ -17,6 +17,7 @@ import control.io as io
 import view.log as log
 import view.translate as tr
 import view.txt as view_txt
+import view.html as view_html
 
 def menu_choices( choice ):
     if   choice ==  '1':  process_knmi_dayvalues_all()
@@ -78,7 +79,7 @@ def get_dayvalues_by_date():
 
                     if not file_name:
                         now = utils.now_act_for_file()
-                        file_name = f'dayvalues-{now}.{type}'
+                        file_name = f'dayvalues-{yyyymmdd}-{now}.{type}'
 
                     if ok:
                         log.header('SEARCHING FOR AND PREPARING DAY VALUES', True)
@@ -94,7 +95,7 @@ def get_dayvalues_by_date():
                             footer = station.data_notification
 
                             if type == 'html':
-                                page = html.Template()
+                                page = view_html.Template()
                                 page.title  = f'{station.place}-{yyyymmdd}'
                                 page.header = header
                                 page.main   = view_dayvalues.html_main( day )
@@ -106,7 +107,8 @@ def get_dayvalues_by_date():
                                     et = time.time_ns()
                                     fopen = control_ask.ask_to_open_with_app("Open the file in your browser ?")
                                     if fopen:
-                                        webbrowser.open_new_tab( page.file_name ) # Opens in default browser
+                                        print(page.file_path)
+                                        webbrowser.open_new_tab( page.file_path ) # Opens in default browser
 
                                 if not et:
                                     et = time.time_ns()

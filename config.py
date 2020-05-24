@@ -18,6 +18,7 @@ dir_data      = os.path.abspath( os.path.join(dir_app, 'data') )
 dir_knmi      = os.path.abspath( os.path.join(dir_data, 'knmi' ) )
 dir_data_txt  = os.path.abspath( os.path.join(dir_data, 'text' ) )
 dir_data_html = os.path.abspath( os.path.join(dir_data, 'html' ) )
+dir_data_template       = os.path.abspath( os.path.join(dir_data, 'templates' ) )
 dir_data_txt_dayvalues  = os.path.abspath( os.path.join(dir_data_txt, 'dayvalues' ) )
 dir_data_html_dayvalues = os.path.abspath( os.path.join(dir_data_html, 'dayvalues' ) )
 

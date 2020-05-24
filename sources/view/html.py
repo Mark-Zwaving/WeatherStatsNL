@@ -8,11 +8,9 @@ __version__    =  "0.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import os
-import config, datetime
+import os, config, datetime
 import control.io as io
 import view.log as log
-from datetime import datetime
 
 class Template():
     ''' Class to make a html page based on the template - template.html'''
@@ -25,52 +23,55 @@ class Template():
     def __init__(self, title='WeatherstatsNL - template',
                        header='Your Title',
                        main='Your Content',
-                       footer='Your Footer' ):
+                       footer='Your Footer'
+                       ):
         self.title  = title
         self.header = header
         self.main   = main
         self.footer = footer
 
         title = self.title.strip().replace(' ', '')
-        dt    = datetime.now().strftime('%Y-%m-%d_%H%M%S')
+        dt    = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
         self.file_name = f'{title}_{dt}.html'
 
-        self.template  = os.path.abspath(os.path.join(config.dir_view,'template.html'))
+        self.template  = os.path.abspath(os.path.join(config.dir_data_template, 'template.html'))
         self.base_dir  = os.path.dirname(os.path.abspath(__file__))
         self.file_dir  = config.dir_data_html_dayvalues
+        self.file_path = os.path.abspath(os.path.join(self.file_dir, self.file_name))
 
     def save(self, dir_map=False, file_name=False):
         ok = False
-        if file_name: self.file_name = file_name
-        if dir_map:   self.file_dir  = dir_map
+        if file_name:
+            self.file_name = file_name
+        if dir_map:
+            self.file_dir  = dir_map
+
+        self.file_path = os.path.abspath(os.path.join(self.file_dir, self.file_name))
 
         try:
-            content = io.read(self.template)
-            content = content.replace('{now}', datetime.now())
-            content = content.replace('{titel}', self.title)
-            content = content.replace('{charset}', self.charset)
-            content = content.replace('{author}', self.author)
-            content = content.replace('{viewport}', self.viewport)
-            content = content.replace('{css_file}', sef.css_file)
-            content = content.replace('{script_file}', sef.script_file)
-            content = content.replace('{header}', sef.header)
-            content = content.replace('{content}', sef.content)
-            content = content.replace('{footer}', sef.footer)
-
-            file_html = os.path.abspath(os.path.join(self.file_dir, self.file_name))
-            io.write(file_html, content)
+            self.html, ok = io.read(self.template)
+            self.html = self.html.replace('{now}', str(datetime.datetime.now()) )
+            self.html = self.html.replace('{title}', self.title)
+            self.html = self.html.replace('{charset}', self.charset)
+            self.html = self.html.replace('{author}', self.author)
+            self.html = self.html.replace('{viewport}', self.viewport)
+            self.html = self.html.replace('{css_file}', self.css_file)
+            self.html = self.html.replace('{script_file}', self.script_file)
+            self.html = self.html.replace('{header}', self.header)
+            self.html = self.html.replace('{content}', self.main)
+            self.html = self.html.replace('{footer}', self.footer)
+            io.write(self.file_path, self.html)
 
         except Exception as e:
-            log.console( f'Error\n{e.reason}\n{e.strerror}' )
+            log.console( f'Error: {e}' )
         else:
-            log.console( f'Creating file: {file_html} succesful' )
+            log.console( f'Creating file: {self.file_path} succesful' )
             ok = True
 
         return ok
 
     def delete(self):
-        file_html = os.path.abspath(os.path.join(self.file_dir, self.file_name))
-        io.delete(file_html)
+        io.delete(self.file_path)
 
 def div_day_entity( station, title, val, ent, t_val, t_ent ):
     if val == station.empthy:

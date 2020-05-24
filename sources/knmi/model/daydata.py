@@ -104,8 +104,7 @@ def read( station ):
                                   skip_header=config.knmi_data_skip_rows_etmgeg
                                   )
         except Exception as e:
-            log.console(tr.txt('Failed to read') + f': {file_name}')
-            log.console( '{e.reason}\n{e.strerror}' )
+            log.console(tr.txt('Failed to read') + f': {file_name}\n{e}' )
         else:
             log.console(tr.txt('Succes reading') + f': {file_name}')
             ok = True
@@ -124,8 +123,7 @@ def unzip( station ):
             with ZipFile(zip, 'r') as z:
                 z.extractall(dir)
         except BadZipfile as e:
-            log.console(tr.txt('Failed to unzip file') + ': {zip}')
-            log.console(f'{e.reason}\n{e.strerror}')
+            log.console(tr.txt('Failed to unzip file') + ': {zip}\n{e}')
         else:
             log.console(f'Unzip successful')
             log.console(view_txt.process_time_ext('Time to unzip', time.time_ns()-ts))

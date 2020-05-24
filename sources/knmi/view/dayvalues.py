@@ -155,7 +155,7 @@ def div( title=False, val=False, time=False ):
             </div>
             '''.format( title, val if val else '', time if time else '' )
 
-def html_main(station, day):
+def html_main(day):
     stn, ymd, ddvec, fhvec, fg, fhx, fhxh, fhn, fhnh, fxx, fxxh, tg, tn,\
     tnh, tx, txh, t10n, t10nh, sq, sp, q, dr, rh, rhx, rhxh, pg, px, pxh,\
     pn, pnh, vvn, vvnh, vvx, vvxh, ng, ug, ux, uxh, un, unh, ev24 = ents(day)
