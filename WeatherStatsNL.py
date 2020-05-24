@@ -18,14 +18,14 @@ import knmi.model.daydata as  daydata
 import knmi.model.stats as stats
 import knmi.control.menu as control_menu
 import knmi.view.menu as view_menu
-import knmi.view.log as log
 import knmi.view.fix as fix
+import view.log as log
 
 # Main programm
 if __name__== "__main__":
 
     log.header('Welcome to WeatherStatsNL', True)
-    if not daydata.knmi_stn:
+    if config.stations.size == 0:
         view_menu.error_no_stations_found()
     else:
         while True:  # Main menu

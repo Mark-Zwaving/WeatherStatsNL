@@ -12,14 +12,8 @@ __status__     =  "Development"
 import datetime
 import view.translate as tr
 
-def path( dir, file):
-    return os.path.abspath(os.path.join(dir,file))
+path = lambda dir, file : os.path.abspath(os.path.join(dir,file))
 
-def from_yyyymmdd_to_txt(ymd):
-    d = datetime.date( int(ymd[:4]), int(ymd[4:6]), int(ymd[6:8]) )
-    day_name  = tr.txt(d.strftime('%A'))
-    date_day  = tr.txt(d.strftime('%d'))
-    monthname = tr.txt(d.strftime('%B'))
-    year      = d.strftime('%B')
+ymd_to_txt = lambda ymd : datetime.date(int(ymd[:4]),int(ymd[4:6]),int(ymd[6:8])).strftime('%A, %d %B %Y')
 
-    return f'{day_name}, {date_day} {monthname} {year}'
+now_act_for_file = lambda : datetime.datetime.now().strftime('%Y%m%d-%H%M%S')

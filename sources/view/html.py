@@ -8,9 +8,8 @@ __version__    =  "0.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config, datetime, dates as d, fn, calc_stats as stat
-import calc_sommerstats as cs, knmi
 import os
+import config, datetime
 import control.io as io
 import view.log as log
 from datetime import datetime

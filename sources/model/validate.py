@@ -11,11 +11,11 @@ __status__     =  "Development"
 import datetime, config
 import view.log as log
 import view.translate as tr
-import validate
 
-def yyymmdd( ymd ):
+def yyyymmdd( ymd ):
     '''Function validates date'''
     ok = False
+    ymd = str(ymd)
     if  len(ymd) != 8:
         log.console(f'Date: {ymd} has wrong length.')
         log.console(tr.txt('Use format of yyyymmdd with length is 8'))
@@ -33,6 +33,7 @@ def yyymmdd( ymd ):
             if date > datetime.datetime.now():
                 log.console(f'Date: {ymd} is in the future.')
                 log.console(tr.txt('Maybe try again later ;-)'))
+            else:
                 ok = True
     if ok:
         log.console(f"Date {ymd} is oké!")

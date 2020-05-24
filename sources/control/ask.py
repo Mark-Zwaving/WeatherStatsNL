@@ -8,22 +8,24 @@ __version__    =  "1.0"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import sys, re
-import config
+import sys, re, config
 import knmi.model.daydata as daydata
 import knmi.model.fn as fn
 import view.log as log
 import view.txt as view_txt
 import view.translate as tr
+import model.validate as validate
 
 # Check and sanitize input
 def clear( s ):
     s = re.sub( '\n|\r|\t', '', s ).strip().replace('  ', ' ').lower()
     return s if s else False
 
-def ask(txt='?'):
+def ask(txt='?', space=True):
+    if space: log.console(' ')
     txt = tr.txt( txt )
     res = clear(input(txt))
+    if space: log.console(' ')
     return res
 
 def pause(s='Paused'):
@@ -52,10 +54,7 @@ def ask_for_stations( txt ):
         log.console("Press '*' to add all available weather stations", True)
         if len(l) > 0: log.console("Press 'n' to move to the next !", True)
         log.console("Press 'q' or 'Q' to go back to the main menu", True)
-
-        log.console(' ')
         ans = ask(' ? ')
-        log.console(' ')
 
         if not ans: # Waarschijnlijk op de enter geramd zonder invoer...
             continue # Nog een een keer dan maar
@@ -107,13 +106,13 @@ def ask_for_date( txt ):
     while True:
         log.console(txt, True)
         log.console("Press 'q' or 'Q' to go back to the main menu", True)
-        ans = ask(' ? ')
-        if ans == config.answer_quit:
+        answ = ask(' ? ')
+        if answ == config.answer_quit:
             return config.answer_quit
-        elif v.check_date(ans):
-            return ans
+        elif validate.yyyymmdd(answ):
+            return answ
         else:
-            log.console(f'Error in date: {s_in}', True)
+            log.console(f'Error in date: {answ}', True)
             ask('Press a key to try again...')
 
 def ask_for_start_and_end_date():
@@ -146,7 +145,7 @@ def ask_for_file_type(txt):
             log.console(f'Unknown option: {ans}', True)
             ask('Press a key to try again...')
 
-def ask_for_file_naam(txt):
+def ask_for_file_name(txt):
     log.console(txt, True)
     log.console('Press <enter> for no given name.\nDefault name will be used')
 

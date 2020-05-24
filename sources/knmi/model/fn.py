@@ -16,7 +16,6 @@ import knmi.model.daydata as daydata
 # Some quick,short functions
 div_10       = lambda s:        f'{float(s)/10:0.1F}'
 div_10_add   = lambda s,a:      f'{div_10(s)}{a}'
-mk_path      = lambda dir,add:  os.path.abspath( os.path.join( dir, add ) )
 
 def find_knmi_station( id ):
     '''Function searches for station in the list if found in list then return

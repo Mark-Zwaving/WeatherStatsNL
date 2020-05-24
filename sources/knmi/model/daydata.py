@@ -14,6 +14,7 @@ import view.log as log
 import view.txt as view_txt
 import view.translate as tr
 from zipfile import ZipFile, BadZipfile
+import model.validate as validate
 
 # Dayvalues data KNMI / Keys for dayvalues
 STN      =  0 # WMO number for nl weatherstation
@@ -75,43 +76,41 @@ def ndx_ent( ent ):
 
 def ent_ndx( ndx ):
     '''Get text by index from array entities'''
-    return entities[ent]
+    return entities[ndx]
 
 def day(station, yyyymmdd):
     '''Function return a list of the dayvalues'''
-    ok = False, data = np.array([])
-    if validate.yyymmdd(yyyymmdd):  # Validate date
+    ok, data = False, np.array([])
+    if validate.yyyymmdd(yyyymmdd):  # Validate date
         ok, data = read(station)
         if ok: # Date is read fine
             ndx = ndx_entity('YYYYMMDD')
             iymd = int(yyyymmdd)
             if iymd >= data[0,ndx] and iymd <= data[-1,ndx]: # Check ranges
                 data = data[np.where(data[:,ndx] == int(yyyymmdd))] # Get values correct date
-                data[data == station.knmi_data_empthy_val] = station.data_dummy_val # Replace False values
                 ok = True
 
-    return ok, data
+    return ok, data[0]
 
 def read( station ):
     '''Reads data dayvalues from the knmi into a list'''
-    ok, file = False, file_txt.format(station.wmo)
+    ok, file_name = False, station.file_txt_etmgeg
 
     with lock:
         try:
-            data = np.genfromtxt( file, dtype=np.int32,
+            data = np.genfromtxt( file_name, dtype=np.int32,
                                   delimiter=config.knmi_data_delimiter,
                                   filling_values=config.knmi_data_dummy_val,
                                   skip_header=config.knmi_data_skip_rows_etmgeg
                                   )
         except Exception as e:
-            log.console( tr.txt('Failed to read') + f': {txt}')
+            log.console(tr.txt('Failed to read') + f': {file_name}')
             log.console( '{e.reason}\n{e.strerror}' )
         else:
-            log.console(tr.txt('Succes reading') + f': {txt}')
+            log.console(tr.txt('Succes reading') + f': {file_name}')
             ok = True
 
     return ok, data
-
 
 def unzip( station ):
     ok  = False

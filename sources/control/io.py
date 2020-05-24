@@ -8,16 +8,15 @@ __version__    =  "0.2"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config, math, time, path
+import config, math, time, os
 import view.log as log
-from Exception import ValueError
 
 def check(file_name):
     '''Function checks a file'''
     ok = False
     try:
-        path = Path(file_name)  # Python 3.4
-        if path.exists():  # Check if is there file
+        path = os.Path(file_name)  # Python 3.4
+        if os.path.exists():  # Check if is there file
             log.console(f'Check file {file_name} succesful')
             ok = True
         else:

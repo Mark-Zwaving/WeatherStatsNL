@@ -9,11 +9,6 @@ __version__    =  "0.9.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-class Station:
-    '''Deze klasse initialiseert een knmi weerstation'''
-    def __init__(self, stn = '', plaats = '', provincie = '', info = ''):
-        self.stn, self.plaats, self.provincie, self.info = wmo, plaats, provincie, info
-
 class Etmgeg:
     '''Klasse voor het opslaan van de daggevens van een knmi station'''
     def __init__(self, knmi_data_line):

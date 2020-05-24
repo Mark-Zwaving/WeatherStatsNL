@@ -30,7 +30,7 @@ def ent(val, entity):
 
     # Indexes
     if ent in ['heat_ndx', 'hellmann']:
-        return val
+        return str(val)
 
     # Temperatures
     elif ent in [ 'tx', 'tn', 'tg', 't10n' ]:
@@ -59,7 +59,7 @@ def ent(val, entity):
 
     # CLouds cover/octants
     elif ent in [ 'ng' ]:
-        return val
+        return str(val)
 
     # Wind
     elif ent in [ 'fhvec','fg','fhx','fhn','fxx' ]:
@@ -112,4 +112,4 @@ def ent(val, entity):
             else:
                 return '>70km'
 
-    return val
+    return val  # Without string casting will give an error with unknowm data entity

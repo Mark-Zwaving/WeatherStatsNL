@@ -15,7 +15,6 @@ import model.utils as utils
 import view.log as log
 import knmi.model.daydata as daydata
 
-
 def prepare( station, yyyymmdd, file_name, file_type ):
     day = day( station, yyyymmdd )
     if day:

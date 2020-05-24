@@ -8,17 +8,15 @@ __version__    =  "0.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import time, config, datetime
+import os, time, config, html, webbrowser, subprocess
 import knmi.model.daydata as daydata
 import knmi.view.dayvalues as view_dayvalues
 import model.utils as utils
 import control.ask as control_ask
+import control.io as io
 import view.log as log
 import view.translate as tr
 import view.txt as view_txt
-import view.html as view_html
-import html
-import webbrowser
 
 def menu_choices( choice ):
     if   choice ==  '1':  process_knmi_dayvalues_all()
@@ -67,62 +65,70 @@ def get_dayvalues_by_date():
     log.header('START: SEARCHING AND PREPARING DAY VALUES...', True)
     yyyymmdd = control_ask.ask_for_date('Give in the date <yyyymmdd> you look for ?')
     if yyyymmdd != config.answer_quit:
-        station = control_ask.ask_for_stations('Select a weather station ? ')
-        if station != config.answer_quit:
+        stations = control_ask.ask_for_stations('Select a weather station ? ')
+        if stations != []:
             type = control_ask.ask_for_file_type('Select filetype ? ')
             if type != config.answer_quit:
-                ok, file_name = True, False
-                if type != 'cmd':
-                    file_name = control_ask.ask_for_file_name(f'Give a name for the {type} file ? <optional> ')
-                    if file_name == config.answer_quit:
-                        ok = False
+                for station in stations:
+                    ok, file_name = True, False
+                    if type != 'cmd':
+                        file_name = control_ask.ask_for_file_name(f'Give a name for the {type} file ? <optional> ')
+                        if file_name == config.answer_quit:
+                            ok = False
 
-                if not file_name:
-                    file_name = 'dayvalues-{(yyyymmdd}.{type}'
+                    if not file_name:
+                        now = utils.now_act_for_file()
+                        file_name = f'dayvalues-{now}.{type}'
 
-                if ok:
-                    log.console('...SEARCHING FOR AND PREPARING DAY VALUES...', True)
-                    log.console(f'Station: {station.wmo} {station.plaats}', True)
-                    log.console(f'Date: {utils.from_yyyymmdd_to_txt(yyyymmdd)} <{yyyymmdd}>', True)
-                    st = time.time_ns()
-                    day = daydata.day(station, yyyymmdd)
+                    if ok:
+                        log.header('SEARCHING FOR AND PREPARING DAY VALUES', True)
 
-                    txt_date = utils.from_yyyymmdd_to_txt(YYYYMMDD)
-                    header = f'{station.wmo} - {station.place} {station.province} - {txt_date}'
-                    footer = station.notification
-                    if type == 'html':
-                        page = html.Template()
-                        page.title  = f'{station.place}-{YYYYMMDD}'
-                        page.header = header
-                        page.main   = view_dayvalues.html_main( day )
-                        page.footer = footer
-                        page.file_name = file_name
+                        st = time.time_ns()
+                        log.console(f'Station: {station.wmo} {station.place}', True)
+                        log.console(f'Date: {utils.ymd_to_txt(yyyymmdd)} <{yyyymmdd}>', True)
+                        ok_data, day = daydata.day(station, yyyymmdd)
 
-                        et = False
-                        if page.save():
-                            et = time.time_ns()
-                            fopen = control_ask.ask_to_open_with_app("Open the file in your browser ?")
-                            if fopen:
-                                webbrowser.open_new_tab( page.file_name ) # Opens in default browser
+                        if ok_data:
+                            txt_date = utils.ymd_to_txt(yyyymmdd)
+                            header = f'{station.wmo} - {station.place} {station.province} - {txt_date}'
+                            footer = station.data_notification
 
-                        if not et:
-                            et = time.time_ns()
+                            if type == 'html':
+                                page = html.Template()
+                                page.title  = f'{station.place}-{yyyymmdd}'
+                                page.header = header
+                                page.main   = view_dayvalues.html_main( day )
+                                page.footer = footer
+                                page.file_name = file_name
 
-                    if type == 'txt':
-                        title = text_date
-                        main  = view_dayvalues.txt_main( day )
-                        txt   = f'{title}\n{main}
-                        dir   = config.dir_data_txt_dayvalues
-                        path  = os.path.abspath(os.path.join(dir_data_txt, file_name))
+                                et = False
+                                if page.save():
+                                    et = time.time_ns()
+                                    fopen = control_ask.ask_to_open_with_app("Open the file in your browser ?")
+                                    if fopen:
+                                        webbrowser.open_new_tab( page.file_name ) # Opens in default browser
 
-                        if io.save(path, txt):
-                            et = time.time_ns()
-                            fopen = control_ask.ask_to_open_with_app("Open the file in with your default app ?")
+                                if not et:
+                                    et = time.time_ns()
 
-                            if fopen:
-                                subprocess.run(['open', filename], check=True)
+                            if type == 'txt':
+                                title = txt_date
+                                main  = view_dayvalues.txt_main( day )
+                                txt   = f'{title}\n{main}'
+                                dir   = config.dir_data_txt_dayvalues
+                                path  = os.path.abspath(os.path.join(dir, file_name))
 
-                    log.footer(view_txt.process_time_ext('Total processing time', et-st), True)
+                                if io.save(path, txt):
+                                    et = time.time_ns()
+                                    fopen = control_ask.ask_to_open_with_app("Open the file in your <default app or browser ?")
+
+                                    if fopen:
+                                        print(path)
+                                        input()
+                                        webbrowser.open_new_tab(path)
+                        else:
+                            log.console( 'Error reading data!', station.place, yyyymmdd )
+                        log.footer(view_txt.process_time_ext('Total processing time', et-st), True)
 
     log.footer('END SEARCHING AND PREPARING DAY VALUES...', True)
     control_ask.ask("Press a 'key' to go back to the main menu\n")
