@@ -1,6 +1,7 @@
 /__pycache__/*
 /sources/__pycache__/*
-/html/*
+/bck/*
+/datal/*
 *.html
 *.txt
 *.zip

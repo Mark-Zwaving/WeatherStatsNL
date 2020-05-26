@@ -9,27 +9,30 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import os, time, config, webbrowser, subprocess
+import model.utils as utils
+import model.convert as convert
 import knmi.model.daydata as daydata
 import knmi.view.dayvalues as view_dayvalues
-import model.utils as utils
 import control.ask as control_ask
 import control.io as io
 import view.log as log
 import view.translate as tr
 import view.txt as view_txt
 import view.html as view_html
+import view.graph as graph
 
 def menu_choices( choice ):
     if   choice ==  '1':  process_knmi_dayvalues_all()
     elif choice ==  '2':  process_knmi_dayvalues_selected()
     elif choice ==  '3':  get_dayvalues_by_date()
-    elif choice ==  '4': menu.calc_winterstats()
-    elif choice ==  '5': pass #menu.calc_coldwaves()
-    elif choice ==  '6': menu.calc_zomerstats()
-    elif choice ==  '7': menu.calc_heat_waves()
-    elif choice ==  '8': menu.calc_allstats()
-    elif choice ==  '9': menu.calc_allextremes()
-    elif choice == '10': menu.make_images()
+    elif choice ==  '4':  graph_periods()
+    elif choice ==  'x': menu.calc_winterstats()
+    elif choice ==  'x': pass #menu.calc_coldwaves()
+    elif choice ==  'x': menu.calc_zomerstats()
+    elif choice ==  'x': menu.calc_heat_waves()
+    elif choice ==  'x': menu.calc_allstats()
+    elif choice ==  'x': menu.calc_allextremes()
+    elif choice == 'x': menu.make_images()
     else:
         log.console(f'Input {choice} unknown. Try again...', True)
 
@@ -65,11 +68,11 @@ def get_dayvalues_by_date():
     '''Funtion gets day values from data knmi '''
     log.header('START: SEARCHING AND PREPARING DAY VALUES...', True)
     yyyymmdd = control_ask.ask_for_date('Give in the date <yyyymmdd> you look for ?')
-    if yyyymmdd != config.answer_quit:
+    if yyyymmdd not in config.answer_quit:
         stations = control_ask.ask_for_stations('Select a weather station ? ')
-        if stations != []:
+        if stations != config.answer_quit:
             type = control_ask.ask_for_file_type('Select filetype ? ')
-            if type != config.answer_quit:
+            if type not in config.answer_quit:
                 for station in stations:
                     ok, file_name = True, False
                     if type != 'cmd':
@@ -82,17 +85,16 @@ def get_dayvalues_by_date():
                         file_name = f'dayvalues-{yyyymmdd}-{now}.{type}'
 
                     if ok:
-                        log.header('SEARCHING FOR AND PREPARING DAY VALUES', True)
-
                         st = time.time_ns()
+                        log.header('SEARCHING FOR AND PREPARING DAY VALUES', True)
                         log.console(f'Station: {station.wmo} {station.place}', True)
-                        log.console(f'Date: {utils.ymd_to_txt(yyyymmdd)} <{yyyymmdd}>', True)
-                        ok_data, day = daydata.day(station, yyyymmdd)
+                        log.console(f'Date: {utils.ymd_to_txt(yyyymmdd)}', True)
+                        ok, = graph.plot( stations, entities, sd, ed, title, size )
 
                         if ok_data:
                             txt_date = utils.ymd_to_txt(yyyymmdd)
-                            header = f'{station.wmo} - {station.place} {station.province} - {txt_date}'
-                            footer = station.data_notification
+                            header = f'<i class="text-info fas fa-home"></i> {station.wmo} - {station.place} {station.province} - {txt_date}'
+                            footer = station.dayvalues_notification
 
                             if type == 'html':
                                 page = view_html.Template()
@@ -105,34 +107,68 @@ def get_dayvalues_by_date():
                                 et = False
                                 if page.save():
                                     et = time.time_ns()
-                                    fopen = control_ask.ask_to_open_with_app("Open the file in your browser ?")
+                                    fopen = control_ask.ask_to_open_with_app(f'Open the file {file_name} in your browser ?')
                                     if fopen:
-                                        print(page.file_path)
                                         webbrowser.open_new_tab( page.file_path ) # Opens in default browser
-
-                                if not et:
+                                else:
                                     et = time.time_ns()
 
                             if type == 'txt':
                                 title = txt_date
                                 main  = view_dayvalues.txt_main( day )
                                 txt   = f'{title}\n{main}'
-                                dir   = config.dir_data_txt_dayvalues
+                                dir   = config.dir_txt_dayvalues
                                 path  = os.path.abspath(os.path.join(dir, file_name))
 
                                 if io.save(path, txt):
                                     et = time.time_ns()
-                                    fopen = control_ask.ask_to_open_with_app("Open the file in your <default app or browser ?")
-
+                                    fopen = control_ask.ask_to_open_with_app(f'Open the file {file_name} in your browser ?')
                                     if fopen:
-                                        print(path)
-                                        input()
                                         webbrowser.open_new_tab(path)
+                                else:
+                                    et = time.time_ns()
+
                         else:
                             log.console( 'Error reading data!', station.place, yyyymmdd )
                         log.footer(view_txt.process_time_ext('Total processing time', et-st), True)
 
     log.footer('END SEARCHING AND PREPARING DAY VALUES...', True)
+    control_ask.ask("Press a 'key' to go back to the main menu\n")
+
+def graph_period():
+    '''Funtion makes images for a period from the data of the knmi'''
+    log.header('START MAKING IMAGE GRAPH...', True)
+    s_ymd, e_ymd = control_ask.ask_for_start_and_end_date( 'Give in the period you look for ?' )
+    if s_ymd not in config.answer_quit and e_ymd not in config.answer_quit:
+        stations = control_ask.ask_for_stations('Select a weather station ?')
+        if stations != config.answer_quit:
+            entities = control_ask.ask_for_entities('Select a weather entities ?')
+            if entities != config.answer_quit:
+                title = station[0].stn
+                size = (convert.pixel_to_inches(800), convert.pixel_to_inches(600))
+                # Ask for graphtitle
+                # Ask for graphsize
+                name = control_ask.ask_for_file_name( f'Give a name for the .png file ? <optional>' )
+                if name not in config.answer_quit:
+                    if not name:
+                        name = name( s_ymd, e_ymd, stations, entities )
+                        st = time.time_ns()
+                        log.header('PREPARING IMAGES', True)
+                        log.console(f'Station: {station.wmo} {station.place}', True)
+                        log.console(f'Date: {utils.ymd_to_txt(yyyymmdd)}', True)
+
+                        plot( stations, entities, sd, ed, title, size )
+                        ok_data, day = daydata.day(station, yyyymmdd)
+
+                        if type != 'cmd':
+                            oke = control_ask.ask_open_url("Open the file in your (default) browser ?")
+                            if oke:
+                                webbrowser.open_new(file_name) # Opens in default browser
+
+                    log.footer(view_txt.process_time_ext('Total processing time', et-st), True)
+
+
+    log.footer('END MAKING IMAGE GRAPH...', True)
     control_ask.ask("Press a 'key' to go back to the main menu\n")
 
 # Menu choice

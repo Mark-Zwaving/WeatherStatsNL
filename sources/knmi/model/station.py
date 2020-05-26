@@ -3,9 +3,9 @@
 
 __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
-__copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
+__copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9"
+__version__    =  "0.1.3"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -14,16 +14,19 @@ import os, pathlib, config
 class Station:
     '''Class defines a KNMI weatherstation'''
     def __init__(self, wmo = ' ', place = ' ', province = ' ', info = ' '):
-        self.wmo               = wmo
-        self.place             = place
-        self.province          = province
-        self.country           = 'Netherlands'
-        self.info              = info
-        self.data_skip_rows    = config.knmi_data_skip_rows_etmgeg
-        self.data_dummy_val    = config.knmi_data_dummy_val
-        self.data_empthy_val   = config.knmi_data_empthy_val
-        self.data_notification = config.knmi_data_notification
-        self.dir_etmgeg        = os.path.join( config.dir_knmi, 'etmgeg' )
-        self.file_zip_etmgeg   = os.path.join( self.dir_etmgeg, f'etmgeg_{self.wmo}.zip' )
-        self.file_txt_etmgeg   = os.path.join( self.dir_etmgeg, f'etmgeg_{self.wmo}.txt' )
-        self.data_url          = config.knmi_data_url.format(self.wmo)
+        self.wmo      = wmo
+        self.place    = place
+        self.province = province
+        self.country  = 'Netherlands'
+        self.info     = info
+
+        self.dayvalues_skip_rows    = config.knmi_dayvalues_skip_rows
+        self.dayvalues_dummy_val    = config.knmi_dayvalues_dummy_val
+        self.dayvalues_empthy_val   = config.knmi_dayvalues_empthy_val
+        self.dayvalues_notification = config.knmi_dayvalues_notification
+
+        self.dir_dayvalues      = config.dir_thirdparty_knmi_dayvalues
+        self.file_zip_dayvalues = os.path.join( self.dir_dayvalues, f'etmgeg_{self.wmo}.zip' )
+        self.file_txt_dayvalues = os.path.join( self.dir_dayvalues, f'etmgeg_{self.wmo}.txt' )
+
+        self.dayvalues_url      = config.knmi_dayvalues_url.format(self.wmo)

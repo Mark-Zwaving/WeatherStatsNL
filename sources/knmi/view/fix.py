@@ -12,18 +12,6 @@ __status__     =  "Development"
 import view.translate as tr
 import model.convert as cvt
 
-def add_zero_less_ten ( d ):
-    '''Function add a leading zero less ten'''
-    return f'0{d}' if d < 10 else f'{d}'
-
-def spaces_till_r( s, end ):
-    '''Function fills spaces to the right in a string till a given end'''
-    return s + ' ' * (end-len(s))
-
-def spaces_till_l( s, end ):
-    '''Function fills spaces to the right in a string till a given end'''
-    return ' ' * (end-len(s)) + s
-
 def ent(val, entity):
     '''Function adds correct post/prefixes for weather entities'''
     ent = entity.lower()
@@ -38,11 +26,11 @@ def ent(val, entity):
 
     # Airpressure
     elif ent in [ 'pg', 'pn', 'px' ]:
-        return f'{float(val)/10.0:.0f} hPa'
+        return f'{float(val)/10.0:.0f}hPa'
 
     # Radiation
     elif ent in [ 'q' ]:
-        return f'{float(val)/10.0:.1f} J/cm2'
+        return f'{float(val)/10.0:.1f}J/cm2'
 
     # Percentages
     elif ent in [ 'ug', 'ux', 'un', 'sp' ]:
@@ -72,7 +60,7 @@ def ent(val, entity):
         if val == -1:
             return '<0.05'
         else:
-            return f'{float(val)/10.0:.1f} mm'
+            return f'{float(val)/10.0:.1f}mm'
 
     # Duration hours
     elif ent in [ 'sq', 'dr' ]:
@@ -90,25 +78,26 @@ def ent(val, entity):
             # Source: https://www.campbellsci.com/blog/convert-wind-directions
             ldir = [ 'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
                      'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N' ]
-            ndx = int( round( float(val) % 360 / 22.5, 0 ) + 1 )
+            ndx = int(round(float(val) % 360 / 22.5))
+            print (val, ndx)
             return f'{val}° {tr.txt(ldir[ndx])}'
 
     # View distance
     elif ent in [ 'vvn', 'vvx' ]:
         if val == 0:
-            return '<100 m'
+            return '<100m'
         else:
             if val < 49:
                 i2 = val + 1
-                return f'{val*100}-{i2*100} m'
+                return f'{val*100}-{i2*100}m'
             elif val == 50:
-                return '5-6 km'
+                return '5-6km'
             elif val <= 79:
                 i1, i2 = val - 50, val - 49
-                return f'{i1}-{i2} km'
+                return f'{i1}-{i2}km'
             elif val <= 89:
                 i1, i2 = val - 50, val - 45
-                return f'{i1}-{i2} km'
+                return f'{i1}-{i2}km'
             else:
                 return '>70km'
 

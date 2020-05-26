@@ -4,11 +4,14 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.4"
+__version__    =  "0.4.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import view.translate as tr
+
+def pixel_to_inch(p):
+    return int(round(p * 0.0104166667))
 
 def ms_to_bft( ms ):
     i = int(ms)

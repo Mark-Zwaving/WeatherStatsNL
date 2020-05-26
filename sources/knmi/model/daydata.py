@@ -68,7 +68,12 @@ entities = np.array( [
     ] )
 
 lock = threading.Lock()
-ndx_entity = lambda entity : int( np.where( entities == entity.upper() )[0] )
+
+def is_ent( ent ):
+    '''Check if a value is a dayvalue entity'''
+    e  = ent.strip().upper()
+    ok = e in entities
+    return ok, e
 
 def ndx_ent( ent ):
     '''Get index by text from array entities'''
@@ -78,7 +83,7 @@ def ent_ndx( ndx ):
     '''Get text by index from array entities'''
     return entities[ndx]
 
-def day(station, yyyymmdd):
+def day( station, yyyymmdd ):
     '''Function return a list of the dayvalues'''
     ok, data = False, np.array([])
     if validate.yyyymmdd(yyyymmdd):  # Validate date
@@ -94,14 +99,14 @@ def day(station, yyyymmdd):
 
 def read( station ):
     '''Reads data dayvalues from the knmi into a list'''
-    ok, file_name = False, station.file_txt_etmgeg
+    ok, file_name = False, station.file_txt_dayvalues
 
     with lock:
         try:
             data = np.genfromtxt( file_name, dtype=np.int32,
-                                  delimiter=config.knmi_data_delimiter,
-                                  filling_values=config.knmi_data_dummy_val,
-                                  skip_header=config.knmi_data_skip_rows_etmgeg
+                                  delimiter=config.knmi_dayvalues_delimiter,
+                                  filling_values=config.knmi_dayvalues_dummy_val,
+                                  skip_header=config.knmi_dayvalues_skip_rows
                                   )
         except Exception as e:
             log.console(tr.txt('Failed to read') + f': {file_name}\n{e}' )
@@ -113,9 +118,9 @@ def read( station ):
 
 def unzip( station ):
     ok  = False
-    zip = station.file_zip_etmgeg
-    txt = station.file_txt_etmgeg
-    dir = station.dir_etmgeg
+    zip = station.file_zip_dayvalues
+    txt = station.file_txt_dayvalues
+    dir = station.dir_dayvalues
     ts  = time.time_ns()
     with lock:
         try:
@@ -134,16 +139,15 @@ def unzip( station ):
 def download ( station ):
     '''Function downloads etmgeg file from knmi.nl'''
     ok   = False
-    zip  = station.file_zip_etmgeg
-    url  = station.data_url
+    zip  = station.file_zip_dayvalues
+    url  = station.dayvalues_url
     ts   = time.time_ns()
     with lock:
-        log.console( f'Download: {url}\nTo: {zip}')
+        log.console(f'Download: {url}\nTo: {zip}')
         try:
             response = urllib.request.urlretrieve( url, zip )
         except urllib.error.URLError as e:
-            log.console(tr.txt('Download failed') + f': {url}')
-            log.console(f'{e.reason}\n{e.strerror}')
+            log.console(tr.txt('Download failed') + f': {url}\n{e}')
         else:
             log.console(tr.txt('Dowload successful'))
             log.console(view_txt.process_time_ext(tr.txt('Time to download'), time.time_ns()-ts))

@@ -16,7 +16,7 @@ class Template():
     ''' Class to make a html page based on the template - template.html'''
     charset     = 'UTF-8'
     author      = 'WeatherstatsNL'
-    viewport    = 'width=device-width, initial-scale=1.0'
+    viewport    = 'width=device-width, initial-scale=1.0, shrink-to-fit=no'
     script_file = './js/js.js'
     css_file    = './css/css.css'
 
@@ -34,9 +34,9 @@ class Template():
         dt    = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
         self.file_name = f'{title}_{dt}.html'
 
-        self.template  = os.path.abspath(os.path.join(config.dir_data_template, 'template.html'))
+        self.template  = os.path.abspath(os.path.join(config.dir_html_templates, 'template.html'))
         self.base_dir  = os.path.dirname(os.path.abspath(__file__))
-        self.file_dir  = config.dir_data_html_dayvalues
+        self.file_dir  = config.dir_html_dayvalues
         self.file_path = os.path.abspath(os.path.join(self.file_dir, self.file_name))
 
     def save(self, dir_map=False, file_name=False):
@@ -73,27 +73,6 @@ class Template():
     def delete(self):
         io.delete(self.file_path)
 
-def div_day_entity( station, title, val, ent, t_val, t_ent ):
-    if val == station.empthy:
-        return ''
-    else:
-        val, time = fn.fix(val, ent), ''
-        if t_val not in [station.empthy, '']:
-            time = div_hour(fn.fix(t_val, t_ent))
-
-        return f'''
-            <div class="entity">
-                <div class="title">
-                    {title}
-                </div>
-                <div class="data">
-                    {val}
-                    {time}
-                </div>
-            </div>
-        '''
-
-    return ''
 
 def div_hour( data ):
     return f'''

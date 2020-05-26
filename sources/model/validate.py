@@ -35,7 +35,5 @@ def yyyymmdd( ymd ):
                 log.console(tr.txt('Maybe try again later ;-)'))
             else:
                 ok = True
-    if ok:
-        log.console(f"Date {ymd} is oké!")
 
     return ok

@@ -17,9 +17,9 @@ import config
 import knmi.model.daydata as  daydata
 import knmi.model.stats as stats
 import knmi.control.menu as control_menu
-import knmi.view.menu as view_menu
 import knmi.view.fix as fix
 import view.log as log
+import view.menu as view_menu
 
 # Main programm
 if __name__== "__main__":
