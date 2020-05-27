@@ -19,13 +19,13 @@ import view.log as log
 import view.translate as tr
 import view.txt as view_txt
 import view.html as view_html
-import view.graph as graph
+import view.graphs as graph
 
 def menu_choices( choice ):
     if   choice ==  '1':  process_knmi_dayvalues_all()
     elif choice ==  '2':  process_knmi_dayvalues_selected()
     elif choice ==  '3':  get_dayvalues_by_date()
-    elif choice ==  '4':  graph_periods()
+    elif choice ==  '4':  graph_period()
     elif choice ==  'x': menu.calc_winterstats()
     elif choice ==  'x': pass #menu.calc_coldwaves()
     elif choice ==  'x': menu.calc_zomerstats()
@@ -137,38 +137,46 @@ def get_dayvalues_by_date():
 
 def graph_period():
     '''Funtion makes images for a period from the data of the knmi'''
-    log.header('START MAKING IMAGE GRAPH...', True)
-    s_ymd, e_ymd = control_ask.ask_for_start_and_end_date( 'Give in the period you look for ?' )
+    log.header('START MAKING A IMAGE GRAPH...', True)
+    log.console( 'What time periode ?\n' )
+    s_ymd, e_ymd = control_ask.ask_for_start_and_end_date( )
     if s_ymd not in config.answer_quit and e_ymd not in config.answer_quit:
         stations = control_ask.ask_for_stations('Select a weather station ?')
         if stations != config.answer_quit:
             entities = control_ask.ask_for_entities('Select a weather entities ?')
             if entities != config.answer_quit:
-                title = station[0].stn
-                size = (convert.pixel_to_inches(800), convert.pixel_to_inches(600))
+                title = f'Graph {entities[0]}'
+
                 # Ask for graphtitle
                 # Ask for graphsize
                 name = control_ask.ask_for_file_name( f'Give a name for the .png file ? <optional>' )
                 if name not in config.answer_quit:
+                    log.console('Fill in the parameters for the image', True)
+                    title  = control_ask.ask_txt('Give a title for the graph ? ', space=False)
+                    ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ', space=False)
+                    # width  = control_ask.ask_txt('Give the width (in pixels) for the graph ? ', space=False)
+                    # height = control_ask.ask_txt('Give the height (in pixels) for the graph ? ', space=False)
+
+                    width  = 1280
+                    height =  720
+                    size   = ( convert.pixel_to_inch(width), convert.pixel_to_inch(height) )
+
+                    st = time.time_ns()
+                    log.header( 'PREPARING IMAGES', True )
+
                     if not name:
-                        name = name( s_ymd, e_ymd, stations, entities )
-                        st = time.time_ns()
-                        log.header('PREPARING IMAGES', True)
-                        log.console(f'Station: {station.wmo} {station.place}', True)
-                        log.console(f'Date: {utils.ymd_to_txt(yyyymmdd)}', True)
+                        name = graph.name( s_ymd, e_ymd, stations, entities )
+                    path = utils.path( config.dir_img_period, name )
+                    graph.plot( stations, entities, s_ymd, e_ymd, title, ylabel, size, path )
 
-                        plot( stations, entities, sd, ed, title, size )
-                        ok_data, day = daydata.day(station, yyyymmdd)
-
-                        if type != 'cmd':
-                            oke = control_ask.ask_open_url("Open the file in your (default) browser ?")
-                            if oke:
-                                webbrowser.open_new(file_name) # Opens in default browser
-
+                    et = time.time_ns()
                     log.footer(view_txt.process_time_ext('Total processing time', et-st), True)
 
+                    fopen = control_ask.ask_to_open_with_app( f'Open the image {name} in your browser ?' )
+                    if fopen:
+                        webbrowser.open_new_tab(path)
 
-    log.footer('END MAKING IMAGE GRAPH...', True)
+    log.footer('END MAKING A IMAGE GRAPH...', True)
     control_ask.ask("Press a 'key' to go back to the main menu\n")
 
 # Menu choice

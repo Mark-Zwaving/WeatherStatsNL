@@ -9,10 +9,36 @@ __version__    =  "0.0.3"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import datetime
+import datetime, os
 import view.translate as tr
+from datetime import datetime
+from dateutil import rrule
 
-path              = lambda dir, file : os.path.abspath(os.path.join(dir,file))
-ymd_to_txt        = lambda ymd : datetime.date(int(ymd[:4]),int(ymd[4:6]),int(ymd[6:8])).strftime('%A, %d %B %Y')
-now_act_for_file  = lambda : datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-add_zero_less_ten = lambda d: f'0{d}' if int(d) < 10 else f'{d}'
+def path( dir, file ):
+    return os.path.abspath(os.path.join( dir, file ))
+
+def ymd_to_txt( ymd ):
+    y = int(ymd[:4])
+    m = int(ymd[4:6])
+    d = int(ymd[6:8])
+    txt = datetime.date(y,m,d.strftime('%A, %d %B %Y'))
+
+    return txt
+
+def now_act_for_file():
+    return datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+
+def add_zero_less_ten(d):
+    if int(d) < 10:
+        return f'0{d}'
+    else:
+        return f'{d}'
+
+def list_dates_range( sd, ed ):
+    l = []
+    start = datetime.strptime(sd, '%Y%m%d')
+    ends  = datetime.strptime(ed, '%Y%m%d')
+    for date in rrule.rrule( rrule.DAILY, dtstart=start, until=ends ):
+        l.append( date.strftime('%Y%m%d') )
+
+    return l

@@ -3,23 +3,29 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1"
+__version__    =  "0.1.0"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import numpy as np
-from matplotlib import pyplot as plt
 import knmi.model.stats as stats
 import knmi.model.daydata as daydata
+import knmi.view.fix as fix
 import view.txt as view_txt
-import view.translate as view_tr
+import view.translate as tr
+import view.color as view_color
+import model.utils as utils
+import matplotlib.pyplot as plt
 
-def name( sd, ed, station, entities, type='png' ):
+def name( sd, ed, stations, entities, type='png' ):
     st = f'{sd}-{ed}-'
-    for s in  station: st += f'{s}-'
-    for s in entities: st += f'{s}-'
 
-    return f'{st},{type}'
+    for s in stations:
+        st += f'{s.wmo}-'
+    for s in entities:
+        st += f'{s}-'
+
+    return f'{st}.{type}'
 
 # 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight',
 # 'ggplot', 'grayscale', 'seaborn-bright', 'seaborn-colorblind',
@@ -29,48 +35,48 @@ def name( sd, ed, station, entities, type='png' ):
 # 'seaborn-white', 'seaborn-whitegrid', 'seaborn', 'Solarize_Light2',
 # 'tableau-colorblind10'
 
-def plot( stations, entities, sd, ed, title='Graph Title', ylable=entities, size=(14,8) ):
-    ok, data = daydata.read( stations[0] )
-    ymd = data[:,daydata.ndx_entity('YYYYMMDD')]
-    plt.figure( figsize=size ) )  # Values are inches!
-    plt.xlabel( view_tr('Dates'), color='#777777')
-    plt.ylabel( ylable, color='#777777')
-    plt.style.use('fivethirtyeight')
+class G:
+    x          = np.array([])
+    y          = np.array([])
+    color      = 'green'
+    label      = 'legend'
+    marker     = 'o'
+    linestyle  = 'solid'
+    linewidth  = 1
+    markersize = 3
 
-    for el in entities:
-        ents = data[:,daydata.ndx_entity(el)]
-        label = f'{el}-{view_txt.ent_to_title(el)}'
-        color =
-        plt.plot( ymd, ents, label=label, color='red', marker='o', linestyle='solid', linewidth=1, markersize=3 )
-        plt.grid( color='#bbbbbb', linestyle='dotted', linewidth=1 )
+    def __init__(self):
+        pass
 
+def plot( stations, entities, sd, ed, title, ylable, size, path ):
+    l_plot = []
+    # ymd = np.array(utils.list_dates_range(sd, ed)).astype(np.str) # Convert to string
 
-
-    plt.xticks( ymd, rotation=38 ) # https://stackoverflow.com/questions/12608788/changing-the-tick-frequency-on-x-or-y-axis-in-matplotlib
-    plt.legend()
-    if ok:
-
-
-    res_station = array( [] )
+    plt.figure( figsize=size )  # Values are inches! And figure always in front
     for station in stations:
-
+        ok, data = daydata.read( station )
         if ok:
-            res_station =
             data = stats.period( data, sd, ed )
-            ents = []
+            ymd  = data[:,daydata.ndx_ent('YYYYMMDD')].astype(np.str) # Convert to string
+            for el in entities:
+                ndx = daydata.ndx_ent( el )
+                plt.plot( ymd,
+                          np.array( [fix.value(val, el) for val in data[:, ndx].tolist()] ),
+                          label = f'{station.place} {view_txt.ent_to_title(el)}',
+                          color = view_color.ent_to_color(el),
+                          marker = 'o',
+                          linestyle = 'solid',
+                          linewidth = 2,
+                          markersize = 4
+                    )
 
-
-ymd = etmgeg[:,1].astype(np.str) # Convert to string
-tx  = etmgeg[:,14] / 10.0
-tg  = etmgeg[:,11] / 10.0
-tn  = etmgeg[:,12] / 10.0
-
-
-
-
-    ymd = daydata.ndx_entity('YYYYMMDD')
-    sel = np.where(( data[:,ymd] >= int(sdate) ) & ( data[:,ymd] < int(edate) ))
-    return data[sel]
-
-# TODO: check for -1 values -> replace with <0.05?
-def process_list( data, entity ):
+    plt.title( title )
+    plt.xlabel( tr.txt('Dates'), color='#333333' )
+    plt.ylabel( ylable, color='#333333' )
+    plt.grid( color='#dddddd', linestyle='dotted', linewidth=1 )
+    plt.xticks( ymd, rotation=40, color='#777777' )
+    # plt.style.use( 'fivethirtyeight' )
+    plt.tight_layout( )
+    plt.legend(loc='best', shadow=True)
+    plt.savefig(path)
+    # plt.show( )

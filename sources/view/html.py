@@ -4,13 +4,18 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1"
+__version__    =  "0.9.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import os, config, datetime
 import control.io as io
 import view.log as log
+import view.icon as icon
+import view.translate as tr
+import view.txt as view_txt
+import knmi.view.fix as fix
+import knmi.model.daydata as daydata
 
 class Template():
     ''' Class to make a html page based on the template - template.html'''
@@ -44,24 +49,19 @@ class Template():
         if file_name:
             self.file_name = file_name
         if dir_map:
-            self.file_dir  = dir_map
+            self.file_dir = dir_map
 
         self.file_path = os.path.abspath(os.path.join(self.file_dir, self.file_name))
 
         try:
             self.html, ok = io.read(self.template)
-            self.html = self.html.replace('{now}', str(datetime.datetime.now()) )
-            self.html = self.html.replace('{title}', self.title)
-            self.html = self.html.replace('{charset}', self.charset)
-            self.html = self.html.replace('{author}', self.author)
-            self.html = self.html.replace('{viewport}', self.viewport)
-            self.html = self.html.replace('{css_file}', self.css_file)
-            self.html = self.html.replace('{script_file}', self.script_file)
-            self.html = self.html.replace('{header}', self.header)
-            self.html = self.html.replace('{content}', self.main)
-            self.html = self.html.replace('{footer}', self.footer)
-            io.write(self.file_path, self.html)
-
+            if ok:
+                self.html = self.html.format( str(datetime.datetime.now()),
+                                self.title, self.charset, self.author,
+                                self.viewport, self.css_file, self.script_file,
+                                self.header, self.main, self.footer
+                                )
+                io.write( self.file_path, self.html )
         except Exception as e:
             log.console( f'Error: {e}' )
         else:
@@ -73,47 +73,88 @@ class Template():
     def delete(self):
         io.delete(self.file_path)
 
-
-def div_hour( data ):
+def div_ent( title=False, val=False, time=False ):
+    val  =  val if  val != False else ''
+    time = time if time != False else ''
     return f'''
-        <div class="hour">
-            {data}
-        </div>
-    '''
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        {title}
+                    </h4>
+                    <div class="card-text day_data">
+                        {val}
+                        <br>
+                        <small class="text-muted">{time}</small>
+                    </div>
+                </div>
+            </div>
+            '''.format( title, val, time )
 
-def html_dayvalues( station, day_values ):
-    d, = day_values, station
-    html  = '<div id="container">'
-    html += div_day_entity( s, 'Maximum temperature', d.TX,'TX',d.TXH,'TXH' )
-    html += div_day_entity( s, 'Gemiddelde temperature', d.TG,'TG','','' )
-    html += div_day_entity( s, 'Minimum temperature', d.TN,'TN',d.TNH,'TNH' )
-    html += div_day_entity( s, 'Minimum temperature (10cm)', d.T10N,'TN',d.T10NH,'TNH' )
-    html += div_day_entity( s, 'Wind direction', d.DDVEC,'DDVEC','','' )
-    html += div_day_entity( s, 'Sunshine duration (hourly)',d.SQ,'SQ','','' )
-    html += div_day_entity( s, 'Mean pressure', d.PG,'PG','','' )
-    html += div_day_entity( s, 'Mean atmospheric humidity', d.UG,'UG','','' )
-    html += div_day_entity( s, 'Mean windspeed (daily)', d.FG,'FG','','' )
-    html += div_day_entity( s, 'Sunshine duration (maximum potential)', d.SP,'SP','','' )
-    html += div_day_entity( s, 'Mean cloud cover', d.NG,'NG','','' )
-    html += div_day_entity( s, 'Precipitation amount', d.RH,'RH','','' )
-    html += div_day_entity( s, 'Maximum wind (gust)', d.FXX,'FXX',d.FXXH,'FXXH' )
-    html += div_day_entity( s, 'Radiation (global)', d.Q,'Q','','' )
-    html += div_day_entity( s, 'Evapotranspiration (potential)', d.EV24,'EV24','','' )
-    html += div_day_entity( s, 'Precipitation duration', d.DR,'DR','','' )
-    html += div_day_entity( s, 'Mean windspeed (vector)', d.FHVEC,'FHVEC','','' )
-    html += div_day_entity( s, 'Maximum wind (gust)', d.FXX,'FXX',d.FXXH,'FXXH' )
-    html += div_day_entity( s, 'Maximum humidity', d.UX,'UX',d.UXH,'UXH' )
-    html += div_day_entity( s, 'Maximum pressure (hourly)', d.PX,'PX',d.PXH,'PXH' )
-    html += div_day_entity( s, 'Maximum precipitation (hourly)', d.RHX,'RHX',d.RHXH,'RHXH' )
-    html += div_day_entity( s, 'Maximum mean windspeed (hourly)', d.FHX,'FHX',d.FHXH,'FHXH' )
-    html += div_day_entity( s, 'Maximum visibility', d.VVX,'VVX',d.VVXH,'VVXH' )
-    html += div_day_entity( s, 'Minimum pressure (hourly)', d.PN,'PN',d.PNH,'PNH' )
-    html += div_day_entity( s, 'Minimum humidity', d.UN,'UN',d.UNH,'UNH' )
-    html += div_day_entity( s, 'Minimum mean windspeed (hourly)', d.FHN,'FHN',d.FHNH,'FHNH' )
-    html += div_day_entity( s, 'Minimum visibility', d.VVN,'VVN',d.VVNH,'VVNH' )
-    html += '</div>'
+def main_ent( day ):
+    stn, ymd, ddvec, fhvec, fg, fhx, fhxh, fhn, fhnh, fxx, fxxh, tg, tn,\
+    tnh, tx, txh, t10n, t10nh, sq, sp, q, dr, rh, rhx, rhxh, pg, px, pxh,\
+    pn, pnh, vvn, vvnh, vvx, vvxh, ng, ug, ux, uxh, un, unh, ev24 = ents(day)
 
-    return html
+    # Add icons
+    if tx: tx = f'{icon.tx} {tx}'
+    if tg: tg = f'{icon.tg} {tg}'
+    if tn: tn = f'{icon.tn} {tn}'
+    if t10n:  t10n = f'{icon.t10n} {t10n}'
+    if ddvec: ddvec = f'{icon.arro} {ddvec}'
+    if fhvec: fhvec = f'{icon.wind} {fhvec}'
+    if fg:  fg  = f'{icon.wind} {fg}'
+    if fhx: fhx = f'{icon.wind} {fhx}'
+    if fhn: fhn = f'{icon.wind} {fhn}'
+    if fxx: fxx = f'{icon.wind} {fxx}'
+    if vvn: vvn = f'{icon.bino} {vvn}'
+    if vvx: vvx = f'{icon.bino} {vvx}'
+    if sq: sq = f'{icon.sun} {sq}'
+    if sp: sp = f'{icon.sun} {sp}'
+    if  q: q  = f'{icon.radi} {q}'
+    if rh: rh = f'{icon.umbr} {rh}'
+    if dr: dr = f'{icon.umbr} {dr}'
+    if rhx: rhx = f'{icon.umbr} {rhx}'
+    if ux: ux = f'{icon.drop} {ux}'
+    if un: un = f'{icon.drop} {un}'
+    if ug: ug = f'{icon.drop} {ug}'
+    if ng: ng = f'{icon.clou} {ng}'
+    if pg: pg = f'{icon.pres} {pg}'
+    if pn: pn = f'{icon.pres} {pn}'
+    if px: px = f'{icon.pres} {px}'
+    if ev24: ev24 = f'{icon.swea} {ev24}'
+
+    main  = ''
+    main += div_ent( view_txt.ent_to_titel('TX'), tx, txh ) if tx else ''
+    main += div_ent( view_txt.ent_to_titel('TG'), tg, False ) if tg else ''
+    main += div_ent( view_txt.ent_to_titel('TN'), tn, tnh ) if tn else ''
+    main += div_ent( view_txt.ent_to_titel('T10N'), t10n, t10nh ) if t10n else ''
+    main += div_ent( view_txt.ent_to_titel('DDVEC'), ddvec, False ) if ddvec else ''
+    main += div_ent( view_txt.ent_to_titel('FG'), fg, False ) if fg else ''
+    main += div_ent( view_txt.ent_to_titel('RH'), rh, False ) if rh else ''
+    main += div_ent( view_txt.ent_to_titel('SQ'), sq, False ) if sq else ''
+    main += div_ent( view_txt.ent_to_titel('PG'), pg, False ) if pg else ''
+    main += div_ent( view_txt.ent_to_titel('UG'), ug, False ) if ug else ''
+
+    main += div_ent( view_txt.ent_to_titel('FXX'), fxx, fxxh ) if fxx else ''
+    main += div_ent( view_txt.ent_to_titel('FHVEC'), fhvec, False ) if fhvec else ''
+    main += div_ent( view_txt.ent_to_titel('FHX'), fhx, fhxh ) if fhx else ''
+    main += div_ent( view_txt.ent_to_titel('FHN'), fhn, fhnh ) if fhn else ''
+    main += div_ent( view_txt.ent_to_titel('SP'), sp, False ) if sp else ''
+    main += div_ent( view_txt.ent_to_titel('Q'), q, False ) if q else ''
+    main += div_ent( view_txt.ent_to_titel('DR'), dr, False ) if dr else ''
+    main += div_ent( view_txt.ent_to_titel('RHX'), rhx, rhxh ) if rhx else ''
+    main += div_ent( view_txt.ent_to_titel('PX'), px, pxh ) if px else ''
+    main += div_ent( view_txt.ent_to_titel('PN'), pn, pnh ) if pn else ''
+
+    main += div_ent( view_txt.ent_to_titel('VVN'), vvn, vvnh ) if vvn else ''
+    main += div_ent( view_txt.ent_to_titel('VVX'), vvx, vvxh ) if vvx else ''
+    main += div_ent( view_txt.ent_to_titel('NG'), ng, False ) if ng else ''
+    main += div_ent( view_txt.ent_to_titel('UX'), ux, uxh ) if ux else ''
+    main += div_ent( view_txt.ent_to_titel('UN'), un, unh ) if un else ''
+    main += div_ent( view_txt.ent_to_titel('EV24'), ev24, False ) if ev24 else ''
+
+    return main
 
 def table_count(l, max):
     html = ''

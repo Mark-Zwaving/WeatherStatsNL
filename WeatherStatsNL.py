@@ -29,11 +29,11 @@ if __name__== "__main__":
         view_menu.error_no_stations_found()
     else:
         while True:  # Main menu
-            choice = view_menu.main_menu( )
+            choice = view_menu.main_menu()
             if choice in config.answer_quit:
                 break
             else:
-                control_menu.menu_choices( choice )
+                control_menu.menu_choices(choice)
 
     log.footer('Good bye', True )
 

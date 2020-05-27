@@ -24,14 +24,14 @@ is_operator = lambda operator : (operator.lower() in operators)
 
 def period( data, sdate, edate ):
     '''Function selects days by start and end dates'''
-    ymd = daydata.ndx_entity('YYYYMMDD')
-    sel = np.where(( data[:,ymd] >= int(sdate) ) & ( data[:,ymd] < int(edate) ))
+    ymd = daydata.ndx_ent('YYYYMMDD')
+    sel = np.where(( data[:,ymd] >= int(sdate) ) & ( data[:,ymd] <= int(edate) ))
     return data[sel]
 
 # TODO: check for -1 values -> replace with <0.05?
 def process_list( data, entity ):
     '''Function processes data values on false values'''
-    key  = daydata.ndx_entity( entity )
+    key  = daydata.ndx_ent( entity )
     sel = np.where( data[:,key] != daydata.data_dummy_val ) # Remove false values
 
     return data[sel], key
@@ -66,7 +66,7 @@ def min( data, entity ):
 
 def terms_days( data, entity, operator, value ):
     '''Function select days based on terms like TX > 30 for example'''
-    ent  = daydata.ndx_entity(entity)
+    ent  = daydata.ndx_ent(entity)
     op   = operator.lower()
     ival = dd(value)
 

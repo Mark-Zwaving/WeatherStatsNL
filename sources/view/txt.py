@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 '''Library contains functions for writing output to screen or to a file'''
-
 __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.3"
+__version__    =  "0.0.4"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config, math, time
-import view.txt as txt
+import view.txt as view_txt
 import knmi.model.daydata as daydata
+import view.translate as tr
 
-def ent_to_titel(ent):
+def ent_to_title(ent):
     e = ent.strip().upper()
-    if  e == 'TX': return tr.txt('Maximum temperature')
+    if   e == 'TX': return tr.txt('Maximum temperature')
     elif e == 'TG': return tr.txt('Mean temperature')
     elif e == 'TN': return tr.txt('Minimum temperature')
     elif e == 'T10N': return tr.txt('Minimum temperature (10cm)')
@@ -47,7 +47,7 @@ def dayvalues_entities( kol = 7, kol_width = 9 ):
     '''Functions prints a list with available entities'''
     tel, txt, ents, max = 1, '', daydata.entities, len( daydata.entities )
     for ent in ents:
-        text += ent
+        txt += ent
         if tel % kol_width == 0 and tel != max:
             txt += ', '
     return txt
@@ -73,6 +73,82 @@ def knmi_stations(l, kol = 4, kol_width = 20):
                 content += ', '
 
     return content
+
+def txt_main(day):
+    stn, ymd, ddvec, fhvec, fg, fhx,\
+    fhxh, fhn, fhnh, fxx, fxxh, tg,\
+    tn, tnh, tx, txh, t10n, t10nh,\
+    sq, sp, q, dr, rh, rhx,\
+    rhxh, pg, px, pxh, pn, pnh,\
+    vvn, vvnh, vvx, vvxh, ng, ug,\
+    ux, uxh, un, unh, ev24 = ents( day )
+
+    txt, title1, title2, title3, main1, main2, main3 = '', '', '', '', '', '', ''
+
+    title1 += view_txt.ent_to_titel('TX') if tx else ''
+    title1 += view_txt.ent_to_titel('TG') if tg else ''
+    title1 += view_txt.ent_to_titel('TN') if tn else ''
+    title1 += view_txt.ent_to_titel('T10N') if t10n else ''
+    title1 += view_txt.ent_to_titel('DDVEC') if ddvec else ''
+    title1 += view_txt.ent_to_titel('FG') if fg else ''
+    title1 += view_txt.ent_to_titel('RH') if rh else ''
+    title1 += view_txt.ent_to_titel('SQ') if sq else ''
+    title1 += view_txt.ent_to_titel('PG') if pg else ''
+    title1 += view_txt.ent_to_titel('UG') if ug else ''
+
+    title2 += view_txt.ent_to_titel('FXX') if fxx else ''
+    title2 += view_txt.ent_to_titel('FHX') if fhx else ''
+    title2 += view_txt.ent_to_titel('FHN') if fhn else ''
+    title2 += view_txt.ent_to_titel('FHVEC') if fhvec else ''
+    title2 += view_txt.ent_to_titel('DR') if dr else ''
+    title2 += view_txt.ent_to_titel('SP') if sp else ''
+    title2 += view_txt.ent_to_titel('Q') if q else ''
+    title2 += view_txt.ent_to_titel('RHX') if rhx else ''
+    title2 += view_txt.ent_to_titel('PX') if px else ''
+    title2 += view_txt.ent_to_titel('PN') if pn else ''
+
+    title3 += view_txt.ent_to_titel('VVX') if vvx else ''
+    title3 += view_txt.ent_to_titel('VVN') if vvn else ''
+    title3 += view_txt.ent_to_titel('NG') if ng else ''
+    title3 += view_txt.ent_to_titel('UX') if ux else ''
+    title3 += view_txt.ent_to_titel('UN') if un else ''
+    title3 += view_txt.ent_to_titel('EV24') if ev24  else ''
+
+    main1 = ''
+    main1 += tx if tx else ''
+    main1 += tg if tg else ''
+    main1 += tn if tn else ''
+    main1 += t10n  if t10n  else ''
+    main1 += ddvec if ddvec else ''
+    main1 += fg    if fg    else ''
+    main1 += rh    if rh    else ''
+    main1 += sq    if sq    else ''
+    main1 += pg    if pg    else ''
+    main1 += ug    if ug    else ''
+
+    main2 += fhvec if fhvec else ''
+    main2 += fhx   if fhx   else ''
+    main2 += fhn   if fhn   else ''
+    main2 += fxx   if fxx   else ''
+    main2 += sp    if sp    else ''
+    main2 += q     if q     else ''
+    main2 += dr    if dr    else ''
+    main2 += rhx   if rhx   else ''
+    main2 += px    if px    else ''
+    main2 += pn    if pn    else ''
+
+    main3 += vvn   if vvn   else ''
+    main3 += vvx   if vvx   else ''
+    main3 += ng    if ng    else ''
+    main3 += ux    if ux    else ''
+    main3 += un    if un    else ''
+    main3 += ev24  if ev24  else ''
+
+    txt += f'{title1}\n{main1}\n'
+    txt += f'{title2}\n{main2}\n'
+    txt += f'{title3}\n{main3}\n'
+
+    return f'{txt}\n'
 
 def process_time_ext(txt, t_ns):
     '''Function gives a time string from nano seconds till days '''

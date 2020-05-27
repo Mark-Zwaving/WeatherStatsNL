@@ -76,8 +76,11 @@ def is_ent( ent ):
     return ok, e
 
 def ndx_ent( ent ):
-    '''Get index by text from array entities'''
-    return entities[entities == ent]
+    '''Get index by text from the array entities'''
+    e = ent.strip().upper()
+    ndx, = np.where( entities == e )
+
+    return ndx[0]
 
 def ent_ndx( ndx ):
     '''Get text by index from array entities'''

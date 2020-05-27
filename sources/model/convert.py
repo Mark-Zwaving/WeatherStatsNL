@@ -11,7 +11,7 @@ __status__     =  "Development"
 import view.translate as tr
 
 def pixel_to_inch(p):
-    return int(round(p * 0.0104166667))
+    return int( round( float(p) * 0.0104166667 ) )
 
 def ms_to_bft( ms ):
     i = int(ms)

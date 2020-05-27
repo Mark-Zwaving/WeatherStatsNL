@@ -21,6 +21,7 @@ dir_html            =  os.path.abspath( os.path.join(dir_data, 'html' ) )
 dir_img             =  os.path.abspath( os.path.join(dir_data, 'images' ) )
 dir_thirdparty      =  os.path.abspath( os.path.join(dir_data, 'thirdparty') )
 dir_img_dayvalues   =  os.path.abspath( os.path.join(dir_img, 'dayvalues' ) )
+dir_img_period      =  os.path.abspath( os.path.join(dir_img, 'period' ) )
 dir_txt_dayvalues   =  os.path.abspath( os.path.join(dir_txt, 'dayvalues' ) )
 dir_html_dayvalues  =  os.path.abspath( os.path.join(dir_html, 'dayvalues' ) )
 dir_html_templates  =  os.path.abspath( os.path.join(dir_html, 'templates' ) )
@@ -33,8 +34,6 @@ dir_thirdparty_knmi_dayvalues = os.path.abspath( os.path.join(dir_thirdparty_knm
 # 'NL' for Netherlands/Dutch, 'EN' for English, Default is English
 language  = 'NL'  # Select language
 translate = True  # Translation active or not
-
-# Add KNMI stations for user
 
 # List for WeatherStations
 from sources.knmi.model.station import Station
@@ -139,7 +138,7 @@ log   = True
 
 # Asked for char
 answer_quit = ['q','Q']
-answer_yes  = ['y','Y']
+answer_yes  = ['y','Y', 'j', 'J', 'ok', 'oke', 'oké']
 answer_no   = ['n','N']
 
 # Add dir_app and dir sources to system

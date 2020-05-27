@@ -10,7 +10,7 @@ __status__     =  "Development"
 
 import sys, re, config
 import knmi.model.daydata as daydata
-import knmi.model.fn as fn
+import knmi.model.station as knmi_station
 import view.log as log
 import view.txt as view_txt
 import view.translate as tr
@@ -23,10 +23,17 @@ def clear( s ):
 
 def ask(txt='?', space=True):
     if space: log.console(' ')
-    txt = tr.txt( txt )
-    res = clear(input(txt))
+    res = clear( input( tr.txt( txt ) ) )
     if space: log.console(' ')
+
     return res
+
+def ask_txt(txt='?', space=True):
+    if space: log.console(' ')
+    answ = input(tr.txt( txt ) ).strip()
+    if space: log.console(' ')
+
+    return answ
 
 def pause(s='Paused'):
     ask(s)
@@ -42,7 +49,13 @@ def ask_to_open_with_app(txt):
     log.console("Press 'Y' or 'y' to open the file", True)
     log.console('Or press - any other key - to skip opening the file', True)
 
-    return True if ask(" ? ") in config.answer_yes else False
+    answ = ask(' ? ')
+
+    if answ:
+        if answ.lower() in config.answer_yes:
+            return True
+    return False
+
 
 def ask_for_entities( txt ):
     l, max = [], daydata.entities
@@ -54,9 +67,10 @@ def ask_for_entities( txt ):
         log.console('See ./data/text/dayvalues/dayvalues.txt for the meaning of the entities', True)
         if len(l) > 0: log.console("Press 'n' to move to the next !", True)
         log.console("Press 'q' or 'Q' to go back to the main menu", True)
+
         answ = ask(' ? ')
 
-        if not ans: # Oke whatever
+        if not answ: # Oke whatever
             continue # Again
 
         if answ in config.answer_quit:
@@ -64,13 +78,13 @@ def ask_for_entities( txt ):
         elif answ == 'n' and len(l) > 0:
             return l
         elif answ.find(',') != -1:
-            lt = ans.split(',')
-            for el in lt:
-                ok, ent = daydata.is_ent( ent )
+            lt = [clear(e) for e in answ.split(',')] # Clean input
+            for e in lt:
+                ok, ent = daydata.is_ent( e )
                 if ok:
-                    l.append(ent)
+                    l.append(e)
         else:
-            ok, ent = daydata.is_ent( ent )
+            ok, ent = daydata.is_ent( answ )
             if ok:
                 l.append(ent)
 
@@ -89,7 +103,6 @@ def ask_for_entities( txt ):
             log.console(' ')
     return l
 
-
 def ask_for_stations( txt ):
     l = []
     while True:
@@ -102,41 +115,41 @@ def ask_for_stations( txt ):
         log.console("Press 'q' or 'Q' to go back to the main menu", True)
         answ = ask(' ? ')
 
-        if not ans: # Waarschijnlijk op de enter geramd zonder invoer...
+        if not answ: # Waarschijnlijk op de enter geramd zonder invoer...
             continue # Nog een een keer dan maar
 
         if answ in config.answer_quit:
             return config.answer_quit
-        elif ans == '*':
+        elif answ == '*':
             l = config.stations
-        elif ans == 'n' and len(l) > 0:
+        elif answ == 'n' and len(l) > 0:
             return l
         else:
             lt = [] # Make a list with stations
-            if ans.find(',') != -1:
-                lt = ans.split(',')
+            if answ.find(',') != -1:
+                lt = [clear(e) for e in answ.split(',')] # Clean input
             else:
-                station = fn.find_knmi_station(ans)
-                if station != False:
-                    lt.append(ans)
+                if knmi_station.name_in_list(answ):
+                    lt.append(answ)
+                elif knmi_station.wmo_in_list(answ):
+                    lt.append(answ)
                 else:
-                    log.console(f'Station: {ans} unknown !', True)
-
-            lt = [clear(e) for e in lt] # Clean input
+                    log.console(f'Station: {answ} unknown !', True)
 
             # Add all added stations
             for st in lt:
-                station = fn.find_knmi_station(st)
+                station = knmi_station.find_by_wmo_or_name(st)
                 if station != False:
-                    wmo = f'{station.wmo} {station.place} {station.province} '
-                    if not fn.is_station_in_list(station, l):
+                    all = f'{station.wmo} {station.place} {station.province}'
+                    if knmi_station.check_if_station_already_in_list( station, l ) != True:
                         l.append(station)
-                        log.console(f"Station: {wmo} added...", True)
+                        log.console(f"Station: {all} added...", True)
                     else:
-                        log.console(f"Station: {wmo} already added...", True)
+                        log.console(f"Station: {all} already added...", True)
                 else:
                     log.console(f"Station: {answ} not found...", True)
 
+        print(' ')
         if len(l) == len(config.stations):
             log.console('All available weatherstations added...', True)
             break
@@ -144,7 +157,9 @@ def ask_for_stations( txt ):
             log.console('All weatherstation(s) who were added are:', True)
             for station in l:
                 log.console(f'{station.wmo}: {station.place} {station.province}', True)
-            log.console(' ')
+        else:
+            continue
+        print(' ')
 
     return l
 
@@ -160,11 +175,11 @@ def ask_for_date( txt ):
             ask('Press a key to try again...')
 
 def ask_for_start_and_end_date( ):
-    sd = ask_for_date('Give start date <format:yyyymmdd> ? ')
+    sd = ask_for_date('Give a START date <format:yyyymmdd> ? ')
     if sd in config.answer_quit:
         return sd, sd
 
-    ed = ask_for_date('Give end date <format:yyyymmdd> ? ')
+    ed = ask_for_date('Give a END date <format:yyyymmdd> ? ')
     if ed in config.answer_quit:
         return ed, ed
 

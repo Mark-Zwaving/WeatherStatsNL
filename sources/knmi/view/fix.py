@@ -12,9 +12,51 @@ __status__     =  "Development"
 import view.translate as tr
 import model.convert as cvt
 
+def value(val, entity):
+    ent = entity.strip().lower()
+    # Indexes
+    if ent in ['heat_ndx', 'hellmann']: return round(val)
+    # Temperatures
+    elif ent in [ 'tx', 'tn', 'tg', 't10n' ]: return round( float(val) / 10.0, 1 )
+    # Airpressure
+    elif ent in [ 'pg', 'pn', 'px' ]: return round( float(val) / 10.0 )
+    # Radiation
+    elif ent in [ 'q' ]: return round( float(val) / 10.0, 1 )
+    # Percentages
+    elif ent in [ 'ug', 'ux', 'un', 'sp' ]: return round(val)
+    # Time hours
+    elif ent in [ 'fhxh', 'fhnh', 'fxxh', 'tnh', 'txh', 'rhxh',
+                  'pxh', 'vvnh', 'vvxh', 'uxh', 'unh', 'pnh' ]: return round(val)
+    # Time 6 hours
+    elif ent in [ 't10nh' ]: return round(val)
+    # CLouds cover/octants
+    elif ent in [ 'ng' ]: return round(val)
+    # Wind
+    elif ent in [ 'fhvec','fg','fhx','fhn','fxx' ]: return round( float(val) / 10.0, 1 )
+    # Evapotranspiration
+    elif ent in [ 'ev24', 'rh', 'rhx' ]:
+        if val == -1:
+        	return 0.05
+        else:
+            return round( float(val) / 10.0, 1)
+    # Duration hours
+    elif ent in [ 'sq', 'dr' ]:
+        if val == -1:
+            return 0.05
+        else:
+            return round( float(val) / 10.0, 1)
+
+    # Wind direction
+    elif ent in  [ 'ddvec' ]: return round(val)
+    # View distance
+    elif ent in [ 'vvn', 'vvx' ]: return round(val)
+
+    return round(val)
+
 def ent(val, entity):
     '''Function adds correct post/prefixes for weather entities'''
-    ent = entity.lower()
+    ent = entity.strip().lower()
+    val = value(val, entity)
 
     # Indexes
     if ent in ['heat_ndx', 'hellmann']:
@@ -22,15 +64,15 @@ def ent(val, entity):
 
     # Temperatures
     elif ent in [ 'tx', 'tn', 'tg', 't10n' ]:
-        return f'{float(val)/10.0:.1f}°C'
+        return f'{val}°C'
 
     # Airpressure
     elif ent in [ 'pg', 'pn', 'px' ]:
-        return f'{float(val)/10.0:.0f}hPa'
+        return f'{val}hPa'
 
     # Radiation
     elif ent in [ 'q' ]:
-        return f'{float(val)/10.0:.1f}J/cm2'
+        return f'{val}J/cm2'
 
     # Percentages
     elif ent in [ 'ug', 'ux', 'un', 'sp' ]:
@@ -39,11 +81,11 @@ def ent(val, entity):
     # Time hours
     elif ent in [ 'fhxh', 'fhnh', 'fxxh', 'tnh', 'txh', 'rhxh',
                   'pxh', 'vvnh', 'vvxh', 'uxh', 'unh', 'pnh' ]:
-        return f'{int(val)-1}-{val} {tr.txt("hour")}'
+        return f'{val-1}-{val} {tr.txt("hour")}'
 
     # Time 6 hours
     elif ent in [ 't10nh' ]:
-        return f'{int(val)-6}-{val} {tr.txt("UT")}'
+        return f'{val-6}-{val} {tr.txt("UT")}'
 
     # CLouds cover/octants
     elif ent in [ 'ng' ]:
@@ -51,23 +93,16 @@ def ent(val, entity):
 
     # Wind
     elif ent in [ 'fhvec','fg','fhx','fhn','fxx' ]:
-        ms = float(val) / 10.0
-        bft = cvt.ms_to_bft(ms)
-        return f'{ms:0.1F}m/s {bft}bft'
+        bft = cvt.ms_to_bft(val)
+        return f'{val}m/s {bft}bft'
 
     # Evapotranspiration
     elif ent in [ 'ev24', 'rh', 'rhx' ]:
-        if val == -1:
-            return '<0.05'
-        else:
-            return f'{float(val)/10.0:.1f}mm'
+        return f'{val}mm'
 
     # Duration hours
     elif ent in [ 'sq', 'dr' ]:
-        if val == -1:
-            return '<0.05'
-        else:
-            return f'{float(val)/10.0:.1f} {tr.txt("hour")}'
+        return f'{val} {tr.txt("hour")}'
 
     # Wind direction
     elif ent in  [ 'ddvec' ]:
@@ -78,8 +113,7 @@ def ent(val, entity):
             # Source: https://www.campbellsci.com/blog/convert-wind-directions
             ldir = [ 'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
                      'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N' ]
-            ndx = int(round(float(val) % 360 / 22.5))
-            print (val, ndx)
+            ndx = int(round(val % 360 / 22.5))
             return f'{val}° {tr.txt(ldir[ndx])}'
 
     # View distance
