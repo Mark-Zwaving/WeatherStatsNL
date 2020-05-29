@@ -14,7 +14,6 @@ import view.translate as tr
 import control.ask as ask
 
 def error_no_stations_found():
-    #
     log.header('No weatherstations found !', True )
     log.console('Add one or more weatherstations in config.py', True )
     log.footer('Press a key to quit...', True )
@@ -22,19 +21,24 @@ def error_no_stations_found():
 
 def main_menu():
     log.header('MAIN MENU', True )
-    log.console('\tChoose one of the following options\n', True )
-    log.console('\t   1) Download all data dayvalues knmi stations', True )
-    log.console('\t   2) Download one or more dayvalues(s) data knmi stations', True )
-    log.console('\t   3) Dayvalues', True )
-    log.console('\t   4) Period graphs', True )
-    log.console('\t   x) Cold waves', True )
-    log.console('\t   x) Summerstatistics', True )
-    log.console('\t   x) Heatwaves', True )
-    log.console('\t   x) Allround statistics summer and winter', True )
-    log.console('\t   x) Extremes', True )
-    log.console('\t   x) Images', True )
-    log.console("\n\tPress 'q' or 'Q' to quit...", True )
+    log.console('\tDOWNLOAD DATA', True )
+    log.console('\t\t1) Download all data dayvalues knmi stations', True )
+    log.console('\t\t2) Download one or more dayvalues(s) data knmi stations', True )
+    print(' ')
+    log.console('\tDAYVALUES AND PERIODS', True )
+    log.console('\t\t3) Dayvalues', True )
+    log.console('\t\t4) Period graphs', True )
+    print(' ')
+    log.console('\tSTATISTICS TABLES', True )
+    log.console('\t\t5) Winterstatistics', True )
+    log.console('\t\t6) Summerstatistics', True )
+    log.console('\t\t7) Heatwaves', True )
+    log.console('\t\t8) Winter- and summerstatistics', True )
+    log.console('\t\t9) Extremes', True )
+    print(' ')
+    log.console('\tChoose one of the following options: 1, 2, 3 ... 9', True )
+    log.console("\tPress 'q' or 'Q' to quit...", True )
     log.footer('Your choice is ?', True )
-    choice = ask.ask(' ? ')  # Make a choice
+    choice = ask.ask(' ? ', False)  # Make a choice
 
     return choice

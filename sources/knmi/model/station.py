@@ -33,40 +33,45 @@ class Station:
         self.dayvalues_url      = config.knmi_dayvalues_url.format(self.wmo)
 
 def name_in_list(name):
-    n = name.lower()
-    for s in config.stations.tolist():
-        if s.place.lower() == n:
-            return True
+    if name:
+        n = name.lower()
+        for s in config.stations.tolist():
+            if s.place.lower() == n:
+                return True
     return False
 
 def wmo_in_list(wmo):
-    for s in config.stations.tolist():
-        if s.wmo == wmo:
-            return True
+    if wmo:
+        for s in config.stations.tolist():
+            if s.wmo == wmo:
+                return True
     return False
 
 def find_by_name( name ):
-    n = name.lower()
-    for s in config.stations.tolist():
-        if s.place.lower() == n:
-            return s
+    if name:
+        n = name.lower()
+        for s in config.stations.tolist():
+            if s.place.lower() == n:
+                return s
     return False
 
 def find_by_wmo( wmo ):
-    n = wmo.lower()
-    for s in config.stations.tolist():
-        if s.wmo.lower() == n:
-            return s
+    if wmo:
+        n = wmo.lower()
+        for s in config.stations.tolist():
+            if s.wmo.lower() == n:
+                return s
     return False
 
 def find_by_wmo_or_name(name_or_wmo):
-    station_name = find_by_name( name_or_wmo )
-    if station_name != False:
-        return station_name
+    if name_or_wmo:
+        station_name = find_by_name( name_or_wmo )
+        if station_name != False:
+            return station_name
 
-    station_wmo = find_by_wmo( name_or_wmo )
-    if station_wmo != False:
-        return station_wmo
+        station_wmo = find_by_wmo( name_or_wmo )
+        if station_wmo != False:
+            return station_wmo
 
     return False
 

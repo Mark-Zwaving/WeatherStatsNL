@@ -92,11 +92,18 @@ def day( station, yyyymmdd ):
     if validate.yyyymmdd(yyyymmdd):  # Validate date
         ok, data = read(station)
         if ok: # Date is read fine
-            ndx = ndx_entity('YYYYMMDD')
-            iymd = int(yyyymmdd)
-            if iymd >= data[0,ndx] and iymd <= data[-1,ndx]: # Check ranges
-                data = data[np.where(data[:,ndx] == int(yyyymmdd))] # Get values correct date
-                ok = True
+            ndx = ndx_ent('YYYYMMDD')
+            ymd, s_ymd, e_ymd = int(yyyymmdd), data[0,ndx], data[-1,ndx]
+
+            # Check ranges and correct anyway
+            if ymd < s_ymd:
+                ymd = s_ymd
+                log.console(f'Date {s_ymd} out range of data. First available date {ymd} used.', True)
+            elif ymd > s_ymd:
+                ymd = e_ymd
+                log.console(f'Date {e_ymd} out range of data. First available date {ymd} used.', True)
+
+            data = data[np.where(data[:,ndx] == ymd)] # Get values correct date
 
     return ok, data[0]
 
@@ -172,21 +179,3 @@ def process_all():
     '''Function processes (downloading en unzipping) files from the selected stations'''
     for station in config.stations:
         process_data( station )
-
-def ent_to_t_ent( ent ):
-    ent = ent.upper()
-    if   ent == 'FHX':  return 'FHXH'    #FHXH  = Uurvak waarin FHX is gemeten / Hourly division in which FHX was measured
-    elif ent == 'FHN':  return 'FHNH'    #FHNH  = Uurvak waarin FHN is gemeten / Hourly division in which FHN was measured
-    elif ent == 'FXX':  return 'FXXH'    #FXXH  = Uurvak waarin FXX is gemeten / Hourly division in which FXX was measured
-    elif ent == 'TN':   return 'TNH '    #TNH   = Uurvak waarin TN is gemeten / Hourly division in which TN was measured
-    elif ent == 'TX':   return 'TXH '    #TXH   = Uurvak waarin TX is gemeten / Hourly division in which TX was measured
-    elif ent == 'T10N': return 'T10NH'   #T10NH = 6-uurs tijdvak waarin T10N is gemeten / 6-hourly division in which T10N was measured; 6=0-6 UT, 12=6-12 UT, 18=12-18 UT, 24=18-24 UT
-    elif ent == 'RHX':  return 'RHXH'    #RHXH  = Uurvak waarin RHX is gemeten / Hourly division in which RHX was measured
-    elif ent == 'PX':   return 'PXH '    #PXH   = Uurvak waarin PX is gemeten / Hourly division in which PX was measured
-    elif ent == 'PN':   return 'PNH '    #PNH   = Uurvak waarin PN is gemeten / Hourly division in which PN was measured
-    elif ent == 'VVN':  return 'VVNH'    #VVNH  = Uurvak waarin VVN is gemeten / Hourly division in which VVN was measured
-    elif ent == 'VVX':  return 'VVXH'    #VVXH  = Uurvak waarin VVX is gemeten / Hourly division in which VVX was measured
-    elif ent == 'UX':   return 'UXH '    #UXH   = Uurvak waarin UX is gemeten / Hourly division in which UX was measured
-    elif ent == 'UN':   return 'UNH '    #UNH   = Uurvak waarin UN is gemeten / Hourly division in which UN was measured
-    else:
-        return False # No

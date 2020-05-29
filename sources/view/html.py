@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9.1"
+__version__    =  "0.9.2"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -16,6 +16,7 @@ import view.translate as tr
 import view.txt as view_txt
 import knmi.view.fix as fix
 import knmi.model.daydata as daydata
+import knmi.view.dayvalues as dayvalues
 
 class Template():
     ''' Class to make a html page based on the template - template.html'''
@@ -23,13 +24,14 @@ class Template():
     author      = 'WeatherstatsNL'
     viewport    = 'width=device-width, initial-scale=1.0, shrink-to-fit=no'
     script_file = './js/js.js'
+    script_code = ''
     css_file    = './css/css.css'
+    css_code    = ''
 
     def __init__(self, title='WeatherstatsNL - template',
                        header='Your Title',
                        main='Your Content',
-                       footer='Your Footer'
-                       ):
+                       footer='Your Footer' ):
         self.title  = title
         self.header = header
         self.main   = main
@@ -44,25 +46,44 @@ class Template():
         self.file_dir  = config.dir_html_dayvalues
         self.file_path = os.path.abspath(os.path.join(self.file_dir, self.file_name))
 
-    def save(self, dir_map=False, file_name=False):
-        ok = False
+    def path(self, dir_map=False, file_name=False):
         if file_name:
             self.file_name = file_name
         if dir_map:
-            self.file_dir = dir_map
+            self.file_dir  = dir_map
 
         self.file_path = os.path.abspath(os.path.join(self.file_dir, self.file_name))
 
+    def create(self, dir_map=False, file_name=False):
+        self.path(dir_map, file_name)
+        ok, self.html = io.read( self.template )
+        if ok:
+            self.html = self.html.replace('{{%now%}}', str( datetime.datetime.now() ))
+            self.html = self.html.replace('{{%title%}}', self.title)
+            self.html = self.html.replace('{{%charset%}}', self.charset)
+            self.html = self.html.replace('{{%author%}}', self.author)
+            self.html = self.html.replace('{{%viewport%}}', self.viewport)
+            self.html = self.html.replace('{{%css_file%}}', self.css_file)
+            self.html = self.html.replace('{{%header%}}', self.header)
+            self.html = self.html.replace('{{%main%}}', self.main)
+            self.html = self.html.replace('{{%footer%}}', self.footer)
+            self.html = self.html.replace('{{%script_file%}}', self.script_file)
+            self.html = self.html.replace('{{%script_code%}}', self.script_code)
+            self.html = self.html.replace('{{%css_code%}}', self.css_code)
+
+        return ok
+
+    def save(self, dir_map=False, file_name=False):
+        ok = False
+
         try:
-            self.html, ok = io.read(self.template)
+            ok = self.create( dir_map, file_name )
             if ok:
-                self.html = self.html.format( str(datetime.datetime.now()),
-                                self.title, self.charset, self.author,
-                                self.viewport, self.css_file, self.script_file,
-                                self.header, self.main, self.footer
-                                )
-                io.write( self.file_path, self.html )
-        except Exception as e:
+                print(self.file_path)
+                ok = io.write( self.file_path, self.html )
+            else:
+                print('Error in ok - file not created')
+        except Exception as e:  # ERROR ?????
             log.console( f'Error: {e}' )
         else:
             log.console( f'Creating file: {self.file_path} succesful' )
@@ -72,6 +93,7 @@ class Template():
 
     def delete(self):
         io.delete(self.file_path)
+
 
 def div_ent( title=False, val=False, time=False ):
     val  =  val if  val != False else ''
@@ -94,7 +116,7 @@ def div_ent( title=False, val=False, time=False ):
 def main_ent( day ):
     stn, ymd, ddvec, fhvec, fg, fhx, fhxh, fhn, fhnh, fxx, fxxh, tg, tn,\
     tnh, tx, txh, t10n, t10nh, sq, sp, q, dr, rh, rhx, rhxh, pg, px, pxh,\
-    pn, pnh, vvn, vvnh, vvx, vvxh, ng, ug, ux, uxh, un, unh, ev24 = ents(day)
+    pn, pnh, vvn, vvnh, vvx, vvxh, ng, ug, ux, uxh, un, unh, ev24 = dayvalues.ents(day)
 
     # Add icons
     if tx: tx = f'{icon.tx} {tx}'
@@ -125,34 +147,34 @@ def main_ent( day ):
     if ev24: ev24 = f'{icon.swea} {ev24}'
 
     main  = ''
-    main += div_ent( view_txt.ent_to_titel('TX'), tx, txh ) if tx else ''
-    main += div_ent( view_txt.ent_to_titel('TG'), tg, False ) if tg else ''
-    main += div_ent( view_txt.ent_to_titel('TN'), tn, tnh ) if tn else ''
-    main += div_ent( view_txt.ent_to_titel('T10N'), t10n, t10nh ) if t10n else ''
-    main += div_ent( view_txt.ent_to_titel('DDVEC'), ddvec, False ) if ddvec else ''
-    main += div_ent( view_txt.ent_to_titel('FG'), fg, False ) if fg else ''
-    main += div_ent( view_txt.ent_to_titel('RH'), rh, False ) if rh else ''
-    main += div_ent( view_txt.ent_to_titel('SQ'), sq, False ) if sq else ''
-    main += div_ent( view_txt.ent_to_titel('PG'), pg, False ) if pg else ''
-    main += div_ent( view_txt.ent_to_titel('UG'), ug, False ) if ug else ''
+    main += div_ent( view_txt.ent_to_title('TX'), tx, txh ) if tx else ''
+    main += div_ent( view_txt.ent_to_title('TG'), tg, False ) if tg else ''
+    main += div_ent( view_txt.ent_to_title('TN'), tn, tnh ) if tn else ''
+    main += div_ent( view_txt.ent_to_title('T10N'), t10n, t10nh ) if t10n else ''
+    main += div_ent( view_txt.ent_to_title('DDVEC'), ddvec, False ) if ddvec else ''
+    main += div_ent( view_txt.ent_to_title('FG'), fg, False ) if fg else ''
+    main += div_ent( view_txt.ent_to_title('RH'), rh, False ) if rh else ''
+    main += div_ent( view_txt.ent_to_title('SQ'), sq, False ) if sq else ''
+    main += div_ent( view_txt.ent_to_title('PG'), pg, False ) if pg else ''
+    main += div_ent( view_txt.ent_to_title('UG'), ug, False ) if ug else ''
 
-    main += div_ent( view_txt.ent_to_titel('FXX'), fxx, fxxh ) if fxx else ''
-    main += div_ent( view_txt.ent_to_titel('FHVEC'), fhvec, False ) if fhvec else ''
-    main += div_ent( view_txt.ent_to_titel('FHX'), fhx, fhxh ) if fhx else ''
-    main += div_ent( view_txt.ent_to_titel('FHN'), fhn, fhnh ) if fhn else ''
-    main += div_ent( view_txt.ent_to_titel('SP'), sp, False ) if sp else ''
-    main += div_ent( view_txt.ent_to_titel('Q'), q, False ) if q else ''
-    main += div_ent( view_txt.ent_to_titel('DR'), dr, False ) if dr else ''
-    main += div_ent( view_txt.ent_to_titel('RHX'), rhx, rhxh ) if rhx else ''
-    main += div_ent( view_txt.ent_to_titel('PX'), px, pxh ) if px else ''
-    main += div_ent( view_txt.ent_to_titel('PN'), pn, pnh ) if pn else ''
+    main += div_ent( view_txt.ent_to_title('FXX'), fxx, fxxh ) if fxx else ''
+    main += div_ent( view_txt.ent_to_title('FHVEC'), fhvec, False ) if fhvec else ''
+    main += div_ent( view_txt.ent_to_title('FHX'), fhx, fhxh ) if fhx else ''
+    main += div_ent( view_txt.ent_to_title('FHN'), fhn, fhnh ) if fhn else ''
+    main += div_ent( view_txt.ent_to_title('SP'), sp, False ) if sp else ''
+    main += div_ent( view_txt.ent_to_title('Q'), q, False ) if q else ''
+    main += div_ent( view_txt.ent_to_title('DR'), dr, False ) if dr else ''
+    main += div_ent( view_txt.ent_to_title('RHX'), rhx, rhxh ) if rhx else ''
+    main += div_ent( view_txt.ent_to_title('PX'), px, pxh ) if px else ''
+    main += div_ent( view_txt.ent_to_title('PN'), pn, pnh ) if pn else ''
 
-    main += div_ent( view_txt.ent_to_titel('VVN'), vvn, vvnh ) if vvn else ''
-    main += div_ent( view_txt.ent_to_titel('VVX'), vvx, vvxh ) if vvx else ''
-    main += div_ent( view_txt.ent_to_titel('NG'), ng, False ) if ng else ''
-    main += div_ent( view_txt.ent_to_titel('UX'), ux, uxh ) if ux else ''
-    main += div_ent( view_txt.ent_to_titel('UN'), un, unh ) if un else ''
-    main += div_ent( view_txt.ent_to_titel('EV24'), ev24, False ) if ev24 else ''
+    main += div_ent( view_txt.ent_to_title('VVN'), vvn, vvnh ) if vvn else ''
+    main += div_ent( view_txt.ent_to_title('VVX'), vvx, vvxh ) if vvx else ''
+    main += div_ent( view_txt.ent_to_title('NG'), ng, False ) if ng else ''
+    main += div_ent( view_txt.ent_to_title('UX'), ux, uxh ) if ux else ''
+    main += div_ent( view_txt.ent_to_title('UN'), un, unh ) if un else ''
+    main += div_ent( view_txt.ent_to_title('EV24'), ev24, False ) if ev24 else ''
 
     return main
 

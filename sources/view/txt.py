@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.4"
+__version__    =  "0.0.5"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -12,6 +12,7 @@ import config, math, time
 import view.txt as view_txt
 import knmi.model.daydata as daydata
 import view.translate as tr
+import numpy as np
 
 def ent_to_title(ent):
     e = ent.strip().upper()
@@ -43,34 +44,45 @@ def ent_to_title(ent):
     elif e == 'EV24': return tr.txt('Evapotranspiration (potential)')
     return e
 
-def dayvalues_entities( kol = 7, kol_width = 9 ):
+def optionlist( npl, sep=',', col_cnt = False, col_spaces = False ):
+    # Possible update none values
+    max_len, max_char = 0, 60
+    for e in npl:
+        char_len = len( str(e) )
+        if char_len > max_len:
+            max_len = char_len
+
+    # Update the values
+    if col_cnt == False: col_cnt = math.floor( max_char / max_len )
+    if col_spaces == False or col_spaces < max_len: col_spaces = max_len
+
+    # Make txt list with colls en newlines
+    txt, n, max = '', 1, npl.size
+    for e in npl:
+        txt += f'{e:{col_spaces}}'
+        txt += f'{sep} ' if n % col_cnt != 0 and n != max else '\n' # comma or newline
+        n   += 1
+
+    return txt
+
+def dayvalues_entities( sep=',', kol = False, kol_width = False ):
     '''Functions prints a list with available entities'''
-    tel, txt, ents, max = 1, '', daydata.entities, len( daydata.entities )
-    for ent in ents:
-        txt += ent
-        if tel % kol_width == 0 and tel != max:
-            txt += ', '
+    l = daydata.entities
+    for rem in np.array( [ 'FHXH', 'FHNH', 'FXXH', 'TNH', 'TXH', 'T10NH',\
+                           'RHXH', 'PXH',  'PNH', 'VVNH', 'VVXH',  'UXH',\
+                           'UNH' ] ):
+        l = l[l != rem] # Remove time ent
+
+    txt = optionlist( l, '', kol, kol_width )
     return txt
 
 def knmi_stations(l, kol = 4, kol_width = 20):
     '''Functions prints list with available knmi stations'''
-    content, cnt = '', len(l)
+    content, cnt = '', len(l) # not a np list
     for i in range(cnt):
         station = l[i]
-        if kol_width != ',':
-            content += f'{station.wmo} {station.place:{kol_width}}'
-            if (i+1) == cnt:
-                content += '\n'
-            elif (i+1) % kol == 0:
-                content += '\n'
-        else:
-            content += f"{station.wmo} {station.place}"
-            if (i+1) == cnt:
-                content += '\n'
-            elif (i+1) % kol == 0:
-                content += ',\n'
-            else:
-                content += ', '
+        content += f'{station.wmo} {station.place:{kol_width}}'
+        content += '\n' if (i+1) == cnt or (i+1) % kol == 0 else '' # comma or newline
 
     return content
 
@@ -185,3 +197,7 @@ def process_time_ext(txt, t_ns):
 
 def process_time_s( txt_start, start_ns ):
     return f'{txt_start} {(time.time_ns() - start_ns) / 1000000000:.4f} seconds'
+
+def menu_process_time(st):
+    et = time.time_ns()
+    return process_time_ext('Total processing time',et-st)

@@ -24,10 +24,10 @@ def footer ( txt='Footer', log=config.log ):
         print(f'\n{line}\n##  {tr.txt(txt)}\n{line}\n')
 
 def console ( txt='Console', log=config.log, debug=config.debug ):
-    txt = tr.txt(txt)
+    out = tr.txt(txt)
 
-    if debug: out = f'{datetime.datetime.now()} | {txt}'
-    if log:   out = txt
+    if debug: out = f'{datetime.datetime.now()} | {out}'
+    # if log:   out = txt
 
     print(out)
 

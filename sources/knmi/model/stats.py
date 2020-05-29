@@ -28,7 +28,6 @@ def period( data, sdate, edate ):
     sel = np.where(( data[:,ymd] >= int(sdate) ) & ( data[:,ymd] <= int(edate) ))
     return data[sel]
 
-# TODO: check for -1 values -> replace with <0.05?
 def process_list( data, entity ):
     '''Function processes data values on false values'''
     key  = daydata.ndx_ent( entity )
@@ -80,9 +79,8 @@ def terms_days( data, entity, operator, value ):
 
     data = data[sel]
     sel = np.where( data[:,ent] != daydata.data_dummy_val ) # Remove/empthy false values
-    data = data[sel]
 
-    return data
+    return data[sel]
 
 def terms_days_or( data, l_terms ):
     '''Function select days based on two terms like TX > 30 OR RH > 10 for example.'''
@@ -141,4 +139,10 @@ def extended_terms_days( data, terms ):
 
     return data
 
-#
+def hellmann( data ):
+    ''' Calculation of hellmann'''
+    data = terms_days( data, 'TG', '<', 0 ) # Get days TG < 0
+    sum  = sum( data, 'TG' ) # Sum all days
+    hman = abs( sum )
+
+    return hman, data

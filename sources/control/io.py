@@ -67,7 +67,7 @@ def read(file_name):
             log.console(f"Read file: {file_name} succesful")
             ok = True
 
-    return txt, ok
+    return ok, txt
 
 def delete(file_name):
     '''Function deletes a file if exists'''
