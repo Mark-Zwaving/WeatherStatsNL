@@ -193,7 +193,7 @@ def process_time_ext(txt, t_ns):
     # if micr > 0: txt += f'{micr} {"microseconds" if micr>1 else "microsecond"} '
     # if nano > 0: txt += f'{nano} {"nanoseconds" if nano>1 else "nanosecond"} '
 
-    return txt
+    return '\n' + txt + '\n'
 
 def process_time_s( txt_start, start_ns ):
     return f'{txt_start} {(time.time_ns() - start_ns) / 1000000000:.4f} seconds'

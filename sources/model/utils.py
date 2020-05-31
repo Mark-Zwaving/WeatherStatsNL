@@ -9,10 +9,12 @@ __version__    =  "0.0.4"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
+import config
 import datetime, os
 import view.translate as tr
 from datetime import datetime
 from dateutil import rrule
+import numpy as np
 
 def path( dir, file ):
     return os.path.abspath(os.path.join(dir, file))
@@ -24,6 +26,12 @@ def now_act_for_file():
     txt =  datetime.now().strftime('%Y%m%d-%H%M%S')
     print(txt)
     return txt
+
+def quit_menu(l):
+    if np.array_equal(l,config.answer_quit):
+        return True
+    else:
+        return False
 
 def add_zero_less_ten(d):
     if int(d) < 10:

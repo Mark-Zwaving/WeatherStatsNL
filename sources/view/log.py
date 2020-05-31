@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.1"
+__version__    =  "0.0.2"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -24,12 +24,10 @@ def footer ( txt='Footer', log=config.log ):
         print(f'\n{line}\n##  {tr.txt(txt)}\n{line}\n')
 
 def console ( txt='Console', log=config.log, debug=config.debug ):
-    out = tr.txt(txt)
-
-    if debug: out = f'{datetime.datetime.now()} | {out}'
-    # if log:   out = txt
-
-    print(out)
+    s = tr.txt(str(txt))
+    if log:
+        print(s)
 
     if debug:
-        ask.ask('Press a key to continue...')
+        print(f'{datetime.datetime.now()} | {s}')
+        ask.ask('Press a key to continue...', True)

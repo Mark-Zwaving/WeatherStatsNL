@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1.3"
+__version__    =  "0.1.5"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -15,6 +15,8 @@ import view.log as log
 import view.txt as view_txt
 import view.translate as tr
 import model.validate as validate
+import numpy as np
+import model.utils as utils
 
 # Check and sanitize input
 def clear( s ):
@@ -154,7 +156,7 @@ def ask_for_stations( txt, space=True):
         elif answ == '*':
             l = config.stations
         elif answ == 'n' and len(l) > 0:
-            return l
+            return np.array(l)
         else:
             lt = [] # Make a list with stations
             if answ.find(',') != -1:
@@ -192,7 +194,7 @@ def ask_for_stations( txt, space=True):
             continue
         print(' ')
 
-    return l
+    return np.array(l)
 
 def ask_for_date( txt, space=True):
     while True:
@@ -204,16 +206,16 @@ def ask_for_date( txt, space=True):
         elif validate.yyyymmdd(answ):
             return answ
         else:
-            log.console(f'Error in date: {answ}', True)
-            ask('Press a key to try again...')
+            log.console(f'Error in date: {answ}\n', True)
+            # ask('Press a key to try again...')
 
 def ask_for_start_and_end_date(space=True):
     sd = ask_for_date('Give a START date <format:yyyymmdd> ? ', space)
-    if sd == config.answer_quit:
+    if utils.quit_menu(sd):
         return config.answer_quit, sd
 
     ed = ask_for_date('Give a END date <format:yyyymmdd> ? ', space)
-    if ed == config.answer_quit:
+    if utils.quit_menu(ed):
         return ed, config.answer_quit
 
     if int(sd) > int(ed):
@@ -226,7 +228,7 @@ def ask_for_date_with_check_data( station, data, txt, space=True ):
     txt += f'Available range data for {station.place} is from {sd} untill {ed}'
     while True:
         answ = ask_for_date(txt, space)
-        if answ == config.answer_quit:
+        if utils.quit_menu(answ):
             return config.answer_quit
         else:
             ymd = int(answ)
@@ -245,16 +247,17 @@ def ask_type_options(txt, type, l, space=True):
         answ = ask(' ? ', space)
 
         if answ:
-            if answ in [str(el) for el in range(len(l))]:
-                return l[int(answ)-1]
-            elif answ in l:
-                return answ
+            sl = [ str(el) for el in range(len(l)) ]
+            if answ in sl:
+                return l[ int(answ)-1 ]
             elif answ in config.answer_quit:
                 return config.answer_quit
+            else:
+                answ = answ.lower()
+                if  answ in [el.lower() for el in l]:
+                    return answ
 
-        log.console(f'Unknown option: {answ} ? ', True)
-
-        ask('Press a key to try again ... ', space)
+        log.console(f'Unknown option: {answ} ? \n', True)
 
 def ask_for_file_type(txt, space=True):
     l = ['txt', 'html', 'cmd']
@@ -274,22 +277,22 @@ def ask_back_to_main_menu(space=True):
     log.console("Press a 'key' to go back to the main menu...", space)
     input()
 
-def ask_period_stations_type_name(space=True):
+def ask_period_stations_type_name( space=True ):
     # Ask start and end date
     ok, sd, ed, stations, type, name = False, '', '', [], '', ''
     sd, ed = control_ask.ask_for_start_and_end_date()
-    if sd != config.answer_quit and ed != config.answer_quit:
+    if utils.quit_menu(sd) == False or utils.quit_menu(ed) == False:
         # Ask for one or more stations
-        stations = ask_for_stations('Select one (or more) weather station(s) ?', space)
-        if stations != config.answer_quit:
+        stations = ask_for_stations('Select one (or more) weather station(s) ?', space )
+        if utils.quit_menu(stations) == False:
             # Ask for a file type
             type = control_ask.ask_for_file_type('Select filetype ? ', space)
-            if type != config.answer_quit:
+            if utils.quit_menu(type) == False:
                 # Ask for a name
                 ok = True
                 if type != 'cmd':
                     name = control_ask.ask_for_file_name('Set a name for the output file ? <optional> ', space)
-                    if name != config.answer_quit:
+                    if utils.quit_menu(name):
                         ok = False # Oke quit
 
     return ok, sd, ed, station, type, name

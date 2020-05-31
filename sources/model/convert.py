@@ -9,9 +9,11 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import view.translate as tr
+import config
 
 def pixel_to_inch(p):
-    return int( round( float(p) * 0.0104166667 ) )
+    # Default dpi in matplotlib is 100. See config.py
+    return float(p) / float(config.plot_dpi)
 
 def ms_to_bft( ms ):
     i = int(ms)

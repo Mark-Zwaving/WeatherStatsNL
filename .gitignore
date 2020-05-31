@@ -4,5 +4,6 @@
 /datal/*
 *.html
 *.txt
+*.png
 *.zip
 *.pyc

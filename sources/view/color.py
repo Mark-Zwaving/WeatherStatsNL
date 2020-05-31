@@ -220,6 +220,7 @@ def ent_to_color(ent):
     elif e == 'EV24': return rnd_savecolor()
     return rnd_savecolor()
 
+# Tested
 save_colors = np.array([
       '#0000FF','#8A2BE2','#A52A2A','#5F9EA0','#D2691E','#6495ED','#DC143C',
       '#00008B','#008B8B','#B8860B','#006400','#BDB76B','#8B008B','#556B2F',

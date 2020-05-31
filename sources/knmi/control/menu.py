@@ -20,7 +20,7 @@ import view.log as log
 import view.translate as tr
 import view.txt as view_txt
 import view.html as view_html
-import view.graphs as graph
+import view.graphs as view_graph
 import numpy as np
 
 def menu_choices( choice ):
@@ -52,22 +52,27 @@ def process_knmi_dayvalues_selected():
     '''Function asks for one or more wmo numbers to download their data'''
     while True:
         log.header('START DOWNLOAD STATION KNMI DATA DAY VALUES...', True )
-        l = control_ask.ask_for_stations('Select one or more stations ? ')
-        if l != config.answer_quit:
+
+        stations = control_ask.ask_for_stations('Select one or more stations ? ')
+        if utils.quit_menu(stations):
             break
-        else:
-            log.header('...DOWNLOADING STARTED...', True )
-            st = time.time_ns()
-            for station in l:
-                daydata.process_data( station )
-            log.console(view_txt.menu_process_time(st), True)
+
+        log.header('...DOWNLOADING STARTED...', True )
+        st = time.time_ns()
+        for station in stations:
+            daydata.process_data( station )
+        log.console(view_txt.menu_process_time(st), True)
 
         # Always ask for going back
-        again = control_ask.ask_again(f'Do you want to download more stations ?', True)
-        if again == config.answer_quit:
+        if stations.size != config.stations.size:
+            again = control_ask.ask_again(f'Do you want to download more stations ?', True)
+            if utils.quit_menu(again):
+                break
+        else:
             break
 
     log.footer('END DOWNLOAD STATION(s) KNMI DATA DAY VALUES...', True )
+    control_ask.ask_back_to_main_menu()
 
 # Menu choice 3
 def get_dayvalues_by_date():
@@ -76,7 +81,7 @@ def get_dayvalues_by_date():
         log.header('START: SEARCHING AND PREPARING DAY VALUES...', True)
         # Ask for station
         station = control_ask.ask_for_one_station('Select a weather station ? ', True)
-        if station == config.answer_quit:
+        if utils.quit_menu(station):
             break
         else:
             log.console(f'Loading data {station.place} ...')
@@ -84,23 +89,24 @@ def get_dayvalues_by_date():
             if ok:
                 txt = '\nSelect a date <yyyymmdd> ?\n'
                 yyyymmdd = control_ask.ask_for_date_with_check_data(station, data, txt, True)
-                if yyyymmdd == config.answer_quit:
+                if utils.quit_menu(yyyymmdd):
                     break
                 else:
                     type = control_ask.ask_for_file_type('Select filetype ? ')
-                    if type == config.answer_quit:
+                    if utils.quit_menu(type):
                         break
                     else:
                         ok, name = True, False
-                        if type != 'cmd': # Ask for a file name
+                        if type != 'cmd':
+                            # Ask for a file name
                             name = control_ask.ask_for_file_name(f'Give a name for the {type} file ? <optional> ', True)
-                            if not name:
-                                print(name)
-                                now  = utils.now_act_for_file()
-                                name = f'dayvalues-{yyyymmdd}-{now}.{type}'
-                                print(name)
-                            elif name == config.answer_quit:
+                            if utils.quit_menu(name):
                                 break
+                            if not name:
+                                now  = utils.now_act_for_file()
+                                name = f'dayvalues-{yyyymmdd}-{now}'
+
+                            name += f'.{type}'
 
                         if ok:
                             st = time.time_ns()
@@ -169,7 +175,7 @@ def get_dayvalues_by_date():
 
         # Always ask for going back
         again = control_ask.ask_again(f'Do you want to select another station and date ?', True)
-        if again == config.answer_quit:
+        if utils.quit_menu(again):
             break
 
     log.footer('END SEARCHING AND PREPARING DAY VALUES...', True)
@@ -179,47 +185,70 @@ def graph_period():
     '''Funtion makes images for a period from the data of the knmi'''
     while True:
         log.header('START MAKING A IMAGE GRAPH...', True)
+
         log.console( 'What time periode ?\n' )
         s_ymd, e_ymd = control_ask.ask_for_start_and_end_date( )
-        if s_ymd != config.answer_quit and e_ymd != config.answer_quit:
-            stations = control_ask.ask_for_stations('Select a weather station ?', True)
-            if stations != config.answer_quit:
-                entities = control_ask.ask_for_entities('Select a weather entities ?', True)
-                if entities != config.answer_quit:
+        if utils.quit_menu(s_ymd) or utils.quit_menu(e_ymd):
+            break
 
-                    # TODO: make options for other type graphs
-                    # type = control_ask.ask_for_graph_type('Select graph type ? ')
+        stations = control_ask.ask_for_stations('Select a weather station ?', True)
+        if utils.quit_menu(stations):
+            break
 
-                    name = control_ask.ask_for_file_name( f'Give a name for the .png file ? <optional>', True)
-                    if name != config.answer_quit:
-                        log.console('Fill in the parameters for the image', True)
-                        title  = control_ask.ask_txt('Give a title for the graph ? ', space=False)
-                        ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ', space=False)
-                        # width  = control_ask.ask_txt('Give the width (in pixels) for the graph ? ', space=False)
-                        # height = control_ask.ask_txt('Give the height (in pixels) for the graph ? ', space=False)
+        entities = control_ask.ask_for_entities('Select a weather entities ?', True)
+        if utils.quit_menu(entities):
+            break
 
-                        width  = 1280
-                        height =  720
-                        size   = ( convert.pixel_to_inch(width), convert.pixel_to_inch(height) )
+        graph = control_ask.ask_for_graph_type('Which type of graph do you want to use ?', space=True)
+        if utils.quit_menu(graph):
+            break
 
-                        st = time.time_ns()
-                        log.header( 'PREPARING IMAGES...', True )
+        name = control_ask.ask_for_file_name('Give a name for the image file ? <optional>', True)
+        if utils.quit_menu(name):
+            break
 
-                        if not name:
-                            name = graph.name( s_ymd, e_ymd, stations, entities )
-                        path = utils.path( config.dir_img_period, name )
-                        graph.plot( stations, entities, s_ymd, e_ymd, title, ylabel, size, path )
+        log.console('Fill in the parameters for the image', True)
+        title  = control_ask.ask_txt('Give a title for the graph ? ', space=False)
+        ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ', space=False)
+        more   = control_ask.ask_type_options(
+                    'Use default values from config.py ?',
+                    '', ['yes', 'no'], space=True
+                    )
 
-                        log.console(view_txt.menu_process_time(st), True)
+        config.plot_defaults = False if more.lower() in config.answer_no else True
 
-                        fopen = control_ask.ask_to_open_with_app( f'Open the image {name} in your browser ?', True)
-                        if fopen:
-                            webbrowser.open_new_tab(path)
+        if config.plot_defaults == False:
+            config.plot_width  = control_ask.ask_txt('Give the width (in pixels) for the graph ? ', space=False)
+            config.plot_height = control_ask.ask_txt('Give the height (in pixels) for the graph ? ', space=False)
+            config.plot_marker_txt = control_ask.ask_type_options(
+                                'Values next to the markers ? y or n ? ', '',
+                                ['yess', 'no'], space=False )
+            config.plot_image_type = control_ask.ask_type_options(
+                                'What type of image ? ', 'image',
+                                ['png', 'jpg', 'ps', 'pdf', 'svg'],
+                                space=False )
+
+            dpi = control_ask.ask_txt('Give the dpi ? ', space=False)
+
+        st = time.time_ns()
+        log.header( 'PREPARING IMAGES...', True )
+
+        if not name:
+            name = graph.name( s_ymd, e_ymd, stations, entities )
+        path = utils.path( config.dir_img_period, name + f'.{config.plot_image_type}' )
+        view_graph.plot( stations, entities, s_ymd, e_ymd, title, ylabel, path, graph )
+
+        log.console(view_txt.menu_process_time(st), True)
+
+        fopen = control_ask.ask_to_open_with_app( f'Open the image {name} in your browser ?', True)
+        if fopen:
+            webbrowser.open_new_tab(path)
 
         # Always ask for going back
         again = control_ask.ask_again(f'Do you want to make more images ?', True)
-        if again == config.answer_quit:
+        if utils.quit_menu(again):
             break
+
     log.footer('END MAKING A IMAGE GRAPH...', True)
 
 
@@ -247,7 +276,7 @@ def table_winterstats():
 
             # Always ask for going back
             again = control_ask.ask_again(f'Do you want to make another winterstatistics table ?', True)
-            if again == config.answer_quit:
+            if utils.quit_menu(again):
                 break
 
     log.footer(f'END CALCULATE WINTER STATISTICS...', True)
@@ -274,7 +303,7 @@ def table_zomerstats():
 
             # Always ask for going back
             again = control_ask.ask_again(f'Do you want to make another summerstatistics table ?', True)
-            if again == config.answer_quit:
+            if utils.quit_menu(again):
                 break
 
     log.footer(f'END CALCULATE SUMMER STATISTICS...', True)
@@ -301,7 +330,7 @@ def table_heatwaves():
 
             # Always ask for going back
             again = control_ask.ask_again(f'Do you want to make another heatwaves table ?', True)
-            if again == config.answer_quit:
+            if utils.quit_menu(again):
                 break
 
     log.footer(f'END CALCULATE HEATWAVES...', True)
@@ -328,7 +357,7 @@ def table_allstats():
 
             # Always ask for going back
             again = control_ask.ask_again(f'Do you want to make another summerstatistics table ?', True)
-            if again == config.answer_quit:
+            if utils.quit_menu(again):
                 break
 
     log.footer(f'END CALCULATE STATISTICS...', True)
@@ -354,7 +383,7 @@ def calc_allextremes():
 
             # Always ask for going back
             again = control_ask.ask_again(f'Do you want to make another statistics table for extremes ?', True)
-            if again == config.answer_quit:
+            if utils.quit_menu(again):
                 break
 
     log.footer(f'END CALCULATE EXTREMES...', True)

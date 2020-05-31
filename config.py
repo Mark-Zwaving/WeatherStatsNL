@@ -137,11 +137,22 @@ html_popup_table_max_rows = -1 # -1 for all rows
 debug = False
 log   = True
 
-# Asked for char
-answer_quit = ['q','Q']
-answer_yes  = ['y','Y', 'j', 'J', 'ok', 'oke', 'oké']
-answer_no   = ['n','N']
-
 # Add dir_app and dir sources to system
 for dir in [ dir_app, dir_sources ]:
     sys.path.append(dir)
+
+# Plotting images
+plot_width       = 1280 # Width plotted image
+plot_height      =  720 # Height plotted image
+# Images dpi (dots per inches) for printing on paper
+plot_dpi         =  108 # Higher will increase de point size. Make width/height higher too
+plot_marker_txt  =  'y'
+plot_defaults    = True # To use above values, will be ask for
+plot_image_type  = 'png'
+
+# Asked for char
+answer_quit = np.array(['q', 'Q'])
+answer_yes  = np.array(['y', 'Y', 'j', 'J', 'ok', 'oke', 'oké'])
+answer_no   = np.array(['n', 'N', 'no', 'nope'])
+
+#
