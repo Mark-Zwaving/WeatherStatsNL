@@ -280,19 +280,19 @@ def ask_back_to_main_menu(space=True):
 def ask_period_stations_type_name( space=True ):
     # Ask start and end date
     ok, sd, ed, stations, type, name = False, '', '', [], '', ''
-    sd, ed = control_ask.ask_for_start_and_end_date()
+    sd, ed = ask_for_start_and_end_date()
     if utils.quit_menu(sd) == False or utils.quit_menu(ed) == False:
         # Ask for one or more stations
         stations = ask_for_stations('Select one (or more) weather station(s) ?', space )
         if utils.quit_menu(stations) == False:
             # Ask for a file type
-            type = control_ask.ask_for_file_type('Select filetype ? ', space)
+            type = ask_for_file_type('Select filetype ? ', space)
             if utils.quit_menu(type) == False:
                 # Ask for a name
                 ok = True
                 if type != 'cmd':
-                    name = control_ask.ask_for_file_name('Set a name for the output file ? <optional> ', space)
+                    name = ask_for_file_name('Set a name for the output file ? <optional> ', space)
                     if utils.quit_menu(name):
                         ok = False # Oke quit
 
-    return ok, sd, ed, station, type, name
+    return ok, sd, ed, stations, type, name

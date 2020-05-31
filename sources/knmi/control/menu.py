@@ -23,19 +23,6 @@ import view.html as view_html
 import view.graphs as view_graph
 import numpy as np
 
-def menu_choices( choice ):
-    if   choice ==  '1':  process_knmi_dayvalues_all()
-    elif choice ==  '2':  process_knmi_dayvalues_selected()
-    elif choice ==  '3':  get_dayvalues_by_date()
-    elif choice ==  '4':  graph_period()
-    elif choice ==  '5':  table_winterstats()
-    elif choice ==  'x':  table_zomerstats()
-    elif choice ==  'x':  table_heat_waves()
-    elif choice ==  'x':  table_allstats()
-    elif choice ==  'x':  table_allextremes()
-    else:
-        log.console(f'Input {choice} unknown. Try again...', True)
-
 # Menu choice 1
 def process_knmi_dayvalues_all():
     '''Function downloads, unzipped  all knmi stations in the list'''
@@ -179,6 +166,11 @@ def get_dayvalues_by_date():
             break
 
     log.footer('END SEARCHING AND PREPARING DAY VALUES...', True)
+
+
+def select_days():
+    pass
+
 
 # Menu choice 4
 def graph_period():
@@ -363,7 +355,7 @@ def table_allstats():
     log.footer(f'END CALCULATE STATISTICS...', True)
 
 # Menu choice 9
-def calc_allextremes():
+def table_allextremes():
     while True:
         log.header('START CALCULATE EXTREMES...', True)
         ok, sd, ed, stations, type, name = control_ask.ask_period_stations_type_name(True)

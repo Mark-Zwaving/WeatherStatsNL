@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Created by WeatherstatsNL at 2020-05-31 13:04:38.711211 //-->
+        <title> Eelde-20200530 </title>
+        <meta charset="UTF-8">
+        <meta name="author" content="WeatherstatsNL">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link rel="stylesheet" type="text/css" href="./../../thirdparty/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="./../../thirdparty/css/font-awesome-5-min.css">
+        <link rel="stylesheet" type="text/css" href="./../../thirdparty/css/./css/css.css">
+        <style>  </style>
+
+
+    </head>
+    <body>
+        <article class="container-fluid m-3 mx-auto">
+          <header class="m-2 p-3">
+              <h5><i class="text-info fas fa-home"></i> 280 - Eelde Drenthe - Saturday, 30 May 2020 </h5>
+          </header>
+          <main class="row text-center m-2">
+              
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Maximum temperature
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-danger fas fa-temperature-high"></i> 21.9°C
+                        <br>
+                        <small class="text-muted">12-13 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Mean temperature
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-success fas fa-thermometer-half"></i> 15.8°C
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Minimum temperature
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-primary fas fa-temperature-low"></i> 7.6°C
+                        <br>
+                        <small class="text-muted">3-4 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Minimum temperature (10cm)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-warning fas fa-thermometer-empty"></i> 1.6°C
+                        <br>
+                        <small class="text-muted">18-24 UT</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Wind direction
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-info fas fa-location-arrow"></i> 45° NE
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Mean windspeed (daily)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-success fas fa-wind"></i> 3.6m/s 1bft
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Precipitation amount
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-primary fas fa-umbrella"></i> 0.0mm
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Sunshine duration (hourly)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-warning fas fa-sun"></i> 15.4 hour
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Mean pressure
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-warning fas fa-compress-arrows-alt"></i> 1026hPa
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Mean atmospheric humidity
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-primary fas fa-tint"></i> 61%
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Maximum wind (gust)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-success fas fa-wind"></i> 10.0m/s 1bft
+                        <br>
+                        <small class="text-muted">12-13 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Mean windspeed (vector)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-success fas fa-wind"></i> 3.4m/s 1bft
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Maximum mean windspeed (hourly)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-success fas fa-wind"></i> 6.0m/s 1bft
+                        <br>
+                        <small class="text-muted">14-15 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Minimum mean windspeed (hourly)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-success fas fa-wind"></i> 1.0m/s 0bft
+                        <br>
+                        <small class="text-muted">22-23 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Sunshine duration (maximum potential)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-warning fas fa-sun"></i> 93%
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Radiation (global)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-danger fas fa-radiation-alt"></i> 291.7J/cm2
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Precipitation duration
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-primary fas fa-umbrella"></i> 0.0 hour
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Maximum precipitation (hourly)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-primary fas fa-umbrella"></i> 0.0mm
+                        <br>
+                        <small class="text-muted">0-1 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Maximum pressure (hourly)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-warning fas fa-compress-arrows-alt"></i> 1027hPa
+                        <br>
+                        <small class="text-muted">0-1 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Minimum pressure (hourly)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-warning fas fa-compress-arrows-alt"></i> 1024hPa
+                        <br>
+                        <small class="text-muted">16-17 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Minimum visibility
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-info fas fa-binoculars"></i> 10-11km
+                        <br>
+                        <small class="text-muted">2-3 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Maximum visibility
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-info fas fa-binoculars"></i> 32-37km
+                        <br>
+                        <small class="text-muted">11-12 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Mean cloud cover
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-secondary fas fa-cloud"></i> 0
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Maximum humidity
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-primary fas fa-tint"></i> 97%
+                        <br>
+                        <small class="text-muted">2-3 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Minimum humidity
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-primary fas fa-tint"></i> 34%
+                        <br>
+                        <small class="text-muted">11-12 hour</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card col-11 col-xs-11 col-sm-11 col-md-6 col-lg-4 col-xl-3 mx-auto border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-capitalize day_title">
+                        Evapotranspiration (potential)
+                    </h4>
+                    <div class="card-text day_data">
+                        <i class="text-warning far fa-grin-beam-sweat"></i> 4.9mm
+                        <br>
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            
+          </main>
+          <footer class="m-2 p-1 text-center text-muted">
+            <small>
+              BRON: KONINKLIJK NEDERLANDS METEOROLOGISCH INSTITUUT (KNMI)
+            </small>
+          </footer>
+        </article>
+
+        <script src="./../../thirdparty/js/jquery-3.2.1/slim.min.js"></script>
+        <script src="./../../thirdparty/js/popper.min.js"></script>
+        <script src="./../../thirdparty/js/bootstrap.js"></script>
+        <script src="./../../thirdparty/js/font-awesome-5.min.js"></script>
+        <script src="./../../thirdparty/js/./js/js.js"></script>
+        <script>
+            
+        </script>
+    </body>
+</html>
