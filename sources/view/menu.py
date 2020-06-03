@@ -45,34 +45,41 @@ def error_no_stations_found():
     log.footer('Press a key to quit...', True )
     input('...')
 
+def fn_exec( choice ):
+    num = 1
+    for title in menu:
+        for option in title[1]:
+            if num == choice:
+                option[1]()
+                return True
+            num += 1
+
 def main_menu():
     while True:  # Main menu
-        n = 1
+        num = 1
         log.header('MAIN MENU', True )
         for el in menu:
             log.console(f'\t{el[0]}', True)
             for option in el[1]:
                 title, fn = option[0], option[1]
-                log.console(f'\t\t{n}) {title}' ,True)
-                n += 1
+                log.console(f'\t\t{num}) {title}', True)
+                num += 1
             print('')
-
-        log.console(f'\tChoose one of the following options: 1, 2, 3 ... {n-1}', True )
+        log.console(f'\tChoose one of the following options: 1...{num-1}', True )
         log.console("\tPress 'q' or 'Q' to quit...", True )
-
         log.footer('Your choice is ?', True )
-        choice = ask.ask(' ? ', False)  # Make a choice
 
-        if choice in config.answer_quit:
+        answ = ask.ask(' ? ', False)  # Make a choice
+
+        if answ in config.answer_quit:
             break
         else:
-            c, n = int(choice), 1
-            for el in menu:
-                for option in el[1]:
-                    print(n)
-                    if n == c:
-                        print( n, c )
-                        option[1]()
-                        break
-                        break
-                    n += 1
+            try:
+                choice = int(answ)
+            except ValueError:
+                log.console(f'\nOption "{answ}" unknown...', True ) # Input was not a number
+            else:
+                if choice in range( 1, num ):
+                    ok = fn_exec(choice)
+                else:
+                    log.console(f'\nOption "{answ}" out of reach', True )

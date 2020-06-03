@@ -13,6 +13,7 @@ import view.txt as view_txt
 import knmi.model.daydata as daydata
 import view.translate as tr
 import numpy as np
+import model.utils as utils
 
 def ent_to_title(ent):
     e = ent.strip().upper()
@@ -86,7 +87,7 @@ def knmi_stations(l, kol = 4, kol_width = 20):
 
     return content
 
-def txt_main(day):
+def txt_main( day ):
     stn, ymd, ddvec, fhvec, fg, fhx,\
     fhxh, fhn, fhnh, fxx, fxxh, tg,\
     tn, tnh, tx, txh, t10n, t10nh,\
@@ -185,15 +186,20 @@ def process_time_ext(txt, t_ns):
     # Make nice output. Give emthpy string if 0
     # Only print to screen when counted amount > 0
     txt += ': '
-    if dag  > 0: txt += f'{dag} {"days" if dag>1 else "day"} '
-    if uur  > 0: txt += f'{uur} {"hours" if uur>1 else "hour"} '
-    if min  > 0: txt += f'{min} {"minutes" if min>1 else "minute"} '
-    if sec  > 0: txt += f'{sec} {"seconds" if sec>1 else "second"} '
-    if mill > 0: txt += f'{mill} {"milliseconds" if mill>1 else "millisecond"} '
+    if dag > 0: txt += dag + (' days '    if dag > 1 else ' day ')
+    if uur > 0: txt += uur + (' hours '   if uur > 1 else ' hour ')
+    if min > 0: txt += min + (' minutes ' if min > 1 else ' minute ')
+    
+    smile = utils.add_zero_less_1000(mill)
+    if sec > 0:
+        txt += f'{sec}.{smile} ' + ('seconds ' if sec > 1 else 'second ')
+    else:
+        txt += f'0.{smile} second '
+
     # if micr > 0: txt += f'{micr} {"microseconds" if micr>1 else "microsecond"} '
     # if nano > 0: txt += f'{nano} {"nanoseconds" if nano>1 else "nanosecond"} '
 
-    return '\n' + txt + '\n'
+    return txt
 
 def process_time_s( txt_start, start_ns ):
     return f'{txt_start} {(time.time_ns() - start_ns) / 1000000000:.4f} seconds'

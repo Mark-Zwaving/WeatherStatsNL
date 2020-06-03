@@ -33,11 +33,28 @@ def quit_menu(l):
     else:
         return False
 
+# TODO testing
+def add_zero_less_x(d, x):
+    s = str(d)
+    n = x - len(s)
+    while n > 0:
+        s = f'0{s}'
+    return s
+
 def add_zero_less_ten(d):
     if int(d) < 10:
         return f'0{d}'
     else:
         return f'{d}'
+
+def add_zero_less_1000(d):
+    s = str(d)
+    n = len(s)
+    if n == 1:
+        return f'00{s}'
+    elif n == 2:
+        return f'0{s}'
+    return s
 
 def list_dates_range( sd, ed ):
     l = []

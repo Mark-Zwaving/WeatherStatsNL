@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.9"
+__version__    =  "0.1.0"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -59,7 +59,6 @@ def process_knmi_dayvalues_selected():
             break
 
     log.footer('END DOWNLOAD STATION(s) KNMI DATA DAY VALUES...', True )
-    control_ask.ask_back_to_main_menu()
 
 # Menu choice 3
 def get_dayvalues_by_date():
