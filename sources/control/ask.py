@@ -115,6 +115,43 @@ def ask_for_entities( txt, space=True):
             log.console(' ')
     return l
 
+def ask_for_yn( txt, space=True ):
+    l = ['yes', 'no']
+    while True:
+        log.console(txt, True)
+        log.console('\t1) Yes', True)
+        log.console('\t2) No', True)
+        log.console("Press 'q' or 'Q' to go back to the main menu")
+
+        answ = ask(' ? ', space)
+
+        if answ in config.answer_quit:
+            return config.answer_quit
+        elif not answ:
+            pass
+        else:
+            try:
+                answi = int(answ)
+            except ValueError:
+                # Input was not a number
+                answl = answ.lower()
+                if answl in config.answer_yes:
+                    return config.answer_yes
+                elif answl in config.answer_no:
+                    return config.answer_no
+            else:
+                # Input is a number
+                if answi in [1,2]:
+                    if answi == 1:
+                        return config.answer_yes
+                    elif answi == 2:
+                        return config.answer_no
+                else:
+                    log.console(f'\nOption "{answ}" out of reach', True )
+                    continue
+
+        log.console(f'Unknown option: {answ} ? \nTry again.', True)
+
 def ask_for_one_station( txt, space=True):
     while True:
         log.console(txt, True)
@@ -263,15 +300,21 @@ def ask_for_file_type(txt, space=True):
     l = ['txt', 'html', 'cmd']
     return ask_type_options(txt, 'file', l, space)
 
+
+
 def ask_for_graph_type(txt, space=True):
     l = ['line', 'bar']
     return ask_type_options(txt, 'graph', l, space)
 
-def ask_for_file_name(txt, space=True):
+def ask_for_file_name(txt, base_name='', space=True):
     log.console(txt, True)
     log.console('Press <enter> for no given name. Default name will be used', True)
 
-    return ask(' ? ', space)
+    answ = ask(' ? ', space)
+
+    if not answ:
+        now  = utils.now_act_for_file()
+        name = f'{base_name}-{now}'
 
 def ask_back_to_main_menu(space=True):
     log.console("Press a 'key' to go back to the main menu...", space)

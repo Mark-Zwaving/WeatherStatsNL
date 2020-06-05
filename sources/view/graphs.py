@@ -111,12 +111,12 @@ def plot( stations, entities, sd, ed, title, ylable, path, graph ):
                     # Postion txt
                     diff = text_diff( val )
                     if graph == 'bar': # No negative values for when graph is a bar
-                        text = np.array( [fix.ent(v, el) if v > 0.0 else '' for v in datl] )
+                        text = np.array( [fix.value(v, el) for v in datl] )
                     elif graph == 'line':
                         text = np.array( [fix.ent(v, el) for v in datl] )
 
                     for d, v, t in zip( ymd, val, text ):
-                        plt.text( d, v+diff, t, fontsize='small', color='black',
+                        plt.text( d, v+diff, t, fontsize='x-small', color='#555555',
                                   horizontalalignment='center', verticalalignment='top',
                                   alpha=0.8
                                 )
@@ -124,7 +124,7 @@ def plot( stations, entities, sd, ed, title, ylable, path, graph ):
             print('Read not oke in graphs.py -> plot')
 
     plt.title( title )
-    plt.xlabel( tr.txt('Dates'), color='#555555', fontsize='small', fontvariant='small-caps' )
+    plt.xlabel( tr.txt('DATES'), color='#555555', fontsize='small', fontvariant='small-caps' )
     plt.ylabel( ylable, color='#555555', fontsize='small' )
     plt.grid( color='#cccccc', linestyle='dotted', linewidth=1 )
     plt.xticks( ymd, rotation=45, color='gray', fontsize='small' )

@@ -186,10 +186,10 @@ def process_time_ext(txt, t_ns):
     # Make nice output. Give emthpy string if 0
     # Only print to screen when counted amount > 0
     txt += ': '
-    if dag > 0: txt += dag + (' days '    if dag > 1 else ' day ')
-    if uur > 0: txt += uur + (' hours '   if uur > 1 else ' hour ')
-    if min > 0: txt += min + (' minutes ' if min > 1 else ' minute ')
-    
+    if dag > 0: txt += str(dag) + (' days '    if dag > 1 else ' day ')
+    if uur > 0: txt += str(uur) + (' hours '   if uur > 1 else ' hour ')
+    if min > 0: txt += str(min) + (' minutes ' if min > 1 else ' minute ')
+
     smile = utils.add_zero_less_1000(mill)
     if sec > 0:
         txt += f'{sec}.{smile} ' + ('seconds ' if sec > 1 else 'second ')

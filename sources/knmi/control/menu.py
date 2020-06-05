@@ -85,13 +85,11 @@ def get_dayvalues_by_date():
                         ok, name = True, False
                         if type != 'cmd':
                             # Ask for a file name
-                            name = control_ask.ask_for_file_name(f'Give a name for the {type} file ? <optional> ', True)
+                            name = control_ask.ask_for_file_name( f'Give a name for the {type} file ? <optional> ',
+                                                                  f'dayvalues-{yyyymmdd}',
+                                                                  True )
                             if utils.quit_menu(name):
                                 break
-                            if not name:
-                                now  = utils.now_act_for_file()
-                                name = f'dayvalues-{yyyymmdd}-{now}'
-
                             name += f'.{type}'
 
                         if ok:
@@ -194,38 +192,33 @@ def graph_period():
         if utils.quit_menu(graph):
             break
 
-        name = control_ask.ask_for_file_name('Give a name for the image file ? <optional>', True)
+        name = control_ask.ask_for_file_name( 'Give a name for the image file ? <optional>',
+                                              f'period-{s_ymd}-{e_ymd}',
+                                              True )
         if utils.quit_menu(name):
             break
 
         log.console('Fill in the parameters for the image', True)
         title  = control_ask.ask_txt('Give a title for the graph ? ', space=False)
         ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ', space=False)
-        more   = control_ask.ask_type_options(
-                    'Use default values from config.py ?',
-                    '', ['yes', 'no'], space=True
-                    )
 
-        config.plot_defaults = False if more.lower() in config.answer_no else True
+        more   = control_ask.ask_for_yn('Use default values ?\nSee file -> config.py...', space=False)
+        if utils.quit_menu(more):
+            break
 
+        config.plot_defaults = False if more == config.answer_no else True
         if config.plot_defaults == False:
             config.plot_width  = control_ask.ask_txt('Give the width (in pixels) for the graph ? ', space=False)
             config.plot_height = control_ask.ask_txt('Give the height (in pixels) for the graph ? ', space=False)
-            config.plot_marker_txt = control_ask.ask_type_options(
-                                'Values next to the markers ? y or n ? ', '',
-                                ['yess', 'no'], space=False )
+            config.plot_marker_txt = control_ask.ask_for_yn('Values next to the markers ? ', space=False )
             config.plot_image_type = control_ask.ask_type_options(
                                 'What type of image ? ', 'image',
                                 ['png', 'jpg', 'ps', 'pdf', 'svg'],
                                 space=False )
-
             dpi = control_ask.ask_txt('Give the dpi ? ', space=False)
 
         st = time.time_ns()
         log.header( 'PREPARING IMAGES...', True )
-
-        if not name:
-            name = graph.name( s_ymd, e_ymd, stations, entities )
         path = utils.path( config.dir_img_period, name + f'.{config.plot_image_type}' )
         view_graph.plot( stations, entities, s_ymd, e_ymd, title, ylabel, path, graph )
 
