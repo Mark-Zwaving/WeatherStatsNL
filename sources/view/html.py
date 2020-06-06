@@ -15,18 +15,19 @@ import view.icon as icon
 import view.translate as tr
 import view.txt as view_txt
 import knmi.view.fix as fix
+import model.utils as utils
 import knmi.model.daydata as daydata
 import knmi.view.dayvalues as dayvalues
 
 class Template():
     ''' Class to make a html page based on the template - template.html'''
-    charset     = 'UTF-8'
-    author      = 'WeatherstatsNL'
-    viewport    = 'width=device-width, initial-scale=1.0, shrink-to-fit=no'
-    script_file = './js/js.js'
-    script_code = ''
-    css_file    = './css/css.css'
-    css_code    = ''
+    charset      = 'UTF-8'
+    author       = 'WeatherstatsNL'
+    viewport     = 'width=device-width, initial-scale=1.0, shrink-to-fit=no'
+    script_files = ['./js/js.js']
+    script_code  = ''
+    css_files    = ['./css/css.css']
+    css_code     = ''
 
     def __init__(self, title='WeatherstatsNL - template',
                        header='Your Title',
@@ -41,10 +42,16 @@ class Template():
         dt    = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
         self.file_name = f'{title}_{dt}.html'
 
-        self.template  = os.path.abspath(os.path.join(config.dir_html_templates, 'template.html'))
+        self.template  = utils.path( config.dir_templates, 'template.html' )
         self.base_dir  = os.path.dirname(os.path.abspath(__file__))
-        self.file_dir  = config.dir_html_dayvalues
-        self.file_path = os.path.abspath(os.path.join(self.file_dir, self.file_name))
+        self.file_dir  = self.base_dir
+        self.file_path = utils.path( self.file_dir, self.file_name )
+
+    def add_css_file(self, dir='./css/', name='css.css'):
+        self.css_files.append(f'{dir}{name}')
+
+    def add_script_file(self, dir='./js/', name='js.js'):
+        self.script_files.append(f'{dir}{name}')
 
     def path(self, dir_map=False, file_name=False):
         if file_name:
@@ -52,10 +59,16 @@ class Template():
         if dir_map:
             self.file_dir  = dir_map
 
-        self.file_path = os.path.abspath(os.path.join(self.file_dir, self.file_name))
+        self.file_path = f'{self.file_dir}{self.file_name}'
 
-    def create(self, dir_map=False, file_name=False):
-        self.path(dir_map, file_name)
+    def create(self):
+        css = ''
+        for css_file in self.css_files:
+            css += f'<link rel="stylesheet" type="text/css" href="{css_file}">\n'
+        js = ''
+        for js_file in self.script_files:
+            js += f'<script src="{js_file}"> </script>\n'
+
         ok, self.html = io.read( self.template )
         if ok:
             self.html = self.html.replace('{{%now%}}', str( datetime.datetime.now() ))
@@ -63,23 +76,22 @@ class Template():
             self.html = self.html.replace('{{%charset%}}', self.charset)
             self.html = self.html.replace('{{%author%}}', self.author)
             self.html = self.html.replace('{{%viewport%}}', self.viewport)
-            self.html = self.html.replace('{{%css_file%}}', self.css_file)
+            self.html = self.html.replace('{{%css_files%}}', css)
+            self.html = self.html.replace('{{%css_code%}}', self.css_code)
             self.html = self.html.replace('{{%header%}}', self.header)
             self.html = self.html.replace('{{%main%}}', self.main)
             self.html = self.html.replace('{{%footer%}}', self.footer)
-            self.html = self.html.replace('{{%script_file%}}', self.script_file)
+            self.html = self.html.replace('{{%script_files%}}', js)
             self.html = self.html.replace('{{%script_code%}}', self.script_code)
-            self.html = self.html.replace('{{%css_code%}}', self.css_code)
 
         return ok
 
-    def save(self, dir_map=False, file_name=False):
+    def save(self):
         ok = False
 
         try:
-            ok = self.create( dir_map, file_name )
+            ok = self.create( )
             if ok:
-                print(self.file_path)
                 ok = io.write( self.file_path, self.html )
             else:
                 print('Error in ok - file not created')

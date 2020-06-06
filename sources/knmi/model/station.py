@@ -26,7 +26,7 @@ class Station:
         self.dayvalues_empthy_val   = config.knmi_dayvalues_empthy_val
         self.dayvalues_notification = config.knmi_dayvalues_notification
 
-        self.dir_dayvalues      = config.dir_thirdparty_knmi_dayvalues
+        self.dir_dayvalues      = config.dir_knmi_dayvalues
         self.file_zip_dayvalues = os.path.join( self.dir_dayvalues, f'etmgeg_{self.wmo}.zip' )
         self.file_txt_dayvalues = os.path.join( self.dir_dayvalues, f'etmgeg_{self.wmo}.txt' )
 

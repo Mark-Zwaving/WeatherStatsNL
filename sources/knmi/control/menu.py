@@ -30,7 +30,7 @@ def process_knmi_dayvalues_all():
     st = time.time_ns()
     for station in config.stations:
         daydata.process_data( station )
-    log.console(view_txt.menu_process_time(st), True)
+    log.console(view_txt.menu_process_time(st) + '\n', True)
     log.footer('END DOWNLOADING ALL STATIONS KNMI DATA DAY VALUES', True)
     control_ask.ask_back_to_main_menu()
 
@@ -48,7 +48,7 @@ def process_knmi_dayvalues_selected():
         st = time.time_ns()
         for station in stations:
             daydata.process_data( station )
-        log.console(view_txt.menu_process_time(st), True)
+        log.console(view_txt.menu_process_time(st) + '\n', True)
 
         # Always ask for going back
         if stations.size != config.stations.size:
@@ -69,93 +69,92 @@ def get_dayvalues_by_date():
         station = control_ask.ask_for_one_station('Select a weather station ? ', True)
         if utils.quit_menu(station):
             break
-        else:
-            log.console(f'Loading data {station.place} ...')
-            ok, data = daydata.read( station )
-            if ok:
-                txt = '\nSelect a date <yyyymmdd> ?\n'
-                yyyymmdd = control_ask.ask_for_date_with_check_data(station, data, txt, True)
-                if utils.quit_menu(yyyymmdd):
-                    break
-                else:
-                    type = control_ask.ask_for_file_type('Select filetype ? ')
-                    if utils.quit_menu(type):
-                        break
-                    else:
-                        ok, name = True, False
-                        if type != 'cmd':
-                            # Ask for a file name
-                            name = control_ask.ask_for_file_name( f'Give a name for the {type} file ? <optional> ',
-                                                                  f'dayvalues-{yyyymmdd}',
-                                                                  True )
-                            if utils.quit_menu(name):
-                                break
-                            name += f'.{type}'
 
-                        if ok:
-                            st = time.time_ns()
-                            log.header('SEARCHING FOR AND PREPARING DAY VALUES', True)
-                            log.console(f'Station: {station.wmo} {station.place}', True)
-                            log.console(f'Date: {utils.ymd_to_txt(yyyymmdd)}', True)
+        log.console(f'Loading data {station.place} ...')
+        ok, data = daydata.read( station )
+        if not ok:
+            log.console( 'Error reading data!', station.place, yyyymmdd )
+            break
 
-                            day = data[np.where(data[:,daydata.YYYYMMDD] == int(yyyymmdd))][0]
+        txt = '\nSelect a date <yyyymmdd> ?\n'
+        yyyymmdd = control_ask.ask_for_date_with_check_data(station, data, txt, True)
+        if utils.quit_menu(yyyymmdd):
+            break
 
-                            if ok:
-                                txt_date = utils.ymd_to_txt(yyyymmdd)
-                                footer = station.dayvalues_notification
+        type = control_ask.ask_for_file_type('Select filetype ? ')
+        if utils.quit_menu(type):
+            break
 
-                                if type == 'html':
-                                    header  = f'<i class="text-info fas fa-home"></i> '
-                                    header += f'{station.wmo} - {station.place} '
-                                    header += f'{station.province} - {txt_date} '
+        # Ask for a file name
+        name = False
+        if type != 'cmd':
+            name = control_ask.ask_for_file_name( f'Give a name for the {type} file ? <optional> ',
+                                                  f'dayvalues-{yyyymmdd}',
+                                                  True )
+            if utils.quit_menu(name):
+                break
+            name += f'.{type}'
 
-                                    page = view_html.Template()
-                                    page.title  = f'{station.place}-{yyyymmdd}'
-                                    page.header = header
-                                    page.main   = view_html.main_ent( day )
-                                    page.footer = footer
-                                    page.file_name = name
+        st = time.time_ns()
+        log.header('SEARCHING FOR AND PREPARING DAY VALUES', True)
+        log.console(f'Station: {station.wmo} {station.place}', True)
+        log.console(f'Date: {utils.ymd_to_txt(yyyymmdd)}', True)
 
-                                    et = False
-                                    if page.save(): # Error
-                                        et = time.time_ns()
-                                        fopen = control_ask.ask_to_open_with_app(f'Open the file {name} in your browser ?', True)
-                                        if fopen:
-                                            webbrowser.open_new_tab( page.file_path ) # Opens in default browser
-                                    else:
-                                        et = time.time_ns()
+        day = data[np.where(data[:,daydata.YYYYMMDD] == int(yyyymmdd))][0]
+        txt_date = utils.ymd_to_txt(yyyymmdd)
+        footer = station.dayvalues_notification
 
-                                elif type == 'txt':
-                                    title = txt_date
-                                    main  = view_dayvalues.txt_main( day )
-                                    txt   = f'{title}\n{main}'
-                                    path  = utils.path( config.dir_txt_dayvalues, name )
+        # Make output
+        if type == 'html':
+            header  = f'<i class="text-info fas fa-home"></i> '
+            header += f'{station.wmo} - {station.place} '
+            header += f'{station.province} - {txt_date} '
 
-                                    if io.save(path, txt):
-                                        et = time.time_ns()
-                                        fopen = control_ask.ask_to_open_with_app(f'Open the file {path} in your browser ?', True)
-                                        if fopen:
-                                            webbrowser.open_new_tab(path)
-                                    else:
-                                        et = time.time_ns()
+            page = view_html.Template()
+            page.title  = f'{station.place}-{yyyymmdd}'
+            page.header = header
+            page.main   = view_html.main_ent( day )
+            page.footer = footer
+            page.file_name = name
 
-                                elif type == 'image':
-                                    title = txt_date
-                                    main  = view_dayvalues.txt_main( day )
-                                    txt   = f'{title}\n{main}'
-                                    path  = utils.path( config.dir_txt_dayvalues, name )
+            et = False
+            if page.save(): # Error
+                et = time.time_ns()
+                fopen = control_ask.ask_to_open_with_app(f'Open the file {name} in your browser ?', True)
+                if fopen:
+                    webbrowser.open_new_tab( page.file_path ) # Opens in default browser
+            else:
+                et = time.time_ns()
 
-                                    if io.save(path, txt):
-                                        et = time.time_ns()
-                                        fopen = control_ask.ask_to_open_with_app(f'Open the file {path} in your browser ?', True)
-                                        if fopen:
-                                            webbrowser.open_new_tab(path)
-                                    else:
-                                        et = time.time_ns()
+        elif type == 'txt':
+            title = txt_date
+            main  = view_dayvalues.txt_main( day )
+            txt   = f'{title}\n{main}'
+            path  = utils.path( config.dir_txt_dayvalues, name )
 
-                                log.console(view_txt.menu_process_time(st), True)
-                            else:
-                                log.console( 'Error reading data!', station.place, yyyymmdd )
+            if io.save(path, txt):
+                et = time.time_ns()
+                fopen = control_ask.ask_to_open_with_app(f'Open the file {path} in your browser ?', True)
+                if fopen:
+                    webbrowser.open_new_tab(path)
+            else:
+                et = time.time_ns()
+
+        elif type == 'image':
+            title = txt_date
+            main  = view_dayvalues.txt_main( day )
+            txt   = f'{title}\n{main}'
+            path  = utils.path( config.dir_txt_dayvalues, name )
+
+            if io.save(path, txt):
+                et = time.time_ns()
+                fopen = control_ask.ask_to_open_with_app(f'Open the file {path} in your browser ?', True)
+                if fopen:
+                    webbrowser.open_new_tab(path)
+            else:
+                et = time.time_ns()
+
+        log.console(view_txt.menu_process_time(st) + '\n', True)
 
         # Always ask for going back
         again = control_ask.ask_again(f'Do you want to select another station and date ?', True)
@@ -222,7 +221,7 @@ def graph_period():
         path = utils.path( config.dir_img_period, name + f'.{config.plot_image_type}' )
         view_graph.plot( stations, entities, s_ymd, e_ymd, title, ylabel, path, graph )
 
-        log.console(view_txt.menu_process_time(st), True)
+        log.console(view_txt.menu_process_time(st) + '\n', True)
 
         fopen = control_ask.ask_to_open_with_app( f'Open the image {name} in your browser ?', True)
         if fopen:
@@ -245,28 +244,29 @@ def table_winterstats():
         ok, sd, ed, stations, type, name = control_ask.ask_period_stations_type_name(True)
 
         if not ok:
+            log.console('Something went wrong ...')
             break
-        else:
-            log.header(f'CALCULATING WINTER STATISTICS...', True)
 
-            st = time.time_ns()
-            path = winterstats.calculation( stations, sd, ed, name, type )
-            log.console(view_txt.menu_process_time(st), True)
+        log.header(f'CALCULATING WINTER STATISTICS...', True)
 
-            if type != 'cmd':
-                fopen = control_ask.ask_to_open_with_app(f'Open the {type} in your browser/application ?', True)
-                if fopen:
-                    webbrowser.open_new_tab(path)
+        st = time.time_ns()
+        path = winterstats.calculate( stations, sd, ed, name, type )
+        log.console(view_txt.menu_process_time(st) + '\n', True)
 
-            # Always ask for going back
-            again = control_ask.ask_again(f'Do you want to make another winterstatistics table ?', True)
-            if utils.quit_menu(again):
-                break
+        if type != 'cmd':
+            fopen = control_ask.ask_to_open_with_app(f'Open the {type} in your browser/application ?', True)
+            if fopen:
+                webbrowser.open_new_tab(path)
+
+        # Always ask for going back
+        again = control_ask.ask_again(f'Do you want to make another winterstatistics table ?', True)
+        if utils.quit_menu(again):
+            break
 
     log.footer(f'END CALCULATE WINTER STATISTICS...', True)
 
 # Menu choice 6
-def table_zomerstats():
+def table_summerstats():
     '''Function makes calculations for winterstatistics'''
     while True:
         log.header('START CALCULATE SUMMER STATISTICS...', True)
@@ -277,8 +277,8 @@ def table_zomerstats():
             log.header('CALCULATING WINTER STATISTICS...', True)
 
             st = time.time_ns()
-            path = summerstats.calculation( stations, sd, ed, name, type )
-            log.console(view_txt.menu_process_time(st), True)
+            path = summerstats.calculate( stations, sd, ed, name, type )
+            log.console(view_txt.menu_process_time(st) + '\n', True)
 
             if type != 'cmd':
                 fopen = control_ask.ask_to_open_with_app(f'Open the {type} in your browser/application ?', True)
@@ -305,7 +305,7 @@ def table_heatwaves():
 
             st = time.time_ns()
             # path = hs.alg_heatwaves(l, sd, ed, type, name)
-            log.console(view_txt.menu_process_time(st), True)
+            log.console(view_txt.menu_process_time(st) + '\n', True)
 
             if type != 'cmd':
                 fopen = control_ask.ask_to_open_with_app(f'Open the {type} in your browser/application ?', True)
@@ -331,7 +331,7 @@ def table_allstats():
 
             st = time.time_ns()
             # path = alls.alg_allstats(stations, sd, ed, name, type)
-            log.console(view_txt.menu_process_time(st), True)
+            log.console(view_txt.menu_process_time(st) + '\n', True)
 
             if type != 'cmd':
                 fopen = control_ask.ask_to_open_with_app(f'Open the {type} in your browser/application ?', True)
@@ -358,7 +358,7 @@ def table_allextremes():
 
             st = time.time_ns()
             # path = ae.alg_allextremes(l, sd, ed, name, type)
-            log.console(view_txt.menu_process_time(st), True)
+            log.console(view_txt.menu_process_time(st) + '\n', True)
 
             if type != 'cmd':
                 fopen = control_ask.ask_to_open_with_app(f'Open the {type} in your browser/application ?', True)

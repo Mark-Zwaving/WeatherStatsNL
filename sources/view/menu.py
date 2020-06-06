@@ -31,9 +31,9 @@ menu = [
     ],
     [ 'STATISTICS TABLES', [
             [ 'Winterstatistics', control_menu.table_winterstats ],
-            [ 'Summerstatistics', control_menu.table_zomerstats  ],
+            [ 'Summerstatistics', control_menu.table_summerstats  ],
             [ 'Heatwaves', control_menu.table_heatwaves ],
-            [ 'Winter- and summerstatistics', control_menu.table_allstats ],
+            [ 'All winter- and summerstatistics', control_menu.table_allstats ],
             [ 'Extremes', control_menu.table_allextremes ]
         ]
     ]
@@ -51,7 +51,6 @@ def fn_exec( choice ):
         for option in title[1]:
             if num == choice:
                 option[1]()
-                return True
             num += 1
 
 def main_menu():
@@ -80,6 +79,6 @@ def main_menu():
                 log.console(f'\nOption "{answ}" unknown...', True ) # Input was not a number
             else:
                 if choice in range( 1, num ):
-                    ok = fn_exec(choice)
+                    fn_exec(choice)
                 else:
                     log.console(f'\nOption "{answ}" out of reach', True )

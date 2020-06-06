@@ -86,6 +86,10 @@ def ent_ndx( ndx ):
     '''Get text by index from array entities'''
     return entities[ndx]
 
+def list_ent( data, ent ):
+    ndx = ndx_ent(ent)
+    return data[:,ndx]
+
 def day( station, yyyymmdd ):
     '''Function return a list of the dayvalues'''
     ok, data = False, np.array([])

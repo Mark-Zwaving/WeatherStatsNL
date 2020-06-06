@@ -10,26 +10,29 @@ __status__     =  "Development"
 
 # Application maps
 import os, sys, numpy as np
-dir_app             =  os.path.dirname( os.path.abspath(__file__) )
-dir_sources         =  os.path.abspath( os.path.join(dir_app, 'sources') )
-dir_view            =  os.path.abspath( os.path.join(dir_app, 'view') )
-dir_control         =  os.path.abspath( os.path.join(dir_app, 'control') )
-dir_model           =  os.path.abspath( os.path.join(dir_app, 'model') )
-dir_data            =  os.path.abspath( os.path.join(dir_app, 'data') )
-dir_txt             =  os.path.abspath( os.path.join(dir_data, 'text' ) )
-dir_html            =  os.path.abspath( os.path.join(dir_data, 'html' ) )
-dir_img             =  os.path.abspath( os.path.join(dir_data, 'images' ) )
-dir_thirdparty      =  os.path.abspath( os.path.join(dir_data, 'thirdparty') )
-dir_img_dayvalues   =  os.path.abspath( os.path.join(dir_img, 'dayvalues' ) )
-dir_img_period      =  os.path.abspath( os.path.join(dir_img, 'period' ) )
-dir_txt_dayvalues   =  os.path.abspath( os.path.join(dir_txt, 'dayvalues' ) )
-dir_html_dayvalues  =  os.path.abspath( os.path.join(dir_html, 'dayvalues' ) )
-dir_html_templates  =  os.path.abspath( os.path.join(dir_html, 'templates' ) )
-dir_html_winterstats  =  os.path.abspath( os.path.join(dir_html, 'winterstats' ) )
-dir_thirdparty_css  =  os.path.abspath( os.path.join(dir_thirdparty, 'css') )
-dir_thirdparty_js   =  os.path.abspath( os.path.join(dir_thirdparty, 'js') )
-dir_thirdparty_knmi =  os.path.abspath( os.path.join(dir_thirdparty, 'knmi' ) )
-dir_thirdparty_knmi_dayvalues = os.path.abspath( os.path.join(dir_thirdparty_knmi, 'dayvalues' ) )
+dir_app              =  os.path.dirname( os.path.abspath(__file__) )
+dir_sources          =  os.path.abspath( os.path.join(dir_app, 'sources') )
+dir_view             =  os.path.abspath( os.path.join(dir_app, 'view') )
+dir_control          =  os.path.abspath( os.path.join(dir_app, 'control') )
+dir_model            =  os.path.abspath( os.path.join(dir_app, 'model') )
+dir_data             =  os.path.abspath( os.path.join(dir_app, 'data') )
+
+dir_txt              =  os.path.abspath( os.path.join(dir_data, 'text' ) )
+dir_html             =  os.path.abspath( os.path.join(dir_data, 'html' ) )
+dir_img              =  os.path.abspath( os.path.join(dir_data, 'images' ) )
+dir_templates        =  os.path.abspath( os.path.join(dir_data, 'templates' ) )
+dir_knmi             =  os.path.abspath( os.path.join(dir_data, 'knmi' ) )
+dir_thirdparty       =  os.path.abspath( os.path.join(dir_data, 'thirdparty') )
+
+dir_knmi_dayvalues   =  os.path.abspath( os.path.join(dir_knmi, 'dayvalues' ) )
+dir_img_dayvalues    =  os.path.abspath( os.path.join(dir_img, 'dayvalues' ) )
+dir_img_period       =  os.path.abspath( os.path.join(dir_img, 'period' ) )
+dir_txt_dayvalues    =  os.path.abspath( os.path.join(dir_txt, 'dayvalues' ) )
+dir_html_dayvalues   =  os.path.abspath( os.path.join(dir_html, 'dayvalues' ) )
+dir_html_winterstats =  os.path.abspath( os.path.join(dir_html, 'winterstats' ) )
+dir_txt_winterstats  =  os.path.abspath( os.path.join(dir_txt, 'winterstats' ) )
+dir_thirdparty_css   =  os.path.abspath( os.path.join(dir_thirdparty, 'css') )
+dir_thirdparty_js    =  os.path.abspath( os.path.join(dir_thirdparty, 'js') )
 
 # Give language for app. Under contruction...
 # 'NL' for Netherlands/Dutch, 'EN' for English, Default is English
@@ -58,7 +61,7 @@ Maastricht.dayvalues_skip_rows    = knmi_dayvalues_skip_rows  # (=49, KNMI)
 Maastricht.dayvalues_dummy_val    = knmi_dayvalues_dummy_val
 Maastricht.dayvalues_empthy_val   = knmi_dayvalues_empthy_val
 Maastricht.dayvalues_notification = knmi_dayvalues_notification
-Maastricht.dir_dayvalues          = dir_thirdparty_knmi_dayvalues
+Maastricht.dir_dayvalues          = dir_knmi_dayvalues
 Maastricht.file_zip_dayvalues     = os.path.join( Maastricht.dir_dayvalues, 'etmgeg_380.zip' )
 Maastricht.file_txt_dayvalues     = os.path.join( Maastricht.dir_dayvalues, 'etmgeg_380.txt' )
 Maastricht.dayvalues_url          = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/daggegevens/etmgeg_380.zip'
@@ -73,7 +76,7 @@ stations = np.append(stations, Station('249', 'Berkhout', 'Noord-Holland', ''))
 stations = np.append(stations, Station('251', 'Hoorn Terschelling', 'Friesland', ''))
 stations = np.append(stations, Station('257', 'Wijk aan Zee', 'Noord-Holland', ''))
 stations = np.append(stations, Station('260', 'De Bilt', 'Utrecht', ''))
-stations = np.append(stations, Station('265', 'Soesterberg', 'Utrecht', ''))
+# stations = np.append(stations, Station('265', 'Soesterberg', 'Utrecht', '')) # Read error 
 stations = np.append(stations, Station('267', 'Stavoren','Friesland', ''))
 stations = np.append(stations, Station('269', 'Lelystad','Flevoland', ''))
 stations = np.append(stations, Station('270', 'Leeuwarden','Friesland', ''))

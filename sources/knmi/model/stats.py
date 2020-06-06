@@ -5,12 +5,13 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.3"
+__version__    =  "0.0.6"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import numpy as np
+import config
 import knmi.model.daydata as daydata
+import numpy as np
 
 # Allowed operators
 operators = np.array( [
@@ -24,14 +25,14 @@ is_operator = lambda operator : (operator.lower() in operators)
 
 def period( data, sdate, edate ):
     '''Function selects days by start and end dates'''
-    ymd = daydata.ndx_ent('YYYYMMDD')
-    sel = np.where(( data[:,ymd] >= int(sdate) ) & ( data[:,ymd] <= int(edate) ))
+    sdate, edate, ymd = int(sdate), int(edate), daydata.ndx_ent('YYYYMMDD')
+    sel = np.where( (data[:,ymd] >= sdate) & (data[:,ymd] <= edate) )
     return data[sel]
 
 def process_list( data, entity ):
     '''Function processes data values on false values'''
     key  = daydata.ndx_ent( entity )
-    sel = np.where( data[:,key] != daydata.data_dummy_val ) # Remove false values
+    sel = np.where( data[:,key] != config.knmi_dayvalues_dummy_val ) # Remove false values
 
     return data[sel], key
 
@@ -74,11 +75,13 @@ def terms_days( data, entity, operator, value ):
     elif op in ['eq', '==']: sel = np.where( data[:,ent] == ival )
     elif op in ['lt',  '<']: sel = np.where( data[:,ent] <  ival )
     elif op in ['le', '<=']: sel = np.where( data[:,ent] <= ival )
-    elif op in ['ne', '!=', '<>']: sel = np.where( data[:,ent] != ival )
-    else: print('error'); input('?')
+    elif op in ['ne', '!=', '<>']:
+        sel = np.where( data[:,ent] != ival )
+    else: print('error, terms_days()'); input('?')
 
     data = data[sel]
-    sel = np.where( data[:,ent] != daydata.data_dummy_val ) # Remove/empthy false values
+    # Remove/empthy false values
+    sel = np.where( data[:,ent] != config.knmi_dayvalues_dummy_val )
 
     return data[sel]
 

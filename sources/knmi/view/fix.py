@@ -15,7 +15,7 @@ import model.convert as cvt
 def value(val, entity):
     ent = entity.strip().lower()
     # Indexes
-    if ent in ['heat_ndx', 'hellmann']: return round(val)
+    if ent in ['heat_ndx', 'hellmann']: return round(val / 10.0, 1)
     # Temperatures
     elif ent in [ 'tx', 'tn', 'tg', 't10n' ]: return round( float(val) / 10.0, 1 )
     # Airpressure

@@ -115,43 +115,6 @@ def ask_for_entities( txt, space=True):
             log.console(' ')
     return l
 
-def ask_for_yn( txt, space=True ):
-    l = ['yes', 'no']
-    while True:
-        log.console(txt, True)
-        log.console('\t1) Yes', True)
-        log.console('\t2) No', True)
-        log.console("Press 'q' or 'Q' to go back to the main menu")
-
-        answ = ask(' ? ', space)
-
-        if answ in config.answer_quit:
-            return config.answer_quit
-        elif not answ:
-            pass
-        else:
-            try:
-                answi = int(answ)
-            except ValueError:
-                # Input was not a number
-                answl = answ.lower()
-                if answl in config.answer_yes:
-                    return config.answer_yes
-                elif answl in config.answer_no:
-                    return config.answer_no
-            else:
-                # Input is a number
-                if answi in [1,2]:
-                    if answi == 1:
-                        return config.answer_yes
-                    elif answi == 2:
-                        return config.answer_no
-                else:
-                    log.console(f'\nOption "{answ}" out of reach', True )
-                    continue
-
-        log.console(f'Unknown option: {answ} ? \nTry again.', True)
-
 def ask_for_one_station( txt, space=True):
     while True:
         log.console(txt, True)
@@ -274,33 +237,66 @@ def ask_for_date_with_check_data( station, data, txt, space=True ):
             else:
                 return answ
 
-def ask_type_options(txt, type, l, space=True):
+def ask_for_yn( txt, space=True ):
+    l = ['yes', 'no']
     while True:
         log.console(txt, True)
-        for n, el in enumerate(l):
-            log.console(f'\t{n+1}) {el}: {type}', True)
+        log.console('\t1) Yes', True)
+        log.console('\t2) No', True)
         log.console("Press 'q' or 'Q' to go back to the main menu")
 
         answ = ask(' ? ', space)
 
-        if answ:
-            sl = [ str(el) for el in range(len(l)) ]
-            if answ in sl:
-                return l[ int(answ)-1 ]
-            elif answ in config.answer_quit:
-                return config.answer_quit
-            else:
-                answ = answ.lower()
-                if  answ in [el.lower() for el in l]:
-                    return answ
+        if answ in config.answer_quit:
+            return config.answer_quit
+        elif not answ:
+            pass
+        else:
+            try:
+                answi = int(answ)
+            except ValueError: # Input was not a number
+                if answ in config.answer_yes:
+                    return config.answer_yes
+                elif answ in config.answer_no:
+                    return config.answer_no
+            else: # Input is a number
+                if answi in [1,2]:
+                    if answi == 1:
+                        return config.answer_yes
+                    elif answi == 2:
+                        return config.answer_no
 
-        log.console(f'Unknown option: {answ} ? \n', True)
+        log.console(f'Unknown option: {answ} ?\nTry again.', True)
+
+def ask_type_options(txt, type, l, space=True):
+    while True:
+        log.console(txt, True)
+        for n, el in enumerate(l):
+            log.console(f'\t{n+1}) {el} {type}', True)
+        log.console("Press 'q' or 'Q' to go back to the main menu")
+
+        answ = ask(' ? ', space)
+
+        if answ in config.answer_quit:
+            return config.answer_quit
+        elif not answ:
+            pass
+        else:
+            try:
+                answi = int(answ)
+            except ValueError: # Input is not a number
+                if answ in l:
+                    return answ
+            else: # Input is a number
+                answi -= 1
+                if answi in range(len(l)):
+                    return l[answi]
+
+        log.console(f'Unknown option: {answ} ?\nTry again.', True)
 
 def ask_for_file_type(txt, space=True):
     l = ['txt', 'html', 'cmd']
-    return ask_type_options(txt, 'file', l, space)
-
-
+    return ask_type_options(txt, '', l, space)
 
 def ask_for_graph_type(txt, space=True):
     l = ['line', 'bar']
@@ -312,9 +308,11 @@ def ask_for_file_name(txt, base_name='', space=True):
 
     answ = ask(' ? ', space)
 
-    if not answ:
+    if not answ: # Get a name anyway
         now  = utils.now_act_for_file()
-        name = f'{base_name}-{now}'
+        answ = f'{base_name}-{now}'
+
+    return answ
 
 def ask_back_to_main_menu(space=True):
     log.console("Press a 'key' to go back to the main menu...", space)
