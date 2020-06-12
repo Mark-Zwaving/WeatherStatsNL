@@ -87,6 +87,8 @@ def calculate( stations, sd, ed, name=False, type='html' ):
             period = stats.period( data, sd, ed ) # Get days of period
             winter = np.append( winter, Stats( station, period ) ) # Create winterstats object
 
+    log.console(f'Preparing output: {type}', True)
+
     # Update name if there is none yet
     if not name:
         name = f'winter-statistics-{sd}-{ed}'
@@ -137,7 +139,8 @@ def calculate( stations, sd, ed, name=False, type='html' ):
 
     # Calculate values
     for s in winter:
-        log.console(f'Make output: {s.station.place}', True)
+        log.console(f'For: {s.station.place}', True)
+
         tg_gem    = fix.ent( s.tg_gem, 'TG' )
         tx_min    = fix.ent( s.tx_min, 'TX' )
         tg_min    = fix.ent( s.tg_min, 'TG' )

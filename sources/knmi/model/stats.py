@@ -71,10 +71,10 @@ def terms_days( data, entity, operator, value ):
     ival = dd(value)
 
     if   op in ['gt',  '>']: sel = np.where( data[:,ent] >  ival )
-    elif op in ['ge', '>=']: sel = np.where( data[:,ent] >= ival )
+    elif op in ['ge', '>=', '≥']: sel = np.where( data[:,ent] >= ival )
     elif op in ['eq', '==']: sel = np.where( data[:,ent] == ival )
     elif op in ['lt',  '<']: sel = np.where( data[:,ent] <  ival )
-    elif op in ['le', '<=']: sel = np.where( data[:,ent] <= ival )
+    elif op in ['le', '<=', '≤']: sel = np.where( data[:,ent] <= ival )
     elif op in ['ne', '!=', '<>']:
         sel = np.where( data[:,ent] != ival )
     else: print('error, terms_days()'); input('?')
