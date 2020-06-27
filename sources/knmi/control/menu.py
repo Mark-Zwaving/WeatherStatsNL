@@ -163,10 +163,8 @@ def get_dayvalues_by_date():
 
     log.footer('END SEARCHING AND PREPARING DAY VALUES...', True)
 
-
 def select_days():
     pass
-
 
 # Menu choice 4
 def graph_period():
@@ -198,28 +196,32 @@ def graph_period():
             break
 
         log.console('Fill in the parameters for the image', True)
-        title  = control_ask.ask_txt('Give a title for the graph ? ', space=False)
-        ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ', space=False)
+        title  = control_ask.ask_txt('Give a title for the graph ? ')
+        ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ')
 
-        more   = control_ask.ask_for_yn('Use default values ?\nSee file -> config.py...', space=False)
+        more = control_ask.ask_for_yn('Use default values ?\nSee file -> config.py...')
         if utils.quit_menu(more):
             break
 
-        config.plot_defaults = False if more == config.answer_no else True
-        if config.plot_defaults == False:
-            config.plot_width  = control_ask.ask_txt('Give the width (in pixels) for the graph ? ', space=False)
-            config.plot_height = control_ask.ask_txt('Give the height (in pixels) for the graph ? ', space=False)
-            config.plot_marker_txt = control_ask.ask_for_yn('Values next to the markers ? ', space=False )
+        if np.array_equal( more, config.answer_no ):
+            config.plot_width  = control_ask.ask_for_int('Give the width (in pixels) for the graph ? ', space=False)
+            config.plot_height = control_ask.ask_for_int('Give the height (in pixels) for the graph ? ', space=False)
+            answ_yn = control_ask.ask_for_yn('Values next to the markers ? ', space=False )
+            config.plot_marker_txt = 'y' if np.array_equal(answ_yn,config.answer_yes) else 'n'
             config.plot_image_type = control_ask.ask_type_options(
                                 'What type of image ? ', 'image',
                                 ['png', 'jpg', 'ps', 'pdf', 'svg'],
                                 space=False )
-            dpi = control_ask.ask_txt('Give the dpi ? ', space=False)
+            config.plot_dpi = control_ask.ask_for_int('Give the dpi ? ', space=False)
+            config.plot_graph_type = control_ask.ask_type_options(
+                                         'What type of graph ? ', 'graph',
+                                         ['line', 'bar'],
+                                         space=False )
 
         st = time.time_ns()
         log.header( 'PREPARING IMAGES...', True )
         path = utils.path( config.dir_img_period, name + f'.{config.plot_image_type}' )
-        view_graph.plot( stations, entities, s_ymd, e_ymd, title, ylabel, path, graph )
+        view_graph.plot( stations, entities, s_ymd, e_ymd, title, ylabel, path )
 
         log.console(view_txt.menu_process_time(st) + '\n', True)
 

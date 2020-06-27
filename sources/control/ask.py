@@ -37,6 +37,21 @@ def ask_txt(txt='?', space=True):
 
     return answ
 
+def ask_for_int(txt='?', space=True):
+    if space: log.console(' ')
+    while True:
+        answ = re.sub( '\D', '', input(txt).strip() ) # Remove non-digits
+        try:
+            answ_i = int(answ)
+        except ValueError:
+            print('Give a real integer  ... ')
+            continue
+        else:
+            break
+    if space: log.console(' ')
+
+    return answ_i
+
 def pause(s='Paused'):
     ask(s, True)
 

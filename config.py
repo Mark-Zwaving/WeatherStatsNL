@@ -76,7 +76,7 @@ stations = np.append(stations, Station('249', 'Berkhout', 'Noord-Holland', ''))
 stations = np.append(stations, Station('251', 'Hoorn Terschelling', 'Friesland', ''))
 stations = np.append(stations, Station('257', 'Wijk aan Zee', 'Noord-Holland', ''))
 stations = np.append(stations, Station('260', 'De Bilt', 'Utrecht', ''))
-# stations = np.append(stations, Station('265', 'Soesterberg', 'Utrecht', '')) # Read error 
+# stations = np.append(stations, Station('265', 'Soesterberg', 'Utrecht', '')) # Read error
 stations = np.append(stations, Station('267', 'Stavoren','Friesland', ''))
 stations = np.append(stations, Station('269', 'Lelystad','Flevoland', ''))
 stations = np.append(stations, Station('270', 'Leeuwarden','Friesland', ''))
@@ -144,14 +144,14 @@ log   = True
 for dir in [ dir_app, dir_sources ]:
     sys.path.append(dir)
 
-# Plotting images
+# Plotting images default values
 plot_width       = 1280 # Width plotted image
 plot_height      =  720 # Height plotted image
 # Images dpi (dots per inches) for printing on paper
 plot_dpi         =  108 # Higher will increase de point size. Make width/height higher too
-plot_marker_txt  =  'y'
-plot_defaults    = True # To use above values, will be ask for
+plot_marker_txt  =  'n'
 plot_image_type  = 'png'
+plot_graph_type  = 'line'  # bar or line
 
 # Asked for char
 answer_quit = np.array(['q', 'Q'])
