@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1.0"
+__version__    =  "0.1.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -185,19 +185,9 @@ def graph_period():
         if utils.quit_menu(entities):
             break
 
-        graph = control_ask.ask_for_graph_type('Which type of graph do you want to use ?', space=True)
-        if utils.quit_menu(graph):
-            break
-
-        name = control_ask.ask_for_file_name( 'Give a name for the image file ? <optional>',
-                                              f'period-{s_ymd}-{e_ymd}',
-                                              True )
-        if utils.quit_menu(name):
-            break
-
-        log.console('Fill in the parameters for the image', True)
-        title  = control_ask.ask_txt('Give a title for the graph ? ')
-        ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ')
+        log.console('Fill in the parameters for the image', False)
+        title  = control_ask.ask_txt('Give a title for the graph ? ', False)
+        ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ', False)
 
         more = control_ask.ask_for_yn('Use default values ?\nSee file -> config.py...')
         if utils.quit_menu(more):
@@ -206,17 +196,27 @@ def graph_period():
         if np.array_equal( more, config.answer_no ):
             config.plot_width  = control_ask.ask_for_int('Give the width (in pixels) for the graph ? ', space=False)
             config.plot_height = control_ask.ask_for_int('Give the height (in pixels) for the graph ? ', space=False)
+            config.plot_graph_type = control_ask.ask_type_options(
+                                        'Which type of graph do you want to use ? ',
+                                        'graph',
+                                        ['line', 'bar'],
+                                        space=False )
             answ_yn = control_ask.ask_for_yn('Values next to the markers ? ', space=False )
             config.plot_marker_txt = 'y' if np.array_equal(answ_yn,config.answer_yes) else 'n'
             config.plot_image_type = control_ask.ask_type_options(
-                                'What type of image ? ', 'image',
-                                ['png', 'jpg', 'ps', 'pdf', 'svg'],
-                                space=False )
+                                        'What type of image ? ',
+                                        'image',
+                                        ['png', 'jpg', 'ps', 'pdf', 'svg'],
+                                        space=False )
             config.plot_dpi = control_ask.ask_for_int('Give the dpi ? ', space=False)
-            config.plot_graph_type = control_ask.ask_type_options(
-                                         'What type of graph ? ', 'graph',
-                                         ['line', 'bar'],
-                                         space=False )
+            if config.plot_graph_type == 'line':
+                config.plot_line_width  = control_ask.ask_for_int('Set the width of the line (in pixels) ? ', space=False) # Width line
+                config.plot_marker_size = control_ask.ask_for_int('Set the marker size (in pixels) ? ', space=False) # Dot sizes on day
+
+        name = control_ask.ask_for_file_name( 'Give a name for the file ? <optional>',
+                                              f'period-{s_ymd}-{e_ymd}', True )
+        if utils.quit_menu(name):
+            break
 
         st = time.time_ns()
         log.header( 'PREPARING IMAGES...', True )
@@ -235,7 +235,6 @@ def graph_period():
             break
 
     log.footer('END MAKING A IMAGE GRAPH...', True)
-
 
 # Menu choice 5
 def table_winterstats():

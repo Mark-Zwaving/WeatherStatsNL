@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9"
+__version__    =  "0.9.0"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -144,14 +144,16 @@ log   = True
 for dir in [ dir_app, dir_sources ]:
     sys.path.append(dir)
 
-# Plotting images default values
+# Plotting default values
 plot_width       = 1280 # Width plotted image
 plot_height      =  720 # Height plotted image
 # Images dpi (dots per inches) for printing on paper
 plot_dpi         =  108 # Higher will increase de point size. Make width/height higher too
-plot_marker_txt  =  'n'
+plot_marker_txt  =  'y'
 plot_image_type  = 'png'
 plot_graph_type  = 'line'  # bar or line
+plot_line_width  =  1      # Width line
+plot_marker_size =  3      # Dot sizes
 
 # Asked for char
 answer_quit = np.array(['q', 'Q'])

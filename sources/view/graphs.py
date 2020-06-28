@@ -3,7 +3,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.6"
+__version__    =  "0.0.7\8"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -88,13 +88,14 @@ def plot( stations, entities, sd, ed, title, ylable, path ):
 
                 if config.plot_graph_type == 'line':  # bar or line
                     plt.plot( ymd, val, label = label, color = color,
-                              marker = 'o', linestyle = 'solid',
-                              linewidth = 2, markersize = 4 )
+                              marker     = 'o',
+                              linestyle  = 'solid',
+                              linewidth  = config.plot_line_width,
+                              markersize = config.plot_marker_size )
                 elif config.plot_graph_type == 'bar':
                     plt.bar( ymd, val, label = label, color = color )
 
-                if rnd_col:
-                    col_ndx = 0 if col_ndx == col_cnt else col_ndx + 1
+                if rnd_col: col_ndx = 0 if col_ndx == col_cnt else col_ndx + 1
 
                 if config.plot_marker_txt in config.answer_yes:
                     diff = text_diff( val )
@@ -104,20 +105,23 @@ def plot( stations, entities, sd, ed, title, ylable, path ):
                         text = np.array( [fix.ent(v, el) for v in datl] )
 
                     for d, v, t in zip( ymd, val, text ):
-                        plt.text( d, v+diff, t, fontsize='x-small', color='#555555',
-                                  horizontalalignment='center', verticalalignment='top',
-                                  alpha=0.8 )
+                        plt.text( d, v+diff, t,
+                                  fontsize='x-small',
+                                  color='#333333',
+                                  horizontalalignment='center',
+                                  verticalalignment='top',
+                                  alpha=0.9 )
         else:
             print('Read not oke in graphs.py -> plot')
 
     plt.title( title )
-    plt.xlabel( tr.txt('DATES'), color='#555555', fontsize='small', fontvariant='small-caps' )
-    plt.ylabel( ylable, color='#555555', fontsize='small' )
+    plt.xlabel( tr.txt('DATES'), color='#111111', fontsize='small', fontvariant='small-caps' )
+    plt.ylabel( ylable, color='#111111', fontsize='small' )
     plt.grid( color='#cccccc', linestyle='dotted', linewidth=1 )
-    plt.xticks( ymd, rotation=45, color='gray', fontsize='small' )
+    plt.xticks( ymd, rotation=40, color='#222222', fontsize='small' )
     # plt.style.use( 'mystyle' )
     plt.grid(True)
     plt.legend( loc='best', shadow=True, fontsize='small', frameon=False ) #
-    plt.savefig( path, dpi=config.plot_dpi, format='png' )
+    plt.savefig( path, dpi=config.plot_dpi, format=config.plot_image_type )
     plt.tight_layout()
     plt.show( )
