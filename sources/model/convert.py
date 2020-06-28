@@ -4,16 +4,23 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.4.1"
+__version__    =  "0.4.2"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import view.translate as tr
 import config
 
-def pixel_to_inch(p):
-    # Default dpi in matplotlib is 100. See config.py
-    return float(p) / float(config.plot_dpi)
+# Convert temperatures
+celsius_to_fahrenheit = lambda c:   float(c) * 1.8 + 32.0
+celsius_to_kelvin     = lambda c:   float(c) + 273.15
+fahrenheit_to_celsius = lambda f: ( float(f) - 32.0 ) / 1.8
+fahrenheit_to_kelvin  = lambda f: ( float(f) + 459.67 ) / 1.8
+kelvin_to_celsius     = lambda k:   float(k) - 273.15
+kelvin_to_fahrenheit  = lambda k:   float(k) * 1.8 - 459.67
+
+# Default dpi in matplotlib is 100. See config.py
+pixel_to_inch         = lambda p: float(p) / float(config.plot_dpi)
 
 def ms_to_bft( ms ):
     i = int(ms)
