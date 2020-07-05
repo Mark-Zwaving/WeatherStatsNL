@@ -185,6 +185,10 @@ def graph_period():
         if utils.quit_menu(entities):
             break
 
+        config.plot_cummul_val = control_ask.ask_for_yn(
+                                        'Do you want cummulative values for the graph ? ',
+                                        space=True )
+
         log.console('Fill in the parameters for the image', False)
         title  = control_ask.ask_txt('Give a title for the graph ? ', False)
         ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ', False)
@@ -223,7 +227,7 @@ def graph_period():
         path = utils.path( config.dir_img_period, name + f'.{config.plot_image_type}' )
         view_graph.plot( stations, entities, s_ymd, e_ymd, title, ylabel, path )
 
-        log.console(view_txt.menu_process_time(st) + '\n', True)
+        log.console( view_txt.menu_process_time(st) + '\n', True )
 
         fopen = control_ask.ask_to_open_with_app( f'Open the image {name} in your browser ?', True)
         if fopen:
