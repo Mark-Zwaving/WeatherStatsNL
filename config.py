@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9.0"
+__version__    =  "0.9.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -41,12 +41,15 @@ translate = True  # Translation active or not
 
 # List for WeatherStations
 from sources.knmi.model.station import Station
-knmi_dayvalues_url            = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/daggegevens/etmgeg_{0}.zip'
-knmi_dayvalues_notification   = 'BRON: KONINKLIJK NEDERLANDS METEOROLOGISCH INSTITUUT (KNMI)'
-knmi_dayvalues_skip_rows      = 49
-knmi_dayvalues_dummy_val      = 99999
-knmi_dayvalues_empthy_val     = '     '
-knmi_dayvalues_delimiter      = ','
+knmi_dayvalues_url          = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/daggegevens/etmgeg_{0}.zip'
+knmi_dayvalues_notification = 'BRON: KONINKLIJK NEDERLANDS METEOROLOGISCH INSTITUUT (KNMI)'
+knmi_dayvalues_skip_rows    = 49
+knmi_dayvalues_dummy_val    = 99999999
+knmi_dayvalues_empthy_val   = '     '
+knmi_dayvalues_delimiter    = ','
+ # For 'rh', 'rhx', 'sq' sometimes value is -1, that means meaurement value is below 0.05.
+ # Give replacement value for -1 here
+knmi_dayvalues_low_measure_val = 0.025
 
 # List with stations
 stations = np.array([])
@@ -149,12 +152,81 @@ plot_width       = 1280 # Width plotted image
 plot_height      =  720 # Height plotted image
 # Images dpi (dots per inches) for printing on paper
 plot_dpi         =  108 # Higher will increase de point size. Make width/height higher too
-plot_marker_txt  =  'y'
 plot_image_type  = 'png'
 plot_graph_type  = 'line'  # bar or line
 plot_line_width  =  1      # Width line
 plot_marker_size =  3      # Dot sizes
-plot_cummul_val  = 'n'     # Cummulative values 
+plot_cummul_val  = 'n'     # Cummulative values
+
+# Base Style Plotting
+# 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight',
+# 'ggplot', 'grayscale', 'seaborn-bright', 'seaborn-colorblind',
+# 'seaborn-dark-palette', 'seaborn-dark', 'seaborn-darkgrid',
+# 'seaborn-deep', 'seaborn-muted', 'seaborn-notebook', 'seaborn-paper',
+# 'seaborn-pastel', 'seaborn-poster', 'seaborn-talk', 'seaborn-ticks',
+# 'seaborn-white', 'seaborn-whitegrid', 'seaborn', 'Solarize_Light2',
+# 'tableau-colorblind10'
+plt_style = False #'fivethirtyeight' # Set to False for no default styling
+
+# Style for marker texts
+plot_marker_txt   = 'y'  # Select 'y' for markertext or 'n' for no
+plot_marker_color = '#333333'
+plot_marker_font  = { 'family'  : 'consolas',
+                      'weight'  : 'normal',
+                      'size'    : 'small',
+                      'variant' : 'small-caps'
+                    }
+plot_marker_horizontalalignment = 'center'
+plot_marker_verticalalignment = 'top'
+plot_marker_alpha = 0.9
+
+# Style grid in plot
+plot_grid_on        = True  # True for a grid or False for no grid
+plot_grid_color     = '#cccccc'
+plot_grid_linestyle = 'dotted'
+plot_grid_linewidth = 1
+
+# Style titel
+plot_title_color = '#333333'
+plot_title_font  = { 'family'  : 'consolas',
+                     'weight'  : 'bold',
+                     'size'    : '14',
+                     'variant' : 'normal'
+                    }
+
+# Style xlabel
+plot_xlabel_text    = 'DATES'
+plot_xlabel_color   = '#333333'
+plot_xlabel_font    = { 'family'  : 'consolas',
+                        'weight'  : 'normal',
+                        'size'    : '12',
+                        'variant' : 'small-caps'
+                      }
+
+# Style ylabel
+plot_ylabel_color = '#333333'
+plot_ylabel_font  = { 'family'  : 'consolas',
+                      'weight'  : 'normal',
+                      'size'    : '11',
+                      'variant' : 'small-caps'
+                    }
+
+# Style values/dates on the x-as
+plot_xas_color   = '#777777'
+plot_xas_font    = { 'family'  : 'consolas',
+                     'weight'  : 'normal',
+                     'size'    : '10',
+                     'variant' : 'small-caps'
+                    }
+plot_xas_rotation = 40
+
+# Style legend
+plot_legend_loc       = 'best'
+plot_legend_fontsize  = 'small'
+plot_legend_facecolor = None
+plot_legend_shadow    = False
+plot_legend_frameon   = False
+plot_legend_fancybox  = False
 
 # Asked for char
 answer_quit = np.array(['q', 'Q'])
