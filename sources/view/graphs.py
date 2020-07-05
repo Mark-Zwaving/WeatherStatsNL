@@ -3,7 +3,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.7\8"
+__version__    =  "0.0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -28,18 +28,10 @@ def name( sd, ed, stations, entities, type='png' ):
     return f'{st}.{type}'
 
 def text_diff( l ):
-    max = l.max()
+    m = max(l)
     # div = max * 3.0
 
-    return max / 30.0
-
-# 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight',
-# 'ggplot', 'grayscale', 'seaborn-bright', 'seaborn-colorblind',
-# 'seaborn-dark-palette', 'seaborn-dark', 'seaborn-darkgrid',
-# 'seaborn-deep', 'seaborn-muted', 'seaborn-notebook', 'seaborn-paper',
-# 'seaborn-pastel', 'seaborn-poster', 'seaborn-talk', 'seaborn-ticks',
-# 'seaborn-white', 'seaborn-whitegrid', 'seaborn', 'Solarize_Light2',
-# 'tableau-colorblind10'
+    return m / 30.0
 
 class G:
     x          = np.array([])
@@ -54,8 +46,7 @@ class G:
     def __init__(self):
         pass
 
-def plot( stations, entities, sd, ed, title, ylable, path ):
-    l_plot = []
+def plot( stations, entities, sd, ed, title, ylabel, path ):
     # Size values are inches. And figure always in front
     plt.figure( figsize=( convert.pixel_to_inch(config.plot_width),
                           convert.pixel_to_inch(config.plot_height)
@@ -69,59 +60,100 @@ def plot( stations, entities, sd, ed, title, ylable, path ):
         col_ndx = 0
         col_cnt = col_list.size - 1
 
-    # Fonts are unused ? TODO
-    font_dic = { 'family': 'calibri', 'color': 'gray', 'size' : 10.0 }
-    font = {'family' : 'calibri', 'weight' : 'normal', 'size'   : 12}
-
     for station in stations:
         ok, data = daydata.read( station )
         if ok:
             data = stats.period( data, sd, ed )
-            ymd  = data[:,daydata.ndx_ent('YYYYMMDD')].astype(np.str) # Convert to string
+            ymd = data[:,daydata.ndx_ent('YYYYMMDD')].astype(
+                            np.int, copy=False
+                            ).astype(
+                                np.str, copy=False
+                                ).tolist() # Convert to string
 
             for el in entities:
-                ndx   = daydata.ndx_ent( el )
-                datl  = data[:, ndx].tolist()
-                val   = np.array( [fix.value(val, el) for val in datl] )
+                # Get the values needed for the graph
+                f_val = data[:, daydata.ndx_ent(el)]
+                # Cumulative sum of values, if chosen
+                if config.plot_cummul_val in config.answer_yes:
+                    f_val = np.cumsum( f_val )
+
+                # Make correct output values
+                l_val = [ fix.rounding(v, el) for v in f_val.tolist() ]
+
                 label = f'{station.place} {view_txt.ent_to_title(el)}'
                 color = col_list[col_ndx] if rnd_col else view_color.ent_to_color(el)
 
                 if config.plot_graph_type == 'line':  # bar or line
-                    plt.plot( ymd, val, label = label, color = color,
-                              marker     = 'o',
-                              linestyle  = 'solid',
-                              linewidth  = config.plot_line_width,
-                              markersize = config.plot_marker_size )
+                    plt.plot( ymd, l_val, label = label, color = color,
+                              marker = 'o', linestyle = 'solid',
+                              linewidth = config.plot_line_width,
+                              markersize = config.plot_marker_size
+                              )
                 elif config.plot_graph_type == 'bar':
-                    plt.bar( ymd, val, label = label, color = color )
+                    plt.bar( ymd, l_val, label = label, color = color )
 
-                if rnd_col: col_ndx = 0 if col_ndx == col_cnt else col_ndx + 1
+                if rnd_col:
+                    col_ndx = 0 if col_ndx == col_cnt else col_ndx + 1
 
                 if config.plot_marker_txt in config.answer_yes:
-                    diff = text_diff( val )
-                    if config.plot_graph_type == 'bar': # No negative values for when graph is a bar
-                        text = np.array( [fix.value(v, el) for v in datl] )
-                    elif config.plot_graph_type == 'line':
-                        text = np.array( [fix.ent(v, el) for v in datl] )
+                    diff = text_diff( l_val ) # based on maximum value
+                    # TODO No negative values for when graph is a bar
+                    text = l_val
 
-                    for d, v, t in zip( ymd, val, text ):
+                    for d, v, t in zip( ymd, l_val, text ):
                         plt.text( d, v+diff, t,
-                                  fontsize='x-small',
-                                  color='#333333',
-                                  horizontalalignment='center',
-                                  verticalalignment='top',
-                                  alpha=0.9 )
+                                  color=config.plot_marker_color,
+                                  **config.plot_marker_font,
+                                  horizontalalignment=config.plot_marker_horizontalalignment,
+                                  verticalalignment=config.plot_marker_verticalalignment,
+                                  alpha=config.plot_marker_alpha
+                                )
         else:
             print('Read not oke in graphs.py -> plot')
 
-    plt.title( title )
-    plt.xlabel( tr.txt('DATES'), color='#111111', fontsize='small', fontvariant='small-caps' )
-    plt.ylabel( ylable, color='#111111', fontsize='small' )
-    plt.grid( color='#cccccc', linestyle='dotted', linewidth=1 )
-    plt.xticks( ymd, rotation=40, color='#222222', fontsize='small' )
-    # plt.style.use( 'mystyle' )
-    plt.grid(True)
-    plt.legend( loc='best', shadow=True, fontsize='small', frameon=False ) #
-    plt.savefig( path, dpi=config.plot_dpi, format=config.plot_image_type )
-    plt.tight_layout()
+    if config.plt_style != False:
+        plt.style.use(config.plt_style)
+
+    plt.title( title,
+               color=config.plot_title_color,
+               **config.plot_title_font
+            )
+
+    plt.xlabel( tr.txt(config.plot_xlabel_text),
+                color=config.plot_xlabel_color,
+                **config.plot_xlabel_font,
+                )
+
+    plt.ylabel( ylabel,
+                color=config.plot_ylabel_color,
+                **config.plot_ylabel_font
+                )
+
+    plt.grid( config.plot_grid_on )
+    if config.plot_grid_on:
+        plt.grid( color=config.plot_grid_color,
+                  linestyle=config.plot_grid_linestyle,
+                  linewidth=config.plot_grid_linewidth
+                  )
+
+    plt.xticks( ymd,
+                **config.plot_xas_font,
+                color=config.plot_xas_color,
+                rotation=config.plot_xas_rotation
+                )
+
+    plt.legend( loc=config.plot_legend_loc,
+                fontsize=config.plot_legend_fontsize,
+                facecolor=config.plot_legend_facecolor,
+                shadow=config.plot_legend_shadow,
+                frameon=config.plot_legend_frameon,
+                fancybox=config.plot_legend_fancybox
+                )
+
+    plt.savefig( path,
+                 dpi=config.plot_dpi,
+                 format=config.plot_image_type
+                 )
+
+    plt.tight_layout( )
     plt.show( )
