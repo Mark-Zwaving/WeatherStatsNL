@@ -115,7 +115,7 @@ def get_dayvalues_by_date():
             page.header = header
             page.main   = view_html.main_ent( day )
             page.footer = footer
-            page.file_name = name
+            page.mkpath( config.dir_html_dayvalues, name )
 
             et = False
             if page.save(): # Error

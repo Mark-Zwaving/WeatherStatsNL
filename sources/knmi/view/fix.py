@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.7"
+__version__    =  "0.0.8"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -194,14 +194,14 @@ def ent(val, entity):
 
     # Wind direction
     elif e in  [ 'ddvec' ]:
-        if F == 0.0:
+        if f == 0.0:
             return f'{f:.0f}° {tr.txt(VAR)}'
         else:
             # From degrees to direction
             # Source: https://www.campbellsci.com/blog/convert-wind-directions
             ldir = [ 'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
                      'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N' ]
-            ndx = int( round( F % 360 / 22.5 ) )
+            ndx = int( round( f % 360 / 22.5 ) )
             dir = ldir[ndx]
             return f'{f:.0f}° {tr.txt(dir)}'
 
