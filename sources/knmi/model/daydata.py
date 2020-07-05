@@ -3,7 +3,7 @@
 __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
-__version__    =  "0.3"
+__version__    =  "0.0.6"
 __license__    =  "GNU Lesser General Public License (LGPL)"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
@@ -117,7 +117,7 @@ def read( station ):
 
     with lock:
         try:
-            data = np.genfromtxt( file_name, dtype=np.int32,
+            data = np.genfromtxt( file_name, dtype=np.float64,
                                   delimiter=config.knmi_dayvalues_delimiter,
                                   filling_values=config.knmi_dayvalues_dummy_val,
                                   skip_header=config.knmi_dayvalues_skip_rows
