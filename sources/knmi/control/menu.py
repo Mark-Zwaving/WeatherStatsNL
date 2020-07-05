@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1.1"
+__version__    =  "0.1.2"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -120,7 +120,9 @@ def get_dayvalues_by_date():
             et = False
             if page.save(): # Error
                 et = time.time_ns()
-                fopen = control_ask.ask_to_open_with_app(f'Open the file {name} in your browser ?', True)
+                fopen = control_ask.ask_to_open_with_app(
+                            f'Open the file {name} in your browser ?', True
+                        )
                 if fopen:
                     webbrowser.open_new_tab( page.file_path ) # Opens in default browser
             else:
@@ -134,7 +136,9 @@ def get_dayvalues_by_date():
 
             if io.save(path, txt):
                 et = time.time_ns()
-                fopen = control_ask.ask_to_open_with_app(f'Open the file {path} in your browser ?', True)
+                fopen = control_ask.ask_to_open_with_app(
+                            f'Open the file {path} in your browser ?', True
+                        )
                 if fopen:
                     webbrowser.open_new_tab(path)
             else:
@@ -185,10 +189,6 @@ def graph_period():
         if utils.quit_menu(entities):
             break
 
-        config.plot_cummul_val = control_ask.ask_for_yn(
-                                        'Do you want cummulative values for the graph ? ',
-                                        space=True )
-
         log.console('Fill in the parameters for the image', False)
         title  = control_ask.ask_txt('Give a title for the graph ? ', False)
         ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ', False)
@@ -198,27 +198,44 @@ def graph_period():
             break
 
         if np.array_equal( more, config.answer_no ):
-            config.plot_width  = control_ask.ask_for_int('Give the width (in pixels) for the graph ? ', space=False)
-            config.plot_height = control_ask.ask_for_int('Give the height (in pixels) for the graph ? ', space=False)
+            config.plot_width = control_ask.ask_for_int(
+                                    'Give the width (in pixels) for the graph ? ',
+                                    space=False
+                                    )
+            config.plot_height = control_ask.ask_for_int(
+                                    'Give the height (in pixels) for the graph ? ',
+                                    space=False
+                                    )
             config.plot_graph_type = control_ask.ask_type_options(
                                         'Which type of graph do you want to use ? ',
-                                        'graph',
-                                        ['line', 'bar'],
-                                        space=False )
-            answ_yn = control_ask.ask_for_yn('Values next to the markers ? ', space=False )
-            config.plot_marker_txt = 'y' if np.array_equal(answ_yn,config.answer_yes) else 'n'
+                                        'graph', ['line', 'bar'], space=False
+                                    )
+            config.plot_cummul_val = control_ask.ask_for_yn(
+                                        'Do you want cummulative values for the graph ? ',
+                                        space=False
+                                    )[0] # Take first yess or no
+            config.plot_marker_txt = control_ask.ask_for_yn(
+                                        'Values next to the markers ? ', space=False
+                                    )[0] # Take first yess or no
             config.plot_image_type = control_ask.ask_type_options(
-                                        'What type of image ? ',
-                                        'image',
+                                        'What type of image ? ', 'image',
                                         ['png', 'jpg', 'ps', 'pdf', 'svg'],
-                                        space=False )
-            config.plot_dpi = control_ask.ask_for_int('Give the dpi ? ', space=False)
+                                        space=False
+                                    )
+            config.plot_dpi = control_ask.ask_for_int( 'Give the dpi ? ', space=False )
             if config.plot_graph_type == 'line':
-                config.plot_line_width  = control_ask.ask_for_int('Set the width of the line (in pixels) ? ', space=False) # Width line
-                config.plot_marker_size = control_ask.ask_for_int('Set the marker size (in pixels) ? ', space=False) # Dot sizes on day
+                config.plot_line_width = control_ask.ask_for_int(
+                                            'Set the width of the line (in pixels) ? ',
+                                            space=False
+                                        ) # Width line
+                config.plot_marker_size = control_ask.ask_for_int(
+                                            'Set the marker size (in pixels) ? ',
+                                            space=False
+                                        ) # Dot sizes on day
 
         name = control_ask.ask_for_file_name( 'Give a name for the file ? <optional>',
-                                              f'period-{s_ymd}-{e_ymd}', True )
+                                              f'period-{s_ymd}-{e_ymd}', True
+                                              )
         if utils.quit_menu(name):
             break
 
@@ -229,7 +246,9 @@ def graph_period():
 
         log.console( view_txt.menu_process_time(st) + '\n', True )
 
-        fopen = control_ask.ask_to_open_with_app( f'Open the image {name} in your browser ?', True)
+        fopen = control_ask.ask_to_open_with_app(
+                    f'Open the image {name} in your browser ?', True
+                )
         if fopen:
             webbrowser.open_new_tab(path)
 
@@ -259,12 +278,16 @@ def table_winterstats():
         log.console(view_txt.menu_process_time(st) + '\n', True)
 
         if type != 'cmd':
-            fopen = control_ask.ask_to_open_with_app(f'Open the {type} in your browser/application ?', True)
+            fopen = control_ask.ask_to_open_with_app(
+                        f'Open the {type} in your browser/application ?', True
+                    )
             if fopen:
                 webbrowser.open_new_tab(path)
 
         # Always ask for going back
-        again = control_ask.ask_again(f'Do you want to make another winterstatistics table ?', True)
+        again = control_ask.ask_again(
+                    f'Do you want to make another winterstatistics table ?', True
+                )
         if utils.quit_menu(again):
             break
 
@@ -286,12 +309,17 @@ def table_summerstats():
             log.console(view_txt.menu_process_time(st) + '\n', True)
 
             if type != 'cmd':
-                fopen = control_ask.ask_to_open_with_app(f'Open the {type} in your browser/application ?', True)
+                fopen = control_ask.ask_to_open_with_app(
+                            f'Open the {type} in your browser/application ?', True
+                        )
                 if fopen:
                     webbrowser.open_new_tab(path)
 
             # Always ask for going back
-            again = control_ask.ask_again(f'Do you want to make another summerstatistics table ?', True)
+            again = control_ask.ask_again(
+                        f'Do you want to make another summerstatistics table ?',
+                        True
+                    )
             if utils.quit_menu(again):
                 break
 
@@ -313,12 +341,18 @@ def table_heatwaves():
             log.console(view_txt.menu_process_time(st) + '\n', True)
 
             if type != 'cmd':
-                fopen = control_ask.ask_to_open_with_app(f'Open the {type} in your browser/application ?', True)
+                fopen = control_ask.ask_to_open_with_app(
+                            f'Open the {type} in your browser/application ?',
+                            True
+                        )
                 if fopen:
                     webbrowser.open_new_tab(path)
 
             # Always ask for going back
-            again = control_ask.ask_again(f'Do you want to make another heatwaves table ?', True)
+            again = control_ask.ask_again(
+                        f'Do you want to make another heatwaves table ?',
+                        True
+                    )
             if utils.quit_menu(again):
                 break
 
