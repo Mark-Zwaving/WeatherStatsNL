@@ -25,7 +25,7 @@ menu = [
     ],
     [ 'DAYVALUES AND PERIODS', [
             [ 'Dayvalues', control_menu.get_dayvalues_by_date ],
-            [ 'Select days', control_menu.select_days ],
+            [ 'Search for days', control_menu.search_for_days ],
             [ 'Period graphs', control_menu.graph_period ]
         ]
     ],
