@@ -18,8 +18,12 @@ def value(val, entity):
     f = float(val)
     e = entity.strip().lower()
 
+    # Exception for -1 in rh,rhx and sq
+    if f == -1.0 and (e in ['rh', 'rhx', 'sq']):
+        return config.knmi_dayvalues_low_measure_val
+
     # Indexes
-    if e in ['heat_ndx', 'hellmann']:
+    elif e in ['heat_ndx', 'hellmann']:
         return f / 10.0
 
     # Temperatures
@@ -217,11 +221,11 @@ def ent(val, entity):
             elif f == 50.0:
                 return '5-6km'
             elif f <= 79.0:
-                f1 = f - 50.0,
+                f1 = f - 50.0
                 f2 = f - 49.0
                 return f'{f1:.0f}-{f2:.0f}km'
             elif f <= 89.0:
-                f1 = f - 50.0,
+                f1 = f - 50.0
                 f2 = f - 45.0
                 return f'{f1:.0f}-{f2:.0f}km'
             else:
