@@ -89,7 +89,7 @@ def get_dayvalues_by_date():
         name = False
         if type != 'cmd':
             name = control_ask.ask_for_file_name( f'Give a name for the {type} file ? <optional> ',
-                                                  f'dayvalues-{yyyymmdd}',
+                                                  f'dayvalues-{station.place}-{yyyymmdd}',
                                                   True )
             if utils.quit_menu(name):
                 break
@@ -167,7 +167,7 @@ def get_dayvalues_by_date():
 
     log.footer('END SEARCHING AND PREPARING DAY VALUES...', True)
 
-def select_days():
+def search_for_days():
     pass
 
 # Menu choice 4
