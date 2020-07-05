@@ -19,15 +19,46 @@ operators = np.array( [
     '<', '<=', '>', '>=', '==', '!=', '<>', '||', '&&'
     ] )
 
-dd          = lambda s        : int(float(s) * 10.0)
+df          = lambda s        : float(s) * 10.0
 is_entity   = lambda entity   : (entity.upper()   in entities)
 is_operator = lambda operator : (operator.lower() in operators)
 
+# Numpy methode didnt work. For now using normal list -> TODO
+def update_minus_1( data ):
+    l = data.tolist()
+    low_val = config.knmi_dayvalues_low_measure_val
+    ndx_rh  = daydata.ndx_ent('rh')
+    ndx_rhx = daydata.ndx_ent('rhx')
+    ndx_sq  = daydata.ndx_ent('sq')
+    l_ndx   = [ ndx_rh, ndx_rhx, ndx_sq ]
+    for x, row in enumerate(l):
+        for y, kol in enumerate(row):
+            if kol == -1.0 and (y in l_ndx):
+                data[x,y] = low_val
+
+    return data
+
 def period( data, sdate, edate ):
     '''Function selects days by start and end dates'''
-    sdate, edate, ymd = int(sdate), int(edate), daydata.ndx_ent('YYYYMMDD')
-    sel = np.where( (data[:,ymd] >= sdate) & (data[:,ymd] <= edate) )
-    return data[sel]
+    # Select values period
+    date_s, date_e = float(sdate),  float(edate)
+    ymd = data[:,daydata.ndx_ent('YYYYMMDD')] # Get dates array
+    sel = np.where( (
+    ymd >= date_s) & (ymd <= date_e) ) # Get selected keys for correct dates
+    data = data[sel] # Make new array based on the selected days
+    data = update_minus_1( data ) # Update low values
+
+    # TODO numpy replacement of values
+    # Always replace knmi low measurement values
+    # low_val = config.knmi_dayvalues_low_measure_val
+    # ndx_rh  = daydata.ndx_ent('rh')
+    # ndx_rhx = daydata.ndx_ent('rhx')
+    # ndx_sq  = daydata.ndx_ent('sq')
+    # data[ data[:,ndx_rh]  == -1.0 ] = low_val
+    # data[ data[:,ndx_rhx] == -1.0 ] = low_val
+    # data[ data[:,ndx_sq]  == -1.0 ] = low_val
+
+    return data
 
 def process_list( data, entity ):
     '''Function processes data values on false values'''
@@ -68,15 +99,14 @@ def terms_days( data, entity, operator, value ):
     '''Function select days based on terms like TX > 30 for example'''
     ent  = daydata.ndx_ent(entity)
     op   = operator.lower()
-    ival = dd(value)
+    f = df(value)
 
-    if   op in ['gt',  '>']: sel = np.where( data[:,ent] >  ival )
-    elif op in ['ge', '>=', '≥']: sel = np.where( data[:,ent] >= ival )
-    elif op in ['eq', '==']: sel = np.where( data[:,ent] == ival )
-    elif op in ['lt',  '<']: sel = np.where( data[:,ent] <  ival )
-    elif op in ['le', '<=', '≤']: sel = np.where( data[:,ent] <= ival )
-    elif op in ['ne', '!=', '<>']:
-        sel = np.where( data[:,ent] != ival )
+    if   op in ['gt',  '>']:       sel = np.where( data[:,ent] >  f )
+    elif op in ['ge', '>=', '≥']:  sel = np.where( data[:,ent] >= f )
+    elif op in ['eq', '==']:       sel = np.where( data[:,ent] == f )
+    elif op in ['lt',  '<']:       sel = np.where( data[:,ent] <  f )
+    elif op in ['le', '<=', '≤']:  sel = np.where( data[:,ent] <= f )
+    elif op in ['ne', '!=', '<>']: sel = np.where( data[:,ent] != f )
     else: print('error, terms_days()'); input('?')
 
     data = data[sel]
@@ -144,7 +174,7 @@ def extended_terms_days( data, terms ):
 
 def hellmann( data ):
     ''' Calculation of hellmann'''
-    data = terms_days( data, 'TG', '<', 0 ) # Get days TG < 0
+    data = terms_days( data, 'TG', '<', 0.0 ) # Get days TG < 0
     sum  = sum( data, 'TG' ) # Sum all days
     hman = abs( sum )
 
