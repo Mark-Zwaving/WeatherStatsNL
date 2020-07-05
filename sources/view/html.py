@@ -53,13 +53,13 @@ class Template():
     def add_script_file(self, dir='./js/', name='js.js'):
         self.script_files.append(f'{dir}{name}')
 
-    def mkpath(self, dir_map=False, file_name=False):
+    def path(self, dir_map=False, file_name=False):
         if file_name:
             self.file_name = file_name
         if dir_map:
             self.file_dir  = dir_map
 
-        self.file_path = utils.path(self.file_dir, self.file_name)
+        self.file_path = f'{self.file_dir}{self.file_name}'
 
     def create(self):
         css = ''
