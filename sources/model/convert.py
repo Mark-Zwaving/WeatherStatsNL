@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.4.2"
+__version__    =  "0.4.3"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -19,8 +19,24 @@ fahrenheit_to_kelvin  = lambda f: ( float(f) + 459.67 ) / 1.8
 kelvin_to_celsius     = lambda k:   float(k) - 273.15
 kelvin_to_fahrenheit  = lambda k:   float(k) * 1.8 - 459.67
 
+# Convert distance/length
+inch_to_cm     = lambda i:   float(i) * 2.54
+cm_to_inch     = lambda c:   float(c) / 2.54
+feet_to_cm     = lambda f:   float(f) * 30.48
+cm_to_feet     = lambda c:   float(c) / 30.48
+inc_to_feet    = lambda i:   float(i) / 12.0
+feet_to_inch   = lambda f:   float(f) * 12.0
+yard_to_feet   = lambda y:   float(y) * 3.0
+feet_to_yard   = lambda y:   float(y) / 3.0
+mile_to_km     = lambda m:   float(m) * 1.60930
+km_to_mile     = lambda k:   float(k) / 1.60930
+nautmile_to_km = lambda s:   float(s) * 1.85  # Nautical miles/seamiles
+km_to_nautmile = lambda f:   float(f) / 1.85
+yard_to_cm     = lambda y:   float(y) * 91.44
+cm_to_yard     = lambda c:   float(c) / 91.44
+
 # Default dpi in matplotlib is 100. See config.py
-pixel_to_inch         = lambda p: float(p) / float(config.plot_dpi)
+pixel_to_inch  = lambda p: float(p) / float(config.plot_dpi)
 
 def ms_to_bft( ms ):
     i = int(ms)

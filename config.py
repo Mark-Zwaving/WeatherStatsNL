@@ -154,6 +154,7 @@ plot_image_type  = 'png'
 plot_graph_type  = 'line'  # bar or line
 plot_line_width  =  1      # Width line
 plot_marker_size =  3      # Dot sizes
+plot_cummul_val  = 'n'     # Cummulative values 
 
 # Asked for char
 answer_quit = np.array(['q', 'Q'])
