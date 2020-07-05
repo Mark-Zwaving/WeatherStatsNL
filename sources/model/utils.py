@@ -23,8 +23,7 @@ def ymd_to_txt( ymd ):
     return datetime.strptime(str(ymd), "%Y%m%d").strftime('%A, %d %B %Y')
 
 def now_act_for_file():
-    txt =  datetime.now().strftime('%Y%m%d-%H%M%S')
-    print(txt)
+    txt =  datetime.now().strftime('%Y%m%d%H%M%S')
     return txt
 
 def quit_menu(l):
