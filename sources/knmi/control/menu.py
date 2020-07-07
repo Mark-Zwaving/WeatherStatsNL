@@ -11,6 +11,7 @@ __status__     =  "Development"
 import os, time, config, webbrowser, subprocess
 import model.utils as utils
 import model.convert as convert
+import model.search4days as search4days
 import knmi.model.daydata as daydata
 import knmi.model.winterstats as winterstats
 import knmi.view.dayvalues as view_dayvalues
@@ -167,10 +168,80 @@ def get_dayvalues_by_date():
 
     log.footer('END SEARCHING AND PREPARING DAY VALUES...', True)
 
-def search_for_days():
-    pass
-
 # Menu choice 4
+def search_for_days():
+    '''Funtion searches files for days with specific values. ie > 30 degrees'''
+    while True:
+        log.header('START SEARCHING FOR SPECIFIC DAYS...', True)
+
+        log.console( 'For which time periode do you want to search ? \n' )
+        st_ymd, ed_ymd = control_ask.ask_for_start_and_end_date( )
+        if utils.quit_menu(st_ymd) or utils.quit_menu(ed_ymd):
+            break
+
+        stations = control_ask.ask_for_stations('Select one or more weather stations ?', True)
+        if utils.quit_menu(stations):
+            break
+
+        query = control_ask.ask_for_query('Type a query, separated with spaces ? ', True)
+        if utils.quit_menu(query):
+            break
+
+        type = control_ask.ask_for_file_type('Select filetype ? ')
+        if utils.quit_menu(type):
+            break
+
+        qname = utils.replace_query_with_text(query).replace(' ', '-')
+        fname = control_ask.ask_for_file_name(
+                        'Give a name for the file ? <optional>',
+                        f'days-{qname}-{st_ymd}-{ed_ymd}',
+                        True
+                    )
+        if utils.quit_menu(fname):
+            break
+
+        # Search for the days the
+        data = search4days.query_process( stations, st_ymd, ed_ymd, query )
+
+        if type =='html':
+            fname = f'{fname}.html'
+            path = utils.path(config.dir_html_search_for_days, fname)
+
+            # Proces data in html table
+            html_main = view_html.table_search_for_days(data, st_ymd, ed_ymd)
+
+            # Write to html, screen, console
+            html = view_html.Template()
+            html.title  = f'Days {query}'
+            html.header = f'Days: {query}'
+            html.add_css_file(name='table-statistics.css')
+            html.main   = html_main
+            html.footer = ''
+            html.mkpath( config.dir_html_search_for_days, fname )
+            html.save()
+
+        elif type == 'text':
+            # TODO:
+            pass
+        elif type == 'cmd':
+            # TODO
+            pass
+
+        if type in [ 'text', 'html' ]:
+            fopen = control_ask.ask_to_open_with_app(
+                            f'\nOpen the file ? \n{path}\n',
+                            True
+                        )
+            if fopen:
+                webbrowser.open_new_tab( path )
+
+        # Always ask for going back
+        again = control_ask.ask_again(f'Do you want to search for days ?', True)
+        if utils.quit_menu(again):
+            break
+
+    log.footer('END MAKING A IMAGE GRAPH...', True)
+
 def graph_period():
     '''Funtion makes images for a period from the data of the knmi'''
     while True:
@@ -208,21 +279,25 @@ def graph_period():
                                     )
             config.plot_graph_type = control_ask.ask_type_options(
                                         'Which type of graph do you want to use ? ',
-                                        'graph', ['line', 'bar'], space=False
+                                        'graph', ['line', 'bar'],
+                                        space=False
                                     )
             config.plot_cummul_val = control_ask.ask_for_yn(
                                         'Do you want cummulative values for the graph ? ',
                                         space=False
                                     )[0] # Take first yess or no
             config.plot_marker_txt = control_ask.ask_for_yn(
-                                        'Values next to the markers ? ', space=False
+                                        'Values next to the markers ? ',
+                                        space=False
                                     )[0] # Take first yess or no
             config.plot_image_type = control_ask.ask_type_options(
                                         'What type of image ? ', 'image',
                                         ['png', 'jpg', 'ps', 'pdf', 'svg'],
                                         space=False
                                     )
-            config.plot_dpi = control_ask.ask_for_int( 'Give the dpi ? ', space=False )
+            config.plot_dpi = control_ask.ask_for_int( 'Give the dpi ? ',
+                                                       space=False
+                                                       )
             if config.plot_graph_type == 'line':
                 config.plot_line_width = control_ask.ask_for_int(
                                             'Set the width of the line (in pixels) ? ',
