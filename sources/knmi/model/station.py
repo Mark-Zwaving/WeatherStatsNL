@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 '''Library contains classes to store knmi data'''
-
-__author__     =  "Mark Zwaving"
-__email__      =  "markzwaving@gmail.com"
-__copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
-__license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1.3"
-__maintainer__ =  "Mark Zwaving"
-__status__     =  "Development"
+__author__     =  'Mark Zwaving'
+__email__      =  'markzwaving@gmail.com'
+__copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
+__license__    =  'GNU Lesser General Public License (LGPL)'
+__version__    =  '0.1.4'
+__maintainer__ =  'Mark Zwaving'
+__status__     =  'Development'
 
 import os, pathlib, config
 import numpy as np
@@ -31,6 +30,20 @@ class Station:
         self.file_txt_dayvalues = os.path.join( self.dir_dayvalues, f'etmgeg_{self.wmo}.txt' )
 
         self.dayvalues_url      = config.knmi_dayvalues_url.format(self.wmo)
+
+def from_wmo_to_name(wmo):
+    if wmo_in_list(wmo):
+        for s in config.stations.tolist():
+            if s.wmo == wmo:
+                return s.place
+    return wmo
+
+def from_wmo_to_province(wmo):
+    if wmo_in_list(wmo):
+        for s in config.stations.tolist():
+            if s.wmo == wmo:
+                return s.province
+    return wmo
 
 def name_in_list(name):
     if name:
