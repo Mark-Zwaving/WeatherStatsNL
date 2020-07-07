@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 '''Library for supportive divers functions'''
-
-__author__     =  "Mark Zwaving"
-__email__      =  "markzwaving@gmail.com"
-__copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
-__license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.4"
-__maintainer__ =  "Mark Zwaving"
-__status__     =  "Development"
+__author__     =  'Mark Zwaving'
+__email__      =  'markzwaving@gmail.com'
+__copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
+__license__    =  'GNU Lesser General Public License (LGPL)'
+__version__    =  '0.0.6'
+__maintainer__ =  'Mark Zwaving'
+__status__     =  'Development'
 
 import config
 import datetime, os
@@ -16,11 +15,28 @@ from datetime import datetime
 from dateutil import rrule
 import numpy as np
 
+def replace_query_with_text(query):
+    q = query.lower()
+    q = q.replace('>=', 'ge')
+    q = q.replace('≥',  'ge')
+    q = q.replace('<=', 'le')
+    q = q.replace('≤',  'le')
+    q = q.replace('==', 'eq')
+    q = q.replace('!=', 'ne')
+    q = q.replace('<>', 'ne')
+    q = q.replace('!=', 'ne')
+    q = q.replace('>', 'gt')
+    q = q.replace('<', 'lt')
+    q = q.replace('||', 'or')
+    q = q.replace('&&', 'and')
+
+    return q
+
 def path( dir, file ):
     return os.path.abspath(os.path.join(dir, file))
 
 def ymd_to_txt( ymd ):
-    return datetime.strptime(str(ymd), "%Y%m%d").strftime('%A, %d %B %Y')
+    return datetime.strptime(str(ymd), '%Y%m%d').strftime('%A, %d %B %Y')
 
 def now_act_for_file():
     txt =  datetime.now().strftime('%Y%m%d%H%M%S')
