@@ -339,7 +339,7 @@ def table_search_for_days(data, symd, eymd):
     html  = '<table>'
     html += '<thead>'
     html += '<tr>'
-    html += f'<th> name </th>'
+    html += f'<th> station </th>'
     html += f'<th> periode </th>'
     html += f'<th> day </th>'
     html += f'<th> TX </th>'
