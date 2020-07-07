@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1.5"
+__version__    =  "0.1.6"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -56,7 +56,7 @@ def pause(s='Paused'):
     ask(s, True)
 
 def stop():
-    answ = ask("Exit program? Press 'q' or 'Q' to exit...", True)
+    answ = ask("Exit program? \nPress 'q' to exit...", True)
 
     if answ:
         if ans in config.answer_quit:
@@ -65,7 +65,7 @@ def stop():
 
 def ask_again(txt, space=True):
     log.console(txt, True)
-    log.console("Press a key ... Or press 'q' or 'Q' to quit", True)
+    log.console("Press a key ... \nPress 'q' to quit", True)
 
     answ = ask(' ? ', space)
 
@@ -76,8 +76,8 @@ def ask_again(txt, space=True):
 
 def ask_to_open_with_app(txt, space=True):
     log.console(txt, True)
-    log.console("Press 'Y' or 'y' to open the file", True)
-    log.console('Or press - any other key - to skip opening the file', True)
+    log.console("Press 'y' to open the file", True)
+    log.console('Or press an other key to skip opening the file', True)
 
     answ = ask(' ? ', space)
 
@@ -95,7 +95,7 @@ def ask_for_entities( txt, space=True):
         log.console('To one more stations, give entity name separated by a comma. e.g TX, TG, TN', True)
         log.console('See - ./data/text/dayvalues/dayvalues.txt - for the meaning of the entities', True)
         if len(l) > 0: log.console("Press 'n' to move to the next !", True)
-        log.console("Press 'q' or 'Q' to go back to the main menu", True)
+        log.console("Press 'q' to go back to the main menu", True)
 
         answ = ask(' ? ', space)
 
@@ -135,7 +135,7 @@ def ask_for_one_station( txt, space=True):
         log.console(txt, True)
         log.console(view_txt.knmi_stations(config.stations, 3, 25), True)
         log.console('To add a station, give a wmo-number or a city name of a weatherstation', True)
-        log.console("Press 'q' or 'Q' to go back to the main menu", True)
+        log.console("Press 'q' to go back to the main menu", True)
 
         answ = ask(' ? ', space)
 
@@ -158,7 +158,7 @@ def ask_for_stations( txt, space=True):
         log.console('To add more stations, give a wmo-number or a city name separated by a comma', True)
         log.console("Press '*' to add all available weather stations", True)
         if len(l) > 0: log.console("Press 'n' to move to the next !", True)
-        log.console("Press 'q' or 'Q' to go back to the main menu", True)
+        log.console("Press 'q' to go back to the main menu", True)
 
         answ = ask(' ? ', space)
 
@@ -214,7 +214,7 @@ def ask_for_stations( txt, space=True):
 def ask_for_date( txt, space=True):
     while True:
         log.console(txt, True)
-        log.console("Press 'q' or 'Q' to go back to the main menu", True)
+        log.console("Press 'q' to go back to the main menu", True)
         answ = ask(' ? ', space)
         if answ in config.answer_quit:
             return config.answer_quit
@@ -229,7 +229,7 @@ def ask_for_start_and_end_date(space=True):
     if utils.quit_menu(sd):
         return config.answer_quit, sd
 
-    ed = ask_for_date('Give a END date <format:yyyymmdd> ? ', space)
+    ed = ask_for_date('Give an END date <format:yyyymmdd> ? ', space)
     if utils.quit_menu(ed):
         return ed, config.answer_quit
 
@@ -258,7 +258,7 @@ def ask_for_yn( txt, space=True ):
         log.console(txt, True)
         log.console('\t1) Yes', True)
         log.console('\t2) No', True)
-        log.console("Press 'q' or 'Q' to go back to the main menu")
+        log.console("Press 'q' to go back to the main menu")
 
         answ = ask(' ? ', space)
 
@@ -288,7 +288,7 @@ def ask_type_options(txt, type, l, space=True):
         log.console(txt, True)
         for n, el in enumerate(l):
             log.console(f'\t{n+1}) {el} {type}', True)
-        log.console("Press 'q' or 'Q' to go back to the main menu")
+        log.console("Press 'q' to go back to the main menu")
 
         answ = ask(' ? ', space)
 
@@ -352,3 +352,58 @@ def ask_period_stations_type_name( space=True ):
                         ok = False # Oke quit
 
     return ok, sd, ed, stations, type, name
+
+def ask_for_query( txt, space=True ):
+    info = False
+    i  = 'Possible properties are\n'
+    i += "' gt', '> '         'greater than'             'ie TG >  20  Warm nights'\n"
+    i += "' ge', '>=', ' ≥'   'greater than and equal'   'ie TX >= 30  Tropical days'\n"
+    i += "' lt', '< '         'less than'                'ie TN <   0  Frosty days'\n"
+    i += "' le', '<=', ' ≤'   'less than equal'          'ie TX <=  0  Icy days'\n"
+    i += "' eq', '=='         'equal'                    'ie DDVEC == 90  A day with a wind from the east'\n"
+    i += "' ne', '!=', '<>'   'not equal'                'ie RH !=  0  A day with rain'\n"
+    i += "' or', '||'  'or '  'ie SQ > 15  or TX >= 25    Sunny and warm days'\n"
+    i += "'and', '&&'  'and'  'ie RH > 10 and TX <  0     Propably a day with snow'\n"
+    i += '\nPossible entities are\n'
+    i += "'DDVEC' = 'Vector mean wind direction (degrees)'    'FHVEC' = 'Vector mean windspeed (m/s)'\n"
+    i += "'FG'    = 'Daily mean windspeed (in 0.1 m/s)'       'FHX'   = 'Maximum hourly mean windspeed (m/s)'\n"
+    i += "'FHN'   = 'Minimum hourly mean windspeed (m/s)'     'FXX'   = 'Maximum wind gust (m/s)'\n"
+    i += "'TG'    = 'Daily mean temperature in (°C)'          'TN'    = 'Minimum temperature (°C)'\n"
+    i += "'TX'    = 'Maximum temperature (°C)                 'T10N'  = 'Minimum temperature at 10 cm (°C)'\n"
+    i += "'SQ'    = 'Sunshine duration (hour)                 'SP'    = '% of maximum sunshine duration'\n"
+    i += "'Q'     = 'Global radiation (J/cm2)                 'DR'    = 'Precipitation duration (hour)'\n"
+    i += "'RH'    = 'Daily precipitation amount (mm)          'RHX'   = 'Maximum hourly precipitation (mm)'\n"
+    i += "'PG'    = 'Daily mean sea level pressure (hPa)      'PX'    = 'Maximum hourly sea level pressure (hPa)'\n"
+    i += "'PN'    = 'Minimum hourly sea level pressure (hPa)' 'EV24'  = 'Potential evapotranspiration (mm)'\n"
+    i += "'VVN'   = 'Minimum visibility 0: <100m, 1:100-200m, 2:200-300m,..., 49:4900-5000m, 50:5-6 km, \'\n"
+    i += ' 56:6-7km, 57:7-8km,..., 79:29-30km, 80:30-35km, 81:35-40km,..., 89: >70km)\n'
+    i += "'VVX'   = 'Maximum visibility 0: <100 m, 1:100-200 m, 2:200-300 m,..., 49:4900-5000 m, 50:5-6 km, '\n"
+    i += ' 56:6-7km, 57:7-8km,..., 79:29-30km, 80:30-35km, 81:35-40km,..., 89: >70km)\n'
+    i += "'NG'    = 'Mean daily cloud cover (octants)         'UG'    = 'Daily mean relative atmospheric humidity (%)'\n"
+    i += "'UX'    = 'Maximum atmospheric humidity (%)         'UN'    = 'Minimum relative atmospheric humidity (%)'\n"
+
+    s  = f'{txt}\n'
+    s += 'For example: TX > 35\n'
+    if not info:
+        s += f"Type 'i' for more info.\n"
+    s  += "Press 'q' to go back to the main menu\n ? "
+
+    while True:
+        if info:
+            print(i)
+
+        answ = ask(s, True) # TODO MAKE ADVANCED CHECKS
+
+        info = True if answ == 'i' else False
+        if info:
+            continue
+        elif answ in config.answer_quit:
+            return config.answer_quit
+        # TODO
+        # elif validate.query(answ): # TODO
+        #     return answ
+        else:
+            return answ
+
+    return answ  # No checking for now
+    #
