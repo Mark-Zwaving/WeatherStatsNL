@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 '''Library contains functions for building html'''
-__author__     =  "Mark Zwaving"
-__email__      =  "markzwaving@gmail.com"
-__copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
-__license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9.2"
-__maintainer__ =  "Mark Zwaving"
-__status__     =  "Development"
+__author__     =  'Mark Zwaving'
+__email__      =  'markzwaving@gmail.com'
+__copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
+__license__    =  'GNU Lesser General Public License (LGPL)'
+__version__    =  '0.9.3'
+__maintainer__ =  'Mark Zwaving'
+__status__     =  'Development'
 
 import os, config, datetime
 import control.io as io
@@ -14,10 +14,11 @@ import view.log as log
 import view.icon as icon
 import view.translate as tr
 import view.txt as view_txt
-import knmi.view.fix as fix
 import model.utils as utils
+import knmi.model.station as station
 import knmi.model.daydata as daydata
 import knmi.view.dayvalues as dayvalues
+import knmi.view.fix as fix
 
 class Template():
     ''' Class to make a html page based on the template - template.html'''
@@ -332,3 +333,94 @@ def table_list_heatwave_days( l, max ):
             html += '</table>'
 
     return html
+
+def table_search_for_days(data, symd, eymd):
+    colcnt = 26
+    html  = '<table>'
+    html += '<thead>'
+    html += '<tr>'
+    html += f'<th> name </th>'
+    html += f'<th> periode </th>'
+    html += f'<th> day </th>'
+    html += f'<th> TX </th>'
+    html += f'<th> TG </th>'
+    html += f'<th> TN </th>'
+    html += f'<th> T10N </th>'
+    html += f'<th> SQ </th>'
+    html += f'<th> RH </th>'
+    html += f'<th> UG </th>'
+    html += f'<th> NG </th>'
+    html += f'<th> DDVEC </th>'
+    html += f'<th> FHVEC </th>'
+    html += f'<th> FG </th>'
+    html += f'<th> FHX </th>'
+    html += f'<th> FHN </th>'
+    html += f'<th> FXX </th>'
+    html += f'<th> SP </th>'
+    html += f'<th> Q </th>'
+    html += f'<th> DR </th>'
+    html += f'<th> RHX  </th>'
+    html += f'<th> PG </th>'
+    html += f'<th> PX </th>'
+    html += f'<th> PN </th>'
+    html += f'<th> VVN </th>'
+    html += f'<th> VVX </th>'
+    html += '</tr>'
+    html += '</thead>'
+    html += '<tbody>'
+    if len(data) > 0:
+        for day in data:
+            stn, ymd, ddvec, fhvec, fg, fhx, fhxh, fhn, fhnh, fxx, fxxh, tg, \
+            tn, tnh, tx, txh, t10n, t10nh, sq, sp, q, dr, rh, rhx, \
+            rhxh, pg, px, pxh, pn, pnh, vvn, vvnh, vvx, vvxh, ng, ug, \
+            ux, uxh, un, unh, ev24 = dayvalues.ents( day )
+
+            # Make correct id
+            id = ''
+            name = station.from_wmo_to_name(stn)
+            prov = station.from_wmo_to_province(stn)
+            if name != stn: id += f' {name} ' # Add name if  given
+            if prov != stn: id += f' {prov} ' # Add prov if given
+            if id == '':    id  = f' {stn} '  # No name or prov use wmo
+            date = int(day[daydata.YYYYMMDD])
+
+            html += '<tr>'
+            html += f'<td> {id} </td>'
+            html += f'<td> {symd}-{eymd} </td>'
+            html += f'<td> {date} </td>'
+            html += f'<td> {tx} {txh} </td>'
+            html += f'<td> {tg} </td>'
+            html += f'<td> {tn} {tnh} </td>'
+            html += f'<td> {t10n} {t10nh} </td>'
+            html += f'<td> {sq} </td>'
+            html += f'<td> {rh} </td>'
+            html += f'<td> {ug} </td>'
+            html += f'<td> {ng} </td>'
+            html += f'<td> {ddvec} </td>'
+            html += f'<td> {fhvec} </td>'
+            html += f'<td> {fg} </td>'
+            html += f'<td> {fhx} {fhxh} </td>'
+            html += f'<td> {fhn} {fhnh} </td>'
+            html += f'<td> {fxx} {fxxh} </td>'
+            html += f'<td> {sp} </td>'
+            html += f'<td> {q} </td>'
+            html += f'<td> {dr} </td>'
+            html += f'<td> {rhx} {rhxh} </td>'
+            html += f'<td> {pg} </td>'
+            html += f'<td> {px} {pxh} </td>'
+            html += f'<td> {pn} {pnh} </td>'
+            html += f'<td> {vvn} {vvnh} </td>'
+            html += f'<td> {vvx} {vvxh} </td>'
+            html += '</tr>'
+    else:
+        html += f'<tr> <td colspan="{colcnt}"> {tr.t("No days found")} </td> </tr>'
+
+    html += '</tbody>'
+    html += '<tfoot>'
+    html += f'<tr> <td colspan="{colcnt}"> {config.knmi_dayvalues_notification} </td> </tr>'
+    html += '</tfoot>'
+    html += '</table>'
+
+    return html
+
+#
