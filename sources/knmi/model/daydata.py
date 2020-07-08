@@ -130,6 +130,42 @@ def read( station ):
 
     return ok, data
 
+# Numpy methode didnt work. For now using normal list -> TODO
+def update_minus_1( data ):
+    l = data.tolist()
+    low_val = config.knmi_dayvalues_low_measure_val
+    ndx_rh  = ndx_ent('rh')
+    ndx_rhx = ndx_ent('rhx')
+    ndx_sq  = ndx_ent('sq')
+    l_ndx   = [ ndx_rh, ndx_rhx, ndx_sq ]
+    for x, row in enumerate(l):
+        for y, kol in enumerate(row):
+            if kol == -1.0 and (y in l_ndx):
+                data[x,y] = low_val
+
+    return data
+
+def period( data, sdate, edate ):
+    '''Function selects days by start and end dates'''
+    # Select values period
+    date_s, date_e = float(sdate),  float(edate)
+    ymd = data[:,ndx_ent('YYYYMMDD')] # Get dates array
+    sel = np.where( (ymd >= date_s) & (ymd <= date_e) ) # Get selected keys for correct dates
+    data = data[sel] # Make new array based on the selected days
+    data = update_minus_1( data ) # Update low values
+
+    return data
+
+def read_stations_period( stations, symd, eymd ):
+    data = np.array([])
+    for station in stations:
+        ok, ds = read(station)
+        if ok:
+            new = period( ds, start_ymd, end_ymd )
+            data = new if data.size == 0 else np.concatenate( (data, new) )
+
+    return data
+
 def unzip( station ):
     ok  = False
     zip = station.file_zip_dayvalues
