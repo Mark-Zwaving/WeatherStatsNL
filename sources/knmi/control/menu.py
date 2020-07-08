@@ -183,7 +183,7 @@ def search_for_days():
         if utils.quit_menu(stations):
             break
 
-        query = control_ask.ask_for_query('Type a query, separated with spaces ? ', True)
+        query = control_ask.ask_for_query('Type a query ? ', True)
         if utils.quit_menu(query):
             break
 
