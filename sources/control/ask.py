@@ -384,8 +384,7 @@ def ask_for_query( txt, space=True ):
 
     s  = f'{txt}\n'
     s += 'For example: TX > 35\n'
-    if not info:
-        s += f"Type 'i' for more info.\n"
+    if not info: s += f"Type 'i' for more info.\n"
     s  += "Press 'q' to go back to the main menu\n ? "
 
     while True:
@@ -403,7 +402,7 @@ def ask_for_query( txt, space=True ):
         # elif validate.query(answ): # TODO
         #     return answ
         else:
-            return answ
+            return make_query_txt_only( answ )
 
     return answ  # No checking for now
     #
