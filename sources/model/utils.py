@@ -4,7 +4,7 @@ __author__     =  'Mark Zwaving'
 __email__      =  'markzwaving@gmail.com'
 __copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
 __license__    =  'GNU Lesser General Public License (LGPL)'
-__version__    =  '0.0.6'
+__version__    =  '0.0.7'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
@@ -15,20 +15,26 @@ from datetime import datetime
 from dateutil import rrule
 import numpy as np
 
-def replace_query_with_text(query):
+# Check and sanitize input
+def clear( s ):
+    s = re.sub( '\n|\r|\t', '', s ).strip().replace('  ', ' ').lower()
+    return s if s else False
+
+def make_query_txt_only(query):
     q = query.lower()
-    q = q.replace('>=', 'ge')
-    q = q.replace('≥',  'ge')
-    q = q.replace('<=', 'le')
-    q = q.replace('≤',  'le')
-    q = q.replace('==', 'eq')
-    q = q.replace('!=', 'ne')
-    q = q.replace('<>', 'ne')
-    q = q.replace('!=', 'ne')
-    q = q.replace('>', 'gt')
-    q = q.replace('<', 'lt')
-    q = q.replace('||', 'or')
-    q = q.replace('&&', 'and')
+    q = q.replace('>=', ' ge ')
+    q = q.replace('≥',  ' ge ')
+    q = q.replace('<=', ' le ')
+    q = q.replace('≤',  ' le ')
+    q = q.replace('==', ' eq ')
+    q = q.replace('!=', ' ne ')
+    q = q.replace('<>', ' ne ')
+    q = q.replace('!=', ' ne ')
+    q = q.replace('>',  ' gt ')
+    q = q.replace('<',  ' lt ')
+    q = q.replace('||', ' or ')
+    q = q.replace('&&', ' and ')
+    q = q.replace('  ', ' ')
 
     return q
 
