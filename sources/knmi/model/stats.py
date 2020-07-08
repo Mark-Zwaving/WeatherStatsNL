@@ -23,43 +23,6 @@ df          = lambda s        : float(s) * 10.0
 is_entity   = lambda entity   : (entity.upper()   in entities)
 is_operator = lambda operator : (operator.lower() in operators)
 
-# Numpy methode didnt work. For now using normal list -> TODO
-def update_minus_1( data ):
-    l = data.tolist()
-    low_val = config.knmi_dayvalues_low_measure_val
-    ndx_rh  = daydata.ndx_ent('rh')
-    ndx_rhx = daydata.ndx_ent('rhx')
-    ndx_sq  = daydata.ndx_ent('sq')
-    l_ndx   = [ ndx_rh, ndx_rhx, ndx_sq ]
-    for x, row in enumerate(l):
-        for y, kol in enumerate(row):
-            if kol == -1.0 and (y in l_ndx):
-                data[x,y] = low_val
-
-    return data
-
-def period( data, sdate, edate ):
-    '''Function selects days by start and end dates'''
-    # Select values period
-    date_s, date_e = float(sdate),  float(edate)
-    ymd = data[:,daydata.ndx_ent('YYYYMMDD')] # Get dates array
-    sel = np.where( (
-    ymd >= date_s) & (ymd <= date_e) ) # Get selected keys for correct dates
-    data = data[sel] # Make new array based on the selected days
-    data = update_minus_1( data ) # Update low values
-
-    # TODO numpy replacement of values
-    # Always replace knmi low measurement values
-    # low_val = config.knmi_dayvalues_low_measure_val
-    # ndx_rh  = daydata.ndx_ent('rh')
-    # ndx_rhx = daydata.ndx_ent('rhx')
-    # ndx_sq  = daydata.ndx_ent('sq')
-    # data[ data[:,ndx_rh]  == -1.0 ] = low_val
-    # data[ data[:,ndx_rhx] == -1.0 ] = low_val
-    # data[ data[:,ndx_sq]  == -1.0 ] = low_val
-
-    return data
-
 def process_list( data, entity ):
     '''Function processes data values on false values'''
     key  = daydata.ndx_ent( entity )
@@ -115,19 +78,23 @@ def terms_days( data, entity, operator, value ):
 
     return data[sel]
 
-def terms_days_or( data, l_terms ):
+def terms_days_or( data, query1, query2 ):
     '''Function select days based on two terms like TX > 30 OR RH > 10 for example.'''
-    data1 = terms_days( data, l_terms[0], l_terms[1], l_terms[2] )
-    data2 = terms_days( data, l_terms[4], l_terms[5], l_terms[6] )
+    q1ent, q1op, q1val = query1.split(' ')
+    q2ent, q2op, q2val = query2.split(' ')
+    data1 = terms_days( data, q1ent, q1op, q1val )
+    data2 = terms_days( data, q2ent, q2op, q2val )
     data  = data[( data1 | data2 )]  # Add together with OR
     # data  = np.unique(data)          # Remove duplicate days
 
     return data
 
-def terms_days_and( date, l_terms ):
+def terms_days_and( data, query1, query2 ):
     '''Function select days based on two terms like TX > 30 AND RH > 10 for example.'''
-    data1 = terms_days( data, l_terms[0], l_terms[1], l_terms[2] )
-    data2 = terms_days( data, l_terms[4], l_terms[5], l_terms[6] )
+    q1ent, q1op, q1val = query1.split(' ')
+    q2ent, q2op, q2val = query2.split(' ')
+    data1 = terms_days( data, q1ent, q1op, q1val )
+    data2 = terms_days( data, q2ent, q2op, q2val )
     data = data[(data1 & data2)]   # Select the same days
 
     return data
