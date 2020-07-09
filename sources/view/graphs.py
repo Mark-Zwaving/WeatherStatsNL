@@ -63,7 +63,7 @@ def plot( stations, entities, sd, ed, title, ylabel, path ):
     for station in stations:
         ok, data = daydata.read( station )
         if ok:
-            data = stats.period( data, sd, ed )
+            data = daydata.period( data, sd, ed )
             ymd = data[:,daydata.ndx_ent('YYYYMMDD')].astype(
                             np.int, copy=False
                             ).astype(
