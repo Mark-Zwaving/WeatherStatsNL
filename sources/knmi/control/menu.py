@@ -191,7 +191,7 @@ def search_for_days():
         if utils.quit_menu(type):
             break
 
-        qname = utils.replace_query_with_text(query).replace(' ', '-')
+        qname = utils.make_query_txt_only(query)
         fname = control_ask.ask_for_file_name(
                         'Give a name for the file ? <optional>',
                         f'days-{qname}-{st_ymd}-{ed_ymd}',
@@ -201,7 +201,7 @@ def search_for_days():
             break
 
         # Search for the days the
-        data = search4days.query_process( stations, st_ymd, ed_ymd, query )
+        data = search4days.process( stations, st_ymd, ed_ymd, query )
 
         if type =='html':
             fname = f'{fname}.html'
