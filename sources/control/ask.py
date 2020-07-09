@@ -402,7 +402,7 @@ def ask_for_query( txt, space=True ):
         # elif validate.query(answ): # TODO
         #     return answ
         else:
-            return make_query_txt_only( answ )
+            return utils.make_query_txt_only( answ )
 
     return answ  # No checking for now
     #
