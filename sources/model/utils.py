@@ -13,7 +13,7 @@ import datetime, os
 import view.translate as tr
 from datetime import datetime
 from dateutil import rrule
-import numpy as np
+import numpy as np, re
 
 # Check and sanitize input
 def clear( s ):
@@ -34,9 +34,8 @@ def make_query_txt_only(query):
     q = q.replace('<',  ' lt ')
     q = q.replace('||', ' or ')
     q = q.replace('&&', ' and ')
-    q = q.replace('  ', ' ')
 
-    return q
+    return clear(q)
 
 def path( dir, file ):
     return os.path.abspath(os.path.join(dir, file))
