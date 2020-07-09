@@ -161,7 +161,7 @@ def read_stations_period( stations, symd, eymd ):
     for station in stations:
         ok, ds = read(station)
         if ok:
-            new = period( ds, start_ymd, end_ymd )
+            new = period( ds, symd, eymd )
             data = new if data.size == 0 else np.concatenate( (data, new) )
 
     return data
