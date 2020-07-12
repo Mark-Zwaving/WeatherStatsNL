@@ -224,19 +224,30 @@ def ask_for_date( txt, space=True):
             log.console(f'Error in date: {answ}\n', True)
             # ask('Press a key to try again...')
 
-def ask_for_start_and_end_date(space=True):
-    sd = ask_for_date('Give a START date <format:yyyymmdd> ? ', space)
-    if utils.quit_menu(sd):
-        return config.answer_quit, sd
+def ask_for_period( space=True ):
+    txt  = 'Give a period ? \n'
+    txt += 'Period           start  -  end    \n'
+    txt += 'Default format  yyyymmdd-yyyymmdd \n'
+    txt += 'For example: 20200510-20200520'
+    # txt += 'Other formats with wild card * \n'
+    # txt += '  yyyy****           selects the whole year \n'
+    # txt += '  ****mm**           selects a month fo every year \n'
+    # txt += '  ****mmdd           selects a day for every year \n'
+    # txt += 'Examples wildcard * \n'
+    # txt += '  2015****           selects the year 2015 \n'
+    # txt += '  201101**-202001**  selects all januarys from 2011 unto 2020 \n'
+    # txt += '  ****07**           selects all julys from avalaible data \n'
+    # txt += '  ****1225           selects all 25 decembers from avalaible data \n'
 
-    ed = ask_for_date('Give an END date <format:yyyymmdd> ? ', space)
-    if utils.quit_menu(ed):
-        return ed, config.answer_quit
+    log.console(txt, True)
+    log.console("Press 'q' to go back to the main menu", True)
+    while True:
+        answ = ask(' Type period ? ', space)
 
-    if int(sd) > int(ed):
-        mem = sd; sd = ed; ed = mem
+        if utils.quit_menu(answ):
+            return config.answer_quit
 
-    return sd, ed
+        return answ.replace(' ', '')
 
 def ask_for_date_with_check_data( station, data, txt, space=True ):
     sd, ed = data[ 0, daydata.YYYYMMDD], data[-1, daydata.YYYYMMDD]
@@ -317,16 +328,14 @@ def ask_for_graph_type(txt, space=True):
     l = ['line', 'bar']
     return ask_type_options(txt, 'graph', l, space)
 
-def ask_for_file_name(txt, base_name='', space=True):
+def ask_for_file_name(txt, space=True):
     log.console(txt, True)
     log.console('Press <enter> for no given name. Default name will be used', True)
 
     answ = ask(' ? ', space)
 
-    if not answ: # Get a name anyway
-        now  = utils.now_act_for_file()
-        answ = f'{base_name}-{now}'
-
+    if not answ:
+        return False
     return answ
 
 def ask_back_to_main_menu(space=True):
@@ -335,15 +344,15 @@ def ask_back_to_main_menu(space=True):
 
 def ask_period_stations_type_name( space=True ):
     # Ask start and end date
-    ok, sd, ed, stations, type, name = False, '', '', [], '', ''
-    sd, ed = ask_for_start_and_end_date()
-    if utils.quit_menu(sd) == False or utils.quit_menu(ed) == False:
+    ok, period, stations, type, name = False, '', [], '', ''
+    period = ask_for_period( space )
+    if not utils.quit_menu(period):
         # Ask for one or more stations
         stations = ask_for_stations('Select one (or more) weather station(s) ?', space )
-        if utils.quit_menu(stations) == False:
+        if not utils.quit_menu(stations) :
             # Ask for a file type
             type = ask_for_file_type('Select filetype ? ', space)
-            if utils.quit_menu(type) == False:
+            if not utils.quit_menu(type):
                 # Ask for a name
                 ok = True
                 if type != 'cmd':
@@ -351,7 +360,7 @@ def ask_period_stations_type_name( space=True ):
                     if utils.quit_menu(name):
                         ok = False # Oke quit
 
-    return ok, sd, ed, stations, type, name
+    return ok, period, stations, type, name
 
 def ask_for_query( txt, space=True ):
     info = False
