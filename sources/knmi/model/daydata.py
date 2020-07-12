@@ -3,7 +3,7 @@
 __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
-__version__    =  "0.0.6"
+__version__    =  "0.1.0"
 __license__    =  "GNU Lesser General Public License (LGPL)"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
@@ -14,7 +14,10 @@ import view.log as log
 import view.txt as view_txt
 import view.translate as tr
 from zipfile import ZipFile, BadZipfile
+from datetime import datetime
 import model.validate as validate
+import model.utils as utils
+import calendar
 
 # Dayvalues data KNMI / Keys for dayvalues
 STN      =  0 # WMO number for nl weatherstation
@@ -78,7 +81,7 @@ def is_ent( ent ):
 def ndx_ent( ent ):
     '''Get index by text from the array entities'''
     e = ent.strip().upper()
-    ndx, = np.where( entities == e )
+    ndx, = np.where( (entities == e) )
 
     return ndx[0]
 
@@ -145,14 +148,117 @@ def update_minus_1( data ):
 
     return data
 
-def period( data, sdate, edate ):
+def sel_keys_days ( ymd, period ):
+    # Get the dates array
+    y0  = utils.f_to_s(ymd[ 0])[:4]
+    yz  = utils.f_to_s(ymd[-1])[:4]
+    per = period.replace(' ','') # No spaces
+    now = datetime.now() # Date now
+    sel = np.array([])  # Array with selected keys
+
+    # Base period with a start and end date is given
+    if period.find('-') != -1:
+        s_per, e_per = per.split('-')  # Split in start and end-date
+
+        # Split up in y , m , d
+        ys, ye = s_per[0:4], e_per[0:4]
+        ms, me = s_per[4:6], e_per[4:6]
+        ds, de = s_per[6:8], e_per[6:8]
+
+        # Correct for the wildcard option: ****1225-****1225
+        if ys == '****': ys = y0  # First possible year
+        if ye == '****': ye = yz  # Last possible year
+
+        # Normal period yyyymmdd-yyyymmdd, easy calculations
+        if s_per.isdigit() and e_per.isdigit():
+            sp, ep = float(s_per), float(e_per)
+            # Get selected keys for correct dates
+            sel = np.where( (ymd >= sp) & (ymd <= ep) )
+
+            return sel
+
+        else:
+            # OPTION yyyymmdd-yyyy*mmdd  Special format an certain day in the year for more years
+            if len(e_per) == 7 and e_per[4] == '*':
+                md, years = f'{ms}{ds}', range(int(ys), int(ye)+1)
+                for y in years:
+                    yymmdd = float(f'{y}{md}')
+                    keys = np.where( (ymd == yymmdd) ) # Get the keys
+                    sel  = np.concatenate( (sel, keys) ) # Add keys to total list
+
+                return sel
+
+            # Start year en month is given. Calculate months over the years
+            # OPTION:  201012**-202012** Calculate dec from 2010 till 2020
+            if f'{ys}{ms}{ye}{me}'.isdigit() and f'{ds}{de}' == '****':
+                mi, years = int(ms), range( int(ys), int(ye) + 1 )
+                for y in years:
+                    days = calendar.monthrange(y, mi)[1]  # num_days
+                    sp, ep = float(f'{y}{ms}01'), float(f'{y}{ms}{days}')
+                    keys = np.where( (ymd >= sp) & (ymd <= ep) ) # Get the keys
+                    sel  = np.concatenate( (sel, keys) ) # Add keys to total list
+
+                return sel
+
+            # OPTION: 2010****-2020**** calculates full years from 2010 till 2020
+            if f'{ys}{ye}'.isdigit() and f'{ms}{ds}{me}{de}' == '********':
+                sp, ep = float(f'{ys}0101'), float(f'{ys}1231')
+                sel = np.where( (ymd >= sp) & (ymd <= ep) )
+
+                return sel
+
+            # More options later, maybe
+
+    #  No '-' in period given
+    else:
+        yp, mp, dp = per[:4], per[4:6], per[6:8]
+        yn, mn, dn = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
+
+        # OPTION YYYYMMDD  Get only one day. No statistic will be calculated
+        if per.isdigit():
+            sel = np.where( (ymd == per) )
+            return sel
+
+        # OPTION YYYY****  The year is given, rest not, is ****
+        if yp.isdigit() and f'{mp}{dp}' == '****':
+            sp, ep = float(f'{yp}0101'), float(f'{yp}1231')
+            sel = np.where( (ymd >= sp) & (ymd <= ep) )
+            return sel
+
+        # OPTION YYYYMM**   The year and month are given, the rest DD not is **
+        if f'{yp}{mp}'.isdigit() and f'{dp}' == '**':
+            days = calendar.monthrange( int(yp), int(mp) )[1]  # num_days
+            sp, ep = float(f'{yp}{mp}01'), float(f'{yp}{mp}{days}')
+            sel = np.where( (ymd >= sp) & (ymd <= ep) )
+            return sel
+
+        # OPTION ****MM**   The month is given only. Selects a month for every year'
+        if f'{yp}{dp}' == '******' and mp.isdigit():
+            mi, years = int(mp), range( int(y0), int(yz) + 1 )
+            for y in years:
+                days = calendar.monthrange(y, mi)[1]  # num_days
+                sp, ep = float(f'{yp}{mp}01'), float(f'{yp}{mp}{days}')
+                keys = np.where( (ymd >= sp) & (ymd <= ep) ) # Get the keys
+                sel  = np.concatenate( (sel, keys) ) # Add keys to total list
+
+            return sel
+
+        # OPTION  ****MMDD   The month and day is given. Selects a day for every year \n'
+        if f'{yp}' == '****' and '{mp}{dp}'.isdigit():
+            years = range( int(y0), int(yz) + 1 )
+            for y in years:
+                days = calendar.monthrange(y, mi)[1]  # num_days
+                sp, ep = float(f'{y}{ms}01'), float(f'{y}{ms}{days}')
+                keys = np.where( (ymd >= sp) & (ymd <= ep) ) # Get the keys
+                sel  = np.concatenate( (sel, keys) ) # Add keys to total list
+
+            return sel
+
+def period( data, period ):
     '''Function selects days by start and end dates'''
-    # Select values period
-    date_s, date_e = float(sdate),  float(edate)
-    ymd = data[:,ndx_ent('YYYYMMDD')] # Get dates array
-    sel = np.where( (ymd >= date_s) & (ymd <= date_e) ) # Get selected keys for correct dates
-    data = data[sel] # Make new array based on the selected days
-    data = update_minus_1( data ) # Update low values
+    ymd  = data[:, ndx_ent('YYYYMMDD')]   # Get the dates array
+    sel  = sel_keys_days ( ymd, period )  # Get the keys list
+    data = update_minus_1( data[sel] )    # Update/correct values -1
 
     return data
 
