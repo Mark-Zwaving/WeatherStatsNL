@@ -4,7 +4,7 @@ __author__     =  'Mark Zwaving'
 __email__      =  'markzwaving@gmail.com'
 __copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
 __license__    =  'GNU Lesser General Public License (LGPL)'
-__version__    =  '0.7.3'
+__version__    =  '0.7.4'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
@@ -23,8 +23,9 @@ class Stats:
     def __init__(self, station, data ):
         self.station    = station
         self.data       = data
-        self.date_start = data[ 0, daydata.YYYYMMDD] # First day data
-        self.date_end   = data[-1, daydata.YYYYMMDD] # Last day data
+        self.ymd        = data[:,daydata.YYYYMMDD]
+        self.date_start = utils.f_to_s( self.ymd[0]  )  # First day data
+        self.date_end   = utils.f_to_s( self.ymd[-1] )  # Last day data
         self.period     = f'{self.date_start}-{self.date_end}'
 
         # Average calculations
@@ -44,39 +45,19 @@ class Stats:
         self.days_tn_lt__15 = stats.terms_days( data, 'TN', '<', -15 )
         self.days_tn_lt__20 = stats.terms_days( data, 'TN', '<', -20 )
         self.days_hellmann  = self.days_tg_lt_0
-
-        # Entities list from days
-        self.ent_tx_lt_0   = daydata.list_ent( self.days_tx_lt_0, 'TX' )
-        self.ent_tg_lt_0   = daydata.list_ent( self.days_tg_lt_0, 'TG' )
-        self.ent_tn_lt_0   = daydata.list_ent( self.days_tn_lt_0, 'TN' )
-        self.ent_tn_lt__5  = daydata.list_ent( self.days_tn_lt__5, 'TN' )
-        self.ent_tn_lt__10 = daydata.list_ent( self.days_tn_lt__10, 'TN' )
-        self.ent_tn_lt__15 = daydata.list_ent( self.days_tn_lt__15, 'TN' )
-        self.ent_tn_lt__20 = daydata.list_ent( self.days_tn_lt__20, 'TN' )
-        self.ent_hellmann  = self.ent_tg_lt_0
-
-        # Counts days
-        self.cnt_tx_lt_0   = self.ent_tx_lt_0.size
-        self.cnt_tg_lt_0   = self.ent_tg_lt_0.size
-        self.cnt_tn_lt_0   = self.ent_tn_lt_0.size
-        self.cnt_tn_lt__5  = self.ent_tn_lt__5.size
-        self.cnt_tn_lt__10 = self.ent_tn_lt__10.size
-        self.cnt_tn_lt__15 = self.ent_tn_lt__15.size
-        self.cnt_tn_lt__20 = self.ent_tn_lt__20.size
-
-        # Sum
-        self.sum_hellmann  = abs(stats.sum(self.days_tg_lt_0, 'TG'))
+        self.sum_hellmann   = stats.hellmann( self.days_hellmann )
 
 def sort( l, ent, pm = '+' ):
     l = np.array( sorted(l, key=lambda stats: stats.sum_hellmann) ) # Sort on hellmann
-    if pm == '+':
-        l = l[::-1] # reverse
+    if pm == '+': l = l[::-1] # reverse
 
     return l
 
-def calculate( stations, sd, ed, name=False, type='html' ):
+def calculate( stations, period, name, type='html' ):
     '''Function to calculate winterstatistics'''
     log.console(f'Preparing output...')
+    colspan = 15
+    popup_rows = config.max_rows_table_popup
 
     # Make data list with station and stats
     winter = np.array( [] )
@@ -84,24 +65,27 @@ def calculate( stations, sd, ed, name=False, type='html' ):
         log.console(f'Read and calculate statistics: {station.place}', True)
         ok, data = daydata.read( station )  # Get data stations
         if ok:
-            period = stats.period( data, sd, ed ) # Get days of period
-            winter = np.append( winter, Stats( station, period ) ) # Create winterstats object
+            days = daydata.period( data, period ) # Get days of period
+            if days.size != 0:
+                winter = np.append( winter, Stats( station, days ) ) # Create winterstats object
 
-    log.console(f'Preparing output: {type}', True)
+    log.console(f'Preparing winterstats, output type is {type}', True)
 
     # Update name if there is none yet
     if not name:
-        name = f'winter-statistics-{sd}-{ed}'
+        name = utils.mk_name('winterstatistics', period)
+
+    input(name)
 
     # Make path if it is a html or txt file
     path = ''
     if type in ['html','txt']:
         if type == 'html':
             dir = config.dir_html_winterstats
-        elif type == 'txt':
+        elif type ==  'txt':
             dir = config.dir_txt_winterstats
 
-        path = utils.path(dir, f'{name}.{type}')
+        path = utils.mk_path(dir, f'{name}.{type}')
 
     # Sort on hellmann
     winter = sort( winter, '+' )
@@ -110,36 +94,48 @@ def calculate( stations, sd, ed, name=False, type='html' ):
     title, main, footer = '', '', ''
 
     # Head of txt of console
+    table_title = name.replace('-', ' ')
+    input(table_title)
     if type in [ 'txt', 'cmd' ]:
-        title += f'PLAATS{s:17} PROVINCIE         PERIODE{s:11} TG{s:5} '
+        title += f'{table_title} \n'
+        title += f'PLAATS{s:17} '
+        title += f'PROVINCIE{s:8} '
+        title += f'PERIODE{s:11} '
+        title += f'TG{s:5} '
         title += 'HELLMANN TX MIN  TG MIN  TN MIN  TX<0  TG<0  TN<0  TN<-5  '
         title += 'TX<-10 TX<-15 TX<-20\n'
 
     if type == 'html':
-        table_title = name.replace('-', ' ').replace('_', ' ')
-        title += f'<table>\n<thead>\n<tr><th colspan="15">{table_title}</th></tr>\n'
-        title += '<tr>\n'
-        title += '<th> plaats </th>\n'
-        title += '<th> provincie </th>\n'
-        title += '<th> periode </th>\n'
-        title += '<th> tg </th>\n'
-        title += '<th> hellmann </th>\n'
-        title += '<th title="Koudste dag"> tx min </th>\n'
-        title += '<th title="Koudste gemiddelde"> tg min </th>\n'
-        title += '<th title="Koudste minimum"> tn min </th>\n'
-        title += '<th title="IJsdagen"> tx&lt;0 </th>\n'
-        title += '<th title="Hellmanndagen"> tg&lt;0 </th>\n'
-        title += '<th title="Vorstdagen"> tn&lt;0 </th>\n'
-        title += '<th title="Dagen met matige vorst"> tn&lt;-5 </th>\n'
-        title += '<th title="Dagen met strenge vorst"> tn&lt;-10 </th>\n'
-        title += '<th title="Dagen met zeer strenge vorst"> tn&lt;-15 </th>\n'
-        title += '<th title="Dagen met zeer strenge vorst"> tn&lt;-20 </th>\n'
-        title += '</tr>\n</thead>\n'
-        title += '<tbody>'
+        title += f'''
+              <table id="stats">
+              <thead>
+                  <tr>
+                       <th colspan="{colspan}"> {table_title} </th>
+                  </tr>
+                  <tr>
+                      <th> plaats </th>
+                      <th> provincie </th>
+                      <th> periode </th>
+                      <th> tg </th>
+                      <th> hellmann </th>
+                      <th title="Koudste dag"> tx min </th>
+                      <th title="Koudste gemiddelde"> tg min </th>
+                      <th title="Koudste minimum"> tn min </th>
+                      <th title="IJsdagen"> tx&lt;0 </th>
+                      <th title="Hellmanndagen"> tg&lt;0 </th>
+                      <th title="Vorstdagen"> tn&lt;0 </th>
+                      <th title="Dagen met matige vorst"> tn&lt;-5 </th>
+                      <th title="Dagen met strenge vorst"> tn&lt;-10 </th>
+                      <th title="Dagen met zeer strenge vorst"> tn&lt;-15 </th>
+                      <th title="Dagen met zeer strenge vorst"> tn&lt;-20 </th>
+                  </tr>
+              </thead>
+              <tbody>
+            '''
 
     # Calculate values
     for s in winter:
-        log.console(f'For: {s.station.place}', True)
+        log.console(f'Working on: {s.station.place}', True)
 
         tg_gem    = fix.ent( s.tg_gem, 'TG' )
         tx_min    = fix.ent( s.tx_min, 'TX' )
@@ -150,58 +146,100 @@ def calculate( stations, sd, ed, name=False, type='html' ):
         if type == 'html':
             period_txt = f'{utils.ymd_to_txt(s.date_start)} - {utils.ymd_to_txt(s.date_end)}'
             # TODO the extension html tables
-            main += '<tr>'
-            main += f'<td> {s.station.place} </td>'
-            main += f'<td> {s.station.province} </td>'
-            main += f'<td title="{period_txt}"> {s.period} </td>'
-            main += f'<td> {tg_gem} </td>'
-            main += f'<td> {hellmann} </td>'
-            main += f'<td> {tx_min} </td>'
-            main += f'<td> {tg_min} </td>'
-            main += f'<td> {tn_min} </td>'
-            main += f'<td> {s.cnt_tx_lt_0} </td>'
-            main += f'<td> {s.cnt_tg_lt_0} </td>'
-            main += f'<td> {s.cnt_tn_lt_0} </td>'
-            main += f'<td> {s.cnt_tn_lt__5} </td>'
-            main += f'<td> {s.cnt_tn_lt__10} </td>'
-            main += f'<td> {s.cnt_tn_lt__15} </td>'
-            main += f'<td> {s.cnt_tn_lt__20} </td>'
-            main += '</tr>'
+            main += f'''
+                <tr class="row-data">
+                    <td> <span class="val"> {s.station.place} </span> </td>
+                    <td> <span class="val"> {s.station.province} </span> </td>
+                    <td title="{period_txt}"> <span class="val"> {s.period} </span> </td>
+                    <td> <span class="val"> {tg_gem} </span> </td>
+                    <td> <span class="val"> {hellmann} </span> </td>
+                    <td> <span class="val"> {tx_min} </span> </td>
+                    <td> <span class="val"> {tg_min} </span> </td>
+                    <td> <span class="val"> {tn_min} </span> </td>
+                    <td>
+                        <span class="val"> {np.size( s.days_tx_lt_0, axis=0 )} </span>
+                        {html.table_count( s.days_tx_lt_0, 'TX', 'TXH', popup_rows )}
+                    </td>
+                    <td>
+                        <span class="val"> {np.size( s.days_tg_lt_0, axis=0 )} </span>
+                        {html.table_count( s.days_tg_lt_0, 'TG', '', popup_rows )}
+                    </td>
+                    <td>
+                        <span class="val"> {np.size( s.days_tn_lt_0,   axis=0 )} </span>
+                        {html.table_count( s.days_tn_lt_0, 'TN', 'TNH', popup_rows )}
+                    </td>
+                    <td>
+                        <span class="val"> {np.size( s.days_tn_lt__5,  axis=0 )} </span>
+                        {html.table_count( s.days_tn_lt__5, 'TN', 'TNH', popup_rows )}
+                    </td>
+                    <td>
+                        <span class="val"> {np.size( s.days_tn_lt__10, axis=0 )} </span>
+                        {html.table_count( s.days_tn_lt__10, 'TN', 'TNH', popup_rows )}
+                    </td>
+                    <td>
+                        <span class="val"> {np.size( s.days_tn_lt__15, axis=0 )} </span>
+                        {html.table_count( s.days_tn_lt__15, 'TN', 'TNH', popup_rows )}
+                    </td>
+                    <td>
+                        <span class="val"> {np.size( s.days_tn_lt__20, axis=0 )} </span>
+                        {html.table_count( s.days_tn_lt__20, 'TN', 'TNH', popup_rows )}
+                    </td>
+                </tr>
+                '''
 
         elif type in ['txt','cmd']:
-            main += f'{s.station.place:<23} {s.station.province:17} '
-            main += f'{s.station.period:18} {tg_gem:7} {hellmann:^8} '
-            main += f'{tx_min:<7} {tg_min:<7} {tn_min:<7} {s.cnt_tx_lt_0:^5} '
-            main += f'{s.cnt_tg_lt_0:^5} {s.cnt_tn_lt_0:^5} {s.cnt_tn_lt__5:^6} '
-            main += f'{s.cnt_tn_lt__10:^6} {s.cnt_tn_lt__15:^6} {s.cnt_tn_lt__20:^6} \n'
+            main += f'{s.station.place:<23} '
+            main += f'{s.station.province:17} '
+            main += f'{s.station.period:18} '
+            main += f'{tg_gem:7} '
+            main += f'{hellmann:^8} '
+            main += f'{tx_min:<7} '
+            main += f'{tg_min:<7} '
+            main += f'{tn_min:<7} '
+            main += f'{np.size( s.days_tx_lt_0,   axis=0 ):^5} '
+            main += f'{np.size( s.days_tg_lt_0,   axis=0 ):^5} '
+            main += f'{np.size( s.days_tn_lt_0,   axis=0 ):^5} '
+            main += f'{np.size( s.days_tn_lt__5,  axis=0 ):^6} '
+            main += f'{np.size( s.days_tn_lt__10, axis=0 ):^6} '
+            main += f'{np.size( s.days_tn_lt__15, axis=0 ):^6} '
+            main += f'{np.size( s.days_tn_lt__20, axis=0 ):^6} \n'
 
     # Close of main, footer
-    notification = stations[0].dayvalues_notification
     if type in ['txt','cmd']:
-        footer += notification
+        footer += config.knmi_dayvalues_notification
+
     elif type == 'html':
-        footer += '</tbody>\n'
-        footer += '<tfoot>\n'
-        footer += '<tr>\n<td colspan="15">\n'
-        footer += notification
-        footer += '</td>\n</tr>\n'
-        footer += '</tfoot>\n'
-        footer += '</table>\n'
+        footer += f'''
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="{colspan}">
+                        {config.knmi_dayvalues_notification}
+                    </td>
+                </tr>
+            </tfoot>
+            </table>
+            '''
 
     # Write to file or console
     output = f'{title}\n{main}\n{footer}'
     if type == 'cmd':
         log.console( output, True )
+
     elif type == 'html':
         page           =  html.Template()
         page.title     =  table_title
-        page.header    =  table_title
         page.main      =  output
-        page.file_path =  path
-
-        page.add_css_file('./css/', 'table-statistics.css')
-        page.add_script_file('./js/', 'sort_col.js') # TODO
+        page.strip     =  True
+        page.set_path( path )
+        page.add_css_file(name='table-statistics.css')
+        page.add_css_file(name='winterstats.css')
+        page.add_css_file(name='default.css')
+        page.add_script_file(dir='./js/', name='sort-col.js')
+        page.add_script_file(name='default.js')
+        page.add_script_file(name='winterstats.js')
         page.save()
+
     elif type == 'txt':
         io.save(path, output) # Schrijf naar bestand
 
