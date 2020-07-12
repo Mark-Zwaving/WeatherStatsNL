@@ -14,6 +14,7 @@ import model.convert as convert
 import model.search4days as search4days
 import knmi.model.daydata as daydata
 import knmi.model.winterstats as winterstats
+import knmi.model.summerstats as summerstats
 import knmi.view.dayvalues as view_dayvalues
 import control.ask as control_ask
 import control.io as io
@@ -78,8 +79,8 @@ def get_dayvalues_by_date():
             break
 
         txt = '\nSelect a date <yyyymmdd> ?\n'
-        yyyymmdd = control_ask.ask_for_date_with_check_data(station, data, txt, True)
-        if utils.quit_menu(yyyymmdd):
+        ymd = control_ask.ask_for_date_with_check_data(station, data, txt, True)
+        if utils.quit_menu(ymd):
             break
 
         type = control_ask.ask_for_file_type('Select filetype ? ')
@@ -90,8 +91,9 @@ def get_dayvalues_by_date():
         name = False
         if type != 'cmd':
             name = control_ask.ask_for_file_name( f'Give a name for the {type} file ? <optional> ',
-                                                  f'dayvalues-{station.place}-{yyyymmdd}',
                                                   True )
+            if not name:
+                name = f'dayvalues-{station.place}-{yyyymmdd}'
             if utils.quit_menu(name):
                 break
             name += f'.{type}'
@@ -175,8 +177,8 @@ def search_for_days():
         log.header('START SEARCHING FOR SPECIFIC DAYS...', True)
 
         log.console( 'For which time periode do you want to search ? \n' )
-        st_ymd, ed_ymd = control_ask.ask_for_start_and_end_date( )
-        if utils.quit_menu(st_ymd) or utils.quit_menu(ed_ymd):
+        period = control_ask.ask_for_period( )
+        if utils.quit_menu(period):
             break
 
         stations = control_ask.ask_for_stations('Select one or more weather stations ?', True)
@@ -194,21 +196,23 @@ def search_for_days():
         qname = utils.make_query_txt_only(query)
         fname = control_ask.ask_for_file_name(
                         'Give a name for the file ? <optional>',
-                        f'days-{qname}-{st_ymd}-{ed_ymd}',
                         True
                     )
+        if not fname:
+            fname = f'days-{qname}-{period}'
+
         if utils.quit_menu(fname):
             break
 
         # Search for the days the
-        data = search4days.process( stations, st_ymd, ed_ymd, query )
+        data = search4days.process( stations, period, query )
 
         if type =='html':
             fname = f'{fname}.html'
             path = utils.path(config.dir_html_search_for_days, fname)
 
             # Proces data in html table
-            html_main = view_html.table_search_for_days(data, st_ymd, ed_ymd)
+            html_main = view_html.table_search_for_days(data, period)
 
             # Write to html, screen, console
             html = view_html.Template()
@@ -248,8 +252,8 @@ def graph_period():
         log.header('START MAKING A IMAGE GRAPH...', True)
 
         log.console( 'What time periode ?\n' )
-        s_ymd, e_ymd = control_ask.ask_for_start_and_end_date( )
-        if utils.quit_menu(s_ymd) or utils.quit_menu(e_ymd):
+        period = control_ask.ask_for_period( )
+        if utils.quit_menu(period):
             break
 
         stations = control_ask.ask_for_stations('Select a weather station ?', True)
@@ -309,15 +313,17 @@ def graph_period():
                                         ) # Dot sizes on day
 
         name = control_ask.ask_for_file_name( 'Give a name for the file ? <optional>',
-                                              f'period-{s_ymd}-{e_ymd}', True
+                                              True
                                               )
+        if not name:
+            name = f'period-{period}'
         if utils.quit_menu(name):
             break
 
         st = time.time_ns()
         log.header( 'PREPARING IMAGES...', True )
         path = utils.path( config.dir_img_period, name + f'.{config.plot_image_type}' )
-        view_graph.plot( stations, entities, s_ymd, e_ymd, title, ylabel, path )
+        view_graph.plot( stations, entities, period, title, ylabel, path )
 
         log.console( view_txt.menu_process_time(st) + '\n', True )
 
@@ -340,7 +346,7 @@ def table_winterstats():
     while True:
         log.header('START CALCULATE WINTER STATISTICS...', True)
         # Ask for all in one
-        ok, sd, ed, stations, type, name = control_ask.ask_period_stations_type_name(True)
+        ok, period, stations, type, name = control_ask.ask_period_stations_type_name(True)
 
         if not ok:
             log.console('Something went wrong ...')
@@ -349,7 +355,7 @@ def table_winterstats():
         log.header(f'CALCULATING WINTER STATISTICS...', True)
 
         st = time.time_ns()
-        path = winterstats.calculate( stations, sd, ed, name, type )
+        path = winterstats.calculate( stations, period, name, type )
         log.console(view_txt.menu_process_time(st) + '\n', True)
 
         if type != 'cmd':
@@ -373,14 +379,14 @@ def table_summerstats():
     '''Function makes calculations for winterstatistics'''
     while True:
         log.header('START CALCULATE SUMMER STATISTICS...', True)
-        ok, sd, ed, stations, type, name = control_ask.ask_period_stations_type_name(True)
+        ok, period, stations, type, name = control_ask.ask_period_stations_type_name(True)
         if not ok:
             break
         else:
-            log.header('CALCULATING WINTER STATISTICS...', True)
+            log.header('CALCULATING SUMMER STATISTICS...', True)
 
             st = time.time_ns()
-            path = summerstats.calculate( stations, sd, ed, name, type )
+            path = summerstats.calculate( stations, period, name, type )
             log.console(view_txt.menu_process_time(st) + '\n', True)
 
             if type != 'cmd':
@@ -404,7 +410,7 @@ def table_summerstats():
 def table_heatwaves():
     while True:
         log.header('START CALCULATE HEATWAVES...', True)
-        ok, sd, ed, stations, type, name = control_ask.ask_period_stations_type_name(True)
+        ok, period, stations, type, name = control_ask.ask_period_stations_type_name(True)
 
         if not ok:
             break
@@ -437,7 +443,7 @@ def table_heatwaves():
 def table_allstats():
     while True:
         log.header('START CALCULATE STATISTICS...', True)
-        ok, sd, ed, stations, type, name = control_ask.ask_period_stations_type_name(True)
+        ok, period, stations, type, name = control_ask.ask_period_stations_type_name(True)
         if not ok:
             break
         else:
@@ -464,7 +470,7 @@ def table_allstats():
 def table_allextremes():
     while True:
         log.header('START CALCULATE EXTREMES...', True)
-        ok, sd, ed, stations, type, name = control_ask.ask_period_stations_type_name(True)
+        ok, period, stations, type, name = control_ask.ask_period_stations_type_name(True)
         if not ok:
             break
         else:
