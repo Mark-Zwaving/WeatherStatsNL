@@ -20,7 +20,6 @@ dir_data             =  os.path.abspath( os.path.join(dir_app, 'data') )
 dir_txt              =  os.path.abspath( os.path.join(dir_data, 'text' ) )
 dir_html             =  os.path.abspath( os.path.join(dir_data, 'html' ) )
 dir_img              =  os.path.abspath( os.path.join(dir_data, 'images' ) )
-dir_templates        =  os.path.abspath( os.path.join(dir_data, 'templates' ) )
 dir_knmi             =  os.path.abspath( os.path.join(dir_data, 'knmi' ) )
 dir_thirdparty       =  os.path.abspath( os.path.join(dir_data, 'thirdparty') )
 
@@ -28,8 +27,11 @@ dir_knmi_dayvalues   =  os.path.abspath( os.path.join(dir_knmi, 'dayvalues' ) )
 dir_img_dayvalues    =  os.path.abspath( os.path.join(dir_img, 'dayvalues' ) )
 dir_img_period       =  os.path.abspath( os.path.join(dir_img, 'period' ) )
 dir_txt_dayvalues    =  os.path.abspath( os.path.join(dir_txt, 'dayvalues' ) )
+
+dir_html_templates   =  os.path.abspath( os.path.join(dir_html, 'templates' ) )
 dir_html_dayvalues   =  os.path.abspath( os.path.join(dir_html, 'dayvalues' ) )
 dir_html_winterstats =  os.path.abspath( os.path.join(dir_html, 'winterstats' ) )
+dir_html_summerstats =  os.path.abspath( os.path.join(dir_html, 'summerstats' ) )
 dir_html_search_for_days =  os.path.abspath( os.path.join(dir_html, 'search-for-days'))
 dir_txt_winterstats  =  os.path.abspath( os.path.join(dir_txt, 'winterstats' ) )
 dir_thirdparty_css   =  os.path.abspath( os.path.join(dir_thirdparty, 'css') )
@@ -228,6 +230,10 @@ plot_legend_facecolor = None
 plot_legend_shadow    = False
 plot_legend_frameon   = False
 plot_legend_fancybox  = False
+
+# Statistics table max rows in popup for automaticly generated in statistics pages
+max_rows_table_popup = 10
+strip_html_output    = True
 
 # Asked for char
 answer_quit = np.array(['q', 'Q'])
