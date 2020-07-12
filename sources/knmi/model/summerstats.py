@@ -4,20 +4,28 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2019 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.9.3"
+__version__    =  "0.9.6"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config as cfg, fn, fn_html as h, calc_stats as st, dates as d
-import write as wr, ask, fn_read as r, knmi
+import config
+import view.log as log
+import view.html as html
+import model.utils as utils
+import control.io as io
+import knmi.model.stats as stats
+import knmi.model.daydata as daydata
+import knmi.view.fix as fix
+import numpy as np
 
 class Stats:
     '''Class saves en stores summer statistics of a station in a given period'''
     def __init__(self, station, data ):
         self.station    = station
         self.data       = data
-        self.date_start = data[ 0, daydata.YYYYMMDD] # First day data
-        self.date_end   = data[-1, daydata.YYYYMMDD] # Last day data
+        self.ymd        = data[:,daydata.YYYYMMDD]
+        self.date_start = utils.f_to_s( self.ymd[ 0] )  # First day data
+        self.date_end   = utils.f_to_s( self.ymd[-1] )  # Last day data
         self.period     = f'{self.date_start}-{self.date_end}'
 
         self.tg_gem = stats.average(data,'TG') # Avergae TG
@@ -26,8 +34,7 @@ class Stats:
         self.tn_max = stats.max(data,'TN') # Highest TN
         self.sq_tot = stats.sum(data,'SQ') # Total sunshine hours
         self.rh_tot = stats.sum(data,'RH') # Total rain
-
-        self.heat_ndx =  st.warmte_getal(etm_l)
+        self.heat_ndx = stats.heat_ndx(data)
 
         self.days_tx_gte_20 = stats.terms_days(data,'TX','≥',20) # Warm days
         self.days_tx_gte_25 = stats.terms_days(data,'TX','≥',25) # Summer days
@@ -39,16 +46,6 @@ class Stats:
         self.days_sq_gte_10 = stats.terms_days(data,'SQ','≥',10) # Sunny days > 10 hours
         self.days_rh_gte_10 = stats.terms_days(data,'RH','≥',10) # Rainy days > 10mm
 
-        self.cnt_tx_gte_20 = self.days_tx_gte_20.size # Count Warm days
-        self.cnt_tx_gte_25 = self.days_tx_gte_25.size # Count Summer days
-        self.cnt_tx_gte_30 = self.days_tx_gte_30.size # Count Tropical days
-        self.cnt_tx_gte_35 = self.days_tx_gte_35.size # Count Tropical days
-        self.cnt_tg_gte_18 = self.days_tg_gte_18.size # Count Warmte getal dag
-        self.cnt_tg_gte_20 = self.days_tg_gte_20.size # Count Warme gemiddelde
-        self.cnt_tn_gte_20 = self.days_tn_gte_20.size # Count Tropical nights
-        self.cnt_sq_gte_10 = self.days_sq_gte_10.size # Count Sunny days > 10 hours
-        self.cnt_rh_gte_10 = self.days_sq_gte_10.size # Count Rainy days > 10mm
-
 def sort( l, pm = '+' ):
     l = np.array( sorted(l, key=lambda stats: stats.heat_ndx) ) # Sort on heat index
     if pm == '+':
@@ -56,11 +53,12 @@ def sort( l, pm = '+' ):
 
     return l
 
-def calculate( stations, sd, ed, name=False, type='html' ):
-    '''Function calculates summer statistics'''
 
-    log.console(f'Preparing output...')
-    max_rows = cfg.html_popup_table_max_rows
+
+def calculate( stations, period, name=False, type='html' ):
+    '''Function calculates summer statistics'''
+    colspan = 18
+    popup_rows = config.max_rows_table_popup
 
     # Make data list with station and summerstatistics
     summer = np.array( [] )
@@ -68,24 +66,25 @@ def calculate( stations, sd, ed, name=False, type='html' ):
         log.console(f'Read and calculate statistics: {station.place}', True)
         ok, data = daydata.read( station )  # Get data stations
         if ok:
-            period = stats.period( data, sd, ed ) # Get days of period
-            summer = np.append( summer, Stats( station, period ) ) # Create summerstats object
+            days = daydata.period( data, period ) # Get days of period
+            if days.size != 0: # Skip station
+                summer = np.append( summer, Stats( station, days ) ) # Create summerstats object
 
     log.console(f'Preparing output: {type}', True)
 
     # Update name if there is none yet
     if not name:
-        name = f'summer-statistics-{sd}-{ed}'
+        name = utils.mk_name('summerstatistics', period)
 
     # Make path if it is a html or txt file
     path = ''
-    if type in ['html','txt']:
-        if type == 'html':
-            dir = config.dir_html_summerstats
-        elif type == 'txt':
-            dir = config.dir_txt_summerstats
+    if type == 'html':
+        dir = config.dir_html_winterstats
+    elif type ==  'txt':
+        dir = config.dir_txt_winterstats
+    path = utils.mk_path(dir, f'{name}.{type}')
 
-        path = utils.path(dir, f'{name}.{type}')
+    log.console(f'Preparing summerstats, output type is {type}', True)
 
     # Sort on TG
     summer = sort( summer, '+' )
@@ -93,119 +92,181 @@ def calculate( stations, sd, ed, name=False, type='html' ):
     # Make output
     title, main, footer = '', '', ''
 
-
-    fn.lnprintln(f'...Preparing output ({type})...')
-
-    zomer_geg = sort_zomerstats_num(zomer_geg,'+') # Sorteer op tg
-
     # Maak content op basis van type uitvoer html of text
     # Maak titel
+    table_title = name.replace('-', ' ')
     if type in ['txt','cmd']:
         s = ' '
-        content = f'PLAATS{s:15} PROVINCIE{s:7} PERIODE{s:11} TG      ∑WARMTE ' \
-                  f'TX MAX  TG MAX  TN MAX  ∑TX≥20 ∑TX≥25 ∑TX≥30 ∑TX≥35 ' \
-                  f'∑TG≥20 ∑TG≥18 ∑TN≥20 ∑ZON≥10 ∑ZON       ∑REGEN≥10 ∑REGEN  \n'
+        title += f'{table_title} \n'
+        title += f'PLAATS{s:15} '
+        title += f'PROVINCIE{s:7} '
+        title += f'PERIODE{s:11} '
+        title += f'TG{s:5} '
+        title += f'∑WARMTE '
+        title += 'TX MAX  '
+        title += 'TG MAX  '
+        title += 'TN MAX  '
+        title += 'TX≥20 '
+        title += 'TX≥25 '
+        title += 'TX≥30 '
+        title += 'TX≥35 '
+        title += 'TG≥20 '
+        title += 'TG≥18 '
+        title += 'TN≥20 '
+        title += 'ZON≥10 '
+        title += 'ZON{s:6} '
+        title += 'REGEN≥10 '
+        title += 'REGEN\n'
 
     if type == 'html':
-        content  = f'''
-        <table>
+        title += f'''
+            <table>
             <thead>
-            <tr> <th colspan="18"> {title} </th> </tr>
-            <tr>
-                <th> plaats </th>
-                <th> provincie </th>
-                <th> periode </th>
-                <th> tg </th>
-                <th title="Warmte getal"> ∑warmte </th>
-                <th title="Warmste dag"> tx max </th>
-                <th title="Hoogste gemiddelde"> tg max </th>
-                <th title="Hoogste minimum"> tn max </th>
-                <th title="Aantal warme dagen"> ∑tx&ge;20 </th>
-                <th title="Aantal zomers dagen"> ∑tx&ge;25 </th>
-                <th title="Aantal tropische dagen"> ∑tx&ge;30 </th>
-                <th title="Aantal tropische dagen"> ∑tx&ge;35 </th>
-                <th title="Aantal tropennachten"> ∑tn&ge;20 </th>
-                <th title="Warmte getal dagen"> tg&ge;18 </th>
-                <th title="Totaal aantal uren zon"> ∑zon </th>
-                <th title="Dagen met meer dan tien uur zon"> ∑zon&ge;10hour</th>
-                <th title="Totaal aantal mm regen"> ∑regen </th>
-                <th title="Dagen met meer dan tien mm regen"> ∑regen&ge;10mm</th>
-            </tr>
+                <tr>
+                    <th colspan="{colspan}"> {table_title} </th>
+                </tr>
+                <tr>
+                    <th> plaats </th>
+                    <th> provincie </th>
+                    <th> periode </th>
+                    <th> tg </th>
+                    <th title="Warmte getal"> heat ndx </th>
+                    <th title="Warmste dag"> tx max </th>
+                    <th title="Hoogste gemiddelde"> tg max </th>
+                    <th title="Hoogste minimum"> tn max </th>
+                    <th title="Aantal warme dagen"> ∑tx&ge;20 </th>
+                    <th title="Aantal zomers dagen"> ∑tx&ge;25 </th>
+                    <th title="Aantal tropische dagen"> ∑tx&ge;30 </th>
+                    <th title="Aantal tropische dagen"> ∑tx&ge;35 </th>
+                    <th title="Aantal tropennachten"> ∑tn&ge;20 </th>
+                    <th title="Warmte getal dagen"> tg&ge;18 </th>
+                    <th title="Totaal aantal uren zon"> ∑zon </th>
+                    <th title="Dagen met meer dan tien uur zon"> ∑zon&ge;10hour</th>
+                    <th title="Totaal aantal mm regen"> ∑regen </th>
+                    <th title="Dagen met meer dan tien mm regen"> ∑regen&ge;10mm</th>
+                </tr>
             </thead>
             <tbody>
-        '''
+            '''
 
     # Walkthrough all cities
     for s in summer:
         log.console(f'For: {s.station.place}', True)
-        warm = g.warmte_getal['getal']
-        heat_ndx = fn.rm_s(fn.fix(warm, 'heat_ndx'))
-        tg_gem   = fn.rm_s(fn.fix(g.tg_gem['gem'],'tg'))
-        tx_max   = fn.rm_s(fn.fix(g.tx_max['max'],'tx'))
-        tg_max   = fn.rm_s(fn.fix(g.tg_max['max'],'tg'))
-        tn_max   = fn.rm_s(fn.fix(g.tn_max['max'],'tn'))
-        rh_tot   = fn.rm_s(fn.fix(g.rh_tot['som'],'rh'))
-        sq_tot   = fn.rm_s(fn.fix(g.sq_tot['som'],'sq'))
-        tx_gte_20 = str(g.tx_gte_20['tel'])
-        tx_gte_25 = str(g.tx_gte_25['tel'])
-        tx_gte_35 = str(g.tx_gte_35['tel'])
-        tx_gte_30 = str(g.tx_gte_30['tel'])
-        tg_gte_18 = str(g.tg_gte_18['tel'])
-        tn_gte_20 = str(g.tn_gte_20['tel'])
-        tg_gte_20 = str(g.tg_gte_20['tel'])
-        sq_gte_10 = str(g.sq_gte_10['tel'])
-        rh_gte_10 = str(g.rh_gte_10['tel'])
+        heat_ndx = fix.ent( s.heat_ndx, 'heat_ndx' )
+        tg_gem   = fix.ent( s.tg_gem, 'tg' )
+        tx_max   = fix.ent( s.tx_max, 'tx' )
+        tg_max   = fix.ent( s.tg_max, 'tg' )
+        tn_max   = fix.ent( s.tn_max, 'tn' )
+        rh_tot   = fix.ent( s.rh_tot, 'rh' )
+        sq_tot   = fix.ent( s.sq_tot, 'sq' )
 
         if type in ['txt','cmd']:
-            content += f"{g.place:<21} {g.province:<16} {g.period:<18} " \
-                       f"{tg_gem:<7} {heat_ndx:<7} {tx_max:<7} {tg_max:<7} " \
-                       f"{tn_max:<7} {tx_gte_20:^6} {tx_gte_25:^6} {tx_gte_30:^6} " \
-                       f"{tx_gte_35:^6} {tg_gte_20:^6} {tg_gte_18:^6} {tn_gte_20:^6} " \
-                       f"{sq_gte_10:^7} {sq_tot:<10} {rh_gte_10:^9} {rh_tot:<11} \n"
+            main += f'{s.station.place:<21} '
+            main += f'{s.station.province:<16} '
+            main += f'{s.station.period:<18} '
+            main += f'{tg_gem:<7} '
+            main += f'{heat_ndx:<7} '
+            main += f'{tx_max:<7} '
+            main += f'{tg_max:<7} '
+            main += f'{tn_max:<7} '
+            main += f'{tx_gte_20:^6} '
+            main += f'{tx_gte_25:^6} '
+            main += f'{tx_gte_30:^6} '
+            main += f'{tx_gte_35:^6} '
+            main += f'{tg_gte_20:^6} '
+            main += f'{tg_gte_18:^6} '
+            main += f'{tn_gte_20:^6} '
+            main += f'{sq_gte_10:^7} '
+            main += f'{sq_tot:<10} '
+            main += f'{rh_gte_10:^9} '
+            main += f'{rh_tot:<11} '
 
         if type == 'html':
-            date_txt = f"{d.Datum(g.date_start).tekst()} - {d.Datum(g.date_end).tekst()}"
-            content += f'''
+            period_txt = f'{utils.ymd_to_txt(s.date_start)} - {utils.ymd_to_txt(s.date_end)}'
+            main += f'''
                 <tr>
-                    <td> {g.place} </td>
-                    <td> {g.province} </td>
-                    <td title="{date_txt}"> {g.period} </td>
-                    <td> {tg_gem} </td>
-                    <td> {heat_ndx} {h.table_heat_ndx(g.warmte_getal['lijst'], max_rows)} </td>
-                    <td> {tx_max} {h.table_extremes(g.tx_max['lijst'][-1:], max_rows)} </td>
-                    <td> {tg_max} {h.table_extremes(g.tg_max['lijst'][-1:], max_rows)} </td>
-                    <td> {tn_max} {h.table_extremes(g.tn_max['lijst'][-1:], max_rows)} </td>
-                    <td> {tx_gte_20} {h.table_count(g.tx_gte_20['lijst'], max_rows)} </td>
-                    <td> {tx_gte_25} {h.table_count(g.tx_gte_25['lijst'], max_rows)} </td>
-                    <td> {tx_gte_30} {h.table_count(g.tx_gte_30['lijst'], max_rows)} </td>
-                    <td> {tx_gte_35} {h.table_count(g.tx_gte_35['lijst'], max_rows)} </td>
-                    <td> {tg_gte_20} {h.table_count(g.tg_gte_20['lijst'], max_rows)} </td>
-                    <td> {tg_gte_18} {h.table_count(g.tg_gte_18['lijst'], max_rows)} </td>
-                    <td> {sq_tot} </td>
-                    <td> {sq_gte_10} {h.table_count(g.sq_gte_10['lijst'], max_rows)} </td>
+                    <td> {s.station.place} </td>
+                    <td> {s.station.province} </td>
+                    <td title="{period_txt}"> {s.period} </td>
+                    <td> {tg_gem}    </td>
+                    <td> {heat_ndx}  </td>
+                    <td> {tx_max}    </td>
+                    <td> {tg_max}    </td>
+                    <td> {tn_max}    </td>
+                    <td>
+                        {np.size(s.days_tx_gte_20)} <span></span>
+                        {html.table_count(s.days_tx_gte_20, 'TX', 'TXH', popup_rows)}
+                    </td>
+                    <td>
+                        {np.size(s.days_tx_gte_25)} <span></span>
+                        {html.table_count(s.days_tx_gte_25, 'TX', 'TXH', popup_rows)}
+                    </td>
+                    <td>
+                        {np.size(s.days_tx_gte_30)} <span></span>
+                        {html.table_count(s.days_tx_gte_30, 'TX', 'TXH', popup_rows)}
+                    </td>
+                    <td>
+                        {np.size(s.days_tx_gte_35)} <span></span>
+                        {html.table_count(s.days_tx_gte_35, 'TX', 'TXH', popup_rows)}
+                    </td>
+                    <td>
+                        {np.size(s.days_tg_gte_20)} <span></span>
+                        {html.table_count(s.days_tg_gte_20, 'TG', '', popup_rows)}
+                    </td>
+                    <td>
+                        {np.size(s.days_tg_gte_18)} <span></span>
+                        {html.table_count(s.days_tg_gte_18, 'TG', '', popup_rows)}
+                    </td>
+                    <td> {sq_tot} <span></span> </td>
+                    <td>
+                        {np.size(s.days_sq_gte_10)} <span></span>
+                        {html.table_count(s.days_sq_gte_10, 'SQ', '', popup_rows)}
+                    </td>
                     <td> {rh_tot} </td>
-                    <td> {rh_gte_10} {h.table_count(g.rh_gte_10['lijst'], max_rows)} </td>
+                    <td>
+                        {np.size(s.days_rh_gte_10)} <span></span>
+                        {html.table_count(s.days_rh_gte_10, 'RH', '', popup_rows)}
+                    </td>
                 </tr>
                 '''
 
+
     if type in ['txt','cmd']:
-        content += bronvermelding
+        footer += config.knmi_dayvalues_notification
 
     if type == 'html':
-        content += f'''
+        footer += f'''
             </tbody>
-            <tfoot> <tr> <td colspan="18"> {bronvermelding} </td> </tr> </tfoot>
-        </table>'''
+            <tfoot>
+                <tr>
+                    <td colspan="{colspan}">
+                        {config.knmi_dayvalues_notification}
+                    </td>
+                </tr>
+            </tfoot>
+            </table>
+        '''
 
-        css = r.get_string_css_from_file( 'default-table-statistics.css' ) # Get css from file
-        content = h.pagina(title, css, content) # Make html page
-        content = fn.clean_s(content) # Remove unnecessary whitespace
-
+    # Write to file or console
+    output = f'{title}\n{main}\n{footer}'
     if type == 'cmd':
-        fn.lnprintln(cfg.line + cfg.ln + content + cfg.ln + cfg.line)
+        log.console( output, True )
 
-    if type in ['html','txt']:
-        file_name = fn.mk_path(path, name) # Make file name
-        wr.write_to_file(file_name, content) # Schrijf naar bestand
+    elif type == 'html':
+        page           =  html.Template()
+        page.title     =  table_title
+        page.main      =  output
+        page.set_path( path )
+        page.add_css_file(name='table-statistics.css')
+        page.add_css_file(name='summerstats.css')
+        page.add_css_file(name='default.css')
+        page.add_script_file(dir='./js/', name='sort-col.js')
+        page.add_script_file(name='default.js')
+        page.add_script_file(name='summerstats.js')
 
-    return file_name
+        page.save()
+
+    elif type == 'txt':
+        io.save(path, output) # Schrijf naar bestand
+
+    return path
