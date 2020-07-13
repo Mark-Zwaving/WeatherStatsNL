@@ -8,7 +8,7 @@ __version__    =  '0.9.3'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
-import os, config, datetime
+import os, config, datetime, numpy as np, re
 import control.io as io
 import view.log as log
 import view.icon as icon
@@ -25,15 +25,14 @@ class Template():
     charset      = 'UTF-8'
     author       = 'WeatherstatsNL'
     viewport     = 'width=device-width, initial-scale=1.0, shrink-to-fit=no'
-    script_files = ['./js/js.js']
+    script_files = []
     script_code  = ''
-    css_files    = ['./css/css.css']
+    css_files    = []
     css_code     = ''
+    strip        = False
 
     def __init__(self, title='WeatherstatsNL - template',
-                       header='Your Title',
-                       main='Your Content',
-                       footer='Your Footer' ):
+                       header='', main='',  footer='' ):
         self.title  = title
         self.header = header
         self.main   = main
@@ -41,26 +40,21 @@ class Template():
 
         title = self.title.strip().replace(' ', '')
         dt    = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
-        self.file_name = f'{title}_{dt}.html'
+        self.file_name = f'{title}-{dt}.html'
 
-        self.template  = utils.path( config.dir_templates, 'template.html' )
+        self.template  = utils.mk_path( config.dir_html_templates, 'template.html' )
         self.base_dir  = os.path.dirname(os.path.abspath(__file__))
         self.file_dir  = self.base_dir
-        self.file_path = utils.path( self.file_dir, self.file_name )
+        self.file_path = utils.mk_path( self.file_dir, self.file_name )
 
-    def add_css_file(self, dir='./css/', name='css.css'):
+    def set_path(self, path):
+        self.file_path = path
+
+    def add_css_file(self, dir='./../static/css/', name='ccs.css'):
         self.css_files.append(f'{dir}{name}')
 
-    def add_script_file(self, dir='./js/', name='js.js'):
+    def add_script_file(self, dir='./../static/js/', name='js.js'):
         self.script_files.append(f'{dir}{name}')
-
-    def mkpath(self, dir_map=False, file_name=False):
-        if file_name:
-            self.file_name = file_name
-        if dir_map:
-            self.file_dir  = dir_map
-
-        self.file_path = utils.path(self.file_dir, self.file_name)
 
     def create(self):
         css = ''
@@ -92,10 +86,11 @@ class Template():
 
         try:
             ok = self.create( )
-            if ok:
-                ok = io.write( self.file_path, self.html )
-            else:
-                print('Error in ok - file not created')
+            html = self.html
+            if config.strip_html_output:
+                html = re.sub('\n|\r|\t', '', html)
+                html = re.sub('\s+', ' ', html)
+            ok = io.write( self.file_path, html )
         except Exception as e:  # ERROR ?????
             log.console( f'Error: {e}' )
         else:
@@ -191,30 +186,50 @@ def main_ent( day ):
 
     return main
 
-def table_count(l, max):
+def table_count(days, ent, t_ent, max):
     html = ''
-    if l:
-        if max is not 0:
-            l.reverse() # Last count is last. Make first
-            cnt = len(l)
-            max = cnt if max == -1 else max # -1 for all!
-            end = cnt if max > cnt else max # check bereik
-            html += '<table class="popup">'
-            html += '<thead><tr><th>datum</th><th>waarde</th><th>tijd</th>'
-            html += '<th>eis</th><th>aantal</th></tr></thead>'
-            html += '<tbody>'
+    if np.size(days, axis=0) > 0:
+        if max != 0:
+            tel   = 1
+            cnt   = np.size(days, axis=0)
+            ndx   = daydata.ndx_ent( ent )
+            t_ndx = -1 if t_ent == '' else daydata.ndx_ent( t_ent )
+            tme   = '' if t_ndx == -1 else '<th>time</th>'
+            max   = cnt if max == -1 else max  #  -1 for all!
+            max   = cnt if max > cnt else max  #  check bereik
+            html += f'''
+                    <table class="popup">
+                        <thead>
+                            <tr>
+                                <th>date</th>
+                                <th>value</th>
+                                {tme}
+                                <th>cnt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    '''
 
-            for e in l[:end]:
-                sdt = d.Datum(e.datum).tekst()
-                val = fn.rm_s( fn.fix( e.waarde, e.ent ) )
-                t_ent = knmi.ent_to_t_ent( e.ent )
-                eis = fn.div_10(e.eis)
-                tme = fn.rm_s(fn.fix(e.tijd, t_ent)) if t_ent is not False else '.'
-                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{val}</td>'\
-                        f'<td>{tme}</td><td>{e.oper}{eis}</td><td>{e.tel}</td></tr>'
+            total = np.size(days, axis=0)
+            for day in days[::-1]:
+                ymd  = int(day[daydata.YYYYMMDD])
+                symd = utils.ymd_to_txt( ymd )
+                val  = fix.ent( day[ndx], ent )
+                tme  = '' if t_ndx == -1 else '<td>'+fix.ent(day[t_ndx],t_ent)+'</td>'
+                html += f'''
+                            <tr>
+                                <td title="{symd}">{ymd}</td>
+                                <td>{val}</td>
+                                {tme}
+                                <td>{total}</td>
+                            </tr>
+                        '''
+                total -= 1
 
-            html += '</tbody>'
-            html += '</table>'
+            html += '''
+                        </tbody>
+                    </table>
+                    '''
 
     return html
 
