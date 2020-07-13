@@ -15,10 +15,28 @@ from datetime import datetime
 from dateutil import rrule
 import numpy as np, re
 
+def mk_name( base='x', period='x', stations=[], entities=[] ):
+    st = base + '-' + period.replace('*', 'x')
+    input(st)
+    for s in stations:
+        st += f'-{s.wmo}-'
+    for e in entities:
+        st += f'-{e}-'
+    input(st)
+    return st[:-1]
+
+def mk_name_type( base='x', period='x', stations=[], entities=[], type='txt' ):
+    return mk_name( base, period, stations, entities ) + f'.{type}'
+
+def f_to_s( f ):
+    return str(int(round(f)))
+
 # Check and sanitize input
 def clear( s ):
-    s = re.sub( '\n|\r|\t', '', s ).strip().replace('  ', ' ').lower()
-    return s if s else False
+    s = re.sub('\n|\r|\t', '', s)
+    s = re.sub('\s+', ' ', s)
+    s = s.strip()
+    return s.lower() if s else False
 
 def make_query_txt_only(query):
     q = query.lower()
@@ -37,11 +55,12 @@ def make_query_txt_only(query):
 
     return clear(q)
 
-def path( dir, file ):
+def mk_path( dir, file ):
     return os.path.abspath(os.path.join(dir, file))
 
 def ymd_to_txt( ymd ):
-    return datetime.strptime(str(ymd), '%Y%m%d').strftime('%A, %d %B %Y')
+    ymd = ymd if type(ymd) is str else f_to_s(ymd)
+    return datetime.strptime(ymd, '%Y%m%d').strftime('%A, %d %B %Y')
 
 def now_act_for_file():
     txt =  datetime.now().strftime('%Y%m%d%H%M%S')
