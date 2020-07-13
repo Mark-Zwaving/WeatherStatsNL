@@ -19,14 +19,6 @@ import model.utils as utils
 import matplotlib.pyplot as plt
 import model.convert as convert
 
-def name( sd, ed, stations, entities, type='png' ):
-    st = f'{sd}-{ed}-'
-    for s in stations: st += f'{s.wmo}-'
-    for s in entities: st += f'{s}-'
-    st = st[:-1]
-
-    return f'{st}.{type}'
-
 def text_diff( l ):
     m = max(l)
     # div = max * 3.0
@@ -46,7 +38,7 @@ class G:
     def __init__(self):
         pass
 
-def plot( stations, entities, sd, ed, title, ylabel, path ):
+def plot( stations, entities, period, title, ylabel, path ):
     # Size values are inches. And figure always in front
     plt.figure( figsize=( convert.pixel_to_inch(config.plot_width),
                           convert.pixel_to_inch(config.plot_height)
@@ -63,7 +55,7 @@ def plot( stations, entities, sd, ed, title, ylabel, path ):
     for station in stations:
         ok, data = daydata.read( station )
         if ok:
-            data = daydata.period( data, sd, ed )
+            data = daydata.period( data, period )
             ymd = data[:,daydata.ndx_ent('YYYYMMDD')].astype(
                             np.int, copy=False
                             ).astype(
