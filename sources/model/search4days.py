@@ -4,14 +4,14 @@ __author__     =  'Mark Zwaving'
 __email__      =  'markzwaving@gmail.com'
 __copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
 __license__    =  'GNU Lesser General Public License (LGPL)'
-__version__    =  '0.0.6'
+__version__    =  '0.0.7'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
-import knmi.model.stats as stats
-import knmi.model.daydata as daydata
-import model.utils as utils
 import numpy as np
+import model.stats as stats
+import model.daydata as daydata
+import model.utils as utils
 
 def query_simple( data, query ):
     ent, op, val = query.split(' ')
