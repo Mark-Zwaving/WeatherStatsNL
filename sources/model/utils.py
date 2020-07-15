@@ -8,12 +8,24 @@ __version__    =  '0.0.7'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
-import config
-import datetime, os
+import config, datetime, os, re, math
+import numpy as np
 import view.translate as tr
 from datetime import datetime
 from dateutil import rrule
-import numpy as np, re
+
+def is_empthy( answ ):
+    if not answ or answ == '':
+        return True
+    else:
+        return False
+
+def isnan( f ):
+    x = float(f)
+    if math.isnan(x) or np.isnan(f):
+        return True
+    else:
+        return False
 
 def mk_name( base='x', period='x', stations=[], entities=[] ):
     st = base + '-' + period.replace('*', 'x')
