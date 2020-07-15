@@ -9,15 +9,15 @@ __status__     =  "Development"
 
 import config
 import numpy as np
-import knmi.model.stats as stats
-import knmi.model.daydata as daydata
-import knmi.view.fix as fix
+import matplotlib.pyplot as plt
+import model.stats as stats
+import model.daydata as daydata
+import model.utils as utils
+import model.convert as convert
+import view.fix as fix
 import view.txt as view_txt
 import view.translate as tr
 import view.color as view_color
-import model.utils as utils
-import matplotlib.pyplot as plt
-import model.convert as convert
 
 def text_diff( l ):
     m = max(l)
@@ -38,7 +38,7 @@ class G:
     def __init__(self):
         pass
 
-def plot( stations, entities, period, title, ylabel, path ):
+def plot( stations, entities, period, title, ylabel, path, options ):
     # Size values are inches. And figure always in front
     plt.figure( figsize=( convert.pixel_to_inch(config.plot_width),
                           convert.pixel_to_inch(config.plot_height)
@@ -52,6 +52,7 @@ def plot( stations, entities, period, title, ylabel, path ):
         col_ndx = 0
         col_cnt = col_list.size - 1
 
+    min, max = 99999999.9, -99999999.9
     for station in stations:
         ok, data = daydata.read( station )
         if ok:
@@ -64,10 +65,17 @@ def plot( stations, entities, period, title, ylabel, path ):
 
             for el in entities:
                 # Get the values needed for the graph
-                f_val = data[:, daydata.ndx_ent(el)]
+                ndx   = daydata.ndx_ent(el)
+                f_val = data[:, ndx]
                 # Cumulative sum of values, if chosen
                 if config.plot_cummul_val in config.answer_yes:
                     f_val = np.cumsum( f_val )
+
+                # Min/ max for ranges
+                min_act = fix.rounding(np.min(f_val), el)
+                max_act = fix.rounding(np.max(f_val), el)
+                if min_act < min: min = min_act
+                if max_act > max: max = max_act
 
                 # Make correct output values
                 l_val = [ fix.rounding(v, el) for v in f_val.tolist() ]
@@ -78,7 +86,7 @@ def plot( stations, entities, period, title, ylabel, path ):
                 if config.plot_graph_type == 'line':  # bar or line
                     plt.plot( ymd, l_val, label = label, color = color,
                               marker = 'o', linestyle = 'solid',
-                              linewidth = config.plot_line_width,
+                              linewidth  = config.plot_line_width,
                               markersize = config.plot_marker_size
                               )
                 elif config.plot_graph_type == 'bar':
@@ -127,6 +135,12 @@ def plot( stations, entities, period, title, ylabel, path ):
                   linestyle=config.plot_grid_linestyle,
                   linewidth=config.plot_grid_linewidth
                   )
+
+    yticks = np.arange( int(min*0.99), int(max*1.1) ) # 1-10 % ranges
+    plt.yticks( yticks,
+                **config.plot_xas_font,
+                color=config.plot_xas_color
+                )
 
     plt.xticks( ymd,
                 **config.plot_xas_font,
