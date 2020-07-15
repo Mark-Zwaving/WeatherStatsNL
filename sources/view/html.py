@@ -4,21 +4,22 @@ __author__     =  'Mark Zwaving'
 __email__      =  'markzwaving@gmail.com'
 __copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
 __license__    =  'GNU Lesser General Public License (LGPL)'
-__version__    =  '0.9.3'
+__version__    =  '0.9.4'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
-import os, config, datetime, numpy as np, re
+import os, re, config, datetime
+import numpy as np
 import control.io as io
 import view.log as log
 import view.icon as icon
 import view.translate as tr
 import view.txt as view_txt
+import view.dayvalues as dayvalues
+import view.fix as fix
 import model.utils as utils
-import knmi.model.station as station
-import knmi.model.daydata as daydata
-import knmi.view.dayvalues as dayvalues
-import knmi.view.fix as fix
+import model.station as station
+import model.daydata as daydata
 
 class Template():
     ''' Class to make a html page based on the template - template.html'''
@@ -47,8 +48,8 @@ class Template():
         self.file_dir  = self.base_dir
         self.file_path = utils.mk_path( self.file_dir, self.file_name )
 
-    def set_path(self, path):
-        self.file_path = path
+    def set_path(self, dir, name):
+        self.file_path = utils.mk_path( dir, name )
 
     def add_css_file(self, dir='./../static/css/', name='ccs.css'):
         self.css_files.append(f'{dir}{name}')
@@ -122,67 +123,66 @@ def div_ent( title=False, val=False, time=False ):
             '''.format( title, val, time )
 
 def main_ent( day ):
+    no = config.no_data_given
     stn, ymd, ddvec, fhvec, fg, fhx, fhxh, fhn, fhnh, fxx, fxxh, tg, tn,\
     tnh, tx, txh, t10n, t10nh, sq, sp, q, dr, rh, rhx, rhxh, pg, px, pxh,\
     pn, pnh, vvn, vvnh, vvx, vvxh, ng, ug, ux, uxh, un, unh, ev24 = dayvalues.ents(day)
 
     # Add icons
-    if tx: tx = f'{icon.tx} {tx}'
-    if tg: tg = f'{icon.tg} {tg}'
-    if tn: tn = f'{icon.tn} {tn}'
-    if t10n:  t10n = f'{icon.t10n} {t10n}'
-    if ddvec: ddvec = f'{icon.arro} {ddvec}'
-    if fhvec: fhvec = f'{icon.wind} {fhvec}'
-    if fg:  fg  = f'{icon.wind} {fg}'
-    if fhx: fhx = f'{icon.wind} {fhx}'
-    if fhn: fhn = f'{icon.wind} {fhn}'
-    if fxx: fxx = f'{icon.wind} {fxx}'
-    if vvn: vvn = f'{icon.bino} {vvn}'
-    if vvx: vvx = f'{icon.bino} {vvx}'
-    if sq: sq = f'{icon.sun} {sq}'
-    if sp: sp = f'{icon.sun} {sp}'
-    if  q: q  = f'{icon.radi} {q}'
-    if rh: rh = f'{icon.umbr} {rh}'
-    if dr: dr = f'{icon.umbr} {dr}'
-    if rhx: rhx = f'{icon.umbr} {rhx}'
-    if ux: ux = f'{icon.drop} {ux}'
-    if un: un = f'{icon.drop} {un}'
-    if ug: ug = f'{icon.drop} {ug}'
-    if ng: ng = f'{icon.clou} {ng}'
-    if pg: pg = f'{icon.pres} {pg}'
-    if pn: pn = f'{icon.pres} {pn}'
-    if px: px = f'{icon.pres} {px}'
-    if ev24: ev24 = f'{icon.swea} {ev24}'
+    if tx    !=  no:  tx    =  f'{icon.tx} {tx}'
+    if tg    !=  no:  tg    =  f'{icon.tg} {tg}'
+    if tn    !=  no:  tn    =  f'{icon.tn} {tn}'
+    if t10n  !=  no:  t10n  =  f'{icon.t10n} {t10n}'
+    if ddvec !=  no:  ddvec =  f'{icon.arro} {ddvec}'
+    if fhvec !=  no:  fhvec =  f'{icon.wind} {fhvec}'
+    if fg    !=  no:  fg    =  f'{icon.wind} {fg}'
+    if fhx   !=  no:  fhx   =  f'{icon.wind} {fhx}'
+    if fhn   !=  no:  fhn   =  f'{icon.wind} {fhn}'
+    if fxx   !=  no:  fxx   =  f'{icon.wind} {fxx}'
+    if vvn   !=  no:  vvn   =  f'{icon.bino} {vvn}'
+    if vvx   !=  no:  vvx   =  f'{icon.bino} {vvx}'
+    if sq    !=  no:  sq    =  f'{icon.sun} {sq}'
+    if sp    !=  no:  sp    =  f'{icon.sun} {sp}'
+    if  q    !=  no:  q     =  f'{icon.radi} {q}'
+    if rh    !=  no:  rh    =  f'{icon.umbr} {rh}'
+    if dr    !=  no:  dr    =  f'{icon.umbr} {dr}'
+    if rhx   !=  no:  rhx   =  f'{icon.umbr} {rhx}'
+    if ux    !=  no:  ux    =  f'{icon.drop} {ux}'
+    if un    !=  no:  un    =  f'{icon.drop} {un}'
+    if ug    !=  no:  ug    =  f'{icon.drop} {ug}'
+    if ng    !=  no:  ng    =  f'{icon.clou} {ng}'
+    if pg    !=  no:  pg    =  f'{icon.pres} {pg}'
+    if pn    !=  no:  pn    =  f'{icon.pres} {pn}'
+    if px    !=  no:  px    =  f'{icon.pres} {px}'
+    if ev24  !=  no:  ev24  =  f'{icon.swea} {ev24}'
 
     main  = ''
-    main += div_ent( view_txt.ent_to_title('TX'), tx, txh ) if tx else ''
-    main += div_ent( view_txt.ent_to_title('TG'), tg, False ) if tg else ''
-    main += div_ent( view_txt.ent_to_title('TN'), tn, tnh ) if tn else ''
-    main += div_ent( view_txt.ent_to_title('T10N'), t10n, t10nh ) if t10n else ''
-    main += div_ent( view_txt.ent_to_title('DDVEC'), ddvec, False ) if ddvec else ''
-    main += div_ent( view_txt.ent_to_title('FG'), fg, False ) if fg else ''
-    main += div_ent( view_txt.ent_to_title('RH'), rh, False ) if rh else ''
-    main += div_ent( view_txt.ent_to_title('SQ'), sq, False ) if sq else ''
-    main += div_ent( view_txt.ent_to_title('PG'), pg, False ) if pg else ''
-    main += div_ent( view_txt.ent_to_title('UG'), ug, False ) if ug else ''
-
-    main += div_ent( view_txt.ent_to_title('FXX'), fxx, fxxh ) if fxx else ''
-    main += div_ent( view_txt.ent_to_title('FHVEC'), fhvec, False ) if fhvec else ''
-    main += div_ent( view_txt.ent_to_title('FHX'), fhx, fhxh ) if fhx else ''
-    main += div_ent( view_txt.ent_to_title('FHN'), fhn, fhnh ) if fhn else ''
-    main += div_ent( view_txt.ent_to_title('SP'), sp, False ) if sp else ''
-    main += div_ent( view_txt.ent_to_title('Q'), q, False ) if q else ''
-    main += div_ent( view_txt.ent_to_title('DR'), dr, False ) if dr else ''
-    main += div_ent( view_txt.ent_to_title('RHX'), rhx, rhxh ) if rhx else ''
-    main += div_ent( view_txt.ent_to_title('PX'), px, pxh ) if px else ''
-    main += div_ent( view_txt.ent_to_title('PN'), pn, pnh ) if pn else ''
-
-    main += div_ent( view_txt.ent_to_title('VVN'), vvn, vvnh ) if vvn else ''
-    main += div_ent( view_txt.ent_to_title('VVX'), vvx, vvxh ) if vvx else ''
-    main += div_ent( view_txt.ent_to_title('NG'), ng, False ) if ng else ''
-    main += div_ent( view_txt.ent_to_title('UX'), ux, uxh ) if ux else ''
-    main += div_ent( view_txt.ent_to_title('UN'), un, unh ) if un else ''
-    main += div_ent( view_txt.ent_to_title('EV24'), ev24, False ) if ev24 else ''
+    main += div_ent( view_txt.ent_to_title('TX'), tx, txh )
+    main += div_ent( view_txt.ent_to_title('TG'), tg, False )
+    main += div_ent( view_txt.ent_to_title('TN'), tn, tnh )
+    main += div_ent( view_txt.ent_to_title('T10N'), t10n, t10nh )
+    main += div_ent( view_txt.ent_to_title('DDVEC'), ddvec, False )
+    main += div_ent( view_txt.ent_to_title('FG'), fg, False )
+    main += div_ent( view_txt.ent_to_title('RH'), rh, False )
+    main += div_ent( view_txt.ent_to_title('SQ'), sq, False )
+    main += div_ent( view_txt.ent_to_title('PG'), pg, False )
+    main += div_ent( view_txt.ent_to_title('UG'), ug, False )
+    main += div_ent( view_txt.ent_to_title('FXX'), fxx, fxxh )
+    main += div_ent( view_txt.ent_to_title('FHVEC'), fhvec, False )
+    main += div_ent( view_txt.ent_to_title('FHX'), fhx, fhxh )
+    main += div_ent( view_txt.ent_to_title('FHN'), fhn, fhnh )
+    main += div_ent( view_txt.ent_to_title('SP'), sp, False )
+    main += div_ent( view_txt.ent_to_title('Q'), q, False )
+    main += div_ent( view_txt.ent_to_title('DR'), dr, False )
+    main += div_ent( view_txt.ent_to_title('RHX'), rhx, rhxh )
+    main += div_ent( view_txt.ent_to_title('PX'), px, pxh )
+    main += div_ent( view_txt.ent_to_title('PN'), pn, pnh )
+    main += div_ent( view_txt.ent_to_title('VVN'), vvn, vvnh )
+    main += div_ent( view_txt.ent_to_title('VVX'), vvx, vvxh )
+    main += div_ent( view_txt.ent_to_title('NG'), ng, False )
+    main += div_ent( view_txt.ent_to_title('UX'), ux, uxh )
+    main += div_ent( view_txt.ent_to_title('UN'), un, unh )
+    main += div_ent( view_txt.ent_to_title('EV24'), ev24, False )
 
     return main
 
