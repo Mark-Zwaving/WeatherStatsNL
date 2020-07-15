@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''HTML awesome icos'''
-
+'''HTML awesome icons'''
 __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
@@ -9,8 +8,6 @@ __version__    =  "0.0.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-
-# TODO
 wind = '<i class="text-success fas fa-wind"></i>'
 tn   = '<i class="text-primary fas fa-temperature-low"></i>'
 tx   = '<i class="text-danger fas fa-temperature-high"></i>'
