@@ -13,7 +13,7 @@ import config
 import view.log as log
 import view.translate as tr
 import control.ask as ask
-import knmi.control.menu as control_menu
+import control.menu as control_menu
 
 menu = [
     [ 'DOWNLOAD DATA', [
@@ -32,9 +32,9 @@ menu = [
     [ 'STATISTICS TABLES', [
             [ 'Winterstatistics', control_menu.table_winterstats ],
             [ 'Summerstatistics', control_menu.table_summerstats  ],
-            [ 'Heatwaves', control_menu.table_heatwaves ],
-            [ 'All winter- and summerstatistics', control_menu.table_allstats ],
-            [ 'Extremes', control_menu.table_allextremes ]
+            [ 'Winter + summerstatistics', control_menu.table_allstats ],
+            [ 'Heatwaves TODO', control_menu.table_heatwaves ],
+            [ 'Coldwaves TODO', control_menu.table_coldwaves ]
         ]
     ]
 ]
@@ -65,8 +65,8 @@ def main_menu():
                 num += 1
             print('')
         log.console(f'\tChoose one of the following options: 1...{num-1}', True )
-        log.console("\tPress 'q' or 'Q' to quit...", True )
-        log.footer('Your choice is ?', True )
+        log.console("\tPress 'q' to quit...", True )
+        log.footer('Your choice is ? ', True )
 
         answ = ask.ask(' ? ', False)  # Make a choice
 
