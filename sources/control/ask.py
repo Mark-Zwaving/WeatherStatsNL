@@ -4,24 +4,35 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1.6"
+__version__    =  "0.1.7"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import sys, re, config
-import knmi.model.daydata as daydata
-import knmi.model.station as knmi_station
+import numpy as np
+import model.utils as utils
+import model.daydata as daydata
+import model.station as station
+import model.validate as validate
 import view.log as log
 import view.txt as view_txt
 import view.translate as tr
-import model.validate as validate
-import numpy as np
-import model.utils as utils
 
 # Check and sanitize input
 def clear( s ):
     s = re.sub( '\n|\r|\t', '', s ).strip().replace('  ', ' ').lower()
     return s if s else False
+
+def enter_default(default):
+    return f'Press <enter> for default (={default})\n'
+
+def back_to_main():
+    return "Press 'q' to go back to the main menu\n"
+
+def ask_back_to_main_menu(space=True):
+    if space: log.console(' ')
+    input("Press a 'key' to go back to the main menu")
+    if space: log.console(' ')
 
 def ask(txt='?', space=True):
     if space: log.console(' ')
@@ -37,17 +48,21 @@ def ask_txt(txt='?', space=True):
 
     return answ
 
-def ask_for_int(txt='?', space=True):
+def ask_for_int(txt, default, space=True):
     if space: log.console(' ')
     while True:
+        txt = f'{txt}\n{enter_default(default)}'
         answ = re.sub( '\D', '', input(txt).strip() ) # Remove non-digits
-        try:
-            answ_i = int(answ)
-        except ValueError:
-            print('Give a real integer  ... ')
-            continue
+        if utils.is_empthy( answ ):
+            return default
         else:
-            break
+            try:
+                answ_i = int(answ)
+            except ValueError:
+                print('Give a real integer  ... ')
+                continue
+            else:
+                break
     if space: log.console(' ')
 
     return answ_i
@@ -63,47 +78,50 @@ def stop():
             log.footer('Application stopped...', True )
             sys.exit()
 
-def ask_again(txt, space=True):
-    log.console(txt, True)
-    log.console("Press a key ... \nPress 'q' to quit", True)
+def ask_again(txt, default, space=True):
+    txt  = f'{txt} Press a key...\n'
+    txt += back_to_main()
+    txt += ' ? '
 
-    answ = ask(' ? ', space)
+    answ = ask(txt, space)
 
-    if answ in config.answer_quit:
+    if utils.is_empthy( answ ):
+        return default
+    elif answ in config.answer_quit:
         return config.answer_quit
+    else:
+        return answ
 
-    return answ
+def ask_to_open_with_app( txt, space=True ):
+    txt  = f'{txt}\n'
+    txt += "Press 'y' to open the file, or press any other key to skip opening the file\n"
+    txt += ' ? '
 
-def ask_to_open_with_app(txt, space=True):
-    log.console(txt, True)
-    log.console("Press 'y' to open the file", True)
-    log.console('Or press an other key to skip opening the file', True)
+    answ = ask(txt, space)
 
-    answ = ask(' ? ', space)
-
-    if answ:
-        if answ in config.answer_yes:
-            return True
-    return False
+    return True if answ in config.answer_yes else False
 
 def ask_for_entities( txt, space=True):
     l = []
+    txt  = f'{txt}\n'
+    txt += view_txt.dayvalues_entities(sep=',')
+    txt += 'To add one weather entity, type in the enitity name. e.g. TX\n'
+    txt += 'To one more stations, give entity name separated by a comma. e.g TX, TG, TN\n'
+    txt += 'See - ./data/text/dayvalues/dayvalues.txt - for the meaning of the entities\n'
+    txt += back_to_main()
+
     while True:
-        log.console(txt, True)
-        log.console(view_txt.dayvalues_entities(sep=','), True)
-        log.console('To add one weather entity, type in the enitity name. e.g. TX', True)
-        log.console('To one more stations, give entity name separated by a comma. e.g TX, TG, TN', True)
-        log.console('See - ./data/text/dayvalues/dayvalues.txt - for the meaning of the entities', True)
-        if len(l) > 0: log.console("Press 'n' to move to the next !", True)
-        log.console("Press 'q' to go back to the main menu", True)
+        ask_txt = txt
+        if len(l) > 0:
+            ask_txt += "Press 'n' to move to the next !\n"
+        ask_txt += '\n ? '
 
-        answ = ask(' ? ', space)
+        answ = ask(ask_txt, space)
 
-        if not answ: # Oke whatever
+        if utils.is_empthy(answ):
             log.console('Please type in something ...', True)
             continue # Again
-
-        if answ in config.answer_quit:
+        elif answ in config.answer_quit:
             return config.answer_quit
         elif answ == 'n' and len(l) > 0:
             return l
@@ -119,54 +137,57 @@ def ask_for_entities( txt, space=True):
                 l.append(ent)
 
         if len(l) > 0:
-            log.console('All weather entities who are added are:', True)
-            cnt, kol, txt = 1, 10, ''
+            cnt, kol, txt = 1, 10, 'All weather entities who are added are:\n'
             for ent in l:
                 txt += ent + ', '
                 if cnt % kol == 0:
                     txt += '\n'
+            log.console( txt, True )
 
-            log.console(f'{txt}', True)
-            log.console(' ')
     return l
 
 def ask_for_one_station( txt, space=True):
+    txt  = f'{txt}\n'
+    txt += view_txt.knmi_stations(config.stations, 3, 25)
+    txt += 'To add a station, give a wmo-number or a city name of a weatherstation\n'
+    txt += back_to_main()
+    txt += ' ? '
+
     while True:
-        log.console(txt, True)
-        log.console(view_txt.knmi_stations(config.stations, 3, 25), True)
-        log.console('To add a station, give a wmo-number or a city name of a weatherstation', True)
-        log.console("Press 'q' to go back to the main menu", True)
+        answ = ask(txt, space)
 
-        answ = ask(' ? ', space)
-
-        if answ in config.answer_quit:
+        if utils.is_empthy(answ):
+            log.console('Please type in something ...', True)
+            continue
+        elif answ in config.answer_quit:
             return config.answer_quit
-        elif knmi_station.name_in_list(answ) or knmi_station.wmo_in_list(answ):
-           station = knmi_station.find_by_wmo_or_name(answ)
-           log.console(f'{station.wmo}: {station.place} {station.province} selected', True)
-           return station
+        elif station.name_in_list(answ) or station.wmo_in_list(answ):
+           st = station.find_by_wmo_or_name(answ)
+           log.console(f'{st.wmo}: {st.place} {st.province} selected', True)
+           return st
+            ask( f'Station: {answ} unknown !\nPress a key to try again...', True )
         else:
-            log.console(f'Station: {answ} unknown !', True)
-            ask('Press a key to try again...')
 
 def ask_for_stations( txt, space=True):
     l = []
+    txt  = f'{txt}\n'
+    txt += view_txt.knmi_stations( config.stations, 3, 25 )
+    txt += 'To add one station, give a wmo-number or a city name of a weatherstation\n'
+    txt += 'To add more stations, give a wmo-number or a city name separated by a comma\n'
+    txt += "Press '*' to add all available weather stations\n"
+    txt += back_to_main()
+
     while True:
-        log.console(txt, True)
-        log.console(view_txt.knmi_stations(config.stations, 3, 25), True)
-        log.console('To add one station, give a wmo-number or a city name of a weatherstation', True)
-        log.console('To add more stations, give a wmo-number or a city name separated by a comma', True)
-        log.console("Press '*' to add all available weather stations", True)
-        if len(l) > 0: log.console("Press 'n' to move to the next !", True)
-        log.console("Press 'q' to go back to the main menu", True)
+        ask_txt = txt
+        if len(l) > 0:
+            ask_txt = "Press 'n' to move to the next ! \n ? "
 
-        answ = ask(' ? ', space)
+        answ = ask(ask_txt, space)
 
-        if not answ: # Waarschijnlijk op de enter geramd zonder invoer...
+        if utils.is_empthy(answ):
             log.console('Please type in something ...', True)
-            continue # Nog een keer dan maar
-
-        if answ in config.answer_quit:
+            continue
+        elif answ in config.answer_quit:
             return config.answer_quit
         elif answ == '*':
             l = config.stations
@@ -177,20 +198,20 @@ def ask_for_stations( txt, space=True):
             if answ.find(',') != -1:
                 lt = [clear(e) for e in answ.split(',')] # Clean input
             else:
-                if knmi_station.name_in_list(answ):
+                if station.name_in_list(answ):
                     lt.append(answ)
-                elif knmi_station.wmo_in_list(answ):
+                elif station.wmo_in_list(answ):
                     lt.append(answ)
                 else:
-                    log.console(f'Station: {answ} unknown !', True)
+                    log.console(f'Station: {answ} is unknown !', True)
 
             # Add all added stations
-            for st in lt:
-                station = knmi_station.find_by_wmo_or_name(st)
-                if station != False:
-                    all = f'{station.wmo} {station.place} {station.province}'
-                    if knmi_station.check_if_station_already_in_list( station, l ) != True:
-                        l.append(station)
+            for s in lt:
+                st = station.find_by_wmo_or_name(s)
+                if st != False:
+                    all = f'{st.wmo} {st.place} {st.province}'
+                    if station.check_if_station_already_in_list( st, l ) != True:
+                        l.append(st)
                         log.console(f"Station: {all} added...", True)
                     else:
                         log.console(f"Station: {all} already added...", True)
@@ -203,8 +224,8 @@ def ask_for_stations( txt, space=True):
             break
         elif len(l) > 0:
             log.console('All weatherstation(s) who were added are:', True)
-            for station in l:
-                log.console(f'{station.wmo}: {station.place} {station.province}', True)
+            for st in l:
+                log.console(f'{st.wmo}: {st.place} {st.province}', True)
         else:
             continue
         print(' ')
@@ -213,78 +234,94 @@ def ask_for_stations( txt, space=True):
 
 def ask_for_date( txt, space=True):
     while True:
-        log.console(txt, True)
-        log.console("Press 'q' to go back to the main menu", True)
-        answ = ask(' ? ', space)
-        if answ in config.answer_quit:
+        answ = ask(f'{txt}\n{back_to_main()} ? ', space)
+
+        if utils.is_empthy(answ):
+            log.console('Please type in something ...', True)
+            continue
+        elif answ in config.answer_quit:
             return config.answer_quit
         elif validate.yyyymmdd(answ):
             return answ
         else:
             log.console(f'Error in date: {answ}\n', True)
-            # ask('Press a key to try again...')
 
 def ask_for_period( space=True ):
-    txt  = 'Give a period ? \n'
+    txt  = 'Give period: \n'
     txt += 'Period           start  -  end    \n'
     txt += 'Default format  yyyymmdd-yyyymmdd \n'
     txt += 'For example: 20200510-20200520'
-    # txt += 'Other formats with wild card * \n'
-    # txt += '  yyyy****           selects the whole year \n'
-    # txt += '  ****mm**           selects a month fo every year \n'
-    # txt += '  ****mmdd           selects a day for every year \n'
-    # txt += 'Examples wildcard * \n'
-    # txt += '  2015****           selects the year 2015 \n'
-    # txt += '  201101**-202001**  selects all januarys from 2011 unto 2020 \n'
-    # txt += '  ****07**           selects all julys from avalaible data \n'
-    # txt += '  ****1225           selects all 25 decembers from avalaible data \n'
+    txt += 'Other formats with wild card * \n'
+    txt += '  yyyy****           selects the whole year \n'
+    txt += '  ****mm**           selects a month fo every year \n'
+    txt += '  ****mmdd           selects a day for every year \n'
+    txt += 'Examples wildcard * \n'
+    txt += '  2015****           selects the year 2015 \n'
+    txt += '  201101**-202001**  selects all januarys from 2011 unto 2020 \n'
+    txt += '  ****07**           selects all julys from avalaible data \n'
+    txt += '  ****1225           selects all 25 decembers from avalaible data \n'
+    txt += back_to_main()
+    txt += 'Type in period\n ? '
 
-    log.console(txt, True)
-    log.console("Press 'q' to go back to the main menu", True)
     while True:
-        answ = ask(' Type period ? ', space)
+        answ = ask( txt, space )
 
-        if utils.quit_menu(answ):
-            return config.answer_quit
-
-        return answ.replace(' ', '')
-
-def ask_for_date_with_check_data( station, data, txt, space=True ):
-    sd, ed = data[ 0, daydata.YYYYMMDD], data[-1, daydata.YYYYMMDD]
-    txt += f'Available range data for {station.place} is from {sd} untill {ed}'
-    while True:
-        answ = ask_for_date(txt, space)
-        if utils.quit_menu(answ):
+        if utils.is_empthy(answ):
+            log.console('Please type in something ...', True)
+            continue
+        elif utils.quit_menu(answ):
             return config.answer_quit
         else:
-            ymd = int(answ)
-            if ymd < sd or ymd > ed:
-                log.console(f'Date {ymd} is out of range for {station.place}')
+            return answ.replace(' ', '')
+
+def ask_for_date_with_check_data( stat, txt, space=True ):
+    log.console(f'Loading data {stat.place} ...')
+    ok, data = daydata.read( stat )
+    if not ok:
+        input(f'Error reading data! {stat.place}')
+        return config.answer_quit, np.array([])
+
+    sd = int( data[ 0, daydata.YYYYMMDD])
+    ed = int( data[-1, daydata.YYYYMMDD])
+
+    txt = f'{txt}\n'
+    txt += f'Available range data for - {stat.place} - is from {sd} untill {ed}'
+    while True:
+        answ = ask_for_date(txt, space)
+
+        if utils.quit_menu(answ):
+            return config.answer_quit, np.array([])
+        else:
+            try:
+                ymd = int(answ)
+            except Exception as e:
+                pass
             else:
-                return answ
+                if ymd < sd or ymd > ed:
+                    log.console(f'Date {ymd} is out of range for {stat.place}')
+                else:
+                    return answ, data
 
 def ask_for_yn( txt, space=True ):
     l = ['yes', 'no']
+    txt  = f'{txt}\n'
+    txt += '\t1) Yes\n\t2) No\n'
+    txt += back_to_main()
+    txt += ' ? '
     while True:
-        log.console(txt, True)
-        log.console('\t1) Yes', True)
-        log.console('\t2) No', True)
-        log.console("Press 'q' to go back to the main menu")
+        answ = ask( txt, space )
 
-        answ = ask(' ? ', space)
-
-        if answ in config.answer_quit:
-            return config.answer_quit
-        elif not answ:
-            pass
+        if utils.is_empthy(answ):
+            log.console("Please type in 'Yes' or 'No' ...", True)
+            continue
+        elif answ in config.answer_quit: return config.answer_quit
+        elif answ in config.answer_yes:  return config.answer_yes
+        elif answ in config.answer_no:   return config.answer_no
         else:
             try:
                 answi = int(answ)
             except ValueError: # Input was not a number
-                if answ in config.answer_yes:
-                    return config.answer_yes
-                elif answ in config.answer_no:
-                    return config.answer_no
+                pass
             else: # Input is a number
                 if answi in [1,2]:
                     if answi == 1:
@@ -294,19 +331,21 @@ def ask_for_yn( txt, space=True ):
 
         log.console(f'Unknown option: {answ} ?\nTry again.', True)
 
-def ask_type_options(txt, type, l, space=True):
+def ask_type_options(txt, type, l, default=1, space=True):
+    txt = f'{txt}\n'
+    for n, el in enumerate(l):
+        txt += f'\t{n+1}) {el} {type}\n'
+    txt += enter_default(default)
+    txt += back_to_main()
+    txt += ' ? '
     while True:
-        log.console(txt, True)
-        for n, el in enumerate(l):
-            log.console(f'\t{n+1}) {el} {type}', True)
-        log.console("Press 'q' to go back to the main menu")
+        answ = ask(txt, space)
 
-        answ = ask(' ? ', space)
+        if utils.is_empthy(answ):
+            answ = str(default)
 
         if answ in config.answer_quit:
             return config.answer_quit
-        elif not answ:
-            pass
         else:
             try:
                 answi = int(answ)
@@ -317,46 +356,60 @@ def ask_type_options(txt, type, l, space=True):
                 answi -= 1
                 if answi in range(len(l)):
                     return l[answi]
+                else:
+                    log.console(f'Unknown option: {answ} ?\nTry again.', True)
 
-        log.console(f'Unknown option: {answ} ?\nTry again.', True)
-
-def ask_for_file_type(txt, space=True):
-    l = ['txt', 'html', 'cmd']
-    return ask_type_options(txt, '', l, space)
+def ask_for_file_type(txt, default=2, space=True):
+    l = ['txt TODO', 'html', 'cmd TODO']
+    return ask_type_options(txt, '', l, default, space)
 
 def ask_for_graph_type(txt, space=True):
     l = ['line', 'bar']
-    return ask_type_options(txt, 'graph', l, space)
+    return ask_type_options(txt, 'graph', l, default, space)
 
-def ask_for_file_name(txt, space=True):
-    log.console(txt, True)
-    log.console('Press <enter> for no given name. Default name will be used', True)
+def ask_for_file_name(txt, default='x', space=True):
+    txt  = f'{txt}\n'
+    txt += enter_default(default)
+    txt += back_to_main()
+    txt += ' ? '
 
-    answ = ask(' ? ', space)
+    answ = ask( txt, space)
 
-    if not answ:
-        return False
+    if utils.is_empthy(answ):
+        return default
+    elif answ in config.answer_quit:
+        return config.answer_quit
+
     return answ
 
-def ask_back_to_main_menu(space=True):
-    log.console("Press a 'key' to go back to the main menu...", space)
-    input()
+def ask_for_color(txt, default='', space=True):
+    pass
 
-def ask_period_stations_type_name( space=True ):
+def ask_period_stations_type_name( name, space=True ):
     # Ask start and end date
     ok, period, stations, type, name = False, '', [], '', ''
     period = ask_for_period( space )
     if not utils.quit_menu(period):
         # Ask for one or more stations
-        stations = ask_for_stations('Select one (or more) weather station(s) ?', space )
+        stations = ask_for_stations(
+                        'Select one (or more) weather station(s) ?',
+                        space
+                    )
         if not utils.quit_menu(stations) :
             # Ask for a file type
-            type = ask_for_file_type('Select filetype ? ', space)
+            type = ask_for_file_type(
+                        'Select filetype ? ',
+                        space
+                        )
             if not utils.quit_menu(type):
-                # Ask for a name
                 ok = True
-                if type != 'cmd':
-                    name = ask_for_file_name('Set a name for the output file ? <optional> ', space)
+                if type != 'cmd': # Ask for a name
+
+                    name = ask_for_file_name(
+                            'Set a name for the output file ? <optional> ',
+                            f'{name}-{period.replace("*","x")}-{utils.now_act_for_file()}',
+                            space
+                    )
                     if utils.quit_menu(name):
                         ok = False # Oke quit
 
@@ -391,19 +444,24 @@ def ask_for_query( txt, space=True ):
     i += "'NG'    = 'Mean daily cloud cover (octants)         'UG'    = 'Daily mean relative atmospheric humidity (%)'\n"
     i += "'UX'    = 'Maximum atmospheric humidity (%)         'UN'    = 'Minimum relative atmospheric humidity (%)'\n"
 
-    s  = f'{txt}\n'
-    s += 'For example: TX > 35\n'
-    if not info: s += f"Type 'i' for more info.\n"
-    s  += "Press 'q' to go back to the main menu\n ? "
+    txt = f'{txt}\n'
+    txt += 'For example: TX > 35\n'
+    if not info:
+        txt += f"Type 'i' for more info.\n"
+    txt += back_to_main()
+    txt += '\n ? '
 
     while True:
         if info:
             print(i)
 
-        answ = ask(s, True) # TODO MAKE ADVANCED CHECKS
+        answ = ask(txt, True) # TODO MAKE ADVANCED CHECKS
 
         info = True if answ == 'i' else False
-        if info:
+        if utils.is_empthy(answ):
+            log.console('Please type in something ...', True)
+            continue
+        elif info:
             continue
         elif answ in config.answer_quit:
             return config.answer_quit
@@ -414,4 +472,3 @@ def ask_for_query( txt, space=True ):
             return utils.make_query_txt_only( answ )
 
     return answ  # No checking for now
-    #
