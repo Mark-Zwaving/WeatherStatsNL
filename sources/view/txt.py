@@ -9,11 +9,12 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config, math, time
-import view.txt as view_txt
-import knmi.model.daydata as daydata
-import view.translate as tr
 import numpy as np
+import model.daydata as daydata
 import model.utils as utils
+import view.translate as tr
+import view.log as log
+import view.txt as view_txt
 
 def ent_to_title(ent):
     e = ent.strip().upper()
@@ -163,10 +164,10 @@ def txt_main( day ):
 
     return f'{txt}\n'
 
-def process_time_ext(txt, t_ns):
+def process_time_ext(txt, delta_ns):
     '''Function gives a time string from nano seconds till days '''
     dag_sec, uur_sec, min_sec = 86400, 3600, 60
-    delta_sec = t_ns / 1000000000
+    delta_sec = delta_ns / 1000000000
 
     rest, total_sec = math.modf( delta_sec )
     rest, milli_sec = math.modf( rest * 1000 )
@@ -185,7 +186,6 @@ def process_time_ext(txt, t_ns):
 
     # Make nice output. Give emthpy string if 0
     # Only print to screen when counted amount > 0
-    txt += ': '
     if dag > 0: txt += str(dag) + (' days '    if dag > 1 else ' day ')
     if uur > 0: txt += str(uur) + (' hours '   if uur > 1 else ' hour ')
     if min > 0: txt += str(min) + (' minutes ' if min > 1 else ' minute ')
@@ -201,9 +201,7 @@ def process_time_ext(txt, t_ns):
 
     return txt
 
-def process_time_s( txt_start, start_ns ):
-    return f'{txt_start} {(time.time_ns() - start_ns) / 1000000000:.4f} seconds'
-
-def menu_process_time(st):
+def show_process_time(st):
     et = time.time_ns()
-    return process_time_ext('Total processing time',et-st)
+    txt = view_txt.process_time_ext('Total processing time is: ', et-st)
+    log.console( txt, True)
