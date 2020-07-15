@@ -10,6 +10,8 @@ __status__     =  "Development"
 
 # Application maps
 import os, sys, numpy as np
+
+# Config base maps
 dir_app              =  os.path.dirname( os.path.abspath(__file__) )
 dir_sources          =  os.path.abspath( os.path.join(dir_app, 'sources') )
 dir_view             =  os.path.abspath( os.path.join(dir_app, 'view') )
@@ -32,6 +34,7 @@ dir_html_templates   =  os.path.abspath( os.path.join(dir_html, 'templates' ) )
 dir_html_dayvalues   =  os.path.abspath( os.path.join(dir_html, 'dayvalues' ) )
 dir_html_winterstats =  os.path.abspath( os.path.join(dir_html, 'winterstats' ) )
 dir_html_summerstats =  os.path.abspath( os.path.join(dir_html, 'summerstats' ) )
+dir_html_allstats    =  os.path.abspath( os.path.join(dir_html, 'allstats' ) )
 dir_html_search_for_days =  os.path.abspath( os.path.join(dir_html, 'search-for-days'))
 dir_txt_winterstats  =  os.path.abspath( os.path.join(dir_txt, 'winterstats' ) )
 dir_thirdparty_css   =  os.path.abspath( os.path.join(dir_thirdparty, 'css') )
@@ -41,6 +44,7 @@ dir_thirdparty_js    =  os.path.abspath( os.path.join(dir_thirdparty, 'js') )
 # 'NL' for Netherlands/Dutch, 'EN' for English, Default is English
 language  = 'NL'  # Select language
 translate = True  # Translation active or not
+no_data_given = '...'
 
 # List for WeatherStations
 from sources.knmi.model.station import Station
@@ -48,7 +52,7 @@ knmi_dayvalues_url          = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/g
 knmi_dayvalues_notification = 'BRON: KONINKLIJK NEDERLANDS METEOROLOGISCH INSTITUUT (KNMI)'
 knmi_dayvalues_skip_rows    = 49
 knmi_dayvalues_dummy_val    = 99999999
-knmi_dayvalues_empthy_val   = '     '
+knmi_dayvalues_missing_val  = '     '
 knmi_dayvalues_delimiter    = ','
  # For 'rh', 'rhx', 'sq' sometimes value is -1, that means meaurement value is below 0.05.
  # Give replacement value for -1 here
@@ -65,7 +69,7 @@ Maastricht.province               = 'Limburg'
 Maastricht.country                = 'Netherlands'
 Maastricht.dayvalues_skip_rows    = knmi_dayvalues_skip_rows  # (=49, KNMI)
 Maastricht.dayvalues_dummy_val    = knmi_dayvalues_dummy_val
-Maastricht.dayvalues_empthy_val   = knmi_dayvalues_empthy_val
+Maastricht.dayvalues_empthy_val   = knmi_dayvalues_missing_val
 Maastricht.dayvalues_notification = knmi_dayvalues_notification
 Maastricht.dir_dayvalues          = dir_knmi_dayvalues
 Maastricht.file_zip_dayvalues     = os.path.join( Maastricht.dir_dayvalues, 'etmgeg_380.zip' )
