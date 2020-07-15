@@ -11,8 +11,9 @@ __status__     =  "Development"
 from random import randint
 import numpy as np
 
- # Initialisation of color list, will be overwritten with correct values later
-list = np.array( [ ['names', 'hexa', 'rgb', 'hsl'] ] )
+# Initialisation of color list, will be overwritten with correct values at the bottom
+list = np.array( [ [ '', '', '', '' ] ] )
+
 NAME = 0  # Names key in list
 HEXA = 1  # et cetera
 RGB  = 2  # et cetera
@@ -110,7 +111,7 @@ def rnd_color(type='name'):
     elif type ==  'rgb': ndx = 2
     elif type ==  'hsl': ndx = 3
 
-    l = np.random.choice(list[:,ndx],1)
+    l = np.random.choice( list[:,ndx], 1 )
 
     return l[0]
 
@@ -118,7 +119,7 @@ def rnd_savecolor():
     return np.random.choice( save_colors[:], 1 )[0]
 
 # Source: https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
-def rgb_to_l(rgb):
+def rgb_to_l( rgb ):
     return round( ( max(rgb) + min(rgb) ) / 2.0 / 255.0, 2 )
 
 # Source: https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
@@ -173,12 +174,13 @@ def hexa_to_dec(hexa):
     pos, radix, total, val = 0, 16, 0, -1 # Init base vars
     for char in hexa: # Check all chars and calculate the hexa value and sum up
         # Find decimal value for char in list with hex values
-        for el in [ ['1',1], ['2',2], ['3',3], ['4',4], ['5',5], ['6',6],
-                    ['7',7], ['8',8], ['9',9], ['0',0], ['A',10],['B',11],
-                    ['C',12], ['D',13], ['E',14], ['F',15] ]:
+        for el in [ ['1',1],  ['2',2],  ['3',3],  ['4',4], ['5',5],  ['6',6],
+                    ['7',7],  ['8',8],  ['9',9],  ['0',0], ['A',10], ['B',11],
+                    ['C',12], ['D',13], ['E',14], ['F',15]
+                ]:
             if char == el[0]:
                 val = el[1]
-                break # # Hex value found
+                break  # Hex value found
 
         if val == -1:
             return False # Error hexa value not correct
@@ -188,39 +190,36 @@ def hexa_to_dec(hexa):
 
     return total
 
-
-
 def ent_to_color(ent):
     e = ent.strip().upper()
-    if   e == 'TX': return 'red'
-    elif e == 'TG': return 'green'
-    elif e == 'TN': return 'blue'
-    elif e == 'T10N': return 'orange'
-    elif e == 'DDVEC': return 'gray'
-    elif e == 'FG': return 'orange'
-    elif e == 'RH': return 'blue'
-    elif e == 'SQ': return 'yellow'
-    elif e == 'PG': return 'purple'
-    elif e == 'UG': return rnd_savecolor()
-    elif e == 'FXX': return rnd_savecolor()
-    elif e == 'FHVEC': return rnd_savecolor()
-    elif e == 'FHX': return rnd_savecolor()
-    elif e == 'FHN': return rnd_savecolor()
-    elif e == 'SP': return rnd_savecolor()
-    elif e == 'Q': return rnd_savecolor()
-    elif e == 'DR': return rnd_savecolor()
-    elif e == 'RHX': return rnd_savecolor()
-    elif e == 'PX': return rnd_savecolor()
-    elif e == 'PN': return rnd_savecolor()
-    elif e == 'VVN': return rnd_savecolor()
-    elif e == 'VVX': return rnd_savecolor()
-    elif e == 'NG': return rnd_savecolor()
-    elif e == 'UX': return rnd_savecolor()
-    elif e == 'UN': return rnd_savecolor()
-    elif e == 'EV24': return rnd_savecolor()
+    if   e in ['TX','TXH']:    return  'red'
+    elif e == 'TG':    return  'green'
+    elif e in ['TN','T10N']:    return  'blue'
+    elif e == 'DDVEC': return  'gray'
+    elif e == 'FXX':   return  'gray'
+    elif e == 'FHVEC': return  'gray'
+    elif e == 'FHX':   return  'gray'
+    elif e == 'FHN':   return  'gray'
+    elif e == 'FG':    return  'orange'
+    elif e == 'RH':    return  'blue'
+    elif e == 'SQ':    return  'orange'
+    elif e == 'PG':    return  'purple'
+    elif e == 'SP':    return  'orange'
+    elif e == 'Q':     return  'orange'
+    elif e == 'DR':    return  'blue'
+    elif e == 'RHX':   return  'blue'
+    elif e == 'PX':    return  'purple'
+    elif e == 'PN':    return  'purple'
+    elif e == 'VVN':   return  'green'
+    elif e == 'VVX':   return  'green'
+    elif e == 'NG':    return  'gray'
+    elif e == 'UX':    return  'green'
+    elif e == 'UN':    return  'green'
+    elif e == 'UG':    return  'green'
+    elif e == 'EV24':  return  'green'
     return rnd_savecolor()
 
-# Tested / selected 
+# Tested / selected
 save_colors = np.array([
       '#0000FF','#D2691E','#8B008B','#556B2F','#E9967A','#2F4F4F','#00CED1',
       '#1E90FF','#DAA520','#9ACD32','#FF69B4','#CD5C5C','#778899','#32CD32',
@@ -228,8 +227,8 @@ save_colors = np.array([
       '#FF0000','#BC8F8F','#2E8B57','#A0522D','#4682B4','#008080'
 ])
 
-
-list = np.array([
+# Real color list
+list = np.array( [
     ['Black',            '#000000', hexa_to_rgb('#000000'), hexa_to_hsl('#000000')],
     ['Navy',             '#000080', hexa_to_rgb('#000080'), hexa_to_hsl('#000080')],
     ['DarkBlue',         '#00008B', hexa_to_rgb('#00008B'), hexa_to_hsl('#00008B')],
@@ -241,7 +240,7 @@ list = np.array([
     ['DarkCyan',         '#008B8B', hexa_to_rgb('#008B8B'), hexa_to_hsl('#008B8B')],
     ['DeepSkyBlue',      '#00BFFF', hexa_to_rgb('#00BFFF'), hexa_to_hsl('#00BFFF')],
     ['DarkTurquoise',    '#00CED1', hexa_to_rgb('#00CED1'), hexa_to_hsl('#00CED1')],
-    ['MediumSpringGreen', '#00FA9A', hexa_to_rgb('#00FA9A'), hexa_to_hsl('#00FA9A')],
+    ['MediumSpringGreen','#00FA9A', hexa_to_rgb('#00FA9A'), hexa_to_hsl('#00FA9A')],
     ['Lime',             '#00FF00', hexa_to_rgb('#00FF00'), hexa_to_hsl('#00FF00')],
     ['SpringGreen',      '#00FF7F', hexa_to_rgb('#00FF7F'), hexa_to_hsl('#00FF7F')],
     ['Aqua',             '#00FFFF', hexa_to_rgb('#00FFFF'), hexa_to_hsl('#00FFFF')],
