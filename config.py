@@ -10,6 +10,7 @@ __status__     =  "Development"
 
 # Application maps
 import os, sys, numpy as np
+from sources.model.station import Station
 
 # Config base maps
 dir_app              =  os.path.dirname( os.path.abspath(__file__) )
@@ -40,14 +41,21 @@ dir_txt_winterstats  =  os.path.abspath( os.path.join(dir_txt, 'winterstats' ) )
 dir_thirdparty_css   =  os.path.abspath( os.path.join(dir_thirdparty, 'css') )
 dir_thirdparty_js    =  os.path.abspath( os.path.join(dir_thirdparty, 'js') )
 
+# Add dir_app and dir sources to system
+for dir in [ dir_app, dir_sources ]:
+    sys.path.append(dir)
+
 # Give language for app. Under contruction...
 # 'NL' for Netherlands/Dutch, 'EN' for English, Default is English
 language  = 'NL'  # Select language
 translate = True  # Translation active or not
 no_data_given = '...'
+help_info = True
+
+# The years/period for the calculations of climate averages
+climate_period = '1990-2019'
 
 # List for WeatherStations
-from sources.knmi.model.station import Station
 knmi_dayvalues_url          = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/daggegevens/etmgeg_{0}.zip'
 knmi_dayvalues_notification = 'BRON: KONINKLIJK NEDERLANDS METEOROLOGISCH INSTITUUT (KNMI)'
 knmi_dayvalues_skip_rows    = 49
@@ -150,20 +158,25 @@ html_popup_table_max_rows = -1 # -1 for all rows
 debug = False
 log   = True
 
-# Add dir_app and dir sources to system
-for dir in [ dir_app, dir_sources ]:
-    sys.path.append(dir)
-
 # Plotting default values
-plot_width       = 1280 # Width plotted image
-plot_height      =  720 # Height plotted image
+default_values = 'no' # Use of default values (below) ? Or add values at runtime ?
+plot_width     = 1280 # Width plotted image
+plot_height    =  720 # Height plotted image
 # Images dpi (dots per inches) for printing on paper
 plot_dpi         =  108 # Higher will increase de point size. Make width/height higher too
 plot_image_type  = 'png'
 plot_graph_type  = 'line'  # bar or line
 plot_line_width  =  1      # Width line
+plot_line_style  = 'solid'  # Linestyle
 plot_marker_size =  3      # Dot sizes
+plot_marker_type =  'o'    # Type marker
 plot_cummul_val  = 'n'     # Cummulative values
+plot_climate_ave = 'n'     # Adding climate averages to plot
+plot_clima_line_style  = 'dotted'
+plot_clima_line_width  = 1
+plot_clima_marker_type = '.'
+plot_clima_marker_size = 1
+
 
 # Base Style Plotting
 # 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight',
@@ -240,8 +253,8 @@ max_rows_table_popup = 10
 strip_html_output    = True
 
 # Asked for char
-answer_quit = np.array(['q', 'Q'])
-answer_yes  = np.array(['y', 'Y', 'j', 'J', 'ok', 'oke', 'oké'])
-answer_no   = np.array(['n', 'N', 'no', 'nope'])
+answer_quit = np.array(['q', 'quit'])
+answer_yes  = np.array(['yes', 'y', 'j', 'ok', 'oke', 'oké'])
+answer_no   = np.array(['no', 'n', 'nope'])
 
 #
