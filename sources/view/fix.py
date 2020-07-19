@@ -94,8 +94,11 @@ def rounding(val, entity):
     f = value(val, e)
 
     # Indexes
-    if e in ['heat_ndx', 'hellmann']:
+    if e in ['hellmann']:
         return round(f)
+
+    elif e in ['heat_ndx']:
+        return round(f,1)
 
     # IJnsen
     elif e in ['ijnsen']:
