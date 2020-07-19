@@ -7,7 +7,7 @@ __version__    =  "0.0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config
+import config, math
 import numpy as np
 import matplotlib.pyplot as plt
 import model.stats as stats
@@ -18,12 +18,11 @@ import view.fix as fix
 import view.txt as view_txt
 import view.translate as tr
 import view.color as view_color
+import view.log as log
 
 def text_diff( l ):
-    m = max(l)
-    # div = max * 3.0
-
-    return m / 30.0
+    mp, mm = max(l), min(l)
+    return (mp - mm) / 20.0
 
 class G:
     x          = np.array([])
@@ -38,7 +37,7 @@ class G:
     def __init__(self):
         pass
 
-def plot( stations, entities, period, title, ylabel, path, options ):
+def plot( stations, entities, period, title, ylabel, path ):
     # Size values are inches. And figure always in front
     plt.figure( figsize=( convert.pixel_to_inch(config.plot_width),
                           convert.pixel_to_inch(config.plot_height)
@@ -54,10 +53,11 @@ def plot( stations, entities, period, title, ylabel, path, options ):
 
     min, max = 99999999.9, -99999999.9
     for station in stations:
+        log.console(f'Read and calculate weatherdata for {station.place}', True)
         ok, data = daydata.read( station )
         if ok:
-            data = daydata.period( data, period )
-            ymd = data[:,daydata.ndx_ent('YYYYMMDD')].astype(
+            days = daydata.period( data, period )
+            ymd = days[ :, daydata.ndx_ent('YYYYMMDD') ].astype(
                             np.int, copy=False
                             ).astype(
                                 np.str, copy=False
@@ -65,32 +65,59 @@ def plot( stations, entities, period, title, ylabel, path, options ):
 
             for el in entities:
                 # Get the values needed for the graph
-                ndx   = daydata.ndx_ent(el)
-                f_val = data[:, ndx]
+                f_val = days[:, daydata.ndx_ent(el)]
                 # Cumulative sum of values, if chosen
                 if config.plot_cummul_val in config.answer_yes:
                     f_val = np.cumsum( f_val )
 
                 # Min/ max for ranges
-                min_act = fix.rounding(np.min(f_val), el)
-                max_act = fix.rounding(np.max(f_val), el)
+                min_act = fix.rounding( np.min(f_val), el )
+                max_act = fix.rounding( np.max(f_val), el )
                 if min_act < min: min = min_act
                 if max_act > max: max = max_act
 
                 # Make correct output values
                 l_val = [ fix.rounding(v, el) for v in f_val.tolist() ]
-
                 label = f'{station.place} {view_txt.ent_to_title(el)}'
                 color = col_list[col_ndx] if rnd_col else view_color.ent_to_color(el)
 
+                if config.plot_climate_ave in config.answer_yes:
+                    l_clima = []
+                    label_clima = f'Day climate {station.place} {view_txt.ent_to_title(el)}'
+                    clima_ymd = days[:, daydata.YYYYMMDD ].astype(
+                                        np.int, copy=False ).astype(
+                                        np.str, copy=False ).tolist()
+                    cli_txt = f"Calculate climate data '{el.upper()}' for {station.place}"
+                    log.console(cli_txt, True)
+                    for d in clima_ymd:
+                        mmdd = d[4:8]
+                        val = stats.climate_day(station, mmdd, el)
+                        res = fix.rounding(val, el)
+                        l_clima.append( res )
+                    cli_txt = f"Calculated values are {str(l_clima)}"
+                    log.console(cli_txt, True)
+
                 if config.plot_graph_type == 'line':  # bar or line
-                    plt.plot( ymd, l_val, label = label, color = color,
-                              marker = 'o', linestyle = 'solid',
+                    plt.plot( ymd, l_val, label = label,
+                              color      = color,
+                              marker     = config.plot_marker_type,
+                              linestyle  = config.plot_line_style,
                               linewidth  = config.plot_line_width,
-                              markersize = config.plot_marker_size
-                              )
+                              markersize = config.plot_marker_size )
+
+                    if config.plot_climate_ave in config.answer_yes:
+                        plt.plot(ymd, l_clima, label = label_clima,
+                                 color      = color,
+                                 marker     = config.plot_clima_marker_type,
+                                 linestyle  = config.plot_clima_line_style,
+                                 linewidth  = config.plot_clima_line_width,
+                                 markersize = config.plot_clima_marker_size )
+
                 elif config.plot_graph_type == 'bar':
                     plt.bar( ymd, l_val, label = label, color = color )
+
+                    if config.plot_climate_ave in config.answer_yes:
+                        plt.bar(ymd, l_clima, label=label_clima, color=color)
 
                 if rnd_col:
                     col_ndx = 0 if col_ndx == col_cnt else col_ndx + 1
@@ -108,6 +135,16 @@ def plot( stations, entities, period, title, ylabel, path, options ):
                                   verticalalignment=config.plot_marker_verticalalignment,
                                   alpha=config.plot_marker_alpha
                                 )
+
+                    if config.plot_climate_ave in config.answer_yes:
+                        for d, v, t in zip( ymd, l_clima, l_clima ):
+                            plt.text( d, v+diff, t,
+                                      color=config.plot_marker_color,
+                                      **config.plot_marker_font,
+                                      horizontalalignment=config.plot_marker_horizontalalignment,
+                                      verticalalignment=config.plot_marker_verticalalignment,
+                                      alpha=config.plot_marker_alpha
+                                    )
         else:
             print('Read not oke in graphs.py -> plot')
 
@@ -133,10 +170,17 @@ def plot( stations, entities, period, title, ylabel, path, options ):
     if config.plot_grid_on:
         plt.grid( color=config.plot_grid_color,
                   linestyle=config.plot_grid_linestyle,
-                  linewidth=config.plot_grid_linewidth
-                  )
+                  linewidth=config.plot_grid_linewidth )
 
-    yticks = np.arange( int(min*0.99), int(max*1.1) ) # 1-10 % ranges
+    diff_max = max*0.1
+    diff_max = 1.5 if diff_max < 1.5 else diff_max
+    max  = math.ceil( max + diff_max )  # 10% upperrange extra
+    min  = math.floor( min*0.98 ) #  2% underrange extra
+    diff = max - min
+    step = math.floor(diff/10-0.5)
+    step = 1 if step == 0 else step
+
+    yticks = np.arange( min, max, step ) # 1-10 % ranges
     plt.yticks( yticks,
                 **config.plot_xas_font,
                 color=config.plot_xas_color
@@ -148,6 +192,8 @@ def plot( stations, entities, period, title, ylabel, path, options ):
                 rotation=config.plot_xas_rotation
                 )
 
+    loc = 'upper left' if config.plot_cummul_val in config.answer_yes \
+                       else config.plot_legend_loc
     plt.legend( loc=config.plot_legend_loc,
                 fontsize=config.plot_legend_fontsize,
                 facecolor=config.plot_legend_facecolor,
