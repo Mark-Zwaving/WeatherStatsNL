@@ -217,7 +217,6 @@ def calculate( stations, period, name=False, type='html' ):
                     <td> <span class="val"> {s.station.province} </span> </td>
                     <td title="{period_txt}"> <span class="val"> {s.period} </span> </td>
                     <td> <span class="val"> {tg_ave} </span> </td>
-                    <td> <span class="val"> {heat_ndx} </span> </td>
                     <td> <span class="val"> {tx_max} </span> </td>
                     <td> <span class="val"> {tg_max} </span> </td>
                     <td> <span class="val"> {tn_max} </span> </td>
@@ -226,6 +225,7 @@ def calculate( stations, period, name=False, type='html' ):
                     <td> <span class="val"> {tn_min} </span> </td>
                     <td> <span class="val"> {sq_sum} </span> </td>
                     <td> <span class="val"> {rh_sum} </span> </td>
+                    <td> <span class="val"> {heat_ndx} </span> </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_20, axis=0)} </span>
                         {html.table_count(s.days_tx_gte_20, 'TX', 'TXH', popup_rows)}
