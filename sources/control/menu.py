@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.1.6"
+__version__    =  "0.1.8"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -151,8 +151,9 @@ def search_for_days():
     while True:
         log.header('START SEARCHING FOR SPECIFIC DAYS...', True)
 
-        log.console( 'For which time periode do you want to search ? \n' )
-        period = control_ask.ask_for_period( )
+        period = control_ask.ask_for_period(
+                    'For which time periode do you want to search ? ', True
+                    )
         if utils.quit_menu(period):
             break
 
@@ -168,30 +169,35 @@ def search_for_days():
         if utils.quit_menu(type):
             break
 
+        default = f'days-{utils.make_query_txt_only(query)}-{period}-{utils.now_act_for_file()}'
+        default = default.replace('*','x').replace(' ','')
         fname = control_ask.ask_for_file_name(
-                        'Give a name for the file ? <optional>',
-                         f'days-{utils.make_query_txt_only(query)}-{period}-{utils.now_act_for_file()}',
-                        True
+                        'Give a name for the file ? <optional>', default, True
                     )
         if utils.quit_menu(fname):
             break
 
         st = time.time_ns()
-        # Search for the days the
         data = search4days.process( stations, period, query )
 
         if type =='html':
+            title = f'Days {query}'
             fname = f'{fname}.html'
             path = utils.mk_path(config.dir_html_search_for_days, fname)
 
             # Proces data in html table
-            html_main = view_html.table_search_for_days(data, period)
+            html_main = view_html.table_search_for_days(data, title, period)
 
             # Write to html, screen, console
             html = view_html.Template()
-            html.title  = f'Days {query}'
-            html.header = f'Days: {query}'
-            html.add_css_file( dir='./css/', name='table-statistics.css' )
+            html.title  = title
+            html.header = ''
+            html.add_css_file(name='table-statistics.css')
+            html.add_css_file(name='default.css')
+            html.add_css_file(dir='./css/', name='search4days.css')
+            html.add_script_file(dir='./js/', name='sort-col.js')
+            html.add_script_file(name='default.js')
+            html.add_script_file(dir='./js/', name='search4days.js')
             html.main   = html_main
             html.footer = ''
             html.set_path( config.dir_html_search_for_days, fname )
@@ -225,8 +231,7 @@ def graph_period():
     while True:
         log.header('START MAKING A IMAGE GRAPH...', True)
 
-        log.console( 'What time periode ?\n' )
-        period = control_ask.ask_for_period( )
+        period = control_ask.ask_for_period('What time periode ?')
         if utils.quit_menu(period):
             break
 
@@ -239,75 +244,111 @@ def graph_period():
             break
 
         log.console('Fill in the parameters for the image', False)
-        title  = control_ask.ask_txt('Give a title for the graph ? ', False)
-        ylabel = control_ask.ask_txt('Give a y-as label for the graph ? ', False)
+        title  = control_ask.ask_txt('Give a title for the graph', True)
+        ylabel = control_ask.ask_txt('Give a y-as label for the graph', True)
 
-        more = control_ask.ask_for_yn(
+        default_values = control_ask.ask_for_yn(
                     'Do you want to use default values ?\nSee file -> config.py...',
-                    False
-                    )
-        if utils.quit_menu(more):
+                    config.default_values,
+                    True )
+        if utils.quit_menu(default_values):
             break
+        else:
+            config.default_values = default_values[0]
 
-        if np.array_equal( more, config.answer_no ):
-            config.plot_width = control_ask.ask_for_int(
-                                    'Give the width (in pixels) for the graph.',
-                                    1280,
-                                    space=False
-                                    )
-            config.plot_height = control_ask.ask_for_int(
-                                    'Give the height (in pixels) for the graph.',
-                                    720,
-                                    space=False
-                                    )
-            config.plot_graph_type = control_ask.ask_type_options(
-                                        'Which type of graph do you want to use ? ',
-                                        'graph', ['line', 'bar'],
-                                        space=False
-                                    )
-            config.plot_cummul_val = control_ask.ask_for_yn(
-                                        'Do you want cummulative values for the graph ? ',
-                                        space=False
-                                    )[0] # Take first yess or no
-            config.plot_marker_txt = control_ask.ask_for_yn(
-                                        'Values next to the markers ? ',
-                                        space=False
-                                    )[0] # Take first yess or no
-            config.plot_image_type = control_ask.ask_type_options(
-                                        'What type of image ? ', 'image',
-                                        ['png', 'jpg', 'ps', 'pdf', 'svg'],
-                                        space=False
-                                    )
-            config.plot_dpi = control_ask.ask_for_int(
-                                'Give the dpi (default is 100) ? ', 100, space=False
-                                )
+        if config.default_values in config.answer_no:
+            plot_width = control_ask.ask_for_int(
+                                'Give the width (in pixels) for the graph.',
+                                config.plot_width,
+                                True )
+            if utils.quit_menu(plot_width): break
+            else: config.plot_width = plot_width
+
+            plot_height = control_ask.ask_for_int(
+                                'Give the height (in pixels) for the graph.',
+                                config.plot_height,
+                                True )
+            if utils.quit_menu(plot_height): break
+            else: config.plot_height = plot_height
+
+            plot_graph_type = control_ask.ask_type_options(
+                                    'Which type of graph do you want to use ? ',
+                                    'graph', ['line', 'bar'],
+                                    config.plot_graph_type,
+                                    True )
+            if utils.quit_menu(plot_graph_type): break
+            else: config.plot_graph_type = plot_graph_type
 
             if config.plot_graph_type == 'line':
-                # l_opt = []
+                # TODO MAKE OPTIONS FOR EACH ENTITIY LATER l_opt = []
                 # option = { 'line-width': 1,
                 #     	   'markersize': 2,
                 #            'colors': vcolors.hexas().toList()
                 #
                 #            }
 
-                config.plot_line_width = control_ask.ask_for_int(
+                plot_line_width = control_ask.ask_for_int (
                                             'Set the width of the line (in pixels) ? ',
-                                            1, space=False
-                                        ) # Width line
-                config.plot_marker_size = control_ask.ask_for_int(
-                                            'Set the marker size (in pixels) ? ',
-                                            3, space=False
-                                        ) # Dot sizes on day
+                                            config.plot_line_width,
+                                            True ) # Width line
+                if utils.quit_menu(plot_line_width): break
+                else: config.plot_line_width = plot_line_width
 
-        name = control_ask.ask_for_file_name( 'Give a name for the file ? <optional>',
-                                              f'graph-{period.replace("*", "x")}-{utils.now_act_for_file()}',
-                                              True
-                                              )
+                plot_marker_size = control_ask.ask_for_int (
+                                            'Set the marker size (in pixels) ? ',
+                                            config.plot_marker_size,
+                                            True ) # Dot sizes on day
+                if utils.quit_menu(plot_marker_size): break
+                else: config.plot_marker_size = plot_marker_size
+
+
+            plot_cummul_val = control_ask.ask_for_yn(
+                                    'Do you want cummulative values for the graph ? ',
+                                    config.plot_cummul_val,
+                                    True )
+            if utils.quit_menu(plot_cummul_val): break
+            else: config.plot_cummul_val = plot_cummul_val[0] # Take first yess or no
+
+            plot_marker_txt = control_ask.ask_for_yn(
+                                        'Values next to the markers ? ',
+                                        config.plot_marker_txt,
+                                        True )
+            if utils.quit_menu(plot_marker_txt): break
+            else: config.plot_marker_txt = plot_marker_txt[0] # Take first yess or no
+
+            plot_climate_ave = control_ask.ask_for_yn(
+                                        'Calculate and add climate averages too ? ',
+                                        config.plot_climate_ave,
+                                        True )
+            if utils.quit_menu(plot_climate_ave): break
+            else: config.plot_climate_ave = plot_climate_ave[0] # Take first yess or no
+
+            plot_image_type = control_ask.ask_type_options(
+                                    'What type of image ? ', 'image',
+                                    ['png', 'jpg', 'ps', 'pdf', 'svg'],
+                                    config.plot_image_type,
+                                    True )
+            if utils.quit_menu(plot_image_type): break
+            else: config.plot_image_type = plot_image_type
+
+            plot_dpi = control_ask.ask_for_int(
+                                'Give the dpi ? ',
+                                config.plot_dpi,
+                                True )
+            if utils.quit_menu(plot_dpi): break
+            else: config.plot_dpi = plot_dpi
+
+        default = f'graph-{period.replace("*", "x")}-{utils.now_act_for_file()}'
+        name = control_ask.ask_for_file_name('Give a name for the file ? ', default, True)
         if utils.quit_menu(name):
             break
 
         st = time.time_ns()
         log.header( 'PREPARING IMAGES...', True )
+
+        if config.plot_climate_ave in config.answer_yes:
+            log.console('Calculating climate data might take a while...\n', True)
+
         path = utils.mk_path( config.dir_img_period, name + f'.{config.plot_image_type}' )
         view_graph.plot( stations, entities, period, title, ylabel, path )
         view_txt.show_process_time(st)
