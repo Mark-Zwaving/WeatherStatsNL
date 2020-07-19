@@ -74,8 +74,6 @@ def calculate( stations, period, name, type='html' ):
             if days.size != 0:
                 winter = np.append( winter, Stats( station, days ) ) # Create winterstats object
 
-    log.console(f'Preparing winterstats, output type is {type}', True)
-
     # Update name if there is none yet
     if not name:
         name = utils.mk_name('winterstatistics', period)
@@ -98,7 +96,6 @@ def calculate( stations, period, name, type='html' ):
 
     # Head of txt of console
     table_title = name.replace('-', ' ')
-    input(table_title)
     if type in [ 'txt', 'cmd' ]:
         title += f'{table_title} \n'
         title += f'PLAATS{s:17} '
@@ -177,11 +174,11 @@ def calculate( stations, period, name, type='html' ):
                         {html.table_count( s.days_tg_lt_0, 'TG', '', popup_rows )}
                     </td>
                     <td>
-                        <span class="val"> {np.size( s.days_tn_lt_0,   axis=0 )} </span>
+                        <span class="val"> {np.size( s.days_tn_lt_0, axis=0 )} </span>
                         {html.table_count( s.days_tn_lt_0, 'TN', 'TNH', popup_rows )}
                     </td>
                     <td>
-                        <span class="val"> {np.size( s.days_tn_lt__5,  axis=0 )} </span>
+                        <span class="val"> {np.size( s.days_tn_lt__5, axis=0 )} </span>
                         {html.table_count( s.days_tn_lt__5, 'TN', 'TNH', popup_rows )}
                     </td>
                     <td>
