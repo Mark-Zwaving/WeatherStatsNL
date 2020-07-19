@@ -14,6 +14,9 @@ import view.translate as tr
 from datetime import datetime
 from dateutil import rrule
 
+def var_dump( v ):
+    print(id(v), type(v), v)
+
 def is_empthy( answ ):
     if not answ or answ == '':
         return True
@@ -48,7 +51,7 @@ def clear( s ):
     s = re.sub('\n|\r|\t', '', s)
     s = re.sub('\s+', ' ', s)
     s = s.strip()
-    return s.lower() if s else False
+    return s
 
 def make_query_txt_only(query):
     q = query.lower()
@@ -78,8 +81,8 @@ def now_act_for_file():
     txt =  datetime.now().strftime('%Y%m%d%H%M%S')
     return txt
 
-def quit_menu(l):
-    if np.array_equal(l,config.answer_quit):
+def quit_menu(el):
+    if np.array_equal(el,config.answer_quit):
         return True
     else:
         return False
