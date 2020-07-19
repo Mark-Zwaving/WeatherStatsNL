@@ -9,7 +9,8 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config
-import os, threading, time, urllib.request, calendar, numpy as np
+import os, threading, time, urllib.request, calendar
+import numpy as np, array
 from zipfile import ZipFile, BadZipfile
 from datetime import datetime
 import model.validate as validate
@@ -123,7 +124,7 @@ def read( station ):
                                   dtype=np.float64,
                                   delimiter=config.knmi_dayvalues_delimiter,
                                   missing_values=config.knmi_dayvalues_missing_val,
-                                  filling_values=config.knmi_dayvalues_dummy_val,
+                                  filling_values=np.nan,
                                   skip_header=config.knmi_dayvalues_skip_rows,
                                   usemask=True
                                   )
@@ -150,127 +151,282 @@ def update_minus_1( data ):
 
     return data
 
-def sel_keys_days ( ymd, period ):
+def sel_tuple(l):
+    '''Function puts keys in a where clausule tuple'''
+    return ( (array.array(l), np.int64), )
+
+def check_periode( per ):
+    '''Function checks if a period is valuable'''
+    per = per.replace(' ','')  # No spaces
+    now = datetime.now()  # Date now
+    yn  = now.strftime('%Y')
+    mn  = now.strftime('%m')
+    dn  = now.strftime('%d')
+
+    # Make start and a end date
+    sp, ep = '', ''
+    if per.find('-') == -1: #  No '-' in period given
+        yp = per[0:4]
+        mp = per[4:6]
+        dp = per[6:8]
+
+        # if int(yp) > int(yn) || int(per) > int(f'{yn}{mn}{dn}'):
+        #     return False
+
+        # OPTION YYYYMMDD   Get only one day in a year
+        if per.isdigit():
+            return True
+        # OPTION ********  All the data
+        elif per == '*'*8:
+            return True
+        # OPTION ****      This actual whole year
+        elif per == '****':
+            return True
+        # OPTION **        This actual whole month
+        elif per == '**':
+            return True
+        # OPTION YYYY****   Get whole year
+        elif yp.isdigit() and f'{mp}{dp}' == '****':
+            return True
+        # OPTION YYYYMM**   Get whole month in year
+        elif f'{yp}{mp}'.isdigit() and f'{dp}' == '**':
+            return True
+        # ADVANCED OPTIONS for more different periods in a given period
+        # OPTION ****MM**   Get months for every year
+        elif f'{yp}{dp}' == '******' and mp.isdigit():
+            return True
+        # OPTION ****MMDD   Get days for every available year
+        elif f'{yp}' == '****' and '{mp}{dp}'.isdigit():
+            return True
+    # Base period with a start and end date is given
+    else:
+        # Split in start and end-date
+        s_per, e_per = per.split('-')
+
+        # OPTION YYYYMMDD-YYYYMMDD  Get keys for the given periode
+        if s_per.isdigit() and e_per.isdigit():
+            return True
+        else:
+            # Split up in y , m , d
+            ys, ye = s_per[0:4], e_per[0:4]
+            ms, me = s_per[4:6], e_per[4:6]
+            ds, de = s_per[6:8], e_per[6:8]
+
+            # Normal period added
+            if s_per.isdigit() and e_per.isdigit():
+                return True
+
+            # OPTION: YYYY****-YYYY****  A full year from startyear to endyear
+            elif f'{ys}{ye}'.isdigit() and f'{ms}{ds}{me}{de}' == '*'*8:
+                return True
+            # OPTION: YYYYMDD-YYYYMM**  A full month + next months untill possible end
+            elif s_per.isdigit() and f'{ye}{me}'.isdigit() and de == '**':
+                return True
+
+            # OPTION: 20100601-2020****  A full date untill a year or a end date -> now!
+            elif s_per.isdigit() and ye.isdigit() and f'{me}{de}' == '*'*4:
+                return True
+
+            # More simple options later maybe
+
+            # ADVANCED OPTIONS for more different periods in a given period
+            # OPTION YYYYMMDD-YYYY*MMDD  A certain day in a year. From startyear to endyear.
+            elif s_per.isdigit() and len(e_per) == 9 and e_per[4] == '*' and \
+               ye.isdigit() and f'{ye}{e_per[5:9]}'.isdigit():
+               return True
+
+            # OPTION YYYYMMDD-YYYY*MMDD*  A certain period in a year. From startyear to endyear
+            elif s_per.isdigit() and len(e_per) == 10 and \
+               e_per[4] == '*' and e_per[9] == '*'  and s_per[5:9].isdigit():
+               return True
+            # TODO periods crossover years
+
+            # OPTION YYYYMM**-YYYYMM** A full 1 month in an year. From startyear to endyear
+            elif f'{ys}{ms}{ye}{me}'.isdigit() and f'{ds}{de}' == '****' and \
+               f'{ys}{ms}' == f'{ye}{me}':
+               return True
+
+    return False
+
+def sel_keys_days ( ymd, per ):
     # Get the dates array
     y0  = utils.f_to_s(ymd[ 0])[:4]
     yz  = utils.f_to_s(ymd[-1])[:4]
-    per = period.replace(' ','') # No spaces
-    now = datetime.now() # Date now
+    per = per.replace(' ','')  # No spaces
+    now = datetime.now()  # Date now
+    yn  = now.strftime('%Y')
+    mn  = now.strftime('%m')
+    dn  = now.strftime('%d')
     sel = np.array([])  # Array with selected keys
+    keys = []  # Empthy keys array to fill with found keys
+
+    # Make start and a end date
+    sp, ep = '', ''
+    if per.find('-') == -1: #  No '-' in period given
+        yp = per[0:4]
+        mp = per[4:6]
+        dp = per[6:8]
+
+        # OPTION YYYYMMDD   Get only one day in a year
+        if per.isdigit():
+            sel = np.where( (ymd == float(per)) )
+            return sel
+
+        # OPTION ********  All the data
+        elif per == '*'*8: # All time
+            sp = ymd[ 0]
+            ep = ymd[-1]
+
+        # OPTION ****      This actual whole year
+        elif per == '****':
+            sp = f'{yn}0101'
+            ep = f'{yn}{mn}{dn}'
+
+        # OPTION **        This actual whole month
+        elif per == '**':
+            sp = f'{yn}{mn}01'
+            ep = f'{yn}{mn}{dn}'
+
+        # OPTION YYYY****   Get whole year
+        elif yp.isdigit() and f'{mp}{dp}' == '****':
+            sp = f'{yp}0101'
+            ep = f'{yp}1231'
+
+        # OPTION YYYYMM**   Get whole month in year
+        elif f'{yp}{mp}'.isdigit() and f'{dp}' == '**':
+            dd = calendar.monthrange(int(yp), int(mp))[1]  # num_days
+            # Is it the actual month in the actual year? Then actual day
+            if mp == mn and yp == yn: dd = dn
+            sp = f'{yp}{mp}01'
+            ep = f'{yp}{mp}{dd}'
+
+        # ADVANCED OPTIONS for more different periods in a given period
+        # OPTION ****MM**   Get months for every year
+        elif f'{yp}{dp}' == '******' and mp.isdigit():
+            years = range(int(y0), int(yz)+1)
+            for y in years:
+                m_per = f'{y}{mp}**'
+                k = sel_keys_days( ymd, m_per )[0]
+                if k.size != 0:
+                    keys = np.concatenate((keys, k))
+            return sel_tuple(keys)
+
+        # OPTION ****MMDD   Get days for every available year
+        elif f'{yp}' == '****' and '{mp}{dp}'.isdigit():
+            years = range(int(y0), int(yz)+1)
+            for y in years:
+                k = sel_keys_days(ymd, f'{y}{mp}{dp}')[0]
+                if k.size != 0:
+                    keys = np.concatenate((keys, k))
+
+            return sel_tuple(keys)
 
     # Base period with a start and end date is given
-    if period.find('-') != -1:
-        s_per, e_per = per.split('-')  # Split in start and end-date
-
-        # Split up in y , m , d
-        ys, ye = s_per[0:4], e_per[0:4]
-        ms, me = s_per[4:6], e_per[4:6]
-        ds, de = s_per[6:8], e_per[6:8]
-
-        # Correct for the wildcard option: ****1225-****1225
-        if ys == '****': ys = y0  # First possible year
-        if ye == '****': ye = yz  # Last possible year
-
-        # Normal period yyyymmdd-yyyymmdd, easy calculations
-        if s_per.isdigit() and e_per.isdigit():
-            sp, ep = float(s_per), float(e_per)
-            # Get selected keys for correct dates
-            sel = np.where( (ymd >= sp) & (ymd <= ep) )
-
-            return sel
-
-        else:
-            # OPTION yyyymmdd-yyyy*mmdd  Special format an certain day in the year for more years
-            if len(e_per) == 7 and e_per[4] == '*':
-                md, years = f'{ms}{ds}', range(int(ys), int(ye)+1)
-                for y in years:
-                    yymmdd = float(f'{y}{md}')
-                    keys = np.where( (ymd == yymmdd) ) # Get the keys
-                    sel  = np.concatenate( (sel, keys) ) # Add keys to total list
-
-                return sel
-
-            # Start year en month is given. Calculate months over the years
-            # OPTION:  201012**-202012** Calculate dec from 2010 till 2020
-            if f'{ys}{ms}{ye}{me}'.isdigit() and f'{ds}{de}' == '****':
-                mi, years = int(ms), range( int(ys), int(ye) + 1 )
-                for y in years:
-                    days = calendar.monthrange(y, mi)[1]  # num_days
-                    sp, ep = float(f'{y}{ms}01'), float(f'{y}{ms}{days}')
-                    keys = np.where( (ymd >= sp) & (ymd <= ep) ) # Get the keys
-                    sel  = np.concatenate( (sel, keys) ) # Add keys to total list
-
-                return sel
-
-            # OPTION: 2010****-2020**** calculates full years from 2010 till 2020
-            if f'{ys}{ye}'.isdigit() and f'{ms}{ds}{me}{de}' == '********':
-                sp, ep = float(f'{ys}0101'), float(f'{ys}1231')
-                sel = np.where( (ymd >= sp) & (ymd <= ep) )
-
-                return sel
-
-            # More options later, maybe
-
-    #  No '-' in period given
     else:
-        yp, mp, dp = per[:4], per[4:6], per[6:8]
-        yn, mn, dn = now.strftime('%Y'), now.strftime('%m'), now.strftime('%d')
+        # Split in start and end-date
+        s_per, e_per = per.split('-')
 
-        # OPTION YYYYMMDD  Get only one day. No statistic will be calculated
-        if per.isdigit():
-            sel = np.where( (ymd == per) )
-            return sel
+        # OPTION YYYYMMDD-YYYYMMDD  Get keys for the given periode
+        if s_per.isdigit() and e_per.isdigit():
+            sp = s_per
+            ep = e_per
+        else:
+            # Split up in y , m , d
+            ys, ye = s_per[0:4], e_per[0:4]
+            ms, me = s_per[4:6], e_per[4:6]
+            ds, de = s_per[6:8], e_per[6:8]
 
-        # OPTION YYYY****  The year is given, rest not, is ****
-        if yp.isdigit() and f'{mp}{dp}' == '****':
-            sp, ep = float(f'{yp}0101'), float(f'{yp}1231')
-            sel = np.where( (ymd >= sp) & (ymd <= ep) )
-            return sel
+            # Correct years for the wildcard option: ****1225-****1225
+            if ys == '****':
+                ys = y0  # First possible year
+            if ye == '****':
+                ye = yz  # Last possible year
 
-        # OPTION YYYYMM**   The year and month are given, the rest DD not is **
-        if f'{yp}{mp}'.isdigit() and f'{dp}' == '**':
-            days = calendar.monthrange( int(yp), int(mp) )[1]  # num_days
-            sp, ep = float(f'{yp}{mp}01'), float(f'{yp}{mp}{days}')
-            sel = np.where( (ymd >= sp) & (ymd <= ep) )
-            return sel
+            # OPTION: YYYY****-YYYY****  A full year from startyear to endyear
+            elif f'{ys}{ye}'.isdigit() and f'{ms}{ds}{me}{de}' == '*'*8:
+                days = calendar.monthrange(int(ye), int(mn))[1]  # num_days
+                mmdd = f'{mn}{days}' if ye == yn else '1231'
+                sp = f'{ys}{ms}{ds}'
+                ep = f'{ye}{mmdd}'
 
-        # OPTION ****MM**   The month is given only. Selects a month for every year'
-        if f'{yp}{dp}' == '******' and mp.isdigit():
-            mi, years = int(mp), range( int(y0), int(yz) + 1 )
-            for y in years:
-                days = calendar.monthrange(y, mi)[1]  # num_days
-                sp, ep = float(f'{yp}{mp}01'), float(f'{yp}{mp}{days}')
-                keys = np.where( (ymd >= sp) & (ymd <= ep) ) # Get the keys
-                sel  = np.concatenate( (sel, keys) ) # Add keys to total list
+            # OPTION: YYYYMMDD-YYYYMM**  A full month + next months untill possible end
+            elif s_per.isdigit() and f'{ye}{me}'.isdigit() and de == '**':
+                days = calendar.monthrange(int(ye), int(me))[1]  # num_days
+                dd  = dn if f'{ye}{me}' == f'{yn}{mn}' else days
+                sp  = f'{ys}{ms}{ds}'
+                ep  = f'{ye}{me}{dd}'
 
-            return sel
+            # OPTION: 20100601-2020****  A full date untill a year or a end date -> now!
+            elif s_per.isdigit() and ye.isdigit() and f'{me}{de}' == '*'*4:
+                days = calendar.monthrange(int(ye), int(me))[1]  # num_days
+                mmdd = f'{mn}{dn}' if ys == ye else f'{me}{days}'
+                sp = f'{ys}{ms}{ds}'
+                ep = f'{ye}{mmdd}'
 
-        # OPTION  ****MMDD   The month and day is given. Selects a day for every year \n'
-        if f'{yp}' == '****' and '{mp}{dp}'.isdigit():
-            years = range( int(y0), int(yz) + 1 )
-            for y in years:
-                days = calendar.monthrange(y, mi)[1]  # num_days
-                sp, ep = float(f'{y}{ms}01'), float(f'{y}{ms}{days}')
-                keys = np.where( (ymd >= sp) & (ymd <= ep) ) # Get the keys
-                sel  = np.concatenate( (sel, keys) ) # Add keys to total list
+            # More simple options later maybe
 
-            return sel
+            # ADVANCED OPTIONS for more different periods in a given period
+            # OPTION YYYYMMDD-YYYY*MMDD  A certain day in a year. From startyear to endyear.
+            elif s_per.isdigit() and len(e_per) == 9 and e_per[4] == '*' and \
+               ye.isdigit() and f'{ye}{e_per[5:9]}'.isdigit():
+                md    = f'{ms}{ds}'
+                years = range(int(ys), int(ye)+1)
+                for y in years:
+                    k = sel_keys_days(ymd, f'{y}{md}')[0]
+                    sel = np.concatenate((sel, k)) if np.size(sel) != 0 else k
+                # tup = sel_tuple( keys )
+                return sel
 
-def period( data, period ):
+            # OPTION YYYYMMDD-YYYY*MMDD*  A certain period in a year. From startyear to endyear
+            elif s_per.isdigit() and len(e_per) == 10 and \
+               e_per[4] == '*' and e_per[9] == '*'  and s_per[5:9].isdigit():
+
+                s_md, e_md = f'{ms}{ds}', f'{e_per[5:9]}'
+                years = range(int(ys), int(ye)+1)
+                for y in years:
+                    keys = sel_keys_days(ymd, f'{y}{s_md}-{y}{e_md}')
+                    sel = np.concatenate((sel, keys)) if sel[0].size != 0 else keys
+
+                return sel
+            # TODO periods crossover years
+
+            # OPTION YYYYMM**-YYYYMM** A full 1 month in an year. From startyear to endyear
+            elif f'{ys}{ms}{ye}{me}'.isdigit() and f'{ds}{de}' == '****' and \
+               f'{ys}{ms}' == f'{ye}{me}':
+                years = range(int(ys),int(ye)+1)
+                for y in years:
+                    keys = sel_keys_days(ymd, f'{y}{ms}**')
+                    if keys.size != 0:
+                        sel = np.concatenate( (sel, keys) ) # Add keys to total list
+
+                return sel
+
+    # Search for wanted date keys
+    # print('SP', sp, 'EP', ep)
+    sp = float(sp)
+    ep = float(ep)
+    sel = np.where( (ymd >= sp) & (ymd <= ep) )
+    return sel
+
+def period( data, per ):
     '''Function selects days by start and end dates'''
-    ymd  = data[:, ndx_ent('YYYYMMDD')]   # Get the dates array
-    sel  = sel_keys_days ( ymd, period )  # Get the keys list
+    ymd  = data[:, YYYYMMDD]   # Get the dates array
+    sel  = sel_keys_days ( ymd, per )  # Get the keys list
     data = update_minus_1( data[sel] )    # Update/correct values -1
-
     return data
 
-def read_stations_period( stations, symd, eymd ):
+def read_station_period ( station, per ):
+    ok, data = read(station)
+    if ok: data = period( data, per )
+    return ok, data
+
+def read_stations_period( stations, per ):
     data = np.array([])
     for station in stations:
-        ok, ds = read(station)
+        log.console(f'Read station {station.place}', True)
+        ok, data_station = read_station_period ( station, per )
         if ok:
-            new = period( ds, symd, eymd )
-            data = new if data.size == 0 else np.concatenate( (data, new) )
+            data = data_station if data.size == 0 else np.concatenate( (data, data_station) )
 
     return data
 
