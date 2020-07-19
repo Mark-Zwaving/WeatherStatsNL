@@ -12,6 +12,7 @@ import numpy as np
 import model.stats as stats
 import model.daydata as daydata
 import model.utils as utils
+import view.log as log
 
 def query_simple( data, query ):
     ent, op, val = query.split(' ')
@@ -119,11 +120,12 @@ def query_advanced( data, query ):
     # All selected (unique)  days
     return sel
 
-def process( stations, symd, eymd, query ):
+def process( stations, period, query ):
     # Read all data stations in a given period
-    data = daydata.read_stations_period( stations, symd, eymd )
+    data = daydata.read_stations_period( stations, period )
 
     # Get all the days to search for
+    log.console(f'Executing query: {query}', True)
     if query.find('and') == -1 and query.find('or') == -1:
         return query_simple( data, query ) # Process only one simple query
     else:
