@@ -349,10 +349,11 @@ def table_list_heatwave_days( l, max ):
 
     return html
 
-def table_search_for_days(data, symd, eymd):
+def table_search_for_days(data, title,period):
     colcnt = 26
-    html  = '<table>'
+    html  = '<table id="stats">'
     html += '<thead>'
+    html += f'<tr> <th colspan="{colcnt}"> {title} </th> </tr>'
     html += '<tr>'
     html += f'<th> station </th>'
     html += f'<th> periode </th>'
@@ -384,6 +385,9 @@ def table_search_for_days(data, symd, eymd):
     html += '</thead>'
     html += '<tbody>'
     if len(data) > 0:
+        lymd = data[:,daydata.YYYYMMDD]
+        symd = utils.f_to_s(lymd[ 0])
+        eymd = utils.f_to_s(lymd[-1])
         for day in data:
             stn, ymd, ddvec, fhvec, fg, fhx, fhxh, fhn, fhnh, fxx, fxxh, tg, \
             tn, tnh, tx, txh, t10n, t10nh, sq, sp, q, dr, rh, rhx, \
@@ -400,32 +404,32 @@ def table_search_for_days(data, symd, eymd):
             date = int(day[daydata.YYYYMMDD])
 
             html += '<tr>'
-            html += f'<td> {id} </td>'
-            html += f'<td> {symd}-{eymd} </td>'
-            html += f'<td> {date} </td>'
-            html += f'<td> {tx} {txh} </td>'
-            html += f'<td> {tg} </td>'
-            html += f'<td> {tn} {tnh} </td>'
-            html += f'<td> {t10n} {t10nh} </td>'
-            html += f'<td> {sq} </td>'
-            html += f'<td> {rh} </td>'
-            html += f'<td> {ug} </td>'
-            html += f'<td> {ng} </td>'
-            html += f'<td> {ddvec} </td>'
-            html += f'<td> {fhvec} </td>'
-            html += f'<td> {fg} </td>'
-            html += f'<td> {fhx} {fhxh} </td>'
-            html += f'<td> {fhn} {fhnh} </td>'
-            html += f'<td> {fxx} {fxxh} </td>'
-            html += f'<td> {sp} </td>'
-            html += f'<td> {q} </td>'
-            html += f'<td> {dr} </td>'
-            html += f'<td> {rhx} {rhxh} </td>'
-            html += f'<td> {pg} </td>'
-            html += f'<td> {px} {pxh} </td>'
-            html += f'<td> {pn} {pnh} </td>'
-            html += f'<td> {vvn} {vvnh} </td>'
-            html += f'<td> {vvx} {vvxh} </td>'
+            html += f'<td> <span class="val">{id}</span> </td>'
+            html += f'<td> <span class="val">{symd}-{eymd}</span> </td>'
+            html += f'<td> <span class="val">{date}</span> </td>'
+            html += f'<td> <span class="val">{tx}</span> {txh} </td>'
+            html += f'<td> <span class="val">{tg}</span> </td>'
+            html += f'<td> <span class="val">{tn}</span> {tnh} </td>'
+            html += f'<td> <span class="val">{t10n}</span> {t10nh} </td>'
+            html += f'<td> <span class="val">{sq}</span> </td>'
+            html += f'<td> <span class="val">{rh}</span> </td>'
+            html += f'<td> <span class="val">{ug}</span> </td>'
+            html += f'<td> <span class="val">{ng}</span> </td>'
+            html += f'<td> <span class="val">{ddvec}</span> </td>'
+            html += f'<td> <span class="val">{fhvec}</span> </td>'
+            html += f'<td> <span class="val">{fg}</span> </td>'
+            html += f'<td> <span class="val">{fhx}</span> {fhxh} </td>'
+            html += f'<td> <span class="val">{fhn}</span> {fhnh} </td>'
+            html += f'<td> <span class="val">{fxx}</span> {fxxh} </td>'
+            html += f'<td> <span class="val">{sp}</span> </td>'
+            html += f'<td> <span class="val">{q}</span> </td>'
+            html += f'<td> <span class="val">{dr}</span> </td>'
+            html += f'<td> <span class="val">{rhx}</span> {rhxh} </td>'
+            html += f'<td> <span class="val">{pg}</span> </td>'
+            html += f'<td> <span class="val">{px}</span> {pxh} </td>'
+            html += f'<td> <span class="val">{pn}</span> {pnh} </td>'
+            html += f'<td> <span class="val">{vvn}</span> {vvnh} </td>'
+            html += f'<td> <span class="val">{vvx}</span> {vvxh} </td>'
             html += '</tr>'
     else:
         html += f'<tr> <td colspan="{colcnt}"> {tr.t("No days found")} </td> </tr>'
