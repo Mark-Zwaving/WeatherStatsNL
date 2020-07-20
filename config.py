@@ -163,7 +163,7 @@ default_values = 'no' # Use of default values (below) ? Or add values at runtime
 plot_width     = 1280 # Width plotted image
 plot_height    =  720 # Height plotted image
 # Images dpi (dots per inches) for printing on paper
-plot_dpi         =  108 # Higher will increase de point size. Make width/height higher too
+plot_dpi         =  100 # Higher will increase de point size. Make width/height higher too
 plot_image_type  = 'png'
 plot_graph_type  = 'line'  # bar or line
 plot_line_width  =  1      # Width line
