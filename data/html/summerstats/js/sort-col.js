@@ -72,7 +72,8 @@ let table_tbody      =  'table#stats>tbody',
     ////////////////////////////////////////////////////////////////////////////
     // Grep a float from a string. Needed for correct sorting
     grep_float = el => {
-        let fl = abs_min; // This value will alway be lowest
+        // This value will alway be lowest or highest
+        let fl = obj.dir == descending ? abs_min : abs_max;
         el = el.trim()
         if ( el != no_data_given ) {
             try {
