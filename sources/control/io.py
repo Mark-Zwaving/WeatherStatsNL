@@ -45,7 +45,7 @@ def save(file_name='dummy.txt', content='', prefix='w', encoding='utf-8'):
 def create(file_name, encoding='utf-8'):
     '''Function create a file if not exists'''
     ok = False
-    if check(file_name): # Check if there is a file
+    if not check(file_name): # Check if there is a file
         ok = write(file_name, encoding=encoding)
     else:
         log.console(f"File: {file_name} already exists")
