@@ -102,14 +102,11 @@ def ask_again(txt, default='', space=True):
 def ask_to_open_with_app( txt, space=True ):
     txt  = f'{txt}\n'
     txt += "Press 'y' to open the file, or press any other key to skip opening the file\n"
-    txt += back_to_main()
     txt += ' ? '
 
     answ = ask(txt, space)
 
-    if answ in config.answer_quit:
-        return config.answer_quit
-    elif answ in config.answer_yes:
+    if answ in config.answer_yes:
         return True
     else:
         return False
