@@ -95,7 +95,7 @@ def rounding(val, entity):
 
     # Indexes
     if e in ['hellmann']:
-        return round(f)
+        return round(f,1)
 
     elif e in ['heat_ndx']:
         return round(f,1)
@@ -167,7 +167,7 @@ def ent(val, entity):
 
     # Indexes
     if e in ['heat_ndx', 'hellmann']:
-        return f'{f:.0f}'
+        return f'{f:.1f}'
 
     elif e in ['ijnsen']:
         return f'{f:.1f}'
