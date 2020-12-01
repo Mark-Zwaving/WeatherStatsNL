@@ -156,7 +156,7 @@ def calculate( stations, period, name=False, type='html' ):
                     <th title="Warm days on average"> tg&ge;18 </th>
                     <th title="Tropical nights"> tn&ge;20 </th>
                     <th title="Days with more than 10hour of sun"> sun&ge;10h</th>
-                    <th title="Days with more than 10 mm of rain"> regen&ge;10mm</th>
+                    <th title="Days with more than 10 mm of rain"> rs&ge;10mm</th>
 
                     <th title="Hellmann"> hmann </th>
                     <th title="IJnsen"> ijnsen </th>
