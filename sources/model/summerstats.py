@@ -142,7 +142,7 @@ def calculate( stations, period, name=False, type='html' ):
                     <th title="Totaal aantal uren zon"> sun </th>
                     <th title="Dagen met meer dan tien uur zon"> sun&ge;10h</th>
                     <th title="Totaal aantal mm regen"> rain </th>
-                    <th title="Dagen met meer dan tien mm regen"> rain&ge;10mm</th>
+                    <th title="Dagen met meer dan tien mm regen"> rs&ge;10mm</th>
                 </tr>
             </thead>
             <tbody>
@@ -263,13 +263,16 @@ def calculate( stations, period, name=False, type='html' ):
         page           =  html.Template()
         page.title     =  table_title
         page.main      =  output
+        page.strip     =  True
         page.set_path(dir, f'{name}.html')
-        page.add_css_file(name='table-statistics.css')
-        page.add_css_file(name='default.css')
+        # Styling
+        page.add_css_file(dir='./../static/css/', name='table-statistics.css')
+        page.add_css_file(dir='./../static/css/', name='default.css')
         page.add_css_file(dir='./css/', name='summerstats.css')
-        page.add_script_file(dir='./js/', name='sort-col.js')
-        page.add_script_file(name='default.js')
+        # Scripts
         page.add_script_file(dir='./js/', name='summerstats.js')
+        page.add_script_file(dir='./../static/js/', name='sort-col.js')
+        page.add_script_file(dir='./../static/js/', name='default.js')
 
         page.save()
 

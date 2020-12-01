@@ -67,7 +67,7 @@ def calculate( stations, period, name, type='html' ):
     # Make data list with station and stats
     winter = np.array( [] )
     for station in stations:
-        log.console(f'Read and calculate statistics: {station.place}', True)
+        log.console(f'Calculate statistics: {station.place}', True)
         ok, data = daydata.read( station )  # Get data stations
         if ok:
             days = daydata.period( data, period ) # Get days of period
@@ -241,12 +241,14 @@ def calculate( stations, period, name, type='html' ):
         page.main      =  output
         page.strip     =  True
         page.set_path( dir, f'{name}.html' )
-        page.add_css_file(name='table-statistics.css')
-        page.add_css_file(name='default.css')
+        # Styling
+        page.add_css_file(dir='./../static/css/', name='table-statistics.css')
+        page.add_css_file(dir='./../static/css/', name='default.css')
         page.add_css_file(dir='./css/', name='winterstats.css')
-        page.add_script_file(dir='./js/', name='sort-col.js')
-        page.add_script_file(name='default.js')
+        # Scripts
         page.add_script_file(dir='./js/', name='winterstats.js')
+        page.add_script_file(dir='./../static/js/', name='sort-col.js')
+        page.add_script_file(dir='./../static/js/', name='default.js')
         page.save()
 
     elif type == 'txt':
