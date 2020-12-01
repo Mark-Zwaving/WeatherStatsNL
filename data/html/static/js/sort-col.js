@@ -8,8 +8,6 @@
 
 'use strict';
 
-console.log(col_titles);
-
 let css_click_cell   =  'cursor: cell;',  // Extra css for click cell
     separator        =  '<span></span>',  // Default separator in html files
     no_data_given    =  '...', // Default dummy value in weatherstats
