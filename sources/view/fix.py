@@ -28,7 +28,7 @@ def value(val, entity):
         return config.knmi_dayvalues_low_measure_val
 
     # Indexes
-    elif e in ['heat_ndx', 'hellmann']:
+    elif e in ['heat_ndx', 'hellmann', 'frost_sum']:
         return f / 10.0
 
     elif e in ['ijnsen']:
@@ -94,14 +94,7 @@ def rounding(val, entity):
     f = value(val, e)
 
     # Indexes
-    if e in ['hellmann']:
-        return round(f,1)
-
-    elif e in ['heat_ndx']:
-        return round(f,1)
-
-    # IJnsen
-    elif e in ['ijnsen']:
+    if e in ['hellmann','frost_sum','heat_ndx','ijnsen']:
         return round(f,1)
 
     # Temperatures
