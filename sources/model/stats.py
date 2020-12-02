@@ -127,6 +127,29 @@ def ijnsen ( data ):
     ijnsen = (v * v / 363.0)  +  (2.0 * y / 3.0)  +  (10.0 * z / 9.0) # Calculate ijnsen
     return ijnsen
 
+def frost_sum(data):
+    '''Function calculates frost sum:
+       Add min and max temp during a day only if TX < 0 or TN < 0
+       IE: TX=-1.0 and TN=-5.0 => 6.0 '''
+    TN = process_list( data, 'TN' )  # Remove nan values in TN
+    TX = process_list( data, 'TX' )  # Remove nan values in TX
+    tn_0 = terms_days( TN, 'TN', '<',  0.0 )  # All days TN < 0
+    tx_0 = terms_days( TX, 'TX', '<',  0.0 )  # All days TX < 0
+    tn_cnt = np.size( tn_0, axis=0 ) # Count tn days < 0
+    tx_cnt = np.size( tx_0, axis=0 ) # Count tx days < 0
+
+    frostie = 0.0
+    if tn_cnt > 0:
+       ndx = daydata.ndx_ent('TN')  # Get index for TN in matrix
+       tn  = tn_0[:,ndx]  #  Make TN list only
+       frostie += abs( np.sum(tn) )
+    if tx_cnt > 0:
+       ndx = daydata.ndx_ent( 'TX' )  # Get index for TN in matrix
+       tx  = tx_0[:,ndx]  #  Make TX list only
+       frostie += abs( np.sum(tx) )
+
+    return frostie
+
 def heat_ndx( data ):
     '''Function calculates heat-ndx in given data'''
     ent  = 'TG'  # Entity for average temp
