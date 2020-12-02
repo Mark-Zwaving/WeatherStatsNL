@@ -4,15 +4,19 @@ __author__     =  'Mark Zwaving'
 __email__      =  'markzwaving@gmail.com'
 __copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
 __license__    =  'GNU Lesser General Public License (LGPL)'
-__version__    =  '0.0.7'
+__version__    =  '0.1.1'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
-import numpy as np
+import numpy as np, config
 import model.stats as stats
 import model.daydata as daydata
 import model.utils as utils
+import model.station as station
 import view.log as log
+import view.html as view_html
+import view.dayvalues as dayvalues
+import view.translate as tr
 
 def query_simple( data, query ):
     ent, op, val = query.split(' ')
@@ -130,3 +134,155 @@ def process( stations, period, query ):
         return query_simple( data, query ) # Process only one simple query
     else:
         return query_advanced( data, query ) # Process query with and, or
+
+def calculate(stations, period, query, type, fname):
+    data = process( stations, period, query ) # All days for the terms given
+
+    # Make path if it is a html or txt file
+    path = ''
+    fname = f'{fname}.{type}'
+    if type == 'html':
+        dir = config.dir_html_search_for_days
+    elif type == 'txt':
+        dir = config.dir_txt_search_for_dayssss
+
+    path = utils.mk_path(dir, fname)
+
+    if type =='html':
+        title = f'Days {query}'
+
+        # Proces data in html table
+        colspan = 29
+        html  = f'''
+        <table id="stats">
+            <thead>
+                <tr>
+                    <th colspan="{colspan}">
+                        <i class="fas fa-cloud-sun-rain"></i>
+                        {title}
+                        <i class="fas fa-calculator"></i>
+                        {period}
+                        <i class="far fa-calendar-alt"></i>
+                    </th>
+                </tr>
+                <tr>
+                    <th> place <i class="fas fa-home fa-sm"></i> </th>
+                    <th> state <i class="fab fa-font-awesome-flag fa-sm"></i> </th>
+                    <th> periode <i class="far fa-calendar-alt fa-sm"></i> </th>
+                    <th> day <i class="fas fa-calendar-day fa-sm"></i></th>
+                    <th> TX <i class="fas fa-thermometer-full fa-sm"></i> </th>
+                    <th> TG <i class="fas fa-thermometer-half fa-sm"></i> </th>
+                    <th> TN <i class="fas fa-thermometer-empty fa-sm"></i> </th>
+                    <th> T10N <i class="fas fa-thermometer-empty fa-sm"></i> </th>
+                    <th> SQ <i class="fas fa-sun fa-sm"></i> </th>
+                    <th> SP <i class="fas fa-sun fa-sm"></i> </th>
+                    <th> RH <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
+                    <th> RHX <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
+                    <th> DR <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
+                    <th> PG <i class="fas fa-compress fa-sm"></i> </th>
+                    <th> PX <i class="fas fa-compress fa-sm"></i> </th>
+                    <th> PN <i class="fas fa-compress fa-sm"></i> </th>
+                    <th> UG <i class="fas fa-tint fa-sm"></i> </th>
+                    <th> UX <i class="fas fa-tint fa-sm"></i> </th>
+                    <th> UN <i class="fas fa-tint fa-sm"></i> </th>
+                    <th> NG <i class="fas fa-cloud fa-sm"></i></th>
+                    <th> DDVEC <i class="fas fa-location-arrow fa-sm"></i> </th>
+                    <th> FHVEC <i class="fas fa-wind fa-sm"></i> </th>
+                    <th> FG <i class="fas fa-wind fa-sm"></i> </th>
+                    <th> FHX <i class="fas fa-wind fa-sm"></i> </th>
+                    <th> FHN <i class="fas fa-wind fa-sm"></i> </th>
+                    <th> FXX <i class="fas fa-wind fa-sm"></i> </th>
+                    <th> VVX <i class="fas fa-eye fa-sm"></i> </th>
+                    <th> VVN <i class="fas fa-eye fa-sm"></i> </th>
+                    <th> Q <i class="fas fa-radiation-alt fa-sm"></i> </th>
+                </tr>
+            </thead>
+            <tbody>
+        '''
+
+        if len(data) > 0:
+            for day in data:
+                stn, ymd, ddvec, fhvec, fg, fhx, fhxh, fhn, fhnh, fxx, fxxh, tg, \
+                tn, tnh, tx, txh, t10n, t10nh, sq, sp, q, dr, rh, rhx, \
+                rhxh, pg, px, pxh, pn, pnh, vvn, vvnh, vvx, vvxh, ng, ug, \
+                ux, uxh, un, unh, ev24 = dayvalues.ents( day )
+
+                place = station.from_wmo_to_name(stn)
+                state = station.from_wmo_to_province(stn)
+                date = f'{day[daydata.YYYYMMDD]:.0f}'
+                html += f'''
+                <tr>
+                    <td> <span class="val">{place}</span> </td>
+                    <td> <span class="val">{state}</span> </td>
+                    <td> <span class="val">{period}</span> </td>
+                    <td> <span class="val">{date}</span> </td>
+                    <td> <span class="val">{tx}</span> <br> <small>{txh}</small> </td>
+                    <td> <span class="val">{tg}</span> </td>
+                    <td> <span class="val">{tn}</span> <br> <small>{tnh}</small> </td>
+                    <td> <span class="val">{t10n}</span> <br> <small>{t10nh}</small> </td>
+                    <td> <span class="val">{sq}</span> </td>
+                    <td> <span class="val">{sp}</span> </td>
+                    <td> <span class="val">{rh}</span> </td>
+                    <td> <span class="val">{rhx}</span> <br> <small>{rhxh}</small> </td>
+                    <td> <span class="val">{dr}</span> </td>
+                    <td> <span class="val">{pg}</span> </td>
+                    <td> <span class="val">{px}</span> <br> <small>{pxh}</small> </td>
+                    <td> <span class="val">{pn}</span> <br> <small>{pnh}</small> </td>
+                    <td> <span class="val">{ug}</span> </td>
+                    <td> <span class="val">{ux}</span> <br> <small>{uxh}</small> </td>
+                    <td> <span class="val">{un}</span> <br> <small>{unh}</small> </td>
+                    <td> <span class="val">{ng}</span> </td>
+                    <td> <span class="val">{ddvec}</span> </td>
+                    <td> <span class="val">{fhvec}</span> </td>
+                    <td> <span class="val">{fg}</span> </td>
+                    <td> <span class="val">{fhx}</span> <br> <small>{fhxh}</small> </td>
+                    <td> <span class="val">{fhn}</span> <br> <small>{fhnh}</small> </td>
+                    <td> <span class="val">{fxx}</span> <br> <small>{fxxh}</small> </td>
+                    <td> <span class="val">{vvx}</span> <br> <small>{vvxh}</small> </td>
+                    <td> <span class="val">{vvn}</span> <br> <small>{vvnh}</small> </td>
+                    <td> <span class="val">{q}</span> </td>
+                </tr>
+                '''
+        else:
+            html += f'''
+                <tr>
+                    <td colspan="{colspan}"> {tr.t("No days found")} </td>
+                </tr>
+                '''
+
+        html += f'''
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="{colspan}"> {config.knmi_dayvalues_notification} </td>
+                </tr>
+            </tfoot>
+        </table>
+        '''
+
+        # Write to html, screen, console
+        page           =  view_html.Template()
+        page.title     =  title
+        page.main      =  html
+        page.strip     =  True
+        page.set_path(dir, fname)
+        # Styling
+        page.add_css_file(dir='./../static/css/', name='table-statistics.css')
+        page.add_css_file(dir='./../static/css/', name='default.css')
+        page.add_css_file(dir='./css/', name='search4days.css')
+        # Scripts
+        page.add_script_file(dir='./js/', name='search4days.js')
+        page.add_script_file(dir='./../static/js/', name='sort-col.js')
+        page.add_script_file(dir='./../static/js/', name='default.js')
+
+        page.save()
+
+    elif type == 'text':
+        # TODO:
+        pass
+    elif type == 'cmd':
+        # TODO
+        pass
+
+    return path
+#
