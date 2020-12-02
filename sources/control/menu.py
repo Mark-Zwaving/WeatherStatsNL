@@ -256,38 +256,7 @@ def search_for_days():
             break
 
         st = time.time_ns()
-        data = search4days.process( stations, period, query )
-
-        if type =='html':
-            title = f'Days {query}'
-            fname = f'{fname}.html'
-            path = utils.mk_path(config.dir_html_search_for_days, fname)
-
-            # Proces data in html table
-            html_main = view_html.table_search_for_days(data, title, period)
-
-            # Write to html, screen, console
-            html = view_html.Template()
-            html.title  = title
-            html.header = ''
-            html.add_css_file(name='table-statistics.css')
-            html.add_css_file(name='default.css')
-            html.add_css_file(dir='./css/', name='search4days.css')
-            html.add_script_file(dir='./js/', name='sort-col.js')
-            html.add_script_file(name='default.js')
-            html.add_script_file(dir='./js/', name='search4days.js')
-            html.main   = html_main
-            html.footer = ''
-            html.set_path( config.dir_html_search_for_days, fname )
-            html.save()
-
-        elif type == 'text':
-            # TODO:
-            pass
-        elif type == 'cmd':
-            # TODO
-            pass
-
+        path = search4days.calculate(stations, period, query, type, fname)
         view_txt.show_process_time(st)
 
         if type in [ 'text', 'html' ]:
@@ -298,11 +267,11 @@ def search_for_days():
                 webbrowser.open_new_tab( path )
 
         # Always ask for going back
-        again = control_ask.ask_again(f'Do you want to search for days ?', True)
+        again = control_ask.ask_again(f'Do you want to search for days again ?', True)
         if utils.quit_menu(again):
             break
 
-    log.footer('END MAKING A IMAGE GRAPH...', True)
+    log.footer('END SEARCH FOR DAYS...', True)
 
 def graph_period():
     '''Funtion makes images for a period from the data of the knmi'''
