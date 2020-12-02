@@ -69,7 +69,7 @@ def calculate( stations, period, name=False, type='html' ):
             if days.size != 0: # Skip station
                 summer = np.append( summer, Stats( station, days ) ) # Create summerstats object
 
-    log.console(f'Preparing output: {type}', True)
+    log.console(f'\nPreparing output: {type}', True)
 
     # Update name if there is none yet
     if not name:
@@ -91,10 +91,10 @@ def calculate( stations, period, name=False, type='html' ):
 
     # Maak content op basis van type uitvoer html of text
     # Maak titel
-    table_title = name.replace('-', ' ')
+    table_title = 'Summer statistics '
     if type in ['txt','cmd']:
         s = ' '
-        title += f'{table_title} \n'
+        title += f'{table_title} {period}\n'
         title += f'PLAATS{s:15} '
         title += f'PROVINCIE{s:7} '
         title += f'PERIODE{s:11} '
@@ -121,28 +121,34 @@ def calculate( stations, period, name=False, type='html' ):
             <table id="stats">
             <thead>
                 <tr>
-                    <th colspan="{colspan}"> {table_title} </th>
+                    <th colspan="{colspan}">
+                        <i class="fas fa-calculator"></i>
+                        {table_title}
+                        <i class="fas fa-arrows-alt-h"></i>
+                        {period}
+                        <i class="far fa-calendar-alt"></i>
+                    </th>
                 </tr>
                 <tr>
-                    <th> plaats </th>
-                    <th> provincie </th>
-                    <th> periode </th>
-                    <th> tg </th>
-                    <th title="Warmte getal"> heat </th>
-                    <th title="Warmste dag"> tx max </th>
-                    <th title="Hoogste gemiddelde"> tg max </th>
-                    <th title="Hoogste minimum"> tn max </th>
-                    <th title="Aantal warme dagen"> tx&ge;20 </th>
-                    <th title="Aantal zomers dagen"> tx&ge;25 </th>
-                    <th title="Aantal tropische dagen"> tx&ge;30 </th>
-                    <th title="Aantal tropische dagen"> tx&ge;35 </th>
-                    <th title="Aantal tropische dagen"> tx&ge;40 </th>
-                    <th title="Aantal tropennachten"> tn&ge;20 </th>
-                    <th title="Warmte getal dagen"> tg&ge;18 </th>
-                    <th title="Totaal aantal uren zon"> sun </th>
-                    <th title="Dagen met meer dan tien uur zon"> sun&ge;10h</th>
-                    <th title="Totaal aantal mm regen"> rain </th>
-                    <th title="Dagen met meer dan tien mm regen"> rs&ge;10mm</th>
+                    <th> place <i class="fas fa-home fa-sm"></i></th>
+                    <th> province <i class="fab fa-font-awesome-flag fa-sm"></i></th>
+                    <th> period <i class="far fa-calendar-alt fa-sm"></i></th>
+                    <th> tg <i class="fas fa-thermometer-half fa-sm"></i> </th>
+                    <th title="Warmte getal"> heat <i class="fas fa-fire-alt fa-sm"></i> </th>
+                    <th title="Warmste dag"> tx <i class="fas fa-arrow-up fa-sm"></i> </th>
+                    <th title="Hoogste gemiddelde"> tg <i class="fas fa-arrow-up fa-sm"></i> </th>
+                    <th title="Hoogste minimum"> tn <i class="fas fa-arrow-up fa-sm"></i> </th>
+                    <th title="Aantal warme dagen"> tx<i class="fas fa-greater-than-equal fa-xs"></i>20 </th>
+                    <th title="Aantal zomers dagen"> tx<i class="fas fa-greater-than-equal fa-xs"></i>25 </th>
+                    <th title="Aantal tropische dagen"> tx<i class="fas fa-greater-than-equal fa-xs"></i>30 </th>
+                    <th title="Aantal tropische dagen"> tx<i class="fas fa-greater-than-equal fa-xs"></i>35 </th>
+                    <th title="Aantal tropische dagen"> tx<i class="fas fa-greater-than-equal fa-xs"></i>40 </th>
+                    <th title="Aantal tropennachten"> tn<i class="fas fa-greater-than-equal fa-xs"></i>20 </th>
+                    <th title="Warmte getal dagen"> tg<i class="fas fa-greater-than-equal fa-xs"></i>18 </th>
+                    <th title="Totaal aantal uren zon"> <i class="fas fa-sun fa-sm"></i> </th>
+                    <th title="Dagen met meer dan tien uur zon"> <i class="fas fa-sun fa-xs"></i> <i class="fas fa-greater-than-equal fa-xs"></i>10h</th>
+                    <th title="Totaal aantal mm regen"> <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
+                    <th title="Dagen met meer dan tien mm regen"> <i class="fas fa-cloud-showers-heavy fa-xs"></i> <i class="fas fa-greater-than-equal fa-xs"></i>10mm</th>
                 </tr>
             </thead>
             <tbody>

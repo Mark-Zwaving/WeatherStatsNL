@@ -81,7 +81,7 @@ def calculate( stations, period, name=False, type='html' ):
             if days.size != 0: # Skip station
                 allstats = np.append( allstats, Stats( station, days ) ) # Create summerstats object
 
-    log.console(f'Preparing output: {type}', True)
+    log.console(f'\nPreparing output: {type}', True)
 
     # Update name if there is none yet
     if not name:
@@ -93,8 +93,6 @@ def calculate( stations, period, name=False, type='html' ):
     elif type ==  'txt': dir = config.dir_txt_allstats
     path = utils.mk_path(dir, f'{name}.{type}')
 
-    log.console(f'Preparing summerstats, output type is {type}', True)
-
     # Sort on TG
     allstats = sort( allstats, '+' )
 
@@ -103,10 +101,10 @@ def calculate( stations, period, name=False, type='html' ):
 
     # Maak content op basis van type uitvoer html of text
     # Maak titel
-    table_title = name.replace('-', ' ')
+    table_title = 'All statistics '
     if type in ['txt','cmd']:
         s = ' '
-        title += f'{table_title} \n'
+        title += f'{table_title} {period}\n'
         title += f'PLACE{s:15} '
         title += f'PROVINCE{s:7} '
         title += f'PERIOD{s:11} '
@@ -132,41 +130,49 @@ def calculate( stations, period, name=False, type='html' ):
         title += f'''
             <table id="stats">
             <thead>
-                <tr> <th colspan="{colspan}"> {table_title} </th> </tr>
                 <tr>
-                    <th> place </th>
-                    <th> province </th>
-                    <th> period </th>
-                    <th title="Average temperature"> tg </th>
-                    <th title="Highest maximum temperature"> tx max </th>
-                    <th title="Highest average temperature"> tg max </th>
-                    <th title="Highest minimum temperature"> tn max </th>
-                    <th title="Lowest maximum temperature"> tx min </th>
-                    <th title="Lowest average temperature "> tg min </th>
-                    <th title="Lowest minumum temperature"> tn min </th>
-                    <th title="Total hours of sunshine"> sun </th>
-                    <th title="Total rain mm"> rain </th>
+                    <th colspan="{colspan}">
+                        <i class="fas fa-calculator"></i>
+                        {table_title}
+                        <i class="fas fa-arrows-alt-h"></i>
+                        {period}
+                        <i class="far fa-calendar-alt"></i>
+                    </th>
+                </tr>
+                <tr>
+                    <th> place <i class="fas fa-home fa-sm"></i></th>
+                    <th> province <i class="fab fa-font-awesome-flag fa-sm"></i> </th>
+                    <th> period  <i class="far fa-calendar-alt fa-sm"></i></th>
+                    <th title="Average temperature"> tg <i class="fas fa-thermometer-half fa-sm"></i> </th>
+                    <th title="Highest maximum temperature"> tx <i class="fas fa-arrow-up fa-sm"></i> </th>
+                    <th title="Highest average temperature"> tg <i class="fas fa-arrow-up fa-sm"></i> </th>
+                    <th title="Highest minimum temperature"> tn <i class="fas fa-arrow-up fa-sm"></i> </th>
+                    <th title="Lowest maximum temperature"> tx <i class="fas fa-arrow-down fa-sm"></i> </th>
+                    <th title="Lowest average temperature "> tg <i class="fas fa-arrow-down fa-sm"></i> </th>
+                    <th title="Lowest minumum temperature"> tn <i class="fas fa-arrow-down fa-sm"></i> </th>
+                    <th title="Total hours of sunshine"> <i class="fas fa-sun fa-sm"></i> </th>
+                    <th title="Total rain mm"> <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
 
-                    <th title="Heat index tg greater than 18 degrees celsius"> heat </th>
-                    <th title="Warm days"> tx&ge;20 </th>
-                    <th title="Summer days"> tx&ge;25 </th>
-                    <th title="Tropical days"> tx&ge;30 </th>
-                    <th title="High tropical days"> tx&ge;35 </th>
-                    <th title="High tropical days"> tx&ge;40 </th>
-                    <th title="Warm days on average"> tg&ge;18 </th>
-                    <th title="Tropical nights"> tn&ge;20 </th>
-                    <th title="Days with more than 10hour of sun"> sun&ge;10h</th>
-                    <th title="Days with more than 10 mm of rain"> rs&ge;10mm</th>
+                    <th title="Heat index tg greater than 18 degrees celsius"> heat <i class="fas fa-fire-alt fa-sm"></i> </th>
+                    <th title="Warm days"> tx<i class="fas fa-greater-than-equal fa-xs"></i>20 </th>
+                    <th title="Summer days"> tx<i class="fas fa-greater-than-equal fa-xs"></i>25 </th>
+                    <th title="Tropical days"> tx<i class="fas fa-greater-than-equal fa-xs"></i>30 </th>
+                    <th title="High tropical days"> tx<i class="fas fa-greater-than-equal fa-xs"></i>35 </th>
+                    <th title="High tropical days"> tx<i class="fas fa-greater-than-equal fa-xs"></i>40 </th>
+                    <th title="Warm days on average"> tg<i class="fas fa-greater-than-equal fa-xs"></i>18 </th>
+                    <th title="Tropical nights"> tn<i class="fas fa-greater-than-equal fa-xs"></i>20 </th>
+                    <th title="Days with more than 10hour of sun"> <i class="fas fa-sun fa-xs"></i><i class="fas fa-greater-than-equal fa-xs"></i>10h</th>
+                    <th title="Days with more than 10 mm of rain"> <i class="fas fa-cloud-showers-heavy fa-xs"></i><i class="fas fa-greater-than-equal fa-xs"></i>10mm</th>
 
-                    <th title="Hellmann"> hmann </th>
-                    <th title="IJnsen"> ijnsen </th>
-                    <th title="Days with maximum temperature below 0 degrees celsius"> tx&lt;0 </th>
-                    <th title="Days with average temperature below 0 degrees celsius"> tg&lt;0 </th>
-                    <th title="Days with minimum temperature below 0 degrees celsius"> tn&lt;0 </th>
-                    <th title="Days with minimum temperature lower than -5 degrees celsius"> tn&lt;-5 </th>
-                    <th title="Days with minimum temperature lower than -10 degrees celsius"> tn&lt;-10 </th>
-                    <th title="Days with minimum temperature lower than -15 degrees celsius"> tn&lt;-15 </th>
-                    <th title="Days with minimum temperature lower than -20 degrees celsius"> tn&lt;-20 </th>
+                    <th title="Hellmann"> hmann <i class="fas fa-icicles fa-sm"></i></th>
+                    <th title="IJnsen"> ijnsen <i class="fas fa-icicles fa-sm"></i></th>
+                    <th title="Days with maximum temperature below 0 degrees celsius"> tx<i class="fas fa-less-than fa-xs"></i>0 </th>
+                    <th title="Days with average temperature below 0 degrees celsius"> tg<i class="fas fa-less-than fa-xs"></i>0 </th>
+                    <th title="Days with minimum temperature below 0 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>0 </th>
+                    <th title="Days with minimum temperature lower than -5 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;5 </th>
+                    <th title="Days with minimum temperature lower than -10 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;10 </th>
+                    <th title="Days with minimum temperature lower than -15 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;15 </th>
+                    <th title="Days with minimum temperature lower than -20 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;20 </th>
                 </tr>
             </thead>
             <tbody>
@@ -174,7 +180,7 @@ def calculate( stations, period, name=False, type='html' ):
 
     # Walkthrough all cities
     for s in allstats:
-        log.console(f'For: {s.station.place}', True)
+        log.console(f'Make {type} output for: {s.station.place}', True)
         heat_ndx = fix.ent( s.heat_ndx, 'heat_ndx' )
         tg_ave   = fix.ent( s.tg_ave, 'tg' )
         tx_max   = fix.ent( s.tx_max, 'tx' )
