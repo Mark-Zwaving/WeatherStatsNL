@@ -296,7 +296,9 @@ def sel_keys_days ( ymd, per ):
         elif f'{yp}{mp}'.isdigit() and f'{dp}' == '**':
             dd = calendar.monthrange(int(yp), int(mp))[1]  # num_days
             # Is it the actual month in the actual year? Then actual day
-            if mp == mn and yp == yn: dd = dn
+            if mp == mn and yp == yn:
+                dd = dn
+                
             sp = f'{yp}{mp}01'
             ep = f'{yp}{mp}{dd}'
 
