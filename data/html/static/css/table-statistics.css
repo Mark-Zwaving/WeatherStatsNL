@@ -5,7 +5,7 @@
 }
 
 body {
-	color: black;
+	color: #333333;
 	font: normal normal normal 0.9rem/1rem Calibri;
 }
 
@@ -23,12 +23,25 @@ th {
 td {
 	padding: 1px 4px;
 	white-space: nowrap;
+	/* font-weight: bold; */
 }
 
 thead tr:first-child th {
-	color: #eeeeee; background: #777777;
+	color: #eeeeee;
+	background: #777777;
 	font-size: 1rem;
 	text-transform: uppercase;
+}
+
+thead tr:nth-child(2) {
+	background: beige;
+	/* font-weight:bold */
+	color: green;
+}
+
+thead tr:nth-child(2) th:hover {
+	/* font-weight:bold */
+	color: #000066;
 }
 
 td:nth-child(1), td:nth-child(2) {
@@ -49,16 +62,18 @@ tr:nth-child(even) {
 
 tr:hover {
 	background:beige;
-	font-weight:bold
+	/* font-weight:bold */
+	color: green
 }
 
 td:hover {
 	font-weight:bold;
 	cursor: pointer;
-	color: green
+	color: #000066;
 }
 
 .popup {
+	color: #333333;
 	position: absolute;
 	display: inline-block;
 	background: #777777;
@@ -72,13 +87,22 @@ td:hover {
 .popup th {
 	padding: 1px 3px 0px 3px;
 }
-
+.popup tr:hover {
+	background:beige;
+	/* font-weight:bold */
+	color: green
+}
 .popup td {
-	color: black;
 	font-style: normal;
 	font-weight: normal;
 	text-align: center;
 	padding: 1px 2px 1px 2px;
+}
+
+.popup td:hover {
+	font-weight:bold;
+	cursor: pointer;
+	color: #000066;
 }
 
 td:hover .popup {
@@ -88,7 +112,8 @@ td:hover .popup {
 
 tfoot tr td {
 	font-size: 0.8rem;
-	color: #cccccc; background: none;
+	color: green;
+	background: beige;
 	text-transform: lowercase;
 	font-style: italic;
 }
