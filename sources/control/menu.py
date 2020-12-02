@@ -11,7 +11,6 @@ __status__     =  "Development"
 import os, time, config, webbrowser, subprocess
 import numpy as np
 import model.utils as utils
-import model.convert as convert
 import model.search4days as search4days
 import model.daydata as daydata
 import model.winterstats as winterstats
