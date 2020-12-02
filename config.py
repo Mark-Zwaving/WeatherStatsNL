@@ -57,7 +57,7 @@ climate_period = '1990-2019'
 
 # List for WeatherStations
 knmi_dayvalues_url          = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/daggegevens/etmgeg_{0}.zip'
-knmi_dayvalues_notification = 'BRON: KONINKLIJK NEDERLANDS METEOROLOGISCH INSTITUUT (KNMI)'
+knmi_dayvalues_notification = 'BRON meteorologische gegevens: KONINKLIJK NEDERLANDS METEOROLOGISCH INSTITUUT (KNMI)'
 knmi_dayvalues_skip_rows    = 49
 knmi_dayvalues_dummy_val    = 99999999
 knmi_dayvalues_missing_val  = '     '
