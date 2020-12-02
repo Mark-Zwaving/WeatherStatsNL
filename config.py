@@ -41,18 +41,28 @@ dir_txt_winterstats  =  os.path.abspath( os.path.join(dir_txt, 'winterstats' ) )
 dir_thirdparty_css   =  os.path.abspath( os.path.join(dir_thirdparty, 'css') )
 dir_thirdparty_js    =  os.path.abspath( os.path.join(dir_thirdparty, 'js') )
 
-# Add dir_app and dir sources to system
-for dir in [ dir_app, dir_sources ]:
-    sys.path.append(dir)
+dir_txt_forecasts    =  os.path.abspath( os.path.join(dir_txt, 'forecasts') )
 
-# Give language for app. Under contruction...
+# Add dir app and dir sources to system. If not already there.
+for map in [dir_app, dir_sources]:
+    if map not in sys.path:
+        sys.path.append(map)
+
+# Give language for app. Under contruction.
 # 'NL' for Netherlands/Dutch, 'EN' for English, Default is English
 language  = 'NL'  # Select language
 translate = True  # Translation active or not
 no_data_given = '...'
 help_info = True
-check_internet_url = 'www.google.com'
+timezone = 'Europe/Amsterdam'
 
+check_internet_url = 'www.google.com'  # Url to check for an internet connection
+
+# Urls weather forecasts knmi
+knmi_ftp_pub = 'ftp://ftp.knmi.nl/pub_weerberichten/'
+knmi_forecast_global_url   = f'{knmi_ftp_pub}basisverwachting.txt'
+knmi_forecast_model_url    = f'{knmi_ftp_pub}guidance_meerdaagse.txt'
+knmi_forecast_guidance_url = f'{knmi_ftp_pub}guidance_modelbeoordeling.txt'
 
 # The years/period for the calculations of climate averages
 climate_period = '1990-2019'
