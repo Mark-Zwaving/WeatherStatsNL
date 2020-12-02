@@ -30,11 +30,11 @@ menu = [
         ]
     ],
     [ 'STATISTICS TABLES', [
-            [ 'Winterstatistics', control_menu.table_winterstats ],
-            [ 'Summerstatistics', control_menu.table_summerstats  ],
-            [ 'Winter + summerstatistics', control_menu.table_allstats ],
-            [ 'Heatwaves TODO', control_menu.table_heatwaves ],
-            [ 'Coldwaves TODO', control_menu.table_coldwaves ]
+            [ 'Winter statistics', control_menu.table_winterstats ],
+            [ 'Summer statistics', control_menu.table_summerstats  ],
+            [ 'Winter & summer statistics', control_menu.table_allstats ]
+            # [ 'Heatwaves TODO', control_menu.table_heatwaves ],
+            # [ 'Coldwaves TODO', control_menu.table_coldwaves ]
         ]
     ]
 ]
