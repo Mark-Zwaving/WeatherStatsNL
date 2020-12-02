@@ -23,6 +23,15 @@ menu = [
                control_menu.process_knmi_dayvalues_selected ]
         ]
     ],
+    [ 'FORECASTS', [
+            [ 'Forecast weather (dutch)',
+               control_menu.process_weather_knmi_global ],
+            [ 'Forecast model (dutch)',
+               control_menu.process_weather_knmi_model ],
+            [ 'Forecast guidance (dutch)',
+               control_menu.process_weather_knmi_guidance ]
+        ]
+    ],
     [ 'DAYVALUES AND PERIODS', [
             [ 'Dayvalues', control_menu.get_dayvalues_by_date ],
             [ 'Search for days', control_menu.search_for_days ],
@@ -43,7 +52,7 @@ def check_internet_menu():
     '''If no internet, skip download part'''
     loc_menu = menu
     if not utils.has_internet():
-        loc_menu = loc_menu[1:] # Skip download
+        loc_menu = loc_menu[2:] # Skip download
     return loc_menu
 
 def error_no_stations_found():
