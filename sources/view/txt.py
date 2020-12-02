@@ -8,13 +8,19 @@ __version__    =  "0.0.5"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config, math, time
+import config, math, time, re
 import numpy as np
 import model.daydata as daydata
 import model.utils as utils
 import view.translate as tr
 import view.log as log
 import view.txt as view_txt
+
+def clean_up( t ):
+    t = t.strip()
+    t = re.sub(r'(\n\n)\n+', '\n\n', t)
+    t = re.sub('\t|  ', ' ', t)
+    return t
 
 def ent_to_title(ent):
     e = ent.strip().upper()
