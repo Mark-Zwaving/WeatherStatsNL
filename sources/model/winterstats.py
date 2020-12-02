@@ -50,6 +50,7 @@ class Stats:
 
         self.days_hellmann  = self.days_tg_lt_0
         self.sum_hellmann   = stats.hellmann( data )
+        self.frost_sum      = stats.frost_sum ( data )
         self.ijnsen         = stats.ijnsen( data )
 
 def sort( l, ent, pm = '+' ):
@@ -61,7 +62,7 @@ def sort( l, ent, pm = '+' ):
 def calculate( stations, period, name, type='html' ):
     '''Function to calculate winterstatistics'''
     log.console(f'Preparing output...')
-    colspan = 18
+    colspan = 19
     popup_rows = config.max_rows_table_popup
 
     # Make data list with station and stats
@@ -113,9 +114,9 @@ def calculate( stations, period, name, type='html' ):
               <thead>
                   <tr>
                       <th colspan="{colspan}">
-                          <i class="fas fa-calculator"></i>
+                          <i class="fas fa-cloud-sun-rain"></i>
                           {table_title}
-                          <i class="fas fa-arrows-alt-h"></i>
+                          <i class="fas fa-calculator"></i>
                           {period}
                           <i class="far fa-calendar-alt"></i>
                       </th>
@@ -127,6 +128,7 @@ def calculate( stations, period, name, type='html' ):
                       <th title="Average temperature"> tg <i class="fas fa-thermometer-half fa-sm"></i></th>
                       <th title="Hellmann"> hmann <i class="fas fa-icicles fa-sm"></i></th>
                       <th title="IJnsen"> ijnsen  <i class="fas fa-icicles fa-sm"></i></th>
+                      <th title="Frost sum"> fsum <i class="fas fa-icicles fa-sm"></i></th>
                       <th title="Coldest maximum temperature"> tx <i class="fas fa-arrow-down fa-sm"></i> </th>
                       <th title="Coldest average temperature "> tg <i class="fas fa-arrow-down fa-sm"></i> </th>
                       <th title="Coldest minumum temperature"> tn <i class="fas fa-arrow-down fa-sm"></i> </th>
@@ -153,6 +155,7 @@ def calculate( stations, period, name, type='html' ):
         tg_min    = fix.ent( s.tg_min, 'TG' )
         tn_min    = fix.ent( s.tn_min, 'TN' )
         hellmann  = fix.ent( s.sum_hellmann, 'hellmann' )
+        f_sum     = fix.ent( s.frost_sum, 'frost_sum' )
         ijnsen    = fix.ent( s.ijnsen, 'ijnsen' )
         sq_sum    = fix.ent( s.sq_sum, 'SQ' )
         rh_sum    = fix.ent( s.rh_sum, 'RH' )
@@ -168,6 +171,7 @@ def calculate( stations, period, name, type='html' ):
                     <td> <span class="val"> {tg_gem} </span> </td>
                     <td> <span class="val"> {hellmann} </span> </td>
                     <td> <span class="val"> {ijnsen} </span> </td>
+                    <td> <span class="val"> {f_sum} </span> </td>
                     <td> <span class="val"> {tx_min} </span> </td>
                     <td> <span class="val"> {tg_min} </span> </td>
                     <td> <span class="val"> {tn_min} </span> </td>

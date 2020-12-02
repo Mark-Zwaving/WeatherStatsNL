@@ -122,9 +122,9 @@ def calculate( stations, period, name=False, type='html' ):
             <thead>
                 <tr>
                     <th colspan="{colspan}">
-                        <i class="fas fa-calculator"></i>
+                        <i class="fas fa-cloud-sun-rain"></i>
                         {table_title}
-                        <i class="fas fa-arrows-alt-h"></i>
+                        <i class="fas fa-calculator"></i>
                         {period}
                         <i class="far fa-calendar-alt"></i>
                     </th>

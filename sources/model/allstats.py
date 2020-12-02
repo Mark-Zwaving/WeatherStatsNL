@@ -39,6 +39,7 @@ class Stats:
         self.heat_ndx = stats.heat_ndx(data)
         self.hellmann = stats.hellmann(data)
         self.ijnsen   = stats.ijnsen(data)
+        self.frost_sum = stats.frost_sum(data)
 
         # Days lists
         self.days_tx_lt_0   = stats.terms_days(data,'TX','<',  0)
@@ -68,7 +69,7 @@ def sort( l, pm = '+' ):
 
 def calculate( stations, period, name=False, type='html' ):
     '''Function calculates all statistics'''
-    colspan = 31
+    colspan = 32
     popup_rows = config.max_rows_table_popup
 
     # Make data list with station and summerstatistics
@@ -132,9 +133,9 @@ def calculate( stations, period, name=False, type='html' ):
             <thead>
                 <tr>
                     <th colspan="{colspan}">
-                        <i class="fas fa-calculator"></i>
+                        <i class="fas fa-cloud-sun-rain"></i>
                         {table_title}
-                        <i class="fas fa-arrows-alt-h"></i>
+                        <i class="fas fa-calculator"></i>
                         {period}
                         <i class="far fa-calendar-alt"></i>
                     </th>
@@ -166,6 +167,7 @@ def calculate( stations, period, name=False, type='html' ):
 
                     <th title="Hellmann"> hmann <i class="fas fa-icicles fa-sm"></i></th>
                     <th title="IJnsen"> ijnsen <i class="fas fa-icicles fa-sm"></i></th>
+                    <th title="Frost sum"> fsum <i class="fas fa-icicles fa-sm"></i></th>
                     <th title="Days with maximum temperature below 0 degrees celsius"> tx<i class="fas fa-less-than fa-xs"></i>0 </th>
                     <th title="Days with average temperature below 0 degrees celsius"> tg<i class="fas fa-less-than fa-xs"></i>0 </th>
                     <th title="Days with minimum temperature below 0 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>0 </th>
@@ -189,10 +191,11 @@ def calculate( stations, period, name=False, type='html' ):
         tx_min   = fix.ent( s.tx_min, 'tx' )
         tg_min   = fix.ent( s.tg_min, 'tg' )
         tn_min   = fix.ent( s.tn_min, 'tn' )
-        hellmann  = fix.ent( s.hellmann, 'hellmann' )
-        ijnsen    = fix.ent( s.ijnsen, 'ijnsen' )
-        sq_sum    = fix.ent( s.sq_sum, 'SQ' )
-        rh_sum    = fix.ent( s.rh_sum, 'RH' )
+        hellmann = fix.ent( s.hellmann, 'hellmann' )
+        ijnsen   = fix.ent( s.ijnsen, 'ijnsen' )
+        f_sum    = fix.ent( s.frost_sum, 'frost_sum' )
+        sq_sum   = fix.ent( s.sq_sum, 'SQ' )
+        rh_sum   = fix.ent( s.rh_sum, 'RH' )
 
         if type in ['txt','cmd']:
             main += f'{s.station.place:<21} '
@@ -270,6 +273,7 @@ def calculate( stations, period, name=False, type='html' ):
                     </td>
                     <td> <span class="val"> {hellmann} </span> </td>
                     <td> <span class="val"> {ijnsen} </span> </td>
+                    <td> <span class="val"> {f_sum} </span> </td>
                     <td>
                         <span class="val"> {np.size( s.days_tx_lt_0, axis=0 )} </span>
                         {html.table_count( s.days_tx_lt_0, 'TX', 'TXH', popup_rows )}
