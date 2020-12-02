@@ -8,8 +8,8 @@ __version__    =  '0.0.7'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
-import config, datetime, os, re, math
-import numpy as np
+import config as cfg, datetime, os, re, math
+import http.client as httplib, numpy as np
 import view.translate as tr
 from datetime import datetime
 from dateutil import rrule
@@ -22,6 +22,19 @@ def is_empthy( answ ):
         return True
     else:
         return False
+
+def has_internet(url=cfg.check_internet_url, timeout=0.1):
+    ok = False 
+    connect = httplib.HTTPConnection(url, timeout=timeout)
+    try:
+        connect.request('HEAD', '/')
+        connect.close()
+    except Exception as e:
+        pass
+    else:
+        ok = True
+
+    return ok
 
 def isnan( f ):
     x = float(f)
@@ -82,7 +95,7 @@ def now_act_for_file():
     return txt
 
 def quit_menu(el):
-    if np.array_equal(el,config.answer_quit):
+    if np.array_equal(el, cfg.answer_quit):
         return True
     else:
         return False
