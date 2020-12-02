@@ -51,6 +51,8 @@ language  = 'NL'  # Select language
 translate = True  # Translation active or not
 no_data_given = '...'
 help_info = True
+check_internet_url = 'www.google.com'
+
 
 # The years/period for the calculations of climate averages
 climate_period = '1990-2019'
