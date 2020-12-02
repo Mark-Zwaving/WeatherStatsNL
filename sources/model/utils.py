@@ -11,8 +11,12 @@ __status__     =  'Development'
 import config as cfg, datetime, os, re, math
 import http.client as httplib, numpy as np
 import view.translate as tr
+import model.download as download
+import model.read as read
+import view.log as log
 from datetime import datetime
 from dateutil import rrule
+from pytz import timezone
 
 def var_dump( v ):
     print(id(v), type(v), v)
@@ -24,7 +28,7 @@ def is_empthy( answ ):
         return False
 
 def has_internet(url=cfg.check_internet_url, timeout=0.1):
-    ok = False 
+    ok = False
     connect = httplib.HTTPConnection(url, timeout=timeout)
     try:
         connect.request('HEAD', '/')
@@ -35,6 +39,46 @@ def has_internet(url=cfg.check_internet_url, timeout=0.1):
         ok = True
 
     return ok
+
+def s_to_bytes( s, charset, errors ):
+    try:
+        b = s.encode(encoding=charset, errors=errors)
+    except Exception as e:
+        log.console(f'Fail convert to bytes with charset {charset}\nError {e}', True)
+    else:
+        return b
+    return s
+
+def bytes_to_s( b, charset, errors ):
+    try:
+        s =  b.decode(encoding=charset, errors=errors)
+    except Exception as e:
+        log.console(f'Fail convert to string with charset {charset}.\nError:{e}', True)
+    else:
+        return s
+    return b
+
+def b_ascii_to_s( b ):
+    s = bytes_to_s(b, 'ascii', 'ignore')
+    return s
+
+def download_and_read_file(url, file):
+    ok, t = False, ''
+    if has_internet():
+        ok = download.file( url, file )
+        if ok:
+            ok, t = read.file(file)
+    else:
+        log.console('No internet connection...', True)
+
+    return ok, t
+
+def loc_date_now():
+    dt_utc = datetime.now() # UTC propably
+    tz = timezone(cfg.timezone)
+    dt_loc = dt_utc.replace(tzinfo=tz)
+
+    return dt_loc.now()
 
 def isnan( f ):
     x = float(f)
