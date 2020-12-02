@@ -8,7 +8,7 @@ __version__    =  "0.1.8"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import os, time, config, webbrowser, subprocess
+import os, time, config, webbrowser
 import numpy as np
 import model.utils as utils
 import model.search4days as search4days
@@ -16,6 +16,8 @@ import model.daydata as daydata
 import model.winterstats as winterstats
 import model.summerstats as summerstats
 import model.allstats as allstats
+import model.download as download
+import model.read as read
 import control.ask as control_ask
 import control.io as io
 import view.log as log
@@ -30,10 +32,12 @@ import view.graphs as view_graph
 def process_knmi_dayvalues_all():
     '''Function downloads, unzipped  all knmi stations in the list'''
     log.header('START DOWNLOADING ALL DATA DAYVALUES KNMI STATIONS...', True)
+
     st = time.time_ns()
     for stat in config.stations:
         daydata.process_data( stat )
     view_txt.show_process_time(st)
+
     log.footer('END DOWNLOADING ALL STATIONS KNMI DATA DAY VALUES', True)
     control_ask.ask_back_to_main_menu()
 
@@ -62,6 +66,81 @@ def process_knmi_dayvalues_selected():
             break
 
     log.footer('END DOWNLOAD STATION(s) KNMI DATA DAY VALUES...', True )
+
+# Menu optie
+def process_weather_knmi_global():
+    '''Function downloads and print a global weather forecast from the website from the knmi'''
+    log.header('START DOWNLOAD KNMI GLOBAL FORECAST...', True)
+
+    ok, t = False, ''
+    if utils.has_internet():
+        sd   = utils.loc_date_now().strftime('%Y%m%d')
+        url  = config.knmi_forecast_global_url
+        file = utils.mk_path(config.dir_txt_forecasts, f'basisverwachting-{sd}.txt')
+        ok = download.file( url, file )
+        if ok:
+            ok, t = read.file(file)
+    else:
+        log.console('No internet connection...', True)
+
+    if ok:
+        t = '\n' + view_txt.clean_up( t )
+        log.console(t, True)
+    else:
+        log.console('Not ok. Something went wrong along the way.')
+
+    log.footer('END DOWNLOAD KNMI GLOBAL FORECAST...', True)
+    control_ask.ask_back_to_main_menu()
+
+def process_weather_knmi_model():
+    '''Function downloads and prints a discussion about the weather models from the website from the knmi'''
+    log.header('START DOWNLOAD KNMI DISCUSSION WEATHER MODELS...', True)
+
+    ok, t = False, ''
+    if utils.has_internet():
+        sd   = utils.loc_date_now().strftime('%Y%m%d')
+        url  = config.knmi_forecast_model_url
+        name = f'guidance_model-{sd}.txt'
+        file = utils.mk_path(config.dir_txt_forecasts, name)
+        ok = download.file( url, file )
+        if ok:
+            ok, t = read.file(file)
+    else:
+        log.console('No internet connection...', True)
+
+    if ok:
+        t = '\n' + view_txt.clean_up( t )
+        log.console(t, True)
+    else:
+        log.console('Not ok. Something went wrong along the way.')
+
+    log.footer('END DOWNLOAD KNMI DISCUSSION WEATHER MODELS...', True)
+    control_ask.ask_back_to_main_menu()
+
+def process_weather_knmi_guidance():
+    '''Function downloads and prints a global a more in depth forecast from the website from the knmi'''
+    log.header('START DOWNLOAD KNMI GUIDANCE...', True)
+
+    ok, t = False, ''
+    if utils.has_internet():
+        sd   = utils.loc_date_now().strftime('%Y%m%d')
+        url  = config.knmi_forecast_guidance_url
+        name = f'guidance_meerdaagse-{sd}.txt'
+        file = utils.mk_path(config.dir_txt_forecasts, name)
+        ok = download.file( url, file )
+        if ok:
+            ok, t = read.file(file)
+    else:
+        log.console('No internet connection...', True)
+
+    if ok:
+        t = '\n' + view_txt.clean_up( t )
+        log.console(t, True)
+    else:
+        log.console('Not ok. Something went wrong along the way.')
+
+    log.footer('END DOWNLOAD KNMI GUIDANCE...', True)
+    control_ask.ask_back_to_main_menu()
 
 # Menu choice 3
 def get_dayvalues_by_date():
