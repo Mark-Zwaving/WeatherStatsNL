@@ -5,11 +5,11 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.2"
+__version__    =  "0.0.3"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config
+import config, model.utils as utils
 import view.log as log
 import view.translate as tr
 import control.ask as ask
@@ -39,31 +39,42 @@ menu = [
     ]
 ]
 
+def check_internet_menu():
+    '''If no internet, skip download part'''
+    loc_menu = menu
+    if not utils.has_internet():
+        loc_menu = loc_menu[1:] # Skip download
+    return loc_menu
+
 def error_no_stations_found():
     log.header('No weatherstations found !', True )
     log.console('Add one or more weatherstations in config.py', True )
     log.footer('Press a key to quit...', True )
     input('...')
 
-def fn_exec( choice ):
+def fn_exec( choice, loc_menu ):
     num = 1
-    for title in menu:
+    for title in loc_menu:
         for option in title[1]:
             if num == choice:
                 option[1]()
             num += 1
 
 def main_menu():
+    loc_menu = check_internet_menu()
     while True:  # Main menu
         num = 1
         log.header('MAIN MENU', True )
-        for el in menu:
-            log.console(f'\t{el[0]}', True)
-            for option in el[1]:
+
+        for el in loc_menu:
+            title, options = el[0], el[1]
+            log.console(f'\t{title}', True)
+            for option in options:
                 title, fn = option[0], option[1]
                 log.console(f'\t\t{num}) {title}', True)
                 num += 1
             print('')
+
         log.console(f'\tChoose one of the following options: 1...{num-1}', True )
         log.console("\tPress 'q' to quit...", True )
         log.footer('Your choice is ? ', True )
@@ -79,6 +90,6 @@ def main_menu():
                 log.console(f'\nOption "{answ}" unknown...', True ) # Input was not a number
             else:
                 if choice in range( 1, num ):
-                    fn_exec(choice)
+                    fn_exec(choice, loc_menu)
                 else:
                     log.console(f'\nOption "{answ}" out of reach', True )
