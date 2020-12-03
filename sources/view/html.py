@@ -129,32 +129,32 @@ def main_ent( day ):
     pn, pnh, vvn, vvnh, vvx, vvxh, ng, ug, ux, uxh, un, unh, ev24 = dayvalues.ents(day)
 
     # Add icons
-    if tx    !=  no:  tx    =  f'{icon.tx} {tx}'
-    if tg    !=  no:  tg    =  f'{icon.tg} {tg}'
-    if tn    !=  no:  tn    =  f'{icon.tn} {tn}'
-    if t10n  !=  no:  t10n  =  f'{icon.t10n} {t10n}'
-    if ddvec !=  no:  ddvec =  f'{icon.arro} {ddvec}'
-    if fhvec !=  no:  fhvec =  f'{icon.wind} {fhvec}'
-    if fg    !=  no:  fg    =  f'{icon.wind} {fg}'
-    if fhx   !=  no:  fhx   =  f'{icon.wind} {fhx}'
-    if fhn   !=  no:  fhn   =  f'{icon.wind} {fhn}'
-    if fxx   !=  no:  fxx   =  f'{icon.wind} {fxx}'
-    if vvn   !=  no:  vvn   =  f'{icon.bino} {vvn}'
-    if vvx   !=  no:  vvx   =  f'{icon.bino} {vvx}'
-    if sq    !=  no:  sq    =  f'{icon.sun} {sq}'
-    if sp    !=  no:  sp    =  f'{icon.sun} {sp}'
-    if  q    !=  no:  q     =  f'{icon.radi} {q}'
-    if rh    !=  no:  rh    =  f'{icon.umbr} {rh}'
-    if dr    !=  no:  dr    =  f'{icon.umbr} {dr}'
-    if rhx   !=  no:  rhx   =  f'{icon.umbr} {rhx}'
-    if ux    !=  no:  ux    =  f'{icon.drop} {ux}'
-    if un    !=  no:  un    =  f'{icon.drop} {un}'
-    if ug    !=  no:  ug    =  f'{icon.drop} {ug}'
-    if ng    !=  no:  ng    =  f'{icon.clou} {ng}'
-    if pg    !=  no:  pg    =  f'{icon.pres} {pg}'
-    if pn    !=  no:  pn    =  f'{icon.pres} {pn}'
-    if px    !=  no:  px    =  f'{icon.pres} {px}'
-    if ev24  !=  no:  ev24  =  f'{icon.swea} {ev24}'
+    if tx    !=  no:  tx    =  f'{icon.temp_full(color="text-danger")} {tx}'
+    if tg    !=  no:  tg    =  f'{icon.temp_half(color="text-success")} {tg}'
+    if tn    !=  no:  tn    =  f'{icon.temp_empty(color="text-primary")} {tn}'
+    if t10n  !=  no:  t10n  =  f'{icon.temp_empty(color="text-warning")} {t10n}'
+    if ddvec !=  no:  ddvec =  f'{icon.wind_dir(color="text-info")} {ddvec}'
+    if fhvec !=  no:  fhvec =  f'{icon.wind(color="text-success")} {fhvec}'
+    if fg    !=  no:  fg    =  f'{icon.wind(color="text-success")} {fg}'
+    if fhx   !=  no:  fhx   =  f'{icon.wind(color="text-success")} {fhx}'
+    if fhn   !=  no:  fhn   =  f'{icon.wind(color="text-success")} {fhn}'
+    if fxx   !=  no:  fxx   =  f'{icon.wind(color="text-success")} {fxx}'
+    if vvn   !=  no:  vvn   =  f'{icon.eye(color="text-info")} {vvn}'
+    if vvx   !=  no:  vvx   =  f'{icon.eye(color="text-info")} {vvx}'
+    if sq    !=  no:  sq    =  f'{icon.sun(color="text-warning")} {sq}'
+    if sp    !=  no:  sp    =  f'{icon.sun(color="text-warning")} {sp}'
+    if  q    !=  no:  q     =  f'{icon.radiation(color="text-danger")} {q}'
+    if rh    !=  no:  rh    =  f'{icon.shower_heavy(color="text-primary")} {rh}'
+    if dr    !=  no:  dr    =  f'{icon.shower_heavy(color="text-primary")} {dr}'
+    if rhx   !=  no:  rhx   =  f'{icon.shower_heavy(color="text-primary")} {rhx}'
+    if ux    !=  no:  ux    =  f'{icon.drop_tint(color="text-primary")} {ux}'
+    if un    !=  no:  un    =  f'{icon.drop_tint(color="text-primary")} {un}'
+    if ug    !=  no:  ug    =  f'{icon.drop_tint(color="text-primary")} {ug}'
+    if ng    !=  no:  ng    =  f'{icon.cloud(color="text-secondary")} {ng}'
+    if pg    !=  no:  pg    =  f'{icon.compress_alt(color="text-warning")} {pg}'
+    if pn    !=  no:  pn    =  f'{icon.compress_alt(color="text-warning")} {pn}'
+    if px    !=  no:  px    =  f'{icon.compress_alt(color="text-warning")} {px}'
+    if ev24  !=  no:  ev24  =  f'{icon.sweat(color="text-warning")} {ev24}'
 
     main  = ''
     main += div_ent( view_txt.ent_to_title('TX'), tx, txh )
@@ -348,98 +348,3 @@ def table_list_heatwave_days( l, max ):
             html += '</table>'
 
     return html
-
-def table_search_for_days(data, title,period):
-    colcnt = 26
-    html  = '<table id="stats">'
-    html += '<thead>'
-    html += f'<tr> <th colspan="{colcnt}"> {title} </th> </tr>'
-    html += '<tr>'
-    html += f'<th> station </th>'
-    html += f'<th> periode </th>'
-    html += f'<th> day </th>'
-    html += f'<th> TX </th>'
-    html += f'<th> TG </th>'
-    html += f'<th> TN </th>'
-    html += f'<th> T10N </th>'
-    html += f'<th> SQ </th>'
-    html += f'<th> RH </th>'
-    html += f'<th> UG </th>'
-    html += f'<th> NG </th>'
-    html += f'<th> DDVEC </th>'
-    html += f'<th> FHVEC </th>'
-    html += f'<th> FG </th>'
-    html += f'<th> FHX </th>'
-    html += f'<th> FHN </th>'
-    html += f'<th> FXX </th>'
-    html += f'<th> SP </th>'
-    html += f'<th> Q </th>'
-    html += f'<th> DR </th>'
-    html += f'<th> RHX  </th>'
-    html += f'<th> PG </th>'
-    html += f'<th> PX </th>'
-    html += f'<th> PN </th>'
-    html += f'<th> VVN </th>'
-    html += f'<th> VVX </th>'
-    html += '</tr>'
-    html += '</thead>'
-    html += '<tbody>'
-    if len(data) > 0:
-        lymd = data[:,daydata.YYYYMMDD]
-        symd = utils.f_to_s(lymd[ 0])
-        eymd = utils.f_to_s(lymd[-1])
-        for day in data:
-            stn, ymd, ddvec, fhvec, fg, fhx, fhxh, fhn, fhnh, fxx, fxxh, tg, \
-            tn, tnh, tx, txh, t10n, t10nh, sq, sp, q, dr, rh, rhx, \
-            rhxh, pg, px, pxh, pn, pnh, vvn, vvnh, vvx, vvxh, ng, ug, \
-            ux, uxh, un, unh, ev24 = dayvalues.ents( day )
-
-            # Make correct id
-            id = ''
-            name = station.from_wmo_to_name(stn)
-            prov = station.from_wmo_to_province(stn)
-            if name != stn: id += f' {name} ' # Add name if  given
-            if prov != stn: id += f' {prov} ' # Add prov if given
-            if id == '':    id  = f' {stn} '  # No name or prov use wmo
-            date = int(day[daydata.YYYYMMDD])
-
-            html += '<tr>'
-            html += f'<td> <span class="val">{id}</span> </td>'
-            html += f'<td> <span class="val">{symd}-{eymd}</span> </td>'
-            html += f'<td> <span class="val">{date}</span> </td>'
-            html += f'<td> <span class="val">{tx}</span> {txh} </td>'
-            html += f'<td> <span class="val">{tg}</span> </td>'
-            html += f'<td> <span class="val">{tn}</span> {tnh} </td>'
-            html += f'<td> <span class="val">{t10n}</span> {t10nh} </td>'
-            html += f'<td> <span class="val">{sq}</span> </td>'
-            html += f'<td> <span class="val">{rh}</span> </td>'
-            html += f'<td> <span class="val">{ug}</span> </td>'
-            html += f'<td> <span class="val">{ng}</span> </td>'
-            html += f'<td> <span class="val">{ddvec}</span> </td>'
-            html += f'<td> <span class="val">{fhvec}</span> </td>'
-            html += f'<td> <span class="val">{fg}</span> </td>'
-            html += f'<td> <span class="val">{fhx}</span> {fhxh} </td>'
-            html += f'<td> <span class="val">{fhn}</span> {fhnh} </td>'
-            html += f'<td> <span class="val">{fxx}</span> {fxxh} </td>'
-            html += f'<td> <span class="val">{sp}</span> </td>'
-            html += f'<td> <span class="val">{q}</span> </td>'
-            html += f'<td> <span class="val">{dr}</span> </td>'
-            html += f'<td> <span class="val">{rhx}</span> {rhxh} </td>'
-            html += f'<td> <span class="val">{pg}</span> </td>'
-            html += f'<td> <span class="val">{px}</span> {pxh} </td>'
-            html += f'<td> <span class="val">{pn}</span> {pnh} </td>'
-            html += f'<td> <span class="val">{vvn}</span> {vvnh} </td>'
-            html += f'<td> <span class="val">{vvx}</span> {vvxh} </td>'
-            html += '</tr>'
-    else:
-        html += f'<tr> <td colspan="{colcnt}"> {tr.t("No days found")} </td> </tr>'
-
-    html += '</tbody>'
-    html += '<tfoot>'
-    html += f'<tr> <td colspan="{colcnt}"> {config.knmi_dayvalues_notification} </td> </tr>'
-    html += '</tfoot>'
-    html += '</table>'
-
-    return html
-
-#
