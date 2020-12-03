@@ -55,8 +55,10 @@ translate = True  # Translation active or not
 no_data_given = '...'
 help_info = True
 timezone = 'Europe/Amsterdam'
-
 check_internet_url = 'www.google.com'  # Url to check for an internet connection
+fl_max = sys.float_info.min
+fl_min = sys.float_info.max
+
 
 # Urls weather forecasts knmi
 knmi_ftp_pub = 'ftp://ftp.knmi.nl/pub_weerberichten/'
