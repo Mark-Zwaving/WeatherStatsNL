@@ -27,11 +27,11 @@ def enter_default(default):
     return f'Press <enter> for default (={default})\n'
 
 def back_to_main():
-    return "Press 'q' to go back to the main menu\n"
+    return "Press 'q' to go back to the main menu... \n"
 
 def ask_back_to_main_menu(space=True):
     if space: log.console(' ')
-    input("Press a 'key' to go back to the main menu")
+    input("Press a 'key' to go back to the main menu... ")
     if space: log.console(' ')
 
 def ask(txt='?', space=True):
