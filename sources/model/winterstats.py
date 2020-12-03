@@ -36,7 +36,7 @@ class Stats:
         self.tx_min = stats.min( data, 'TX' )
         self.tg_min = stats.min( data, 'TG' )
         self.tn_min = stats.min( data, 'TN' )
-        
+
         self.rh_sum = stats.sum( data, 'RH' )
         self.sq_sum = stats.sum( data, 'SQ' )
 
@@ -117,7 +117,7 @@ def calculate( stations, period, name, type='html' ):
                     <th colspan="{colspan}">
                       {icon.weather_all()}
                       {table_title}
-                      {icon.calculator()}
+                      {icon.wave_square()}
                       {period}
                       {icon.cal_period()}
                     </th>

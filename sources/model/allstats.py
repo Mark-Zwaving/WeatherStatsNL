@@ -136,7 +136,7 @@ def calculate( stations, period, name=False, type='html' ):
                     <th colspan="{colspan}">
                         {icon.weather_all()}
                         {table_title}
-                        {icon.calculator()}
+                        {icon.wave_square()}
                         {period}
                         {icon.cal_period()}
                     </th>

@@ -161,7 +161,7 @@ def calculate(stations, period, query, type, fname):
                     <th colspan="{colspan}">
                         {icon.weather_all()}
                         {title}
-                        {icon.calculator()}
+                        {icon.wave_square()}
                         {period}
                         {icon.cal_period()}
                     </th>
