@@ -46,12 +46,10 @@ def plot( stations, entities, period, title, ylabel, path ):
     # Color handling
     rnd_col = True if len(stations) > 1 else False
     if rnd_col:
-        col_list = view_color.save_colors
-        np.random.shuffle( col_list )
-        col_ndx = 0
-        col_cnt = col_list.size - 1
+        col_list = utils.shuffle_list(view_color.save_colors, level=2)
+        col_ndx, col_cnt = 0, len(col_list) - 1
 
-    min, max = 99999999.9, -99999999.9
+    min, max = config.fl_min, config.fl_max
     for station in stations:
         log.console(f'Read and calculate weatherdata for {station.place}', True)
         ok, data = daydata.read( station )
