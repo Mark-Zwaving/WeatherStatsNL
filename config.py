@@ -19,18 +19,15 @@ dir_view             =  os.path.abspath( os.path.join(dir_app, 'view') )
 dir_control          =  os.path.abspath( os.path.join(dir_app, 'control') )
 dir_model            =  os.path.abspath( os.path.join(dir_app, 'model') )
 dir_data             =  os.path.abspath( os.path.join(dir_app, 'data') )
-
 dir_txt              =  os.path.abspath( os.path.join(dir_data, 'text' ) )
 dir_html             =  os.path.abspath( os.path.join(dir_data, 'html' ) )
 dir_img              =  os.path.abspath( os.path.join(dir_data, 'images' ) )
 dir_knmi             =  os.path.abspath( os.path.join(dir_data, 'knmi' ) )
 dir_thirdparty       =  os.path.abspath( os.path.join(dir_data, 'thirdparty') )
-
 dir_knmi_dayvalues   =  os.path.abspath( os.path.join(dir_knmi, 'dayvalues' ) )
 dir_img_dayvalues    =  os.path.abspath( os.path.join(dir_img, 'dayvalues' ) )
 dir_img_period       =  os.path.abspath( os.path.join(dir_img, 'period' ) )
 dir_txt_dayvalues    =  os.path.abspath( os.path.join(dir_txt, 'dayvalues' ) )
-
 dir_html_templates   =  os.path.abspath( os.path.join(dir_html, 'templates' ) )
 dir_html_dayvalues   =  os.path.abspath( os.path.join(dir_html, 'dayvalues' ) )
 dir_html_winterstats =  os.path.abspath( os.path.join(dir_html, 'winterstats' ) )
@@ -40,7 +37,6 @@ dir_html_search_for_days =  os.path.abspath( os.path.join(dir_html, 'search-for-
 dir_txt_winterstats  =  os.path.abspath( os.path.join(dir_txt, 'winterstats' ) )
 dir_thirdparty_css   =  os.path.abspath( os.path.join(dir_thirdparty, 'css') )
 dir_thirdparty_js    =  os.path.abspath( os.path.join(dir_thirdparty, 'js') )
-
 dir_txt_forecasts    =  os.path.abspath( os.path.join(dir_txt, 'forecasts') )
 
 # Add dir app and dir sources to system. If not already there.
@@ -59,16 +55,14 @@ check_internet_url = 'www.google.com'  # Url to check for an internet connection
 fl_max = sys.float_info.min
 fl_min = sys.float_info.max
 
+# The years/period for the calculations of climate averages
+climate_period = '1990-2019'
 
 # Urls weather forecasts knmi
 knmi_ftp_pub = 'ftp://ftp.knmi.nl/pub_weerberichten/'
 knmi_forecast_global_url   = f'{knmi_ftp_pub}basisverwachting.txt'
 knmi_forecast_model_url    = f'{knmi_ftp_pub}guidance_meerdaagse.txt'
 knmi_forecast_guidance_url = f'{knmi_ftp_pub}guidance_modelbeoordeling.txt'
-
-# The years/period for the calculations of climate averages
-climate_period = '1990-2019'
-
 # List for WeatherStations
 knmi_dayvalues_url          = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/daggegevens/etmgeg_{0}.zip'
 knmi_dayvalues_notification = 'SOURCE meteorological data: ROYAL NETHERLANDS METEOROLOGICAL INSTITUTE (KNMI)'
@@ -191,7 +185,6 @@ plot_clima_line_width  = 1
 plot_clima_marker_type = '.'
 plot_clima_marker_size = 1
 
-
 # Base Style Plotting
 # 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight',
 # 'ggplot', 'grayscale', 'seaborn-bright', 'seaborn-colorblind',
@@ -208,8 +201,7 @@ plot_marker_color = '#333333'
 plot_marker_font  = { 'family'  : 'consolas',
                       'weight'  : 'normal',
                       'size'    : 'small',
-                      'variant' : 'small-caps'
-                    }
+                      'variant' : 'small-caps' }
 plot_marker_horizontalalignment = 'center'
 plot_marker_verticalalignment = 'top'
 plot_marker_alpha = 0.9
@@ -227,7 +219,6 @@ plot_title_font  = { 'family'  : 'consolas',
                      'size'    : '14',
                      'variant' : 'normal'
                     }
-
 # Style xlabel
 plot_xlabel_text    = 'DATES'
 plot_xlabel_color   = '#333333'
@@ -236,7 +227,6 @@ plot_xlabel_font    = { 'family'  : 'consolas',
                         'size'    : '12',
                         'variant' : 'small-caps'
                       }
-
 # Style ylabel
 plot_ylabel_color = '#333333'
 plot_ylabel_font  = { 'family'  : 'consolas',
@@ -244,7 +234,6 @@ plot_ylabel_font  = { 'family'  : 'consolas',
                       'size'    : '11',
                       'variant' : 'small-caps'
                     }
-
 # Style values/dates on the x-as
 plot_xas_color   = '#777777'
 plot_xas_font    = { 'family'  : 'consolas',
@@ -253,7 +242,6 @@ plot_xas_font    = { 'family'  : 'consolas',
                      'variant' : 'small-caps'
                     }
 plot_xas_rotation = 40
-
 # Style legend
 plot_legend_loc       = 'best'
 plot_legend_fontsize  = 'small'
@@ -261,7 +249,6 @@ plot_legend_facecolor = None
 plot_legend_shadow    = False
 plot_legend_frameon   = False
 plot_legend_fancybox  = False
-
 # Statistics table max rows in popup for automaticly generated in statistics pages
 max_rows_table_popup = 10
 strip_html_output    = True
@@ -270,5 +257,3 @@ strip_html_output    = True
 answer_quit = np.array(['q', 'quit'])
 answer_yes  = np.array(['yes', 'y', 'j', 'ok', 'oke', 'oké'])
 answer_no   = np.array(['no', 'n', 'nope'])
-
-#
