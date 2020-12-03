@@ -4,79 +4,80 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.4"
+__version__    =  "0.0.7"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-from random import randint
 import numpy as np
+import model.utils as utils
+from random import randint
 
 # Initialisation of color list, will be overwritten with correct values at the bottom
-list = np.array( [ [ '', '', '', '' ] ] )
+list = list()
 
 NAME = 0  # Names key in list
 HEXA = 1  # et cetera
 RGB  = 2  # et cetera
 HSL  = 3  # et cetera
 
-def names():
-    return list[:,NAME]
-def hexas():
-    return list[:,HEXA]
-def rgbs():
-    return list[:,RGB]
-def hsls():
-    return list[:,HSL]
+names      = lambda : [ el[NAME] for el in list ]
+hexas      = lambda : [ el[HEXA] for el in list ]
+rgbs       = lambda : [ el[RGB]  for el in list ]
+hsls       = lambda : [ el[HSL]  for el in list ]
+check_name = lambda name : name in names()
+check_hexa = lambda hexa : hexa in hexas()
+check_rgb  = lambda rgb  : rgb in rgbs()
+check_hsl  = lambda hsl  : hsl in hsls()
+sort_names = lambda : names().sort()
+sort_hexas = lambda : hexas().sort()
+sort_rgbs  = lambda : rgbs().sort()
+sort_hsl   = lambda : hsls().sort()
 
-def check_name(name):
-    return name in names()
-def check_hexa(hexa):
-    return hexa in hexas()
-def check_rgb(rgb):
-    return rgb in rgbs()
-def check_hsl(hsl):
-    return hsl in hsls()
+def get_key_row(id=NAME, color=''):
+    key = -1
+    if check_name(color):
+        i = 0
+        for el in list:
+            if color == el[id]:
+                key = i
+                break
+            i += 1
 
-def sort_names():
-    return np.array( sorted( list, key = lambda el : el[NAME] ) )
-def sort_hexas():
-    return np.array( sorted( list, key = lambda el : el[HEXA] ) )
-def sort_rgbs():
-    return np.array( sorted( list, key = lambda el : el[RGB] ) )
-def sort_hsls():
-    return np.array( sorted( list, key = lambda el : el[HSL] ) )
+    return key
 
 def sort(type='name'):
-    if   type == 'name': return sort_names()
-    elif type == 'hexa': return sort_hexas()
-    elif type ==  'rgb': return sort_rgbs()
-    elif type ==  'rgb': return sort_hsls()
-
-    return list
+    l = list()
+    if   type == 'name': l = sort_names()
+    elif type == 'hexa': l = sort_hexas()
+    elif type ==  'rgb': l = sort_rgbs()
+    elif type ==  'rgb': l = sort_hsls()
+    return l
 
 def name_to_rgb(name):
-    if check_name(name):
-        return list[np.where(list[:,NAME]==name)][RGB]
-    return (False,False,False)
+    key = get_key_row(NAME, name)
+    rgb = list[key][RGB] if key != -1 else (False,False,False)
+    return rgb
 
 def name_to_hexa(name):
-    if check_name(name):
-        return list[np.where(list[:,NAME]==name)][HEXA]
-    return False
+    key = get_key_row(NAME, name)
+    hex = list[key][HEXA] if key != -1 else False
+    return hex
 
 def name_to_hsl(name):
-    if check_name(name):
-        return list[np.where(list[:,NAME]==name)][HSL]
-    return (False,False,False)
+    key = get_key_row(NAME, name)
+    hsl = list[key][HSL] if key != -1 else (False,False,False)
+    return hsl
 
 def hexa_to_name(hexa):
-    if check_hexa(hexa):
-        return list[np.where(list[:,HEXA]==hexa)][NAME]
-    return False
+    key = get_key_row(HEXA, hexa)
+    name = list[key][NAME] if key != -1 else False
+    return name
 
 def hexa_to_rgb(hexa):
-    if check_hexa(hexa):
-        return list[np.where(list[:,HEXA]==hexa)][RGB]
+    rgb = (False, False, False)
+    key = get_key_row(HEXA, hexa)
+    if key != -1:
+        rgb = list[key][RGB]
     else:
         # Make hexa always a string, replace '#' with '' and make uppercase
         h = str(hexa).replace('#','').upper()
@@ -89,34 +90,37 @@ def hexa_to_rgb(hexa):
             r = hexa_to_dec(h[0:2])
             g = hexa_to_dec(h[2:4])
             b = hexa_to_dec(h[4:6])
-            return ( r, g, b)
+            rgb = ( r, g, b)
 
-    return ( False, False, False)
+    return rgb
 
 def hexa_to_hsl(hexa):
-    if check_hexa(hexa):
-        return list[np.where(list[:,HEXA]==hexa)][HSL] # No need to calculate
+    hsl = (False, False, False)
+    key = get_key_row(HEXA, hexa)
+    if key != -1:
+        hsl = list[key][HSL]
     else:
         rgb = hexa_to_rgb(hexa)
         hue = rgb_to_hue(rgb) # Hue
         sat = rgb_to_saturation(rgb) # Saturation
         lig = rgb_to_l(rgb) # Lightness
+        hsl = (hue, sat, lig)
 
-        return ( hue, sat, lig )
+    return hsl
 
 def rnd_color(type='name'):
-    ndx = 0
-    if   type == 'name': ndx = 0
-    elif type == 'hexa': ndx = 1
-    elif type ==  'rgb': ndx = 2
-    elif type ==  'hsl': ndx = 3
+    l = list()
+    if   type == 'name': l = names()
+    elif type == 'hexa': l = hexas()
+    elif type ==  'rgb': l = rgbs()
+    elif type ==  'hsl': l = hsls()
 
-    l = np.random.choice( list[:,ndx], 1 )
-
-    return l[0]
+    rnd = utils.rnd_from_list( l )
+    return rnd
 
 def rnd_savecolor():
-    return np.random.choice( save_colors[:], 1 )[0]
+    rnd = utils.rnd_from_list( save_colors )
+    return rnd
 
 # Source: https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
 def rgb_to_l( rgb ):
@@ -221,10 +225,10 @@ def ent_to_color(ent):
 
 # Tested / selected
 save_colors = [
-      '#0000FF','#D2691E','#8B008B','#556B2F','#E9967A','#2F4F4F','#00CED1',
-      '#1E90FF','#DAA520','#9ACD32','#FF69B4','#CD5C5C','#778899','#32CD32',
-      '#66CDAA','#9370DB','#191970','#808000','#DA70D6','#DB7093','#663399',
-      '#FF0000','#BC8F8F','#2E8B57','#A0522D','#4682B4','#008080'
+    '#0000FF','#D2691E','#8B008B','#556B2F','#E9967A','#2F4F4F','#00CED1',
+    '#1E90FF','#DAA520','#9ACD32','#FF69B4','#CD5C5C','#778899','#32CD32',
+    '#66CDAA','#9370DB','#191970','#808000','#DA70D6','#DB7093','#663399',
+    '#FF0000','#BC8F8F','#2E8B57','#A0522D','#4682B4','#008080'
 ]
 
 # Real color list
