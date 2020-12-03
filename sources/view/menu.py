@@ -13,37 +13,37 @@ import config, model.utils as utils
 import view.log as log
 import view.translate as tr
 import control.ask as ask
-import control.menu as control_menu
+import control.menu as cmenu
 
 menu = [
     [ 'DOWNLOAD DATA', [
             [ 'Download all data dayvalues knmi stations',
-               control_menu.process_knmi_dayvalues_all ],
+               cmenu.process_knmi_dayvalues_all ],
             [ 'Download one or more data dayvalues knmi stations',
-               control_menu.process_knmi_dayvalues_selected ]
+               cmenu.process_knmi_dayvalues_selected ]
         ]
     ],
     [ 'FORECASTS', [
             [ 'Forecast weather (dutch)',
-               control_menu.process_weather_knmi_global ],
+               cmenu.process_weather_knmi_global ],
             [ 'Forecast model (dutch)',
-               control_menu.process_weather_knmi_model ],
+               cmenu.process_weather_knmi_model ],
             [ 'Forecast guidance (dutch)',
-               control_menu.process_weather_knmi_guidance ]
+               cmenu.process_weather_knmi_guidance ]
         ]
     ],
     [ 'DAYVALUES AND PERIODS', [
-            [ 'Dayvalues', control_menu.get_dayvalues_by_date ],
-            [ 'Search for days', control_menu.search_for_days ],
-            [ 'Period graphs', control_menu.graph_period ]
+            [ 'Dayvalues', cmenu.get_dayvalues_by_date ],
+            [ 'Search for days', cmenu.search_for_days ],
+            [ 'Period graphs', cmenu.graph_period ]
         ]
     ],
     [ 'STATISTICS TABLES', [
-            [ 'Winter statistics', control_menu.table_winterstats ],
-            [ 'Summer statistics', control_menu.table_summerstats  ],
-            [ 'Winter & summer statistics', control_menu.table_allstats ]
-            # [ 'Heatwaves TODO', control_menu.table_heatwaves ],
-            # [ 'Coldwaves TODO', control_menu.table_coldwaves ]
+            [ 'Winter statistics', cmenu.table_winterstats ],
+            [ 'Summer statistics', cmenu.table_summerstats ],
+            [ 'Winter & summer statistics', cmenu.table_allstats ]
+            # [ 'Heatwaves TODO', cmenu.table_heatwaves ],
+            # [ 'Coldwaves TODO', cmenu.table_coldwaves ]
         ]
     ]
 ]
@@ -62,12 +62,12 @@ def error_no_stations_found():
     input('...')
 
 def fn_exec( choice, loc_menu ):
-    num = 1
+    n = 1
     for title in loc_menu:
         for option in title[1]:
-            if num == choice:
+            if n == choice:
                 option[1]()
-            num += 1
+            n += 1
 
 def main_menu():
     loc_menu = check_internet_menu()
