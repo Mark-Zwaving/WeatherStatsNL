@@ -21,9 +21,9 @@ menu = [
           [ 'Download one or more dayvalues knmi stations', cmenu.process_knmi_dayvalues_selected ] ]
     ],
     [ 'FORECASTS',
-        [ [ 'Forecast weather (dutch)', cmenu.process_weather_knmi_global ],
-          [ 'Forecast model (dutch)', cmenu.process_weather_knmi_model ],
-          [ 'Forecast guidance (dutch)', cmenu.process_weather_knmi_guidance ] ]
+        [ [ 'Knmi weather (dutch)', cmenu.process_weather_knmi_global ],
+          [ 'Knmi model evaluation (dutch)', cmenu.process_weather_knmi_model ],
+          [ 'Knmi medium-term (dutch)', cmenu.process_weather_knmi_guidance ] ]
     ],
     [ 'DAYVALUES AND PERIODS',
         [ [ 'Dayvalues', cmenu.get_dayvalues_by_date ],
