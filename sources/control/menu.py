@@ -17,6 +17,7 @@ import model.winterstats as winterstats
 import model.summerstats as summerstats
 import model.allstats as allstats
 import model.download as download
+import model.dayvalues as model_dayvalues
 import model.read as read
 import control.ask as control_ask
 import control.io as io
@@ -165,56 +166,21 @@ def get_dayvalues_by_date():
         # Ask for a file name
         if type != 'cmd':
             default = f'dayvalues-{stat.place.lower()}-{ymd}-{utils.now_act_for_file()}'
-            name = control_ask.ask_for_file_name (
+            fname = control_ask.ask_for_file_name (
                         f'Give a name for the {type} file ?', default, True
                     )
-            if utils.quit_menu(name):
+            if utils.quit_menu(fname):
                 break
-            name += f'.{type}'
 
         st = time.time_ns()
-        log.header('SEARCHING FOR AND PREPARING DAY VALUES', True)
-        log.console(f'Station: {stat.wmo} {stat.place}', True)
-        log.console(f'Date: {utils.ymd_to_txt(ymd)}', True)
+        path = model_dayvalues.calculate(data, ymd, stat, type, fname)
+        view_txt.show_process_time(st)
 
-        day = data[np.where(data[:,daydata.YYYYMMDD] == int(ymd))][0]
-        txt_date = utils.ymd_to_txt(ymd)
-        footer = stat.dayvalues_notification
-
-        # Make output
-        if type == 'html':
-            header  = f'<i class="text-info fas fa-home"></i> '
-            header += f'{stat.wmo} - {stat.place} '
-            header += f'{stat.province} - {txt_date} '
-
-            page = view_html.Template()
-            page.title  = f'{stat.place}-{ymd}'
-            page.header = header
-            page.main   = view_html.main_ent( day )
-            page.footer = footer
-            page.set_path( config.dir_html_dayvalues, name )
-
-            if page.save():
-                view_txt.show_process_time(st)
-                fopen = control_ask.ask_to_open_with_app(
-                            f'Open the file {name} in your browser ?', True
-                        )
-                if fopen:
-                    webbrowser.open_new_tab( page.file_path ) # Opens in default browser
-
-        elif type == 'txt':
-            title = txt_date
-            main  = view_dayvalues.txt_main( day )
-            txt   = f'{title}\n{main}'
-            path  = utils.mk_path( config.dir_txt_dayvalues, name )
-
-            if io.save(path, txt):
-                view_txt.show_process_time(st)
-                fopen = control_ask.ask_to_open_with_app(
-                            f'Open the file {path} in your browser ?', True
-                        )
-                if fopen:
-                    webbrowser.open_new_tab(path)
+        fopen = control_ask.ask_to_open_with_app(
+                    f'Open the file {path} in your browser ?', True
+                )
+        if fopen:
+            webbrowser.open_new_tab(path)
 
         # Always ask for going back
         again = control_ask.ask_again(f'Do you want to select another station and date ?', True)
