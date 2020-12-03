@@ -8,7 +8,7 @@ __version__    =  '0.0.7'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
-import config as cfg, datetime, os, re, math
+import config as cfg, datetime, os, re, math, random
 import http.client as httplib, numpy as np
 import view.translate as tr
 import model.download as download
@@ -17,6 +17,10 @@ import view.log as log
 from datetime import datetime
 from dateutil import rrule
 from pytz import timezone
+
+rnd_digit = lambda min,max  : random.randint(min, max)
+file_path = lambda dir,file : os.path.join(dir, file)
+mk_path   = lambda dir,file : os.path.abspath( file_path(dir, file) )
 
 def var_dump( v ):
     print(id(v), type(v), v)
@@ -39,6 +43,37 @@ def has_internet(url=cfg.check_internet_url, timeout=0.1):
         ok = True
 
     return ok
+
+def unique_list(l):
+    unique = list()
+    for el in l:
+        if el not in unique:
+            unique.append(el)
+    return unique
+
+# Fisher Yates Algorithm
+def shuffle_list(l, level=1):
+    max = len(l) - 1
+    if max > 0:
+        while level > 0:
+            i = 0
+            while i <= max:
+                rnd = rnd_digit(0, max)  # Get random key
+
+                # Swap values elements
+                mem    = l[i]
+                l[i]   = l[rnd]
+                l[rnd] = mem
+
+                i += 1  # Next element
+
+            level -= 1
+    return l
+
+def rnd_from_list( l ):
+    l = shuffle_list(l)  # Shuffle list
+    rnd = rnd_digit( 0, len(l)-1 ) # Get a random number from list
+    return l[rnd]
 
 def s_to_bytes( s, charset, errors ):
     try:
@@ -126,9 +161,6 @@ def make_query_txt_only(query):
     q = q.replace('&&', ' and ')
 
     return clear(q)
-
-def mk_path( dir, file ):
-    return os.path.abspath(os.path.join(dir, file))
 
 def ymd_to_txt( ymd ):
     ymd = ymd if type(ymd) is str else f_to_s(ymd)
