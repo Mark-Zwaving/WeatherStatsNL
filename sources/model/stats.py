@@ -58,28 +58,28 @@ def process_list( data, entity ):
 def average( data, entity ):
     '''Function calculates the average value for a given entity'''
     data = process_list( data, entity )  # Remove nan values
-    ndx = daydata.ndx_ent(entity)  # Get index of entity in matrix
+    ndx  = daydata.ndx_ent(entity)  # Get index of entity in matrix
     ave  = np.average( data[:,ndx] )  # Calculate average
     return ave
 
 def sum( data, entity ):
     '''Function calculates the sum value for a given entity'''
     data = process_list( data, entity )  # Remove nan values
-    ndx = daydata.ndx_ent(entity)  # Get index of entity in matrix
+    ndx  = daydata.ndx_ent(entity)  # Get index of entity in matrix
     sum  = np.sum( data[:,ndx] )  # Calculate sum
     return sum
 
 def max( data, entity ):
     '''Function gets maximum for a given entity'''
     data = process_list( data, entity )  # Remove nan values
-    ndx = daydata.ndx_ent(entity)  # Get index of entity in matrix
-    max = np.max( data[:,ndx] )  # Get max
+    ndx  = daydata.ndx_ent(entity)  # Get index of entity in matrix
+    max  = np.max( data[:,ndx] )  # Get max
     return max
 
 def min( data, entity ):
     '''Function gets minimum for a given entity'''
     data = process_list( data, entity )  # Remove nan values
-    ndx = daydata.ndx_ent(entity)  # Get index of entity in matrix
+    ndx  = daydata.ndx_ent(entity)  # Get index of entity in matrix
     min  = np.min( data[:,ndx] )  # Get min
     return min
 
@@ -105,7 +105,7 @@ def hellmann( data ):
     ent  = 'TG'  # Entity for hellman is TG
     data = process_list( data, ent )  # Remove nan values
     days = terms_days( data, ent, '<', 0.0 ) # Get all days TG < 0
-    cnt  = np.size( days, axis=0 )  #  # Count days hellmann
+    cnt  = np.size( days, axis=0 )  # Count days hellmann
     if cnt == 0:  #  No days found tg < 0
         hman = 0.0  # Hellmann is 0
     else: # Sum valus all days TG < 0.0
@@ -131,8 +131,8 @@ def frost_sum(data):
     '''Function calculates frost sum:
        Add min and max temp during a day only if TX < 0 or TN < 0
        IE: TX=-1.0 and TN=-5.0 => 6.0 '''
-    TN = process_list( data, 'TN' )  # Remove nan values in TN
-    TX = process_list( data, 'TX' )  # Remove nan values in TX
+    TN   = process_list( data, 'TN' )  # Remove nan values in TN
+    TX   = process_list( data, 'TX' )  # Remove nan values in TX
     tn_0 = terms_days( TN, 'TN', '<',  0.0 )  # All days TN < 0
     tx_0 = terms_days( TX, 'TX', '<',  0.0 )  # All days TX < 0
     tn_cnt = np.size( tn_0, axis=0 ) # Count tn days < 0
