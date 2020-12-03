@@ -44,3 +44,7 @@ def arrow_left(color='', extra='', size=''): return i('fas fa-arrow-left', color
 def arrow_down(color='', extra='', size=''): return i('fas fa-arrow-down', color, extra, size)
 def arrow_right(color='', extra='', size=''): return i('fas fas fa-arrow-right', color, extra, size)
 def binoculars(color='', extra='', size=''): return i('fas fa-binoculars', color, extra, size)
+
+def minus(color='', extra='', size=''): return i('fas fa-minus', color, extra, size)
+def plus(color='', extra='', size=''): return i('fas fa-plus', color, extra, size)
+def wave_square(color='', extra='', size=''): return i('fas fa-wave-square', color, extra, size)
