@@ -220,15 +220,15 @@ def ent_to_color(ent):
     return rnd_savecolor()
 
 # Tested / selected
-save_colors = np.array([
+save_colors = [
       '#0000FF','#D2691E','#8B008B','#556B2F','#E9967A','#2F4F4F','#00CED1',
       '#1E90FF','#DAA520','#9ACD32','#FF69B4','#CD5C5C','#778899','#32CD32',
       '#66CDAA','#9370DB','#191970','#808000','#DA70D6','#DB7093','#663399',
       '#FF0000','#BC8F8F','#2E8B57','#A0522D','#4682B4','#008080'
-])
+]
 
 # Real color list
-list = np.array( [
+list = [
     ['Black',            '#000000', hexa_to_rgb('#000000'), hexa_to_hsl('#000000')],
     ['Navy',             '#000080', hexa_to_rgb('#000080'), hexa_to_hsl('#000080')],
     ['DarkBlue',         '#00008B', hexa_to_rgb('#00008B'), hexa_to_hsl('#00008B')],
@@ -377,4 +377,4 @@ list = np.array( [
     ['LightYellow',      '#FFFFE0', hexa_to_rgb('#FFFFE0'), hexa_to_hsl('#FFFFE0')]
     # ['Ivory',            '#FFFFF0', hexa_to_rgb('#FFFFF0'), hexa_to_hsl('#FFFFF0')],
     # ['White',            '#FFFFFF', hexa_to_rgb('#FFFFFF'), hexa_to_hsl('#FFFFFF')]
-])
+]
