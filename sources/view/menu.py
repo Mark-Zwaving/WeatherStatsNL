@@ -16,34 +16,26 @@ import control.ask as ask
 import control.menu as cmenu
 
 menu = [
-    [ 'DOWNLOAD DATA', [
-            [ 'Download all data dayvalues knmi stations',
-               cmenu.process_knmi_dayvalues_all ],
-            [ 'Download one or more data dayvalues knmi stations',
-               cmenu.process_knmi_dayvalues_selected ]
-        ]
+    [ 'DOWNLOAD DATA',
+        [ [ 'Download all dayvalues knmi stations', cmenu.process_knmi_dayvalues_all ],
+          [ 'Download one or more dayvalues knmi stations', cmenu.process_knmi_dayvalues_selected ] ]
     ],
-    [ 'FORECASTS', [
-            [ 'Forecast weather (dutch)',
-               cmenu.process_weather_knmi_global ],
-            [ 'Forecast model (dutch)',
-               cmenu.process_weather_knmi_model ],
-            [ 'Forecast guidance (dutch)',
-               cmenu.process_weather_knmi_guidance ]
-        ]
+    [ 'FORECASTS',
+        [ [ 'Forecast weather (dutch)', cmenu.process_weather_knmi_global ],
+          [ 'Forecast model (dutch)', cmenu.process_weather_knmi_model ],
+          [ 'Forecast guidance (dutch)', cmenu.process_weather_knmi_guidance ] ]
     ],
-    [ 'DAYVALUES AND PERIODS', [
-            [ 'Dayvalues', cmenu.get_dayvalues_by_date ],
-            [ 'Search for days', cmenu.search_for_days ],
-            [ 'Period graphs', cmenu.graph_period ]
-        ]
+    [ 'DAYVALUES AND PERIODS',
+        [ [ 'Dayvalues', cmenu.get_dayvalues_by_date ],
+          [ 'Search for days', cmenu.search_for_days ],
+          [ 'Period graphs', cmenu.graph_period ] ]
     ],
-    [ 'STATISTICS TABLES', [
-            [ 'Winter statistics', cmenu.table_winterstats ],
-            [ 'Summer statistics', cmenu.table_summerstats ],
-            [ 'Winter & summer statistics', cmenu.table_allstats ]
-            # [ 'Heatwaves TODO', cmenu.table_heatwaves ],
-            # [ 'Coldwaves TODO', cmenu.table_coldwaves ]
+    [ 'STATISTICS TABLES',
+        [ [ 'Winter statistics', cmenu.table_winterstats ],
+          [ 'Summer statistics', cmenu.table_summerstats ],
+          [ 'Winter & summer statistics', cmenu.table_allstats ]
+        # [ 'Heatwaves TODO', cmenu.table_heatwaves ],
+        # [ 'Coldwaves TODO', cmenu.table_coldwaves ]
         ]
     ]
 ]
