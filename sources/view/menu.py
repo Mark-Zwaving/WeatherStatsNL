@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.3"
+__version__    =  "0.0.4"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -19,7 +19,7 @@ menu = [
     [ 'DOWNLOAD DATA', [
             [ 'Download all data dayvalues knmi stations',
                control_menu.process_knmi_dayvalues_all ],
-            [ 'Download one or more dayvalues(s) data knmi stations',
+            [ 'Download one or more data dayvalues knmi stations',
                control_menu.process_knmi_dayvalues_selected ]
         ]
     ],
