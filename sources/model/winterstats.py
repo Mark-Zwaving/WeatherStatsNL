@@ -13,6 +13,7 @@ import numpy as np
 import view.log as log
 import view.html as html
 import view.fix as fix
+import view.icon as icon
 import control.io as io
 import model.utils as utils
 import model.stats as stats
@@ -35,7 +36,7 @@ class Stats:
         self.tx_min = stats.min( data, 'TX' )
         self.tg_min = stats.min( data, 'TG' )
         self.tn_min = stats.min( data, 'TN' )
-
+        
         self.rh_sum = stats.sum( data, 'RH' )
         self.sq_sum = stats.sum( data, 'SQ' )
 
@@ -113,39 +114,38 @@ def calculate( stations, period, name, type='html' ):
               <table id="stats">
               <thead>
                   <tr>
-                      <th colspan="{colspan}">
-                          <i class="fas fa-cloud-sun-rain"></i>
-                          {table_title}
-                          <i class="fas fa-calculator"></i>
-                          {period}
-                          <i class="far fa-calendar-alt"></i>
-                      </th>
+                    <th colspan="{colspan}">
+                      {icon.weather_all()}
+                      {table_title}
+                      {icon.calculator()}
+                      {period}
+                      {icon.cal_period()}
+                    </th>
                   </tr>
                   <tr>
-                      <th> place  <i class="fas fa-home fa-sm"></i></th>
-                      <th> province <i class="fab fa-font-awesome-flag fa-sm"></i> </th>
-                      <th> period <i class="far fa-calendar-alt fa-sm"></i></th>
-                      <th title="Average temperature"> tg <i class="fas fa-thermometer-half fa-sm"></i></th>
-                      <th title="Hellmann"> hmann <i class="fas fa-icicles fa-sm"></i></th>
-                      <th title="IJnsen"> ijnsen  <i class="fas fa-icicles fa-sm"></i></th>
-                      <th title="Frost sum"> fsum <i class="fas fa-icicles fa-sm"></i></th>
-                      <th title="Coldest maximum temperature"> tx <i class="fas fa-arrow-down fa-sm"></i> </th>
-                      <th title="Coldest average temperature "> tg <i class="fas fa-arrow-down fa-sm"></i> </th>
-                      <th title="Coldest minumum temperature"> tn <i class="fas fa-arrow-down fa-sm"></i> </th>
-                      <th title="Total hours sun"> <i class="fas fa-sun fa-sm"></i> </th>
-                      <th title="Total mm rain"> <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
-                      <th title="Days with maximum temperature below 0 degrees celsius"> tx<i class="fas fa-less-than fa-xs"></i>0 </th>
-                      <th title="Days with average temperature below 0 degrees celsius"> tg<i class="fas fa-less-than fa-xs"></i>0 </th>
-                      <th title="Days with minimum temperature below 0 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>0 </th>
-                      <th title="Days with temperature lower than -5 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;5 </th>
-                      <th title="Days with temperature lower than -10 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;10 </th>
-                      <th title="Days with temperature lower than -15 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;15 </th>
-                      <th title="Days with temperature lower than -20 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;20 </th>
+                    <th> place {icon.home(size='fa-sm')}</th>
+                    <th> province {icon.flag(size='fa-sm')}</th>
+                    <th> period {icon.cal_period(size='fa-sm')}</th>
+                    <th title="Average temperature"> tg {icon.temp_half(size='fa-sm')}</th>
+                    <th title="Hellmann"> hmann {icon.icicles(size='fa-sm')}</th>
+                    <th title="IJnsen"> ijnsen {icon.icicles(size='fa-sm')}</th>
+                    <th title="Frost sum"> fsum {icon.icicles(size='fa-sm')}</th>
+                    <th title="Coldest maximum temperature"> tx {icon.arrow_down(size='fa-sm')}</th>
+                    <th title="Coldest average temperature "> tg {icon.arrow_down(size='fa-sm')}</th>
+                    <th title="Coldest minumum temperature"> tn {icon.arrow_down(size='fa-sm')}</th>
+                    <th title="Total hours sun"> {icon.sun(size='fa-sm')}</th>
+                    <th title="Total mm rain"> {icon.shower_heavy(size='fa-sm')} </th>
+                    <th title="Days with maximum temperature below 0 degrees celsius"> tx{icon.lt(size='fa-xs')}0 </th>
+                    <th title="Days with average temperature below 0 degrees celsius"> tg{icon.lt(size='fa-xs')}0 </th>
+                    <th title="Days with minimum temperature below 0 degrees celsius"> tn{icon.lt(size='fa-xs')}0 </th>
+                    <th title="Days with temperature lower than -5 degrees celsius"> tn{icon.lt(size='fa-xs')}&minus;5 </th>
+                    <th title="Days with temperature lower than -10 degrees celsius"> tn{icon.lt(size='fa-xs')}&minus;10 </th>
+                    <th title="Days with temperature lower than -15 degrees celsius"> tn{icon.lt(size='fa-xs')}&minus;15 </th>
+                    <th title="Days with temperature lower than -20 degrees celsius"> tn{icon.lt(size='fa-xs')}&minus;20 </th>
                   </tr>
               </thead>
               <tbody>
             '''
-
     # Calculate values
     for s in winter:
         log.console(f'Make {type} output for: {s.station.place}', True)

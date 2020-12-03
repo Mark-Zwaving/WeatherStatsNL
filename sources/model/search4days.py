@@ -17,6 +17,7 @@ import view.log as log
 import view.html as view_html
 import view.dayvalues as dayvalues
 import view.translate as tr
+import view.icon as icon
 
 def query_simple( data, query ):
     ent, op, val = query.split(' ')
@@ -158,43 +159,43 @@ def calculate(stations, period, query, type, fname):
             <thead>
                 <tr>
                     <th colspan="{colspan}">
-                        <i class="fas fa-cloud-sun-rain"></i>
+                        {icon.weather_all()}
                         {title}
-                        <i class="fas fa-calculator"></i>
+                        {icon.calculator()}
                         {period}
-                        <i class="far fa-calendar-alt"></i>
+                        {icon.cal_period()}
                     </th>
                 </tr>
                 <tr>
-                    <th> place <i class="fas fa-home fa-sm"></i> </th>
-                    <th> state <i class="fab fa-font-awesome-flag fa-sm"></i> </th>
-                    <th> periode <i class="far fa-calendar-alt fa-sm"></i> </th>
-                    <th> day <i class="fas fa-calendar-day fa-sm"></i></th>
-                    <th> TX <i class="fas fa-thermometer-full fa-sm"></i> </th>
-                    <th> TG <i class="fas fa-thermometer-half fa-sm"></i> </th>
-                    <th> TN <i class="fas fa-thermometer-empty fa-sm"></i> </th>
-                    <th> T10N <i class="fas fa-thermometer-empty fa-sm"></i> </th>
-                    <th> SQ <i class="fas fa-sun fa-sm"></i> </th>
-                    <th> SP <i class="fas fa-sun fa-sm"></i> </th>
-                    <th> RH <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
-                    <th> RHX <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
-                    <th> DR <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
-                    <th> PG <i class="fas fa-compress fa-sm"></i> </th>
-                    <th> PX <i class="fas fa-compress fa-sm"></i> </th>
-                    <th> PN <i class="fas fa-compress fa-sm"></i> </th>
-                    <th> UG <i class="fas fa-tint fa-sm"></i> </th>
-                    <th> UX <i class="fas fa-tint fa-sm"></i> </th>
-                    <th> UN <i class="fas fa-tint fa-sm"></i> </th>
-                    <th> NG <i class="fas fa-cloud fa-sm"></i></th>
-                    <th> DDVEC <i class="fas fa-location-arrow fa-sm"></i> </th>
-                    <th> FHVEC <i class="fas fa-wind fa-sm"></i> </th>
-                    <th> FG <i class="fas fa-wind fa-sm"></i> </th>
-                    <th> FHX <i class="fas fa-wind fa-sm"></i> </th>
-                    <th> FHN <i class="fas fa-wind fa-sm"></i> </th>
-                    <th> FXX <i class="fas fa-wind fa-sm"></i> </th>
-                    <th> VVX <i class="fas fa-eye fa-sm"></i> </th>
-                    <th> VVN <i class="fas fa-eye fa-sm"></i> </th>
-                    <th> Q <i class="fas fa-radiation-alt fa-sm"></i> </th>
+                    <th> place {icon.home(size='fa-sm')}</th>
+                    <th> state {icon.flag(size='fa-sm')}</th>
+                    <th> periode {icon.cal_period(size='fa-sm')}</th>
+                    <th> day {icon.cal_day(size='fa-sm')}</th>
+                    <th> TX {icon.temp_full(size='fa-sm')}</th>
+                    <th> TG {icon.temp_half(size='fa-sm')}</th>
+                    <th> TN {icon.temp_empty(size='fa-sm')}</th>
+                    <th> T10N {icon.temp_empty(size='fa-sm')}</th>
+                    <th> SQ {icon.sun(size='fa-sm')}</th>
+                    <th> SP {icon.sun(size='fa-sm')}</th>
+                    <th> RH {icon.shower_heavy(size='fa-sm')}</th>
+                    <th> RHX {icon.shower_heavy(size='fa-sm')} </th>
+                    <th> DR {icon.shower_heavy(size='fa-sm')}</th>
+                    <th> PG {icon.compress_alt(size='fa-sm')}</th>
+                    <th> PX {icon.compress_alt(size='fa-sm')}</th>
+                    <th> PN {icon.compress_alt(size='fa-sm')}</th>
+                    <th> UG {icon.drop_tint(size='fa-sm')}</th>
+                    <th> UX {icon.drop_tint(size='fa-sm')}</th>
+                    <th> UN {icon.drop_tint(size='fa-sm')}</th>
+                    <th> NG {icon.cloud(size='fa-sm')}</th>
+                    <th> DDVEC {icon.arrow_loc(size='fa-sm')}</th>
+                    <th> FHVEC {icon.wind(size='fa-sm')}</th>
+                    <th> FG {icon.wind(size='fa-sm')}</th>
+                    <th> FHX {icon.wind(size='fa-sm')}</th>
+                    <th> FHN {icon.wind(size='fa-sm')}</th>
+                    <th> FXX {icon.wind(size='fa-sm')}</th>
+                    <th> VVX {icon.eye(size='fa-sm')}</th>
+                    <th> VVN {icon.eye(size='fa-sm')}</th>
+                    <th> Q {icon.radiation(size='fa-sm')}</th>
                 </tr>
             </thead>
             <tbody>

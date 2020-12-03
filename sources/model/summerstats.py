@@ -13,6 +13,7 @@ import numpy as np
 import view.log as log
 import view.html as html
 import view.fix as fix
+import view.icon as icon
 import control.io as io
 import model.utils as utils
 import model.stats as stats
@@ -79,7 +80,7 @@ def calculate( stations, period, name=False, type='html' ):
     path = ''
     if type == 'html':
         dir = config.dir_html_summerstats
-    elif type ==  'txt':
+    elif type == 'txt':
         dir = config.dir_txt_summerstats
     path = utils.mk_path(dir, f'{name}.{type}')
 
@@ -122,33 +123,33 @@ def calculate( stations, period, name=False, type='html' ):
             <thead>
                 <tr>
                     <th colspan="{colspan}">
-                        <i class="fas fa-cloud-sun-rain"></i>
+                        {icon.weather_all()}
                         {table_title}
-                        <i class="fas fa-calculator"></i>
+                        {icon.calculator()}
                         {period}
-                        <i class="far fa-calendar-alt"></i>
+                        {icon.cal_period()}
                     </th>
                 </tr>
                 <tr>
-                    <th> place <i class="fas fa-home fa-sm"></i></th>
-                    <th> province <i class="fab fa-font-awesome-flag fa-sm"></i></th>
-                    <th> period <i class="far fa-calendar-alt fa-sm"></i></th>
-                    <th> tg <i class="fas fa-thermometer-half fa-sm"></i> </th>
-                    <th title="Warmte getal"> heat <i class="fas fa-fire-alt fa-sm"></i> </th>
-                    <th title="Warmste dag"> tx <i class="fas fa-arrow-up fa-sm"></i> </th>
-                    <th title="Hoogste gemiddelde"> tg <i class="fas fa-arrow-up fa-sm"></i> </th>
-                    <th title="Hoogste minimum"> tn <i class="fas fa-arrow-up fa-sm"></i> </th>
-                    <th title="Aantal warme dagen"> tx<i class="fas fa-greater-than-equal fa-xs"></i>20 </th>
-                    <th title="Aantal zomers dagen"> tx<i class="fas fa-greater-than-equal fa-xs"></i>25 </th>
-                    <th title="Aantal tropische dagen"> tx<i class="fas fa-greater-than-equal fa-xs"></i>30 </th>
-                    <th title="Aantal tropische dagen"> tx<i class="fas fa-greater-than-equal fa-xs"></i>35 </th>
-                    <th title="Aantal tropische dagen"> tx<i class="fas fa-greater-than-equal fa-xs"></i>40 </th>
-                    <th title="Aantal tropennachten"> tn<i class="fas fa-greater-than-equal fa-xs"></i>20 </th>
-                    <th title="Warmte getal dagen"> tg<i class="fas fa-greater-than-equal fa-xs"></i>18 </th>
-                    <th title="Totaal aantal uren zon"> <i class="fas fa-sun fa-sm"></i> </th>
-                    <th title="Dagen met meer dan tien uur zon"> <i class="fas fa-sun fa-xs"></i> <i class="fas fa-greater-than-equal fa-xs"></i>10h</th>
-                    <th title="Totaal aantal mm regen"> <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
-                    <th title="Dagen met meer dan tien mm regen"> <i class="fas fa-cloud-showers-heavy fa-xs"></i> <i class="fas fa-greater-than-equal fa-xs"></i>10mm</th>
+                    <th> place {icon.home(size='fa-sm')}</th>
+                    <th> province {icon.flag(size='fa-sm')}</th>
+                    <th> period {icon.cal_period(size='fa-sm')}</th>
+                    <th title="Average temperature"> tg {icon.temp_half(size='fa-sm')}</th>
+                    <th title="Warmte getal"> heat {icon.fire(size='fa-sm')}</th>
+                    <th title="Warmste dag"> tx {icon.arrow_up(size='fa-sm')}</th>
+                    <th title="Hoogste gemiddelde"> tg {icon.arrow_up(size='fa-sm')}</th>
+                    <th title="Hoogste minimum"> tn {icon.arrow_up(size='fa-sm')}</th>
+                    <th title="Aantal warme dagen"> tx{icon.gte(size='fa-xs')}20 </th>
+                    <th title="Aantal zomers dagen"> tx{icon.gte(size='fa-xs')}25 </th>
+                    <th title="Aantal tropische dagen"> tx{icon.gte(size='fa-xs')}30 </th>
+                    <th title="Aantal tropische dagen"> tx{icon.gte(size='fa-xs')}35 </th>
+                    <th title="Aantal tropische dagen"> tx{icon.gte(size='fa-xs')}40 </th>
+                    <th title="Aantal tropennachten"> tn{icon.gte(size='fa-xs')}20 </th>
+                    <th title="Warmte getal dagen"> tg{icon.gte(size='fa-xs')}18 </th>
+                    <th title="Totaal aantal uren zon"> {icon.sun(size='fa-sm')} </th>
+                    <th title="Dagen met meer dan tien uur zon"> {icon.sun(size='fa-xs')}{icon.gte(size='fa-xs')}10h</th>
+                    <th title="Totaal aantal mm regen">{icon.shower_heavy(size='fa-sm')}</th>
+                    <th title="Dagen met meer dan tien mm regen"> {icon.shower_heavy(size='fa-xs')}{icon.gte(size='fa-xs')}10mm</th>
                 </tr>
             </thead>
             <tbody>
@@ -242,7 +243,6 @@ def calculate( stations, period, name=False, type='html' ):
                     </td>
                 </tr>
                 '''
-
 
     if type in ['txt','cmd']:
         footer += config.knmi_dayvalues_notification

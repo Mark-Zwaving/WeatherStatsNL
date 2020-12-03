@@ -17,6 +17,7 @@ import model.daydata as daydata
 import view.fix as fix
 import view.log as log
 import view.html as html
+import view.icon as icon
 
 class Stats:
     '''Class saves en stores summer statistics of a station in a given period'''
@@ -133,48 +134,50 @@ def calculate( stations, period, name=False, type='html' ):
             <thead>
                 <tr>
                     <th colspan="{colspan}">
-                        <i class="fas fa-cloud-sun-rain"></i>
+                        {icon.weather_all()}
                         {table_title}
-                        <i class="fas fa-calculator"></i>
+                        {icon.calculator()}
                         {period}
-                        <i class="far fa-calendar-alt"></i>
+                        {icon.cal_period()}
                     </th>
                 </tr>
                 <tr>
-                    <th> place <i class="fas fa-home fa-sm"></i></th>
-                    <th> province <i class="fab fa-font-awesome-flag fa-sm"></i> </th>
-                    <th> period  <i class="far fa-calendar-alt fa-sm"></i></th>
-                    <th title="Average temperature"> tg <i class="fas fa-thermometer-half fa-sm"></i> </th>
-                    <th title="Highest maximum temperature"> tx <i class="fas fa-arrow-up fa-sm"></i> </th>
-                    <th title="Highest average temperature"> tg <i class="fas fa-arrow-up fa-sm"></i> </th>
-                    <th title="Highest minimum temperature"> tn <i class="fas fa-arrow-up fa-sm"></i> </th>
-                    <th title="Lowest maximum temperature"> tx <i class="fas fa-arrow-down fa-sm"></i> </th>
-                    <th title="Lowest average temperature "> tg <i class="fas fa-arrow-down fa-sm"></i> </th>
-                    <th title="Lowest minumum temperature"> tn <i class="fas fa-arrow-down fa-sm"></i> </th>
-                    <th title="Total hours of sunshine"> <i class="fas fa-sun fa-sm"></i> </th>
-                    <th title="Total rain mm"> <i class="fas fa-cloud-showers-heavy fa-sm"></i> </th>
-
-                    <th title="Heat index tg greater than 18 degrees celsius"> heat <i class="fas fa-fire-alt fa-sm"></i> </th>
-                    <th title="Warm days"> tx<i class="fas fa-greater-than-equal fa-xs"></i>20 </th>
-                    <th title="Summer days"> tx<i class="fas fa-greater-than-equal fa-xs"></i>25 </th>
-                    <th title="Tropical days"> tx<i class="fas fa-greater-than-equal fa-xs"></i>30 </th>
-                    <th title="High tropical days"> tx<i class="fas fa-greater-than-equal fa-xs"></i>35 </th>
-                    <th title="High tropical days"> tx<i class="fas fa-greater-than-equal fa-xs"></i>40 </th>
-                    <th title="Warm days on average"> tg<i class="fas fa-greater-than-equal fa-xs"></i>18 </th>
-                    <th title="Tropical nights"> tn<i class="fas fa-greater-than-equal fa-xs"></i>20 </th>
-                    <th title="Days with more than 10hour of sun"> <i class="fas fa-sun fa-xs"></i><i class="fas fa-greater-than-equal fa-xs"></i>10h</th>
-                    <th title="Days with more than 10 mm of rain"> <i class="fas fa-cloud-showers-heavy fa-xs"></i><i class="fas fa-greater-than-equal fa-xs"></i>10mm</th>
-
-                    <th title="Hellmann"> hmann <i class="fas fa-icicles fa-sm"></i></th>
-                    <th title="IJnsen"> ijnsen <i class="fas fa-icicles fa-sm"></i></th>
-                    <th title="Frost sum"> fsum <i class="fas fa-icicles fa-sm"></i></th>
-                    <th title="Days with maximum temperature below 0 degrees celsius"> tx<i class="fas fa-less-than fa-xs"></i>0 </th>
-                    <th title="Days with average temperature below 0 degrees celsius"> tg<i class="fas fa-less-than fa-xs"></i>0 </th>
-                    <th title="Days with minimum temperature below 0 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>0 </th>
-                    <th title="Days with minimum temperature lower than -5 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;5 </th>
-                    <th title="Days with minimum temperature lower than -10 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;10 </th>
-                    <th title="Days with minimum temperature lower than -15 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;15 </th>
-                    <th title="Days with minimum temperature lower than -20 degrees celsius"> tn<i class="fas fa-less-than fa-xs"></i>&minus;20 </th>
+                    <th> place {icon.home(size='fa-sm')} </th>
+                    <th> province {icon.flag(size='fa-sm')} </th>
+                    <th> period  {icon.cal_period(size='fa-sm')} </th>
+                    <th title="Average temperature"> tg {icon.temp_half(size='fa-sm')} </th>
+                    <th title="Highest maximum temperature"> tx {icon.arrow_up(size='fa-sm')} </th>
+                    <th title="Highest average temperature"> tg {icon.arrow_up(size='fa-sm')} </th>
+                    <th title="Highest minimum temperature"> tn {icon.arrow_up(size='fa-sm')} </th>
+                    <th title="Lowest maximum temperature"> tx {icon.arrow_down(size='fa-sm')} </th>
+                    <th title="Lowest average temperature "> tg {icon.arrow_down(size='fa-sm')} </th>
+                    <th title="Lowest minumum temperature"> tn {icon.arrow_down(size='fa-sm')} </th>
+                    <th title="Total hours of sunshine"> {icon.sun(size='fa-sm')} </th>
+                    <th title="Total rain mm"> {icon.shower_heavy(size='fa-sm')} </th>
+                    <th title="Heat index tg greater than 18 degrees celsius"> heat {icon.fire(size='fa-sm')} </th>
+                    <th title="Warm days"> tx{icon.gte(size='fa-xs')}20 </th>
+                    <th title="Summer days"> tx{icon.gte(size='fa-xs')}25 </th>
+                    <th title="Tropical days"> tx{icon.gte(size='fa-xs')}30 </th>
+                    <th title="High tropical days"> tx{icon.gte(size='fa-xs')}35 </th>
+                    <th title="High tropical days"> tx{icon.gte(size='fa-xs')}40 </th>
+                    <th title="Warm days on average"> tg{icon.gte(size='fa-xs')}18 </th>
+                    <th title="Tropical nights"> tn{icon.gte(size='fa-xs')}20 </th>
+                    <th title="Days with more than 10hour of sun">
+                        {icon.sun(size='fa-xs')}{icon.gte(size='fa-xs')}10h
+                    </th>
+                    <th title="Days with more than 10 mm of rain">
+                        {icon.shower_heavy(size='fa-xs')}{icon.gte(size='fa-xs')}10mm
+                    </th>
+                    <th title="Hellmann"> hmann {icon.icicles(size='fa-sm')}</th>
+                    <th title="IJnsen"> ijnsen {icon.icicles(size='fa-sm')}</th>
+                    <th title="Frost sum"> fsum {icon.icicles(size='fa-sm')}</th>
+                    <th title="Days with maximum temperature below 0 degrees celsius"> tx{icon.lt(size='fa-xs')}0 </th>
+                    <th title="Days with average temperature below 0 degrees celsius"> tg{icon.lt(size='fa-xs')}0 </th>
+                    <th title="Days with minimum temperature below 0 degrees celsius"> tn{icon.lt(size='fa-xs')}0 </th>
+                    <th title="Days with minimum temperature lower than -5 degrees celsius"> tn{icon.lt(size='fa-xs')}&minus;5 </th>
+                    <th title="Days with minimum temperature lower than -10 degrees celsius"> tn{icon.lt(size='fa-xs')}&minus;10 </th>
+                    <th title="Days with minimum temperature lower than -15 degrees celsius"> tn{icon.lt(size='fa-xs')}&minus;15 </th>
+                    <th title="Days with minimum temperature lower than -20 degrees celsius"> tn{icon.lt(size='fa-xs')}&minus;20 </th>
                 </tr>
             </thead>
             <tbody>
