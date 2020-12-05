@@ -30,17 +30,21 @@ class Stats:
         self.period   = f'{self.p_start}-{self.p_end}'
         self.tg_ave   = stats.average(data,'TG')
         self.tx_max   = stats.max(data,'TX')
+        self.tx_max_sort = stats.sort( data, 'TX')
         self.tg_max   = stats.max(data,'TG')
+        self.tg_max_sort = stats.sort( data, 'TG')
         self.tn_max   = stats.max(data,'TN')
+        self.tn_max_sort = stats.sort( data, 'TN')
         self.tx_min   = stats.min(data,'TX')
+        self.tx_min_sort = stats.sort( data, 'TX', reverse=True )
         self.tg_min   = stats.min(data,'TG')
+        self.tg_min_sort = stats.sort( data, 'TG', reverse=True )
         self.tn_min   = stats.min(data,'TN')
+        self.tn_min_sort = stats.sort( data, 'TN', reverse=True )
         self.sq_sum   = stats.sum(data,'SQ') # Total sunshine hours
+        self.sq_sum_sort = stats.sort( data, 'SQ' )
         self.rh_sum   = stats.sum(data,'RH') # Total rain
-        self.heat_ndx = stats.heat_ndx(data)
-        self.hellmann = stats.hellmann(data)
-        self.ijnsen   = stats.ijnsen(data)
-        self.frost_sum = stats.frost_sum(data)
+        self.rh_sum_sort = stats.sort( data, 'RH' )
 
         # Days lists
         self.days_tx_lt_0   = stats.terms_days(data,'TX','<',  0)
@@ -61,6 +65,13 @@ class Stats:
         self.days_sq_gte_10 = stats.terms_days(data,'SQ','≥',10) # Sunny days > 10 hours
         self.days_rh_gte_10 = stats.terms_days(data,'RH','≥',10) # Rainy days > 10mm
 
+        self.heat_ndx = stats.heat_ndx(data)
+        self.days_heat_ndx = self.days_tg_gte_18
+        self.hellmann = stats.hellmann(data)
+        self.days_hellmann = self.days_tg_lt_0
+        self.ijnsen = stats.ijnsen(data)
+        self.frost_sum = stats.frost_sum(data)
+
 def sort( l, pm = '+' ):
     l = np.array( sorted(l, key=lambda stats: stats.tg_ave) ) # Sort on average
     if pm == '+':
@@ -71,7 +82,6 @@ def sort( l, pm = '+' ):
 def calculate( stations, period, name=False, type='html' ):
     '''Function calculates all statistics'''
     colspan = 32
-    popup_rows = config.max_rows_table_popup
 
     # Make data list with station and summerstatistics
     allstats = np.array( [] )
@@ -228,82 +238,118 @@ def calculate( stations, period, name=False, type='html' ):
                     <td> <span class="val"> {s.station.place} </span> </td>
                     <td> <span class="val"> {s.station.province} </span> </td>
                     <td title="{period_txt}"> <span class="val"> {s.period} </span> </td>
-                    <td> <span class="val"> {tg_ave} </span> </td>
-                    <td> <span class="val"> {tx_max} </span> </td>
-                    <td> <span class="val"> {tg_max} </span> </td>
-                    <td> <span class="val"> {tn_max} </span> </td>
-                    <td> <span class="val"> {tx_min} </span> </td>
-                    <td> <span class="val"> {tg_min} </span> </td>
-                    <td> <span class="val"> {tn_min} </span> </td>
-                    <td> <span class="val"> {sq_sum} </span> </td>
-                    <td> <span class="val"> {rh_sum} </span> </td>
-                    <td> <span class="val"> {heat_ndx} </span> </td>
+                    <td>
+                        <span class="val"> {tg_ave} </span>
+                    </td>
+                    <td>
+                        <span class="val"> {tx_max} </span>
+                        {html.table_days( s.tx_max_sort, 'TX', 'TXH' )}
+                    </td>
+                    <td>
+                        <span class="val"> {tg_max} </span>
+                        {html.table_days( s.tg_max_sort, 'TG' )}
+                    </td>
+                    <td>
+                        <span class="val"> {tn_max} </span>
+                        {html.table_days( s.tn_max_sort, 'TN', 'TNH' )}
+                    </td>
+                    <td>
+                        <span class="val"> {tx_min} </span>
+                        {html.table_days( s.tx_min_sort, 'TX', 'TXH' )}
+                    </td>
+                    <td>
+                        <span class="val"> {tg_min} </span>
+                        {html.table_days( s.tg_min_sort, 'TG' )}
+                    </td>
+                    <td>
+                        <span class="val"> {tn_min} </span>
+                        {html.table_days( s.tn_min_sort, 'TN', 'TNH' )}
+                    </td>
+                    <td>
+                        <span class="val"> {sq_sum} </span>
+                        {html.table_days( s.sq_sum_sort, 'SQ' )}
+                    </td>
+                    <td>
+                        <span class="val"> {rh_sum} </span>
+                        {html.table_days( s.rh_sum_sort, 'RH' )}
+                    </td>
+                    <td>
+                        <span class="val"> {heat_ndx} </span>
+                        {html.table_days( s.days_heat_ndx, 'TG' )}
+                    </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_20, axis=0)} </span>
-                        {html.table_count(s.days_tx_gte_20, 'TX', 'TXH', popup_rows)}
+                        {html.table_days_count(s.days_tx_gte_20, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_25, axis=0)} </span>
-                        {html.table_count(s.days_tx_gte_25, 'TX', 'TXH', popup_rows)}
+                        {html.table_days_count(s.days_tx_gte_25, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_30, axis=0)} </span>
-                        {html.table_count(s.days_tx_gte_30, 'TX', 'TXH', popup_rows)}
+                        {html.table_days_count(s.days_tx_gte_30, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_35, axis=0)} </span>
-                        {html.table_count(s.days_tx_gte_35, 'TX', 'TXH', popup_rows)}
+                        {html.table_days_count(s.days_tx_gte_35, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_40, axis=0)} </span>
-                        {html.table_count(s.days_tx_gte_40, 'TX', 'TXH', popup_rows)}
+                        {html.table_days_count(s.days_tx_gte_40, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tg_gte_18, axis=0)} </span>
-                        {html.table_count(s.days_tg_gte_18, 'TG', '', popup_rows)}
+                        {html.table_days_count(s.days_tg_gte_18, 'TG' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tn_gte_20, axis=0)} </span>
-                        {html.table_count(s.days_tn_gte_20, 'TG', '', popup_rows)}
+                        {html.table_days_count(s.days_tn_gte_20, 'TG' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_sq_gte_10, axis=0)} </span>
-                        {html.table_count(s.days_sq_gte_10, 'SQ', '', popup_rows)}
+                        {html.table_days_count(s.days_sq_gte_10, 'SQ' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_rh_gte_10, axis=0)} </span>
-                        {html.table_count(s.days_rh_gte_10, 'RH', '', popup_rows)}
+                        {html.table_days_count(s.days_rh_gte_10, 'RH' )}
                     </td>
-                    <td> <span class="val"> {hellmann} </span> </td>
-                    <td> <span class="val"> {ijnsen} </span> </td>
-                    <td> <span class="val"> {f_sum} </span> </td>
+                    <td>
+                        <span class="val"> {hellmann} </span>
+                        {html.table_days( s.days_hellmann, 'TG' )}
+                    </td>
+                    <td>
+                        <span class="val"> {ijnsen} </span>
+                    </td>
+                    <td>
+                        <span class="val"> {f_sum} </span>
+                    </td>
                     <td>
                         <span class="val"> {np.size( s.days_tx_lt_0, axis=0 )} </span>
-                        {html.table_count( s.days_tx_lt_0, 'TX', 'TXH', popup_rows )}
+                        {html.table_days_count( s.days_tx_lt_0, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tg_lt_0, axis=0 )} </span>
-                        {html.table_count( s.days_tg_lt_0, 'TG', '', popup_rows )}
+                        {html.table_days_count( s.days_tg_lt_0, 'TG' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt_0, axis=0 )} </span>
-                        {html.table_count( s.days_tn_lt_0, 'TN', 'TNH', popup_rows )}
+                        {html.table_days_count( s.days_tn_lt_0, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__5, axis=0 )} </span>
-                        {html.table_count( s.days_tn_lt__5, 'TN', 'TNH', popup_rows )}
+                        {html.table_days_count( s.days_tn_lt__5, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__10, axis=0 )} </span>
-                        {html.table_count( s.days_tn_lt__10, 'TN', 'TNH', popup_rows )}
+                        {html.table_days_count( s.days_tn_lt__10, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__15, axis=0 )} </span>
-                        {html.table_count( s.days_tn_lt__15, 'TN', 'TNH', popup_rows )}
+                        {html.table_days_count( s.days_tn_lt__15, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__20, axis=0 )} </span>
-                        {html.table_count( s.days_tn_lt__20, 'TN', 'TNH', popup_rows )}
+                        {html.table_days_count( s.days_tn_lt__20, 'TN', 'TNH' )}
                     </td>
                 </tr>
                 '''
