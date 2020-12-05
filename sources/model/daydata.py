@@ -81,9 +81,14 @@ def is_ent( ent ):
 def ndx_ent( ent ):
     '''Get index by text from the array entities'''
     e = ent.strip().upper()
-    ndx, = np.where( (entities == e) )
+    key, ndx= -1, 0
+    for el in entities:
+        if ent == el:
+            key = ndx
+            break
+        ndx += 1
 
-    return ndx[0]
+    return key
 
 def ent_ndx( ndx ):
     '''Get text by index from array entities'''
@@ -298,7 +303,7 @@ def sel_keys_days ( ymd, per ):
             # Is it the actual month in the actual year? Then actual day
             if mp == mn and yp == yn:
                 dd = dn
-                
+
             sp = f'{yp}{mp}01'
             ep = f'{yp}{mp}{dd}'
 
