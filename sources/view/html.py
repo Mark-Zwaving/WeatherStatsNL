@@ -186,50 +186,111 @@ def main_ent( day ):
 
     return main
 
-def table_count(days, ent, t_ent, max):
+def table_days(days, entity, time_ent=''):
     html = ''
-    if np.size(days, axis=0) > 0:
-        if max != 0:
-            tel   = 1
-            cnt   = np.size(days, axis=0)
-            ndx   = daydata.ndx_ent( ent )
-            t_ndx = -1 if t_ent == '' else daydata.ndx_ent( t_ent )
-            tme   = '' if t_ndx == -1 else '<th>time</th>'
-            max   = cnt if max == -1 else max  #  -1 for all!
-            max   = cnt if max > cnt else max  #  check bereik
+    total = np.size(days, axis=0)
+    if total > 0:
+        # Time th cell yess or no
+        b_time_cell  = True if time_ent != '' else False
+        th_time_cell = '<th>time</th>' if b_time_cell else ''
+        time_ndx = daydata.ndx_ent(time_ent) if b_time_cell else -1
+        val_ndx  = daydata.ndx_ent(entity) # Index of value
+
+        # HTML table header
+        html += f'''
+                <table class="popup">
+                    <thead>
+                        <tr>
+                            <th>pos</th>
+                            <th>date</th>
+                            <th>value</th>
+                            {th_time_cell}
+                        </tr>
+                    </thead>
+                    <tbody>
+                '''
+
+        pos, max = 1, config.html_popup_table_val_10
+        if max == -1:
+            max = Total
+
+        for day in days:
+            ymd  = int(day[daydata.YYYYMMDD]) # Get data int format
+            symd = utils.ymd_to_txt( ymd ) # Get date string format
+            val = fix.ent( day[val_ndx], entity )  # Get value with right output
+
+            # Get a time value or not
+            time_val = f'<td>{fix.ent(day[time_ndx], time_ent)}</td>' if b_time_cell else ''
+
             html += f'''
-                    <table class="popup">
-                        <thead>
-                            <tr>
-                                <th>date</th>
-                                <th>value</th>
-                                {tme}
-                                <th>cnt</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                        <tr>
+                            <td>{pos}</td>
+                            <td title="{symd}">{ymd}</td>
+                            <td>{val}</td>
+                            {time_val}
+                        </tr>
                     '''
+            if pos == max:
+                break
+            else:
+                pos += 1
 
-            total = np.size(days, axis=0)
-            for day in days[::-1]:
-                ymd  = int(day[daydata.YYYYMMDD])
-                symd = utils.ymd_to_txt( ymd )
-                val  = fix.ent( day[ndx], ent )
-                tme  = '' if t_ndx == -1 else '<td>'+fix.ent(day[t_ndx],t_ent)+'</td>'
-                html += f'''
-                            <tr>
-                                <td title="{symd}">{ymd}</td>
-                                <td>{val}</td>
-                                {tme}
-                                <td>{total}</td>
-                            </tr>
-                        '''
-                total -= 1
+        html += '''
+                </tbody>
+            </table>
+                '''
+    return html
 
-            html += '''
-                        </tbody>
-                    </table>
+def table_days_count(days, entity, time_ent=''):
+    html = ''
+    total = np.size(days, axis=0)
+    if total > 0:
+        # Time th cell yess or no
+        b_time_cell  = True if time_ent != '' else False
+        th_time_cell = '<th>time</th>' if b_time_cell else ''
+        time_ndx = daydata.ndx_ent( time_ent ) if b_time_cell else -1
+        val_ndx  = daydata.ndx_ent( entity )  # Index of value
+
+        html += f'''
+                <table class="popup">
+                    <thead>
+                        <tr>
+                            <th>date</th>
+                            <th>value</th>
+                            {th_time_cell}
+                            <th>cnt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                '''
+
+        pos, max = 1, config.html_popup_table_cnt_rows
+        if max == -1:
+            max = total
+
+        days = np.flip(days, axis=0) # Reverse the matrix. Last day first
+        for day in days:
+            ymd  = int(day[daydata.YYYYMMDD])
+            symd = utils.ymd_to_txt( ymd )
+            val  = fix.ent( day[val_ndx], entity )
+            tme  = f'<td>{fix.ent(day[time_ndx],time_ent)}</td>' if b_time_cell else ''
+            html += f'''
+                        <tr>
+                            <td title="{symd}">{ymd}</td>
+                            <td>{val}</td>
+                            {tme}
+                            <td>{total}</td>
+                        </tr>
                     '''
+            if pos == max:
+                break
+            else:
+                total, pos = total - 1, pos + 1
+
+        html += '''
+                    </tbody>
+                </table>
+                '''
 
     return html
 
