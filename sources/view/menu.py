@@ -5,7 +5,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.4"
+__version__    =  "0.0.7"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -18,17 +18,24 @@ import control.menu as cmenu
 menu = [
     [ 'DOWNLOAD DATA',
         [ [ 'Download all dayvalues knmi stations', cmenu.process_knmi_dayvalues_all ],
-          [ 'Download one or more dayvalues knmi stations', cmenu.process_knmi_dayvalues_selected ] ]
+          [ 'Download one or more dayvalues knmi stations', cmenu.process_knmi_dayvalues_selected ]
+          ]
     ],
     [ 'FORECASTS',
         [ [ 'Knmi weather (dutch)', cmenu.process_weather_knmi_global ],
           [ 'Knmi model evaluation (dutch)', cmenu.process_weather_knmi_model ],
-          [ 'Knmi medium-term (dutch)', cmenu.process_weather_knmi_guidance ] ]
+          [ 'Knmi medium-term (dutch)', cmenu.process_weather_knmi_guidance ]
+          ]
+    ],
+    [ 'CURRENT WEATHER',
+        [ [ 'Weather stations NL (dutch)', cmenu.process_weather_knmi_current ]
+        ]
     ],
     [ 'DAYVALUES AND PERIODS',
         [ [ 'Dayvalues', cmenu.get_dayvalues_by_date ],
           [ 'Search for days', cmenu.search_for_days ],
-          [ 'Period graphs', cmenu.graph_period ] ]
+          [ 'Period graphs', cmenu.graph_period ]
+          ]
     ],
     [ 'STATISTICS TABLES',
         [ [ 'Winter statistics', cmenu.table_winterstats ],
@@ -44,7 +51,7 @@ def check_internet_menu():
     '''If no internet, skip download part'''
     loc_menu = menu
     if not utils.has_internet():
-        loc_menu = loc_menu[2:] # Skip download
+        loc_menu = loc_menu[3:] # Skip download options menu
     return loc_menu
 
 def error_no_stations_found():
@@ -82,7 +89,9 @@ def main_menu():
 
         answ = ask.ask(' ? ', False)  # Make a choice
 
-        if answ in config.answer_quit:
+        if not answ:
+            continue
+        elif answ in config.answer_quit:
             break
         else:
             try:
