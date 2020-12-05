@@ -145,7 +145,7 @@ def calculate(stations, period, query, type, fname):
     if type == 'html':
         dir = config.dir_html_search_for_days
     elif type == 'txt':
-        dir = config.dir_txt_search_for_dayssss
+        dir = config.dir_txt_search_for_days
 
     path = utils.mk_path(dir, fname)
 
