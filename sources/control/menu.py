@@ -19,6 +19,7 @@ import model.allstats as allstats
 import model.download as download
 import model.dayvalues as model_dayvalues
 import model.read as read
+import model.current_weather as current_weather
 import control.ask as control_ask
 import control.io as io
 import view.log as log
@@ -81,14 +82,13 @@ def process_weather_knmi_global():
         ok = download.file( url, file )
         if ok:
             ok, t = read.file(file)
+            if ok:
+                t = '\n' + view_txt.clean_up( t )
+                log.console(t, True)
+            else:
+                log.console('Not ok. Something went wrong along the way.')
     else:
         log.console('No internet connection...', True)
-
-    if ok:
-        t = '\n' + view_txt.clean_up( t )
-        log.console(t, True)
-    else:
-        log.console('Not ok. Something went wrong along the way.')
 
     log.footer('END DOWNLOAD KNMI GLOBAL FORECAST...', True)
     control_ask.ask_back_to_main_menu()
@@ -106,17 +106,35 @@ def process_weather_knmi_model():
         ok = download.file( url, file )
         if ok:
             ok, t = read.file(file)
+            if ok:
+                t = '\n' + view_txt.clean_up( t )
+                log.console(t, True)
+            else:
+                log.console('Not ok. Something went wrong along the way.')
     else:
         log.console('No internet connection...', True)
 
-    if ok:
-        t = '\n' + view_txt.clean_up( t )
-        log.console(t, True)
-    else:
-        log.console('Not ok. Something went wrong along the way.')
-
     log.footer('END DOWNLOAD KNMI DISCUSSION WEATHER MODELS...', True)
     control_ask.ask_back_to_main_menu()
+
+def process_weather_knmi_current():
+    '''Function downloads and print a actual weather values to the screen'''
+    log.header('START DOWNLOAD CURRENT VALUES KNMI WEATHERSTATIONS...', True)
+
+    ok, t = False, ''
+    if utils.has_internet():
+        ok, t = current_weather.knmi_stations()
+        if ok:
+            t = '\n' + view_txt.clean_up( t )
+            log.console(t, True)
+        else:
+            log.console('Not ok. Something went wrong along the way.')
+    else:
+        log.console('No internet connection...', True)
+
+    log.footer('END DOWNLOAD CURRENT VALUES KNMI WEATHERSTATIONS...', True)
+    control_ask.ask_back_to_main_menu()
+
 
 def process_weather_knmi_guidance():
     '''Function downloads and prints a global a more in depth forecast from the website from the knmi'''
@@ -131,14 +149,13 @@ def process_weather_knmi_guidance():
         ok = download.file( url, file )
         if ok:
             ok, t = read.file(file)
+            if ok:
+                t = '\n' + view_txt.clean_up( t )
+                log.console(t, True)
+            else:
+                log.console('Not ok. Something went wrong along the way.')
     else:
         log.console('No internet connection...', True)
-
-    if ok:
-        t = '\n' + view_txt.clean_up( t )
-        log.console(t, True)
-    else:
-        log.console('Not ok. Something went wrong along the way.')
 
     log.footer('END DOWNLOAD KNMI GUIDANCE...', True)
     control_ask.ask_back_to_main_menu()
