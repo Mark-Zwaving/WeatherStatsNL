@@ -22,23 +22,28 @@ import model.daydata as daydata
 class Stats:
     '''Class stores and saves winter statistics of a station in a given period'''
     def __init__(self, station, data ):
-        self.station    = station
-        self.data       = data
-        self.ymd        = data[:,daydata.YYYYMMDD]
-        self.date_start = utils.f_to_s( self.ymd[0]  )  # First day data
-        self.date_end   = utils.f_to_s( self.ymd[-1] )  # Last day data
-        self.period     = f'{self.date_start}-{self.date_end}'
+        self.station = station
+        self.data    = data
+        self.ymd     = data[:,daydata.YYYYMMDD]
+        self.date_s  = utils.f_to_s( self.ymd[0]  )  # First day data
+        self.date_e  = utils.f_to_s( self.ymd[-1] )  # Last day data
+        self.period  = f'{self.date_s}-{self.date_e}'
 
         # Average calculations
         self.tg_gem = stats.average( data, 'TG' )
 
         # Min extremes
         self.tx_min = stats.min( data, 'TX' )
+        self.tx_min_sort = stats.sort( data, 'TX', reverse=True )
         self.tg_min = stats.min( data, 'TG' )
+        self.tg_min_sort = stats.sort( data, 'TG', reverse=True )
         self.tn_min = stats.min( data, 'TN' )
+        self.tn_min_sort = stats.sort( data, 'TN', reverse=True )
 
         self.rh_sum = stats.sum( data, 'RH' )
+        self.rh_sum_sort = stats.sort( data, 'RH' )
         self.sq_sum = stats.sum( data, 'SQ' )
+        self.sq_sum_sort = stats.sort( data, 'SQ' )
 
         # Days lists
         self.days_tx_lt_0   = stats.terms_days( data, 'TX', '<',   0 )
@@ -51,7 +56,7 @@ class Stats:
 
         self.days_hellmann  = self.days_tg_lt_0
         self.sum_hellmann   = stats.hellmann( data )
-        self.frost_sum      = stats.frost_sum ( data )
+        self.frost_sum      = stats.frost_sum( data )
         self.ijnsen         = stats.ijnsen( data )
 
 def sort( l, ent, pm = '+' ):
@@ -64,7 +69,6 @@ def calculate( stations, period, name, type='html' ):
     '''Function to calculate winterstatistics'''
     log.console(f'Preparing output...')
     colspan = 19
-    popup_rows = config.max_rows_table_popup
 
     # Make data list with station and stats
     winter = np.array( [] )
@@ -161,7 +165,7 @@ def calculate( stations, period, name, type='html' ):
         rh_sum    = fix.ent( s.rh_sum, 'RH' )
 
         if type == 'html':
-            period_txt = f'{utils.ymd_to_txt(s.date_start)} - {utils.ymd_to_txt(s.date_end)}'
+            period_txt = f'{utils.ymd_to_txt(s.date_s)} - {utils.ymd_to_txt(s.date_e)}'
             # TODO the extension html tables
             main += f'''
                 <tr class="row-data">
@@ -169,41 +173,63 @@ def calculate( stations, period, name, type='html' ):
                     <td> <span class="val"> {s.station.province} </span> </td>
                     <td title="{period_txt}"> <span class="val"> {s.period} </span> </td>
                     <td> <span class="val"> {tg_gem} </span> </td>
-                    <td> <span class="val"> {hellmann} </span> </td>
-                    <td> <span class="val"> {ijnsen} </span> </td>
+                    <td>
+                        <span class="val"> {hellmann} </span>
+                        {html.table_days_count( s.days_tg_lt_0, 'TG', 'TGH' )}
+                    </td>
+                    <td>
+                        <span class="val"> {ijnsen} </span>
+                    </td>
                     <td> <span class="val"> {f_sum} </span> </td>
-                    <td> <span class="val"> {tx_min} </span> </td>
-                    <td> <span class="val"> {tg_min} </span> </td>
-                    <td> <span class="val"> {tn_min} </span> </td>
-                    <td> <span class="val"> {sq_sum} </span> </td>
-                    <td> <span class="val"> {rh_sum} </span> </td>
+                    <td>
+                        <span class="val"> {tx_min} </span>
+                        {html.table_days( s.tx_min_sort, 'TX', 'TXH' )}
+                    </td>
+                    <td>
+                        <span class="val"> {tg_min} </span>
+                        {html.table_days( s.tg_min_sort, 'TG' )}
+                    </td>
+                    <td>
+                        <span class="val"> {tn_min} </span>
+                        {html.table_days( s.tn_min_sort, 'TN', 'TNH' )}
+                    </td>
+                    <td>
+                        <span class="val"> {sq_sum} </span>
+                        {html.table_days( s.sq_sum_sort, 'SQ' )}
+
+                    </td>
+                    <td>
+                        <span class="val"> {rh_sum} </span>
+                        {html.table_days( s.rh_sum_sort, 'RH' )}
+
+                    </td>
                     <td>
                         <span class="val"> {np.size( s.days_tx_lt_0, axis=0 )} </span>
-                        {html.table_count( s.days_tx_lt_0, 'TX', 'TXH', popup_rows )}
+                        {html.table_days_count( s.days_tx_lt_0, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tg_lt_0, axis=0 )} </span>
-                        {html.table_count( s.days_tg_lt_0, 'TG', '', popup_rows )}
+                        {html.table_days_count( s.days_tg_lt_0, 'TG' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt_0, axis=0 )} </span>
-                        {html.table_count( s.days_tn_lt_0, 'TN', 'TNH', popup_rows )}
+                        {html.table_days_count( s.days_tn_lt_0, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__5, axis=0 )} </span>
-                        {html.table_count( s.days_tn_lt__5, 'TN', 'TNH', popup_rows )}
+                        {html.table_days_count( s.days_tn_lt__5, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__10, axis=0 )} </span>
-                        {html.table_count( s.days_tn_lt__10, 'TN', 'TNH', popup_rows )}
+                        {html.table_days_count( s.days_tn_lt__10, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__15, axis=0 )} </span>
-                        {html.table_count( s.days_tn_lt__15, 'TN', 'TNH', popup_rows )}
+                        {html.table_days_count( s.days_tn_lt__15, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__20, axis=0 )} </span>
-                        {html.table_count( s.days_tn_lt__20, 'TN', 'TNH', popup_rows )}
+                        {html.table_days_count( s.days_tn_lt__20, 'TN', 'TNH' )}
                     </td>
                 </tr>
                 '''
