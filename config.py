@@ -160,7 +160,10 @@ stations = np.array( sorted( stations, key=lambda station: station.place ) )
 allowed_perc_data_errors = 10
 
 # Give a max number for preventing possible html files becoming very large
-html_popup_table_max_rows = -1 # -1 for all rows
+html_popup_table_cnt_rows = 25 # -1 for all rows
+
+# Give a max number for preventing possible html files becoming very large
+html_popup_table_val_10 = 20 # -1 for all rows
 
 # Set Debugging on or of for development
 debug = False
@@ -249,8 +252,6 @@ plot_legend_facecolor = None
 plot_legend_shadow    = False
 plot_legend_frameon   = False
 plot_legend_fancybox  = False
-# Statistics table max rows in popup for automaticly generated in statistics pages
-max_rows_table_popup = 10
 strip_html_output    = True
 
 # Asked for char
