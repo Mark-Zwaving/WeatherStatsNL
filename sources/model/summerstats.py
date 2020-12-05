@@ -22,20 +22,25 @@ import model.daydata as daydata
 class Stats:
     '''Class saves en stores summer statistics of a station in a given period'''
     def __init__(self, station, data ):
-        self.station    = station
-        self.data       = data
-        self.ymd        = data[:,daydata.YYYYMMDD]
-        self.date_start = utils.f_to_s( self.ymd[ 0] )  # First day data
-        self.date_end   = utils.f_to_s( self.ymd[-1] )  # Last day data
-        self.period     = f'{self.date_start}-{self.date_end}'
+        self.station = station
+        self.data    = data
+        self.ymd     = data[:,daydata.YYYYMMDD]
+        self.date_s  = utils.f_to_s(self.ymd[ 0])  # First day data
+        self.date_e  = utils.f_to_s(self.ymd[-1])  # Last day data
+        self.period  = f'{self.date_s}-{self.date_e}'
 
         self.tg_gem = stats.average(data,'TG') # Avergae TG
         self.tx_max = stats.max(data,'TX') # Highest TX
+        self.tx_max_sort = stats.sort( data, 'TX')
         self.tg_max = stats.max(data,'TG') # Highest TG
+        self.tg_max_sort = stats.sort( data, 'TG')
         self.tn_max = stats.max(data,'TN') # Highest TN
+        self.tn_max_sort = stats.sort( data, 'TN')
+
         self.sq_tot = stats.sum(data,'SQ') # Total sunshine hours
+        self.sq_tot_sort = stats.sort( data, 'SQ')
         self.rh_tot = stats.sum(data,'RH') # Total rain
-        self.heat_ndx = stats.heat_ndx(data)
+        self.rh_tot_sort = stats.sort( data, 'RH')
 
         self.days_tx_gte_20 = stats.terms_days(data,'TX','≥',20) # Warm days
         self.days_tx_gte_25 = stats.terms_days(data,'TX','≥',25) # Summer days
@@ -48,6 +53,9 @@ class Stats:
         self.days_sq_gte_10 = stats.terms_days(data,'SQ','≥',10) # Sunny days > 10 hours
         self.days_rh_gte_10 = stats.terms_days(data,'RH','≥',10) # Rainy days > 10mm
 
+        self.heat_ndx = stats.heat_ndx(data)
+        self.days_heat_ndx = self.days_tg_gte_18
+
 def sort( l, pm = '+' ):
     l = np.array( sorted(l, key=lambda stats: stats.heat_ndx) ) # Sort on heat index
     if pm == '+':
@@ -58,7 +66,6 @@ def sort( l, pm = '+' ):
 def calculate( stations, period, name=False, type='html' ):
     '''Function calculates summer statistics'''
     colspan = 19
-    popup_rows = config.max_rows_table_popup
 
     # Make data list with station and summerstatistics
     summer = np.array( [] )
@@ -188,58 +195,72 @@ def calculate( stations, period, name=False, type='html' ):
             main += f'{rh_tot:<11} '
 
         if type == 'html':
-            period_txt = f'{utils.ymd_to_txt(s.date_start)} - {utils.ymd_to_txt(s.date_end)}'
+            period_txt = f'{utils.ymd_to_txt(s.date_s)} - {utils.ymd_to_txt(s.date_e)}'
             main += f'''
                 <tr>
                     <td> <span class="val"> {s.station.place} </span> </td>
                     <td> <span class="val"> {s.station.province} </span> </td>
                     <td title="{period_txt}"> <span class="val"> {s.period} </span> </td>
                     <td> <span class="val"> {tg_gem} </span> </td>
-                    <td> <span class="val"> {heat} </span> </td>
-                    <td> <span class="val"> {tx_max} </span> </td>
-                    <td> <span class="val"> {tg_max} </span> </td>
-                    <td> <span class="val"> {tn_max}  </span> </td>
+                    <td>
+                        <span class="val"> {heat} </span>
+                        {html.table_days(s.days_heat_ndx, 'TG')}
+                    </td>
+                    <td>
+                        <span class="val"> {tx_max} </span>
+                        {html.table_days( s.tx_max_sort, 'TX', 'TXH' )}
+                    </td>
+                    <td>
+                        <span class="val"> {tg_max} </span>
+                        {html.table_days( s.tg_max_sort, 'TG' )}
+                    </td>
+                    <td>
+                        <span class="val"> {tn_max}  </span>
+                        {html.table_days( s.tn_max_sort, 'TN', 'TNH' )}
+                    </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_20, axis=0)} </span>
-                        {html.table_count(s.days_tx_gte_20, 'TX', 'TXH', popup_rows)}
+                        {html.table_days_count(s.days_tx_gte_20, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_25, axis=0)} </span>
-                        {html.table_count(s.days_tx_gte_25, 'TX', 'TXH', popup_rows)}
+                        {html.table_days_count(s.days_tx_gte_25, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_30, axis=0)} </span>
-                        {html.table_count(s.days_tx_gte_30, 'TX', 'TXH', popup_rows)}
+                        {html.table_days_count(s.days_tx_gte_30, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_35, axis=0)} </span>
-                        {html.table_count(s.days_tx_gte_35, 'TX', 'TXH', popup_rows)}
+                        {html.table_days_count(s.days_tx_gte_35, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_40, axis=0)} </span>
-                        {html.table_count(s.days_tx_gte_40, 'TX', 'TXH', popup_rows)}
+                        {html.table_days_count(s.days_tx_gte_40, 'TX', 'TXH' )}
                     </td>
                     <td>
-                        <span class="val"> {np.size(s.days_tg_gte_20, axis=0)} </span>
-                        {html.table_count(s.days_tg_gte_20, 'TG', '', popup_rows)}
+                        <span class="val"> {np.size(s.days_tn_gte_20, axis=0)} </span>
+                        {html.table_days_count(s.days_tn_gte_20, 'TG' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tg_gte_18, axis=0)} </span>
-                        {html.table_count(s.days_tg_gte_18, 'TG', '', popup_rows)}
+                        {html.table_days_count(s.days_tg_gte_18, 'TG' )}
                     </td>
                     <td>
                         <span class="val"> {sq_tot} </span>
+                        {html.table_days( s.sq_tot_sort, 'SQ' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_sq_gte_10, axis=0)} </span>
-                        {html.table_count(s.days_sq_gte_10, 'SQ', '', popup_rows)}
+                        {html.table_days_count(s.days_sq_gte_10, 'SQ', '' )}
                     </td>
                     <td>
                         <span class="val"> {rh_tot} </span>
+                        {html.table_days( s.rh_tot_sort, 'RH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_rh_gte_10, axis=0)} </span>
-                        {html.table_count(s.days_rh_gte_10, 'RH', '', popup_rows)}
+                        {html.table_days_count(s.days_rh_gte_10, 'RH', '' )}
                     </td>
                 </tr>
                 '''
