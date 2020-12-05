@@ -83,6 +83,15 @@ def min( data, entity ):
     min  = np.min( data[:,ndx] )  # Get min
     return min
 
+def sort( data, entity, reverse=False ):
+    '''Function sorts data based on entity'''
+    data = process_list( data, entity )  # Remove nan values
+    ndx  = daydata.ndx_ent(entity)  # Get index of entity in matrix
+    data = data[data[:,ndx].argsort()] # Sort the matrix based on ndx. Low to high
+    if not reverse: data = np.flip(data, axis=0) # Reverse the matrix (if asked)
+
+    return data
+
 def terms_days( data, entity, operator, value ):
     '''Function select days based on terms like TX > 30 for example'''
     ndx = daydata.ndx_ent(entity)  # Get index for entity in data matrix
