@@ -22,7 +22,7 @@ def file( path ):
         except Exception as e:
             log.console(f'Fail reading file.\nError: {e}', True)
         else:
-            log.console('Reading success.\n', True)
+            log.console('Read success.', True)
             ok = True
 
     return ok, t
