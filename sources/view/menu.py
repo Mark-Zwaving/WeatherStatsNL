@@ -22,13 +22,15 @@ menu = [
           ]
     ],
     [ 'FORECASTS',
-        [ [ 'Knmi weather (dutch)', cmenu.process_weather_knmi_global ],
-          [ 'Knmi model evaluation (dutch)', cmenu.process_weather_knmi_model ],
-          [ 'Knmi medium-term (dutch)', cmenu.process_weather_knmi_guidance ]
+        [ [ 'Weather (knmi, dutch)', cmenu.process_weather_knmi_global ],
+          [ 'Weather (buienradar, dutch)', cmenu.process_weather_buienradar_global ],
+          [ 'Model evaluation (knmi, dutch)', cmenu.process_weather_knmi_model ],
+          [ 'Medium-term (knmi, dutch)', cmenu.process_weather_knmi_guidance ]
           ]
     ],
     [ 'CURRENT WEATHER',
-        [ [ 'Weather stations NL (dutch)', cmenu.process_weather_knmi_current ]
+        [ [ 'Stations NL (buienradar, dutch)', cmenu.process_weather_buienradar_current ],
+          [ 'Stations NL (knmi, dutch)', cmenu.process_weather_knmi_current ]
         ]
     ],
     [ 'DAYVALUES AND PERIODS',
