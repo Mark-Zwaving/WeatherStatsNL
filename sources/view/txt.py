@@ -22,6 +22,19 @@ def clean_up( t ):
     t = re.sub('\t|  ', ' ', t)
     return t
 
+def padding( t, align='center', spaces=35):
+    pad = spaces - len(t)
+    if pad < 0:
+        pad = 0
+
+    res = f'{t:{pad}}'
+    if   align == 'center': res = f'{t:^{pad}}'
+    elif align == 'left':   res = f'{t:{pad}}'
+    elif align == 'right':  res = f'{t:>{pad}}'
+
+    return res
+
+
 def ent_to_title(ent):
     e = ent.strip().upper()
     if   e == 'TX': return tr.txt('Maximum temperature')
