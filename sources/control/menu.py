@@ -93,6 +93,25 @@ def process_weather_knmi_global():
     log.footer('END DOWNLOAD KNMI GLOBAL FORECAST...', True)
     control_ask.ask_back_to_main_menu()
 
+def process_weather_buienradar_global():
+    '''Function downloads and print a global weather forecast from the website from the knmi'''
+    log.header('START DOWNLOAD BUIENRADAR GLOBAL FORECAST...', True)
+
+    ok = False
+    if utils.has_internet():
+        t, url = '', config.buienradar_json_data
+        ok, t = current_weather.buienradar_weather()
+        if ok:
+            t = '\n' + view_txt.clean_up( t )
+            log.console(t, True)
+        else:
+            log.console('Not ok. Something went wrong along the way.')
+    else:
+        log.console('No internet connection...', True)
+
+    log.footer('END DOWNLOAD BUIENRADAR GLOBAL FORECAST...', True)
+    control_ask.ask_back_to_main_menu()
+
 def process_weather_knmi_model():
     '''Function downloads and prints a discussion about the weather models from the website from the knmi'''
     log.header('START DOWNLOAD KNMI DISCUSSION WEATHER MODELS...', True)
@@ -135,6 +154,23 @@ def process_weather_knmi_current():
     log.footer('END DOWNLOAD CURRENT VALUES KNMI WEATHERSTATIONS...', True)
     control_ask.ask_back_to_main_menu()
 
+def process_weather_buienradar_current():
+    '''Function downloads and print a actual weather values to the screen'''
+    log.header('START DOWNLOAD CURRENT VALUES BUIENRADAR WEATHERSTATIONS...', True)
+
+    ok, t = False, ''
+    if utils.has_internet():
+        ok, t = current_weather.buienradar_stations()
+        if ok:
+            t = '\n' + view_txt.clean_up( t )
+            log.console(t, True)
+        else:
+            log.console('Not ok. Something went wrong along the way.')
+    else:
+        log.console('No internet connection...', True)
+
+    log.footer('END DOWNLOAD CURRENT VALUES BUIENRADAR WEATHERSTATIONS...', True)
+    control_ask.ask_back_to_main_menu()
 
 def process_weather_knmi_guidance():
     '''Function downloads and prints a global a more in depth forecast from the website from the knmi'''
