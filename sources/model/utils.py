@@ -97,6 +97,10 @@ def b_ascii_to_s( b ):
     s = bytes_to_s(b, 'ascii', 'ignore')
     return s
 
+def b_utf8_to_s( b ):
+    s = bytes_to_s(b, 'utf-8', 'ignore')
+    return s
+
 def download_and_read_file(url, file):
     ok, t = False, ''
     if has_internet():
