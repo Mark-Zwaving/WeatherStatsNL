@@ -8,22 +8,181 @@ __version__    =  "0.0.3"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config, model.download as download
+import config, model.download as download, re
 import view.fix as fix
+import view.txt as txt
 
-knmi = 'tabel_10Min_data.json'
+def buienradar_table_current_weather_stations(l, cols=8, spaces=33):
+    entities = [ 'stationname', 'timestamp', 'weatherdescription', 'temperature',
+                 'feeltemperature', 'windspeedBft', 'winddirection',
+                 'precipitation', 'humidity', 'airpressure', 'sunpower' ]
+                 # 'winddirectiondegrees',
 
-def knmi_table(l, cols=8, spaces=33):
+    t, ndx, end, max = '\n', 0, cols, len(l)
+    while True:
+        part = l[ndx:end]
+        for enties in entities:
+            if enties == 'weatherdescription':
+                enties = enties.replace('weather', '')
+
+            title = enties + ' '
+            post_fix = ''
+            if enties in ['temperature', 'feeltemperature']:
+                post_fix = '°C'
+            elif enties == 'humidity':
+                post_fix = '%'
+            elif enties == 'windspeedBft':
+                post_fix = 'bft'
+            elif enties == 'visibility':
+                post_fix = 'm'
+            elif enties == 'airpressure':
+                post_fix = 'hPa'
+            elif enties == 'precipitation':
+                post_fix = 'mm'
+
+            t += txt.padding( title, align='right', spaces=33 )
+
+            el_t = ''
+            for station in part:
+                if enties in station:
+                    el = str(station[enties])
+                    if el == '':
+                        el = '....'
+                    else:
+                        if enties == 'timestamp':
+                            el = el.replace('T', ' ')[:-3]
+                        elif enties == 'stationname':
+                            el = el.replace('Meetstation','')
+
+                        el += post_fix
+                else:
+                    el = '....'
+
+                el_t += txt.padding( el, align='center', spaces=spaces )
+
+            t += el_t + '\n'
+
+        t += '\n'
+        ndx, end = ndx + cols, end + cols
+        # Check end
+        if ndx >= max:
+            break
+        elif ndx < max:
+            if end >= max:
+                end = max # Correct max endkey
+
+    t += '\n'
+    return t
+
+def buienradar_stations():
+    t = ''
+    ok, js = download.request_json( config.buienradar_json_data )
+
+    if ok: # If download is oke, prepare the results
+        stations = js['actual']['stationmeasurements']
+        if config.buienradar_json_places != -1: # Print only stations in list
+            l = list()
+            for select in config.buienradar_json_places:
+                sel = str(select)
+                for station in stations:
+                    name = str(station['stationname']).replace('Meetstation',' ').strip()
+                    if name == sel:
+                        l.append(station)
+        else:
+            l = stations # Print all stations
+
+        t += f'Waarnemingen NL\n'
+        t += buienradar_table_current_weather_stations(
+                    l, cols=config.buienradar_json_cols, spaces=44
+                )
+        t += js['buienradar']['copyright'] + '\n'
+
+    return ok, t
+
+def buienradar_table_forecast(l, spaces=30):
+    entities = [ 'day', 'maxtemperature', 'mintemperature', 'rainChance',
+                 'sunChance', 'windDirection', 'wind' ] #'weatherdescription'
+    t = ''
+    for enties in entities:
+        # Make title and post fix
+        title, post_fix = enties + ' ', ' '
+        if enties in ['maxtemperature', 'mintemperature']:
+            post_fix = '°C'
+        elif enties in ['rainChance', 'sunChance']:
+            post_fix = '%'
+        elif enties == 'wind':
+            post_fix = 'bft'
+        elif enties == 'visibility':
+            post_fix = 'm'
+        elif enties == 'air_pressure':
+            post_fix = 'hPa'
+
+        t += txt.padding( title, align='right', spaces=spaces )
+
+        el_t = ''
+        for day in l:
+            el = str(day[enties])
+            el = '....' if el == '' else el + post_fix
+
+            if enties == 'day':
+                el = el[:10]
+
+            el_t += txt.padding( el, align='center', spaces=27 )
+
+        t += el_t + '\n'
+
+    return t
+
+def buienradar_weather():
+    t = ''
+    ok, js = download.request_json(config.buienradar_json_data)
+    if ok:
+        report = js['forecast']['weatherreport']
+        text = report['text'].replace('.', '. ')
+        l = re.sub('\t|  |&nbsp;', ' ', text).split(' ')
+        word, max_word = 1, 13  # Count words
+        zin, max_zin = 1, 8   # Count sentence
+        t_report = ''
+        for el in l:
+            el = el.strip()
+            if el.find('.') != -1:
+                zin += 1
+                if zin % max_zin == 0:  # -1 Correction
+                    t_report += el + '\n\n'
+                    word = 1 # reset
+                    continue
+
+            t_report += el + ('\n' if word % max_word == 0 else ' ')
+            word += 1
+
+        t += 'Weerbericht van buienradar.nl\n'
+        t += 'Gepubliceerd op: '
+        t += report['published'].replace('T', ' ') + '\n\n'
+        t += report['title']  + '\n\n'
+        t += t_report.strip() + '\n\n'
+        t += 'Auteur: ' + report['author'] + '\n\n'
+
+        l_days_forecast = js['forecast']['fivedayforecast']
+
+        t += 'Vooruitzichten\n\n'
+        t += buienradar_table_forecast(l_days_forecast) + '\n\n'
+        t += js['buienradar']['copyright'] + '\n\n'
+
+    return ok, t
+
+
+def knmi_table_current_weather_stations(l, cols=8, spaces=33):
     entities = [ 'station', 'overcast', 'temperature', 'windchill',
                  'humidity', 'wind_direction', 'wind_strength',
                  'visibility', 'air_pressure' ]
 
-    txt, ndx, end, max = '\n', 0, cols-1, len(l)
+    t, ndx, end, max = '\n', 0, cols, len(l)
     while True:
         part = l[ndx:end]
         for enties in entities:
 
-            title, post_fix = enties, ' '
+            title = enties.replace('_','') + ' '
+            post_fix = ''
             if enties in ['temperature', 'windchill']:
                 post_fix = '°C'
             elif enties == 'humidity':
@@ -35,28 +194,17 @@ def knmi_table(l, cols=8, spaces=33):
             elif enties == 'air_pressure':
                 post_fix = 'hPa'
 
-            title = title.replace('_','')
-            pad = 26-len(title)
-            if pad < 0: pad = 0
-            elif pad % 1 == 0: pad -= 1
-            txt += f'{title: >{pad}}'
+            t += txt.padding( title, align='right', spaces=30 )
 
-            el_txt = ''
+            el_t = ''
             for station in part:
-                el = station[enties]
-                if el == '':
-                    el = '....'
-                else:
-                    el += post_fix
+                el = str(station[enties])
+                el = '....'if el == '' else el + post_fix
+                el_t += txt.padding( el, align='center', spaces=spaces )
 
-                pad = spaces-len(el)
-                if pad < 0: pad = 0
-                elif pad % 1 == 0: pad += 1
-                el_txt += f'{el: ^{pad}}'
+            t += el_t + '\n'
 
-            txt += el_txt + '\n'
-
-        txt += '\n'
+        t += '\n'
         ndx, end = ndx + cols, end + cols
         # Check end
         if ndx >= max:
@@ -65,17 +213,32 @@ def knmi_table(l, cols=8, spaces=33):
             if end >= max:
                 end = max # Correct max endkey
 
-    txt += '\n'
-    return txt
+    t += '\n'
+    return t
 
 def knmi_stations():
     t = ''
-    url = f'{config.knmi_ftp_pub}{knmi}'
-    ok, json = download.request_json( url )
+    url = config.knmi_json_data_10min
+    ok, js = download.request_json( url )
 
     if ok: # If download is oke, prepare the results
-        t += f'Waarnemingen: {json["date"]}\n'
-        t += knmi_table(json['stations'])
+
+        stations = js['stations']
+        if config.knmi_json_places != -1: # Print only stations in list
+            l = list()
+            for select in config.knmi_json_places:
+                for station in stations:
+                    name = station['station'].strip()
+                    if name == select:
+                        l.append(station)
+        else:
+            l = stations # Print all stations
+
+        t += f'Waarnemingen: {js["date"]}\n'
+        t += knmi_table_current_weather_stations(
+                    l, cols=config.knmi_json_cols, spaces=44
+                )
+        t += config.knmi_dayvalues_notification.lower() + '\n'
 
     return ok, t
 
