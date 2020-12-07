@@ -74,6 +74,41 @@ knmi_dayvalues_delimiter    = ','
  # Give replacement value for -1 here
 knmi_dayvalues_low_measure_val = 0.025
 
+# Buienradar JSON data url
+buienradar_json_data = 'https://data.buienradar.nl/2.0/feed/json'
+# Select places to show with actual measurements. -1 for all
+buienradar_json_places = [
+    'Leeuwarden', 'Vlissingen', 'De Bilt', 'Groningen',
+    'Maastricht', 'Nieuw Beerta', 'Twente', 'Arnhem',
+    'Arcen', 'Eindhoven', 'Woensdrecht', 'Rotterdam',
+    'Voorschoten', 'Lelystad', 'Hoorn Terschelling', 'Berkhout'
+]
+#  Possible options for buienradar places
+#  'Arcen', 'Arnhem', 'Berkhout', 'Cadzand', 'De Bilt', 'Eindhoven', 'Ell', 'Euro platform',
+#  'Gilze Rijen', 'Goes', 'Groningen', 'Hansweert', 'Heino', 'Herwijnen', 'Hoek van Holland',
+#  'Hoorn Terschelling', 'Houtribdijk', 'Huibertgat', 'IJmond', 'IJmuiden', 'LE Goeree',
+#  'Leeuwarden', 'Lelystad', 'Lopik-Cabauw', 'Maastricht', 'Nieuw Beerta', 'Oosterschelde',
+#  'Rotterdam', 'Rotterdam Geulhaven Schaar', 'Stavenisse', 'Stavoren', 'Texelhors', 'Tholen',
+#  'Twente', 'Vlieland', 'Vlissingen', 'Volkel', 'Voorschoten', 'Westdorpe', 'Wijk aan Zee',
+#  'Woensdrecht', 'Zeeplatform F-3', 'Zeeplatform K13'
+buienradar_json_cols = 4 # Colums for the data
+
+knmi_json_data_10min = 'ftp://ftp.knmi.nl/pub_weerberichten/tabel_10Min_data.json'
+# Select places to show with actual measurements. -1 for all
+knmi_json_places = [
+    'Den Helder', 'Vlissingen', 'De Bilt', 'Nieuw Beerta',
+    'Terschelling', 'Leeuwarden', 'Twente', 'Wilhelminadorp',
+    'Arcen', 'Eindhoven', 'Woensdrecht', 'Rotterdam',
+    'Voorschoten', 'Berkhout', 'Hoogeveen', 'Maastricht-Aachen Airport'
+]
+# Possible options for knmi places
+# 'Lauwersoog', 'Nieuw Beerta', 'Terschelling', 'Vlieland', 'Leeuwarden', 'Stavoren',
+# 'Houtribdijk', 'Hoogeveen', 'Heino', 'Twente', 'Deelen', 'Hupsel', 'Herwijnen', 'Marknesse',
+# 'De Bilt', 'Cabauw', 'Den Helder', 'Texelhors', 'Berkhout', 'IJmuiden', 'Wijk aan Zee',
+# 'Voorschoten', 'Rotterdam', 'Hoek van Holland', 'Wilhelminadorp', 'Vlissingen', 'Westdorpe',
+# 'Woensdrecht', 'Volkel', 'Eindhoven', 'Ell', 'Arcen', 'Maastricht-Aachen Airport'
+knmi_json_cols = 4 # Colums for the data
+
 # List with stations
 stations = np.array([])
 # Add KNMI weatherstations
