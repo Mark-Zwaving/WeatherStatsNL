@@ -21,7 +21,7 @@ def file( url, file ):
         try:
             f = urllib.request.urlopen(url)
             data = f.read()
-            t = utils.b_ascii_to_s( data )
+            t = utils.b_utf8_to_s( data )
             with open(file, 'w') as loc:
                 loc.write(t)
         except Exception as e:
