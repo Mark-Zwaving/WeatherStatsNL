@@ -8,13 +8,11 @@ __version__    =  "0.0.7"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config, math, time, re
+import math, time, re
 import numpy as np
 import sources.model.daydata as daydata
 import sources.model.utils as utils
-import sources.view.translate as tr
 import sources.view.log as log
-import sources.view.txt as view_txt
 
 def error(t, err):
     t = f'{t} failed.\nError {err}'
@@ -131,34 +129,34 @@ def txt_main( day ):
 
     txt, title1, title2, title3, main1, main2, main3 = '', '', '', '', '', '', ''
 
-    title1 += view_txt.ent_to_titel('TX') if tx else ''
-    title1 += view_txt.ent_to_titel('TG') if tg else ''
-    title1 += view_txt.ent_to_titel('TN') if tn else ''
-    title1 += view_txt.ent_to_titel('T10N') if t10n else ''
-    title1 += view_txt.ent_to_titel('DDVEC') if ddvec else ''
-    title1 += view_txt.ent_to_titel('FG') if fg else ''
-    title1 += view_txt.ent_to_titel('RH') if rh else ''
-    title1 += view_txt.ent_to_titel('SQ') if sq else ''
-    title1 += view_txt.ent_to_titel('PG') if pg else ''
-    title1 += view_txt.ent_to_titel('UG') if ug else ''
+    title1 += ent_to_title('TX') if tx else ''
+    title1 += ent_to_title('TG') if tg else ''
+    title1 += ent_to_title('TN') if tn else ''
+    title1 += ent_to_title('T10N') if t10n else ''
+    title1 += ent_to_title('DDVEC') if ddvec else ''
+    title1 += ent_to_title('FG') if fg else ''
+    title1 += ent_to_title('RH') if rh else ''
+    title1 += ent_to_title('SQ') if sq else ''
+    title1 += ent_to_title('PG') if pg else ''
+    title1 += ent_to_title('UG') if ug else ''
 
-    title2 += view_txt.ent_to_titel('FXX') if fxx else ''
-    title2 += view_txt.ent_to_titel('FHX') if fhx else ''
-    title2 += view_txt.ent_to_titel('FHN') if fhn else ''
-    title2 += view_txt.ent_to_titel('FHVEC') if fhvec else ''
-    title2 += view_txt.ent_to_titel('DR') if dr else ''
-    title2 += view_txt.ent_to_titel('SP') if sp else ''
-    title2 += view_txt.ent_to_titel('Q') if q else ''
-    title2 += view_txt.ent_to_titel('RHX') if rhx else ''
-    title2 += view_txt.ent_to_titel('PX') if px else ''
-    title2 += view_txt.ent_to_titel('PN') if pn else ''
+    title2 += ent_to_title('FXX') if fxx else ''
+    title2 += ent_to_title('FHX') if fhx else ''
+    title2 += ent_to_title('FHN') if fhn else ''
+    title2 += ent_to_title('FHVEC') if fhvec else ''
+    title2 += ent_to_title('DR') if dr else ''
+    title2 += ent_to_title('SP') if sp else ''
+    title2 += ent_to_title('Q') if q else ''
+    title2 += ent_to_title('RHX') if rhx else ''
+    title2 += ent_to_title('PX') if px else ''
+    title2 += ent_to_title('PN') if pn else ''
 
-    title3 += view_txt.ent_to_titel('VVX') if vvx else ''
-    title3 += view_txt.ent_to_titel('VVN') if vvn else ''
-    title3 += view_txt.ent_to_titel('NG') if ng else ''
-    title3 += view_txt.ent_to_titel('UX') if ux else ''
-    title3 += view_txt.ent_to_titel('UN') if un else ''
-    title3 += view_txt.ent_to_titel('EV24') if ev24  else ''
+    title3 += ent_to_title('VVX') if vvx else ''
+    title3 += ent_to_title('VVN') if vvn else ''
+    title3 += ent_to_title('NG') if ng else ''
+    title3 += ent_to_title('UX') if ux else ''
+    title3 += ent_to_title('UN') if un else ''
+    title3 += ent_to_title('EV24') if ev24  else ''
 
     main1 = ''
     main1 += tx if tx else ''
@@ -235,5 +233,5 @@ def process_time_ext(t='', delta_ns=0):
 
 def process_time(t='', st=time.time_ns()):
     delta = time.time_ns() - st
-    t = view_txt.process_time_ext(t, delta)
+    t = process_time_ext(t, delta)
     return t
