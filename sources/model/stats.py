@@ -4,14 +4,15 @@ __author__     =  'Mark Zwaving'
 __email__      =  'markzwaving@gmail.com'
 __copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
 __license__    =  'GNU Lesser General Public License (LGPL)'
-__version__    =  '0.0.9'
+__version__    =  '0.1.1'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
 import config
 import numpy as np
 import numpy.ma as ma
-import model.daydata as daydata
+import sources.model.daydata as daydata
+import sources.view.log as log
 
 # All allowed input operators
 operators = np.array( [
@@ -21,7 +22,6 @@ operators = np.array( [
     'or', '||', 'and', '&&'
     ] )
 
-df          = lambda s        : float(s) * 10.0
 is_entity   = lambda entity   : entity.upper()   in entities
 is_operator = lambda operator : operator.lower() in operators
 
@@ -52,35 +52,42 @@ def climate_day( station, mmdd, ent ):
 def process_list( data, entity ):
     '''Function processes data values on false values'''
     ndx = daydata.ndx_ent( entity )  # Get index of entity in matrix
-    sel = np.where( data[:,ndx] != np.nan )  # Remove false/nan values
+    d1 = data[:,ndx]
+    sel = np.where( d1 != np.isnan(d1) )  # Remove false/nan values
     return data[sel]
+
+    # d1 = data[:,ndx]
+    # sel = np.where( d1 != d1[np.isnan(d1)] )  # Remove false/nan values
+
+def process_list_1d( data, entity ):
+    '''Function processes data values on false values'''
+    ndx = daydata.ndx_ent(entity)  # Get index of entity in matrix
+    d1 = data[:, ndx]
+    d2 = d1[~np.isnan(d1)] # Remove nan
+    return d2
 
 def average( data, entity ):
     '''Function calculates the average value for a given entity'''
-    data = process_list( data, entity )  # Remove nan values
-    ndx  = daydata.ndx_ent(entity)  # Get index of entity in matrix
-    ave  = np.average( data[:,ndx] )  # Calculate average
+    d = process_list_1d( data, entity )  # Remove nan values
+    ave  = np.average( d )  # Calculate average
     return ave
 
 def sum( data, entity ):
     '''Function calculates the sum value for a given entity'''
-    data = process_list( data, entity )  # Remove nan values
-    ndx  = daydata.ndx_ent(entity)  # Get index of entity in matrix
-    sum  = np.sum( data[:,ndx] )  # Calculate sum
+    d = process_list_1d( data, entity )  # Remove nan values
+    sum  = np.sum( d )  # Calculate sum
     return sum
 
 def max( data, entity ):
     '''Function gets maximum for a given entity'''
-    data = process_list( data, entity )  # Remove nan values
-    ndx  = daydata.ndx_ent(entity)  # Get index of entity in matrix
-    max  = np.max( data[:,ndx] )  # Get max
+    d = process_list_1d( data, entity )  # Remove nan values
+    max  = np.max( d )  # Get max
     return max
 
 def min( data, entity ):
     '''Function gets minimum for a given entity'''
-    data = process_list( data, entity )  # Remove nan values
-    ndx  = daydata.ndx_ent(entity)  # Get index of entity in matrix
-    min  = np.min( data[:,ndx] )  # Get min
+    d = process_list_1d( data, entity )  # Remove nan values
+    min  = np.min( d )  # Get min
     return min
 
 def sort( data, entity, reverse=False ):
@@ -92,11 +99,24 @@ def sort( data, entity, reverse=False ):
 
     return data
 
+def df(val, entity):
+    f, e = float(val), entity.upper()
+    if e in ['TX', 'TG', 'TN', 'FG', 'FHX', 'FHN', 'FXX', 'DR',
+             'FHVEC', 'SQ', 'RH', 'RHX', 'PG', 'PX', 'PN', 'EV24'
+             ]:
+        return f * 10.0
+    elif e in ['YYYYMMDD', 'STN', 'DDVEC', 'SP', 'Q', 'VVN', 'VVX', 'NG', 'UG',
+               'UX', 'UN', 'FHXH', 'FHNH', 'FXXH', 'TNH', 'TXH', 'T10NH',
+               'RHXH', 'PXH', 'PNH', 'VVNH', 'VVXH', 'UXH', 'UNH'
+               ]:
+        return f
+    return f
+
 def terms_days( data, entity, operator, value ):
     '''Function select days based on terms like TX > 30 for example'''
     ndx = daydata.ndx_ent(entity)  # Get index for entity in data matrix
     op  = operator.lower()  #  Make operator lowercase
-    f   = df(value)  #  Make input value equal to data in matrix
+    f   = df(value, entity)  #  Make input value equal to data in matrix
     if is_operator(op):  # Check for allowed operator
         if   op in ['gt',  '>']:       sel = np.where( data[:,ndx] >  f )
         elif op in ['ge', '>=', '≥']:  sel = np.where( data[:,ndx] >= f )
@@ -104,9 +124,11 @@ def terms_days( data, entity, operator, value ):
         elif op in ['lt',  '<']:       sel = np.where( data[:,ndx] <  f )
         elif op in ['le', '<=', '≤']:  sel = np.where( data[:,ndx] <= f )
         elif op in ['ne', '!=', '<>']: sel = np.where( data[:,ndx] != f )
-        else: print('error, terms_days()'); input('?')
+        else:
+            log.console(f'Error in operator {op} in terms for day...')
     else:  # Wrong input
-        print(f'Error. Operator {op} is unknown...')
+        log.console(f'Error. Operator {op} is unknown...')
+
     return data[sel]  # Return all days where the selected terms are true
 
 def hellmann( data ):
@@ -115,11 +137,12 @@ def hellmann( data ):
     data = process_list( data, ent )  # Remove nan values
     days = terms_days( data, ent, '<', 0.0 ) # Get all days TG < 0
     cnt  = np.size( days, axis=0 )  # Count days hellmann
-    if cnt == 0:  #  No days found tg < 0
-        hman = 0.0  # Hellmann is 0
-    else: # Sum valus all days TG < 0.0
+
+    hman = 0.0
+    if cnt > 0:  # Sum valus all days TG < 0.0
         som  = sum( days, ent )  # Calculate sum
         hman = abs( som )  # Make positive
+
     return hman
 
 def ijnsen ( data ):
@@ -133,7 +156,9 @@ def ijnsen ( data ):
     v = np.size( terms_days( TN, 'TN', '<',  0.0 ), axis=0 )  # Count days TN lower 0
     y = np.size( terms_days( TX, 'TX', '<',  0.0 ), axis=0 )  # Count days TX lower 0
     z = np.size( terms_days( TN, 'TN', '<', -10.0 ), axis=0 )  # Count days TN lower -10
+
     ijnsen = (v * v / 363.0)  +  (2.0 * y / 3.0)  +  (10.0 * z / 9.0) # Calculate ijnsen
+
     return ijnsen
 
 def frost_sum(data):
@@ -166,5 +191,10 @@ def heat_ndx( data ):
     data = process_list( data, ent )  # Remove nan values
     data = terms_days( data, ent, '≥', 18 )  # All days with TG >= 18
     tg   = data[:,ndx]  #  Make TG list only
-    heat = np.sum( tg - 180 )  # Sum heat above 18 degress
+
+    heat = 0.0
+    tg_cnt = np.size( tg, axis=0 ) # Count tg days >= 18
+    if tg_cnt > 0:
+        heat = np.sum( tg - 180 )  # Sum heat above 18 degress
+
     return heat
