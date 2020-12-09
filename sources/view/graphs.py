@@ -9,6 +9,7 @@ __status__     =  "Development"
 
 import config, math
 import numpy as np
+from datetime import datetime
 import matplotlib.pyplot as plt
 import sources.model.stats as stats
 import sources.model.daydata as daydata
@@ -52,7 +53,7 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
     # }
 
     if utils.is_yes(options['plot_climate_ave']):
-        log.console('Calculating mean climate data might take a while...', True)
+        log.console('Calculating climate data might take a while...\n', True)
 
     path = utils.mk_path( config.dir_img_period, fname + f'.{config.plot_image_type}' )
 
@@ -79,39 +80,45 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                                 np.str, copy=False
                                 ).tolist() # Convert to list
 
-            for el in entities:
+            for ent in entities:
                 # Get the values needed for the graph
-                f_val = days[:, daydata.ndx_ent(el)]
+                f_val = days[:, daydata.ndx_ent(ent)]
                 # Cumulative sum of values, if chosen
                 if utils.is_yes(options['plot_cummul_val']):
                     f_val = np.cumsum( f_val )
 
                 # Min/ max for ranges
-                min_act = fix.rounding( np.min(f_val), el )
-                max_act = fix.rounding( np.max(f_val), el )
+                min_act = fix.rounding( np.min(f_val), ent )
+                max_act = fix.rounding( np.max(f_val), ent )
                 if min_act < min: min = min_act
                 if max_act > max: max = max_act
 
                 # Make correct output values
-                l_val = [ fix.rounding(v, el) for v in f_val.tolist() ]
-                label = f'{station.place} {vt.ent_to_title(el)}'
-                color = col_list[col_ndx] if rnd_col else vcol.ent_to_color(el)
+                l_val = [ fix.rounding(v, ent) for v in f_val.tolist() ]
+                label = f'{station.place} {vt.ent_to_title(ent)}'
+                color = col_list[col_ndx] if rnd_col else vcol.ent_to_color(ent)
 
                 if utils.is_yes(options['plot_climate_ave']):
                     l_clima = []
-                    label_clima = f'Day climate {station.place} {vt.ent_to_title(el)}'
+                    label_clima = f'Day climate {station.place} {vt.ent_to_title(ent)}'
                     clima_ymd = days[:, daydata.YYYYMMDD ].astype(
                                         np.int, copy=False ).astype(
                                         np.str, copy=False ).tolist()
-                    cli_txt = f"Calculate climate data '{el.upper()}' for {station.place}"
+                    cli_txt = f"Calculate climate data '{ent.upper()}' for {station.place}"
                     log.console(cli_txt, True)
                     for d in clima_ymd:
-                        mmdd = d[4:8]
-                        val = stats.climate_day(station, mmdd, el)
-                        res = fix.rounding(val, el)
-                        l_clima.append( res )
-                    cli_txt = f"Calculated values are {str(l_clima)}"
-                    log.console(cli_txt, True)
+                        mmdd = d[4:8] # What day it is ?
+                        sdat = datetime.strptime(d, '%Y%m%d').strftime('%B %d').lower()
+                        log.console(f'Calculate climate {ent} for day {sdat}')
+                        clima_val = stats.climate_day( station, mmdd, ent,
+                                                 options['plot_climate_per']
+                                                 )
+                        clima_rounded = fix.rounding( clima_val, ent )
+                        log.console(f'Calculated clima value {ent} for {sdat} is {clima_rounded}\n')
+                        # Append with correct rounding
+                        l_clima.append( clima_rounded )
+
+                    log.console(' ')
 
                 if options['plot_graph_type'] == 'line':  # bar or line
                     plt.plot( ymd, l_val, label = label,
