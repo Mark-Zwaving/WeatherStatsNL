@@ -9,12 +9,12 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config
-import model.utils as utils
-import model.daydata as daydata
-import view.icon as icon
-import view.fix as fix
-import view.translate as tr
-import view.txt as txt
+import sources.model.utils as utils
+import sources.model.daydata as daydata
+import sources.view.icon as icon
+import sources.view.fix as fix
+import sources.view.translate as tr
+import sources.view.txt as txt
 
 def ents( day ):
     stn   = utils.f_to_s( day[daydata.STN] )

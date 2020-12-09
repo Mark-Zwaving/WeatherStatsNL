@@ -9,9 +9,9 @@ __version__    =  "0.0.2"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import datetime, config
-import view.translate as tr
-import control.ask as ask
+import datetime, config 
+import sources.view.translate as tr
+import sources.control.ask as ask
 
 line = '#' * 80
 
