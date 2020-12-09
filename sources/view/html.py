@@ -10,16 +10,15 @@ __status__     =  'Development'
 
 import os, re, config, datetime
 import numpy as np
-import control.io as io
-import view.log as log
-import view.icon as icon
-import view.translate as tr
-import view.txt as view_txt
-import view.dayvalues as dayvalues
-import view.fix as fix
-import model.utils as utils
-import model.station as station
-import model.daydata as daydata
+import sources.control.fio as fio
+import sources.view.log as log
+import sources.view.icon as icon
+import sources.view.translate as tr
+import sources.view.txt as view_txt
+import sources.view.dayvalues as dayvalues
+import sources.view.fix as fix
+import sources.model.utils as utils
+import sources.model.daydata as daydata
 
 class Template():
     ''' Class to make a html page based on the template - template.html'''
@@ -65,7 +64,7 @@ class Template():
         for js_file in self.script_files:
             js += f'<script src="{js_file}"> </script>\n'
 
-        ok, self.html = io.read( self.template )
+        ok, self.html = fio.read( self.template )
         if ok:
             self.html = self.html.replace('{{%now%}}', str( datetime.datetime.now() ))
             self.html = self.html.replace('{{%title%}}', self.title)
@@ -91,18 +90,22 @@ class Template():
             if config.strip_html_output:
                 html = re.sub('\n|\r|\t', '', html)
                 html = re.sub('\s+', ' ', html)
-            ok = io.write( self.file_path, html )
+            ok = fio.write( self.file_path, html )
         except Exception as e:  # ERROR ?????
             log.console( f'Error: {e}' )
         else:
-            log.console( f'Creating file: {self.file_path} succesful' )
+            log.console( f'Creating file: {self.file_path} succesfull' )
             ok = True
 
         return ok
 
     def delete(self):
-        io.delete(self.file_path)
+        fio.delete(self.file_path)
 
+def footer_data_notification(station):
+    t  = f'{station.data_notification}'.lower()
+    t += f'<br>{utils.now_created_notification()}'
+    return t
 
 def div_ent( title=False, val=False, time=False ):
     val  =  val if  val != False else ''
