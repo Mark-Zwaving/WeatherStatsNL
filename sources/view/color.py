@@ -9,8 +9,8 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import numpy as np
-import model.utils as utils
 from random import randint
+import sources.model.utils as utils
 
 # Initialisation of color list, will be overwritten with correct values at the bottom
 list = list()
