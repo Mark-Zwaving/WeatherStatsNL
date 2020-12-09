@@ -5,19 +5,28 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.8"
+__version__    =  "0.1.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config
 import numpy as np
-import view.translate as tr
-import model.utils as utils
-import model.convert as cvt
+import sources.view.translate as tr
+import sources.model.utils as utils
+import sources.model.convert as cvt
 
-def value(val, entity):
+def check(val):
+    ok = True
+    if not utils.is_float(val):
+        ok = False
+    elif val == config.knmi_dayvalues_dummy_val:
+        ok = False
+    # print(f'CHECK: {val}\t OK: {ok}')
+    return ok
+
+def process_value(val, entity):
     '''Function turns data from etmgeg into the real values'''
-    if utils.isnan(val) or val == config.knmi_dayvalues_dummy_val:
+    if check(val) == False:
         return val
 
     f = float(val)
@@ -85,13 +94,109 @@ def value(val, entity):
 
     return f  # Happens for dummy values
 
+def ent(val, entity):
+    '''Function adds correct post/prefixes for weather entities'''
+    # No measurement or false measurement
+    if not check(val):
+        return config.no_data_given # Return '...'
+
+    e = entity.strip().lower()
+    f = process_value(val, e) # Format correct for entity
+
+    # Indexes
+    if e in ['heat_ndx', 'hellmann', 'ijnsen']:
+        return f'{f:.1f}'
+
+    # Temperatures
+    elif e in [ 'tx', 'tn', 'tg', 't10n' ]:
+        return f'{f:.1f}°C'
+
+    # Airpressure
+    elif e in [ 'pg', 'pn', 'px' ]:
+        return f'{f:.0f}hPa'
+
+    # Radiation
+    elif e in [ 'q' ]:
+        return f'{f:.1f}J/cm2'
+
+    # Percentages
+    elif e in [ 'ug', 'ux', 'un', 'sp' ]:
+        return f'{f:.0f}%'
+
+    # Time hours
+    elif e in [ 'fhxh', 'fhnh', 'fxxh', 'tnh', 'txh', 'rhxh',
+                  'pxh', 'vvnh', 'vvxh', 'uxh', 'unh', 'pnh' ]:
+        f1 = f'{f:.0f}'
+        f2 = f'{(f-1):.0f}'
+        return f'{f2}-{f1} {tr.txt("hour")}'
+
+    # Time 6 hours
+    elif e in [ 't10nh' ]:
+        f1 = f'{f:.0f}'
+        f2 = f'{(f-6):.0f}'
+        return f'{f2}-{f1} {tr.txt("hour")}'
+
+    # CLouds cover/octants
+    elif e in [ 'ng' ]:
+        return f'{f:.0f}'
+
+    # Wind
+    elif e in [ 'fhvec','fg','fhx','fhn','fxx' ]:
+        bft = cvt.ms_to_bft(val)
+        return f'{f:.1f}m/s {bft}bft'
+
+    # Evapotranspiration
+    elif e in [ 'ev24', 'rh', 'rhx' ]:
+        return f'{f:.1f}mm'
+
+    # Duration hours
+    elif e in [ 'sq', 'dr' ]:
+        return f'{f:.0f} {tr.txt("hour")}'
+
+    # Wind direction
+    elif e in [ 'ddvec' ]:
+        if f == 0.0:
+            return f'{f:.0f}° {tr.txt(VAR)}'
+        else:
+            # From degrees to direction
+            # Source: https://www.campbellsci.com/blog/convert-wind-directions
+            ldir = [ 'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
+                     'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N' ]
+            ndx = int( round( f % 360 / 22.5 ) )
+            dir = ldir[ndx]
+            return f'{f:.0f}° {tr.txt(dir)}'
+
+    # View distance
+    elif e in [ 'vvn', 'vvx' ]:
+        if f == 0.0:
+            return '<100m'
+        else:
+            if f < 49.0:
+                f1 = f * 100.0
+                f2 = (f + 1.0) * 100.0
+                return f'{f1:.0f}-{f2:.0f}m'
+            elif f == 50.0:
+                return '5-6km'
+            elif f <= 79.0:
+                f1 = f - 50.0
+                f2 = f - 49.0
+                return f'{f1:.0f}-{f2:.0f}km'
+            elif f <= 89.0:
+                f1 = f - 50.0
+                f2 = f - 45.0
+                return f'{f1:.0f}-{f2:.0f}km'
+            else:
+                return '>70km'
+
+    return f  # Without string casting will give an error with unknowm data entity
+
 def rounding(val, entity):
     '''Function turns data from etmgeg into the real values'''
-    if utils.isnan(val) or val == config.knmi_dayvalues_dummy_val:
+    if check(val) == False:
         return val
 
     e = entity.strip().lower()
-    f = value(val, e)
+    f = process_value(val, e)
 
     # Indexes
     if e in ['hellmann','frost_sum','heat_ndx','ijnsen']:
@@ -147,103 +252,3 @@ def rounding(val, entity):
         return round(f,1)
 
     return f  # Happens for dummy values
-
-def ent(val, entity):
-    '''Function adds correct post/prefixes for weather entities'''
-
-    # No measurement or false measurement
-    if utils.isnan(val) or val == config.knmi_dayvalues_dummy_val:
-        return config.no_data_given
-
-    e = entity.strip().lower()
-    f = value(val, e)
-
-    # Indexes
-    if e in ['heat_ndx', 'hellmann']:
-        return f'{f:.1f}'
-
-    elif e in ['ijnsen']:
-        return f'{f:.1f}'
-
-    # Temperatures
-    elif e in [ 'tx', 'tn', 'tg', 't10n' ]:
-        return f'{f:.1f}°C'
-
-    # Airpressure
-    elif e in [ 'pg', 'pn', 'px' ]:
-        return f'{f:.0f}hPa'
-
-    # Radiation
-    elif e in [ 'q' ]:
-        return f'{f:.1f}J/cm2'
-
-    # Percentages
-    elif e in [ 'ug', 'ux', 'un', 'sp' ]:
-        return f'{f:.0f}%'
-
-    # Time hours
-    elif e in [ 'fhxh', 'fhnh', 'fxxh', 'tnh', 'txh', 'rhxh',
-                  'pxh', 'vvnh', 'vvxh', 'uxh', 'unh', 'pnh' ]:
-        f1 = f'{f:.0f}'
-        f2 = f'{(f-1):.0f}'
-        return f'{f2}-{f1} {tr.txt("hour")}'
-
-    # Time 6 hours
-    elif e in [ 't10nh' ]:
-        f1 = f'{f:.0f}'
-        f2 = f'{(f-6):.0f}'
-        return f'{f2}-{f1} {tr.txt("hour")}'
-
-    # CLouds cover/octants
-    elif e in [ 'ng' ]:
-        return f'{f:.0f}'
-
-    # Wind
-    elif e in [ 'fhvec','fg','fhx','fhn','fxx' ]:
-        bft = cvt.ms_to_bft(val)
-        return f'{f:.1f}m/s {bft}bft'
-
-    # Evapotranspiration
-    elif e in [ 'ev24', 'rh', 'rhx' ]:
-        return f'{f:.1f}mm'
-
-    # Duration hours
-    elif e in [ 'sq', 'dr' ]:
-        return f'{f:.0f} {tr.txt("hour")}'
-
-    # Wind direction
-    elif e in  [ 'ddvec' ]:
-        if f == 0.0:
-            return f'{f:.0f}° {tr.txt(VAR)}'
-        else:
-            # From degrees to direction
-            # Source: https://www.campbellsci.com/blog/convert-wind-directions
-            ldir = [ 'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S',
-                     'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N' ]
-            ndx = int( round( f % 360 / 22.5 ) )
-            dir = ldir[ndx]
-            return f'{f:.0f}° {tr.txt(dir)}'
-
-    # View distance
-    elif e in [ 'vvn', 'vvx' ]:
-        if f == 0.0:
-            return '<100m'
-        else:
-            if f < 49.0:
-                f1 = f * 100.0
-                f2 = (f + 1.0) * 100.0
-                return f'{f1:.0f}-{f2:.0f}m'
-            elif f == 50.0:
-                return '5-6km'
-            elif f <= 79.0:
-                f1 = f - 50.0
-                f2 = f - 49.0
-                return f'{f1:.0f}-{f2:.0f}km'
-            elif f <= 89.0:
-                f1 = f - 50.0
-                f2 = f - 45.0
-                return f'{f1:.0f}-{f2:.0f}km'
-            else:
-                return '>70km'
-
-    return f  # Without string casting will give an error with unknowm data entity
