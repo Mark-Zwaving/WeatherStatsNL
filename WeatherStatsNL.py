@@ -9,14 +9,18 @@ __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
 # Import libraries
-import config
-import view.log as log
-import view.menu as menu
+import config, sys, stations
+import sources.view.log as log
+import sources.view.menu as menu
+
+# Add dir (from this) app to system path, if not already there.
+if config.dir_app not in sys.path:
+    sys.path.append(config.dir_app)
 
 # Main programm
 if __name__== '__main__':
     log.header( 'Welcome to WeatherStatsNL', True )
-    if config.stations.size == 0:
+    if len(stations.list) == 0:
         menu.error_no_stations_found()
     else:
         menu.main_menu()
