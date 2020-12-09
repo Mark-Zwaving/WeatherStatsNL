@@ -82,7 +82,7 @@ let css_click_cell   =  'cursor: cell;',  // Extra css for click cell
 
     // Function reads all the column values from the weather object into a list
     list_col_from_matrix = ( matrix, obj ) => {
-        let cols = [], ndx = obj.col - 1;
+        let cols = [], ndx = obj.col - diff_col;
         matrix.forEach( (row, i) => cols.push(row[ndx]) );
 
         return cols;
