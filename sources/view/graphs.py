@@ -172,7 +172,7 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                **config.plot_title_font
             )
 
-    plt.xlabel( tr.txt(config.plot_xlabel_text),
+    plt.xlabel( config.plot_xlabel_text,
                 color=config.plot_xlabel_color,
                 **config.plot_xlabel_font,
                 )
