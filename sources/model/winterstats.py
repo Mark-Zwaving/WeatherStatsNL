@@ -11,7 +11,7 @@ __status__     =  'Development'
 import config
 import numpy as np
 import sources.view.log as log
-import sources.view.html as html
+import sources.view.html as vhtml
 import sources.view.fix as fix
 import sources.view.icon as icon
 import sources.control.fio as fio
@@ -180,7 +180,7 @@ def calculate( stations, period, name, type='html' ):
                     <td> <span class="val"> {tg_gem} </span> </td>
                     <td>
                         <span class="val"> {hellmann} </span>
-                        {html.table_days_count( s.days_tg_lt_0, 'TG', 'TGH' )}
+                        {vhtml.table_days_count( s.days_tg_lt_0, 'TG', 'TGH' )}
                     </td>
                     <td>
                         <span class="val"> {ijnsen} </span>
@@ -188,53 +188,53 @@ def calculate( stations, period, name, type='html' ):
                     <td> <span class="val"> {f_sum} </span> </td>
                     <td>
                         <span class="val"> {tx_min} </span>
-                        {html.table_days( s.tx_min_sort, 'TX', 'TXH' )}
+                        {vhtml.table_days( s.tx_min_sort, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {tg_min} </span>
-                        {html.table_days( s.tg_min_sort, 'TG' )}
+                        {vhtml.table_days( s.tg_min_sort, 'TG' )}
                     </td>
                     <td>
                         <span class="val"> {tn_min} </span>
-                        {html.table_days( s.tn_min_sort, 'TN', 'TNH' )}
+                        {vhtml.table_days( s.tn_min_sort, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {sq_sum} </span>
-                        {html.table_days( s.sq_sort, 'SQ' )}
+                        {vhtml.table_days( s.sq_sort, 'SQ' )}
 
                     </td>
                     <td>
                         <span class="val"> {rh_sum} </span>
-                        {html.table_days( s.rh_sort, 'RH' )}
+                        {vhtml.table_days( s.rh_sort, 'RH' )}
 
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tx_lt_0, axis=0 )} </span>
-                        {html.table_days_count( s.days_tx_lt_0, 'TX', 'TXH' )}
+                        {vhtml.table_days_count( s.days_tx_lt_0, 'TX', 'TXH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tg_lt_0, axis=0 )} </span>
-                        {html.table_days_count( s.days_tg_lt_0, 'TG' )}
+                        {vhtml.table_days_count( s.days_tg_lt_0, 'TG' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt_0, axis=0 )} </span>
-                        {html.table_days_count( s.days_tn_lt_0, 'TN', 'TNH' )}
+                        {vhtml.table_days_count( s.days_tn_lt_0, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__5, axis=0 )} </span>
-                        {html.table_days_count( s.days_tn_lt__5, 'TN', 'TNH' )}
+                        {vhtml.table_days_count( s.days_tn_lt__5, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__10, axis=0 )} </span>
-                        {html.table_days_count( s.days_tn_lt__10, 'TN', 'TNH' )}
+                        {vhtml.table_days_count( s.days_tn_lt__10, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__15, axis=0 )} </span>
-                        {html.table_days_count( s.days_tn_lt__15, 'TN', 'TNH' )}
+                        {vhtml.table_days_count( s.days_tn_lt__15, 'TN', 'TNH' )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tn_lt__20, axis=0 )} </span>
-                        {html.table_days_count( s.days_tn_lt__20, 'TN', 'TNH' )}
+                        {vhtml.table_days_count( s.days_tn_lt__20, 'TN', 'TNH' )}
                     </td>
                 </tr>
                 '''
@@ -279,7 +279,7 @@ def calculate( stations, period, name, type='html' ):
         log.console( output, True )
 
     elif type == 'html':
-        page           =  html.Template()
+        page           =  vhtml.Template()
         page.title     =  table_title
         page.main      =  output
         page.strip     =  True
