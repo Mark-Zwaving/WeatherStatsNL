@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.5"
+__version__    =  "0.0.7"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -15,6 +15,14 @@ import sources.model.utils as utils
 import sources.view.translate as tr
 import sources.view.log as log
 import sources.view.txt as view_txt
+
+def error(t, err):
+    t = f'{t} failed.\nError {err}'
+    return t
+
+def succes(t):
+    t = f'{t} success.'
+    return t
 
 def clean_up( t ):
     t = t.strip()
@@ -42,32 +50,32 @@ def enter_back_to_main():
 
 def ent_to_title(ent):
     e = ent.strip().upper()
-    if   e == 'TX': return tr.txt('Maximum temperature')
-    elif e == 'TG': return tr.txt('Mean temperature')
-    elif e == 'TN': return tr.txt('Minimum temperature')
-    elif e == 'T10N': return tr.txt('Minimum temperature (10cm)')
-    elif e == 'DDVEC': return tr.txt('Wind direction')
-    elif e == 'FG': return tr.txt('Mean windspeed (daily)')
-    elif e == 'RH': return tr.txt('Precipitation amount')
-    elif e == 'SQ': return tr.txt('Sunshine duration (hourly)')
-    elif e == 'PG': return tr.txt('Mean pressure')
-    elif e == 'UG': return tr.txt('Mean atmospheric humidity')
-    elif e == 'FXX': return tr.txt('Maximum wind (gust)')
-    elif e == 'FHVEC': return tr.txt('Mean windspeed (vector)')
-    elif e == 'FHX': return tr.txt('Maximum mean windspeed (hourly)')
-    elif e == 'FHN': return tr.txt('Minimum mean windspeed (hourly)')
-    elif e == 'SP': return tr.txt('Sunshine duration (maximum potential)')
-    elif e == 'Q': return tr.txt('Radiation (global)')
-    elif e == 'DR': return tr.txt('Precipitation duration')
-    elif e == 'RHX': return tr.txt('Maximum precipitation (hourly)')
-    elif e == 'PX': return tr.txt('Maximum pressure (hourly)')
-    elif e == 'PN': return tr.txt('Minimum pressure (hourly)')
-    elif e == 'VVN': return tr.txt('Minimum visibility')
-    elif e == 'VVX': return tr.txt('Maximum visibility')
-    elif e == 'NG': return tr.txt('Mean cloud cover')
-    elif e == 'UX': return tr.txt('Maximum humidity')
-    elif e == 'UN': return tr.txt('Minimum humidity')
-    elif e == 'EV24': return tr.txt('Evapotranspiration (potential)')
+    if   e == 'TX': return 'Maximum temperature'
+    elif e == 'TG': return 'Mean temperature'
+    elif e == 'TN': return 'Minimum temperature'
+    elif e == 'T10N': return 'Minimum temperature (10cm)'
+    elif e == 'DDVEC': return 'Wind direction'
+    elif e == 'FG': return 'Mean windspeed (daily)'
+    elif e == 'RH': return 'Precipitation amount'
+    elif e == 'SQ': return 'Sunshine duration (hourly)'
+    elif e == 'PG': return 'Mean pressure'
+    elif e == 'UG': return 'Mean atmospheric humidity'
+    elif e == 'FXX': return 'Maximum wind (gust)'
+    elif e == 'FHVEC': return 'Mean windspeed (vector)'
+    elif e == 'FHX': return 'Maximum mean windspeed (hourly)'
+    elif e == 'FHN': return 'Minimum mean windspeed (hourly)'
+    elif e == 'SP': return 'Sunshine duration (maximum potential)'
+    elif e == 'Q': return 'Radiation (global)'
+    elif e == 'DR': return 'Precipitation duration'
+    elif e == 'RHX': return 'Maximum precipitation (hourly)'
+    elif e == 'PX': return 'Maximum pressure (hourly)'
+    elif e == 'PN': return 'Minimum pressure (hourly)'
+    elif e == 'VVN': return 'Minimum visibility'
+    elif e == 'VVX': return 'Maximum visibility'
+    elif e == 'NG': return 'Mean cloud cover'
+    elif e == 'UX': return 'Maximum humidity'
+    elif e == 'UN': return 'Minimum humidity'
+    elif e == 'EV24': return 'Evapotranspiration (potential)'
     return e
 
 def optionlist( npl, sep=',', col_cnt = False, col_spaces = False ):
