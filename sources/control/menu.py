@@ -57,7 +57,6 @@ def process_knmi_dayvalues_selected():
         if utils.is_quit(places):
             break
 
-        log.console('\nStart processing data...\n', True)
         st = time.time_ns()
         for stat in places:
             daydata.process_data( stat )
