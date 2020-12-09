@@ -14,7 +14,7 @@ import sources.model.utils as utils
 import sources.model.daydata as daydata
 import sources.model.validate as validate
 import sources.view.log as log
-import sources.view.txt as view_txt
+import sources.view.txt as vt
 import sources.view.translate as tr
 
 # Check and sanitize input
@@ -43,8 +43,8 @@ def ask(txt='?', space=False):
 def ask_for_txt(txt='?', default=False, space=False):
     t = f'{txt}\n'
     if default != False:
-        t += view_txt.enter_default(default) + '\n'
-    t += view_txt.enter_back_to_main() + '\n'
+        t += vt.enter_default(default) + '\n'
+    t += vt.enter_back_to_main() + '\n'
     t += ' ? '
 
     if space: log.console(' ')
@@ -109,7 +109,7 @@ def ask_to_open_with_app( txt, space=False ):
 def ask_for_entities( txt, space=False):
     l = []
     txt  = f'{txt}\n'
-    txt += view_txt.dayvalues_entities(sep=',')
+    txt += vt.dayvalues_entities(sep=',')
     txt += "See file: './data/text/dayvalues/dayvalues.txt' for the meaning of the entities\n"
     txt += 'To add one weather entity, type in the enitity name. e.g. TX\n'
     txt += 'To add one more stations, give entity name separated by a comma. e.g TX, TG, TN'
@@ -158,7 +158,7 @@ def ask_for_one_station( txt, l=False, space=False):
 
     if len(l) != 0:
         t  = f'{txt}\n'
-        t += view_txt.knmi_stations(l, 3, 25)
+        t += vt.knmi_stations(l, 3, 25)
         t += 'To add a station, give a wmo-number or a city name'
         while True:
             answ = ask_for_txt( t, default=False, space=space )
@@ -187,7 +187,7 @@ def ask_for_stations( txt, l=False, space=False):
 
     if len(l) != 0:
         t  = f'{txt}\n'
-        t += view_txt.knmi_stations( l, 3, 25 )
+        t += vt.knmi_stations( l, 3, 25 )
         t += 'To add one station, give a wmo-number or a city name\n'
         t += 'To add more stations, give a wmo-number or a city name separated by a comma\n'
         t += "Press '*' to add all available weather stations"
