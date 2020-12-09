@@ -13,7 +13,7 @@ import os, threading, time, urllib.request, calendar, numpy as np, array
 import sources.model.validate as validate
 import sources.model.utils as utils
 import sources.view.log as log
-import sources.view.txt as view_txt
+import sources.view.txt as vt
 import sources.view.translate as tr
 import sources.control.fio as fio
 from datetime import datetime
@@ -119,6 +119,7 @@ def day( station, yyyymmdd ):
 def read( station ):
     '''Reads data dayvalues from the knmi into a list'''
     ok, data, file_name = '', False, station.data_txt_path
+    log.console(f'Read {station.wmo} {station.place}')
 
     with threading.Lock():
         try:
@@ -133,9 +134,9 @@ def read( station ):
                                   autostrip=True,
                                   usemask=True  )
         except Exception as e:
-            log.console(tr.txt('Failed to read') + f': {file_name}\n{e}' )
+            log.console(vt.error('Read', e))
         else:
-            # log.console(tr.txt('Succes reading') + f': {file_name}')
+            log.console(vt.succes('Read'))
             ok = True
 
     return ok, data
@@ -453,11 +454,11 @@ def process_data( station ):
         else:
             ok = fio.download(url, zip)
             if ok:
-                log.console(view_txt.process_time('Download in ', st))
+                log.console(vt.process_time('Download in ', st))
                 st = time.time_ns()
                 ok = fio.unzip(zip, txt)
                 if ok:
-                    log.console(view_txt.process_time('Unzip in ', st))
+                    log.console(vt.process_time('Unzip in ', st))
 
             if ok:
                 t = f'Process data {station.place} success.'
