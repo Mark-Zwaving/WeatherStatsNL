@@ -5,15 +5,16 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.7"
+__version__    =  "0.0.8"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config, model.utils as utils
-import view.log as log
-import view.translate as tr
-import control.ask as ask
-import control.menu as cmenu
+import config, threading
+import sources.model.utils as utils
+import sources.view.log as log
+import sources.view.translate as tr
+import sources.control.ask as ask
+import sources.control.menu as cmenu
 
 menu = [
     [ 'DOWNLOAD DATA',
@@ -49,15 +50,24 @@ menu = [
     ]
 ]
 
-def check_internet_menu():
+def check_menu_options():
     '''If no internet, skip download part'''
-    loc_menu = menu
+    ok_web, ok_data, loc_menu = False, False, menu
+    # Check internet
     if not utils.has_internet():
-        loc_menu = loc_menu[3:] # Skip download options menu
-    return loc_menu
+        loc_menu = loc_menu[3:] # Update menu. Skip download options menu
+    else:
+        ok_web = True
+
+    if utils.is_data_map_empthy():
+        loc_menu = loc_menu[:-2] # Update menu. Skip data handling options menu
+    else:
+        ok_data = True
+
+    return ok_web, ok_data, loc_menu
 
 def error_no_stations_found():
-    log.header('No weatherstations found !', True )
+    log.header('No weatherstations found in configuration file !', True )
     log.console('Add one or more weatherstations in config.py', True )
     log.footer('Press a key to quit...', True )
     input('...')
@@ -71,8 +81,8 @@ def fn_exec( choice, loc_menu ):
             n += 1
 
 def main_menu():
-    loc_menu = check_internet_menu()
     while True:  # Main menu
+        ok_web, ok_data, loc_menu = check_menu_options()
         num = 1
         log.header('MAIN MENU', True )
 
@@ -85,11 +95,29 @@ def main_menu():
                 num += 1
             print('')
 
-        log.console(f'\tChoose one of the following options: 1...{num-1}', True )
-        log.console("\tPress 'q' to quit...", True )
-        log.footer('Your choice is ? ', True )
+        if ok_data == False and ok_web == False:
+            t  = '\tNo internet and no data! Not much can be done now.\n'
+            t += '\tFirst.  Try to have a working internet connection.\n'
+            t += '\tSecond. Press a key to reload the menu or restart the application.\n'
+            t += '\tThird.  Download weatherdata from the download options in the menu.'
+            log.console(t, True)
+            log.footer("\tPress a key to reload menu or press 'q' to quit...", True )
+            answ = ask.ask(' ? ')
+            if answ in config.answer_quit:
+                break
+            else:
+                answ = False
+        else:
+            if ok_web == False:
+                t = '\tNo internet connection. Get an working internet connection for more menu options.'
+                log.console(t, True )
+            elif ok_data == False:
+                t = '\tNo data found. Download the weather data (option 1 & 2) for more menu options.'
+                log.console(t, True )
 
-        answ = ask.ask(' ? ', False)  # Make a choice
+            log.console(f'\tChoose one of the following options: 1...{num-1}', True )
+            log.footer('Your choice is ? ', True )
+            answ = ask.ask(' ? ')  # Make a choice
 
         if not answ:
             continue
