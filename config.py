@@ -8,9 +8,7 @@ __version__    =  "0.9.1"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-# Application maps
 import os, sys, numpy as np
-from sources.model.station import Station
 
 # Config base maps
 dir_app              =  os.path.dirname( os.path.abspath(__file__) )
@@ -22,9 +20,8 @@ dir_data             =  os.path.abspath( os.path.join(dir_app, 'data') )
 dir_txt              =  os.path.abspath( os.path.join(dir_data, 'text' ) )
 dir_html             =  os.path.abspath( os.path.join(dir_data, 'html' ) )
 dir_img              =  os.path.abspath( os.path.join(dir_data, 'images' ) )
-dir_knmi             =  os.path.abspath( os.path.join(dir_data, 'knmi' ) )
 dir_thirdparty       =  os.path.abspath( os.path.join(dir_data, 'thirdparty') )
-dir_knmi_dayvalues   =  os.path.abspath( os.path.join(dir_knmi, 'dayvalues' ) )
+dir_data_dayvalues   =  os.path.abspath( os.path.join(dir_data, 'dayvalues' ) )
 dir_img_dayvalues    =  os.path.abspath( os.path.join(dir_img, 'dayvalues' ) )
 dir_img_period       =  os.path.abspath( os.path.join(dir_img, 'period' ) )
 dir_txt_dayvalues    =  os.path.abspath( os.path.join(dir_txt, 'dayvalues' ) )
@@ -39,24 +36,25 @@ dir_thirdparty_css   =  os.path.abspath( os.path.join(dir_thirdparty, 'css') )
 dir_thirdparty_js    =  os.path.abspath( os.path.join(dir_thirdparty, 'js') )
 dir_txt_forecasts    =  os.path.abspath( os.path.join(dir_txt, 'forecasts') )
 
-# Add dir app and dir sources to system. If not already there.
-for map in [dir_app, dir_sources]:
-    if map not in sys.path:
-        sys.path.append(map)
-
 # Give language for app. Under contruction.
 # 'NL' for Netherlands/Dutch, 'EN' for English, Default is English
 language  = 'NL'  # Select language
 translate = True  # Translation active or not
-no_data_given = '...'
-help_info = True
-timezone = 'Europe/Amsterdam'
+# Default output type file. 'html'for html file.  'cmd' for commandline
+# 'txt' for a text file. Only html is available at this moment
+default_output = 'html'
+timezone = 'Europe/Amsterdam'  # Set the time zone
+help_info = True  # If True al (extra) info is shown
+no_data_given = '...' # Replacement for no output
 check_internet_url = 'www.google.com'  # Url to check for an internet connection
-fl_max = sys.float_info.min
-fl_min = sys.float_info.max
-
 # The years/period for the calculations of climate averages
 climate_period = '1990-2019'
+
+data_comment_sign = '#'
+
+# Set Debugging on or of for development. TODO
+debug = False  # Code will stop after executing some parts
+log   = True   # Print all to screen
 
 # Urls weather forecasts knmi
 knmi_ftp_pub = 'ftp://ftp.knmi.nl/pub_weerberichten/'
@@ -66,13 +64,16 @@ knmi_forecast_guidance_url = f'{knmi_ftp_pub}guidance_modelbeoordeling.txt'
 # List for WeatherStations
 knmi_dayvalues_url          = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/daggegevens/etmgeg_{0}.zip'
 knmi_dayvalues_notification = 'SOURCE meteorological data: ROYAL NETHERLANDS METEOROLOGICAL INSTITUTE (KNMI)'
-knmi_dayvalues_skip_rows    = 49
+knmi_dayvalues_skip_header  = 49
+knmi_dayvalues_skip_footer  = 0
 knmi_dayvalues_dummy_val    = 99999999
 knmi_dayvalues_missing_val  = '     '
 knmi_dayvalues_delimiter    = ','
  # For 'rh', 'rhx', 'sq' sometimes value is -1, that means meaurement value is below 0.05.
  # Give replacement value for -1 here
 knmi_dayvalues_low_measure_val = 0.025
+
+created_by_notification = 'Created by WeatherstatsNL at %s'
 
 # Buienradar JSON data url
 buienradar_json_data = 'https://data.buienradar.nl/2.0/feed/json'
@@ -109,87 +110,6 @@ knmi_json_places = [
 # 'Woensdrecht', 'Volkel', 'Eindhoven', 'Ell', 'Arcen', 'Maastricht-Aachen Airport'
 knmi_json_cols = 4 # Colums for the data
 
-# List with stations
-stations = np.array([])
-# Add KNMI weatherstations
-# Extended example ie Maastricht
-Maastricht = Station()  # Create Station
-Maastricht.wmo                    = '380'
-Maastricht.place                  = 'Maastricht'
-Maastricht.province               = 'Limburg'
-Maastricht.country                = 'Netherlands'
-Maastricht.dayvalues_skip_rows    = knmi_dayvalues_skip_rows  # (=49, KNMI)
-Maastricht.dayvalues_dummy_val    = knmi_dayvalues_dummy_val
-Maastricht.dayvalues_empthy_val   = knmi_dayvalues_missing_val
-Maastricht.dayvalues_notification = knmi_dayvalues_notification
-Maastricht.dir_dayvalues          = dir_knmi_dayvalues
-Maastricht.file_zip_dayvalues     = os.path.join( Maastricht.dir_dayvalues, 'etmgeg_380.zip' )
-Maastricht.file_txt_dayvalues     = os.path.join( Maastricht.dir_dayvalues, 'etmgeg_380.txt' )
-Maastricht.dayvalues_url          = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/daggegevens/etmgeg_380.zip'
-stations = np.append( stations, Maastricht ) # Add to list
-
-# For the rest the url and the files and the rest are automaticly updated
-# Just put in the right WMO number for the station
-stations = np.append(stations, Station('215', 'Voorschoten', 'Zuid-Holland', ''))
-stations = np.append(stations, Station('235', 'De Kooy', 'Noord-Holland', ''))
-stations = np.append(stations, Station('240', 'Schiphol', 'Noord-Holland', ''))
-stations = np.append(stations, Station('249', 'Berkhout', 'Noord-Holland', ''))
-stations = np.append(stations, Station('251', 'Hoorn Terschelling', 'Friesland', ''))
-stations = np.append(stations, Station('257', 'Wijk aan Zee', 'Noord-Holland', ''))
-stations = np.append(stations, Station('260', 'De Bilt', 'Utrecht', ''))
-# stations = np.append(stations, Station('265', 'Soesterberg', 'Utrecht', '')) # Read error
-stations = np.append(stations, Station('267', 'Stavoren','Friesland', ''))
-stations = np.append(stations, Station('269', 'Lelystad','Flevoland', ''))
-stations = np.append(stations, Station('270', 'Leeuwarden','Friesland', ''))
-stations = np.append(stations, Station('273', 'Marknesse', 'Flevoland', ''))
-stations = np.append(stations, Station('275', 'Deelen', 'Gelderland', ''))
-stations = np.append(stations, Station('277', 'Lauwersoog', 'Groningen', ''))
-stations = np.append(stations, Station('278', 'Heino', 'Overijssel', ''))
-stations = np.append(stations, Station('279', 'Hoogeveen', 'Drenthe', ''))
-stations = np.append(stations, Station('280', 'Eelde', 'Drenthe', ''))
-stations = np.append(stations, Station('283', 'Hupsel', 'Gelderland', ''))
-stations = np.append(stations, Station('286', 'Nieuw Beerta', 'Groningen', ''))
-stations = np.append(stations, Station('290', 'Twenthe', 'Overijssel', ''))
-stations = np.append(stations, Station('310', 'Vlissingen', 'Zeeland', ''))
-stations = np.append(stations, Station('319', 'Westdorpe', 'Zeeland', ''))
-stations = np.append(stations, Station('323', 'Wilhelminadorp', 'Zeeland', ''))
-stations = np.append(stations, Station('330', 'Hoek van Holland', 'Zuid-Holland', ''))
-stations = np.append(stations, Station('344', 'Rotterdam', 'Zuid-Holland', ''))
-stations = np.append(stations, Station('348', 'Cabauw Mast', 'Utrecht', ''))
-stations = np.append(stations, Station('350', 'Gilze-Rijen', 'Noord-Brabant', ''))
-stations = np.append(stations, Station('356', 'Herwijnen', 'Gelderland', ''))
-stations = np.append(stations, Station('370', 'Eindhoven', 'Noord-Brabant', ''))
-stations = np.append(stations, Station('375', 'Volkel', 'Noord-Brabant', ''))
-stations = np.append(stations, Station('377', 'Ell', 'Limburg', ''))
-stations = np.append(stations, Station('391', 'Arcen', 'Limburg', ''))
-stations = np.append(stations, Station('242', 'Vlieland', 'Friesland', ''))
-
-# Below an example how to add your your (own) station
-# Rules for your data file.
-# 1. Keep knmi structure and order. So restructure data in a KNMI way
-# 2. '     ' = 5 spaces or data_dummy_value = 99999 for unregistered data
-#  KNMI DATA Structure:
-#  STN,YYYYMMDD,DDVEC,FHVEC,   FG,  FHX, FHXH,  FHN, FHNH,  FXX, FXXH,   TG,   TN,  TNH,
-#   TX,  TXH, T10N,T10NH,   SQ,   SP,    Q,   DR,   RH,  RHX, RHXH,   PG,   PX,  PXH,
-#   PN,  PNH,  VVN, VVNH,  VVX, VVXH,   NG,   UG,   UX,  UXH,   UN,  UNH, EV24
-# Borkum = Station()  # Create Station
-# Borkum.wmo                    =  '-1'
-# Borkum.place                  =  'Emden'
-# Borkum.province               =  'Niedersaksen'
-# Borkum.country                =  'Deutschland'
-# Borkum.dayvalues_skip_rows    =  1
-# Borkum.dayvalues_dummy_val    =  knmi_dayvalues_dummy_val
-# Borkum.dayvalues_empthy_val   =  knmi_dayvalues_empthy_val
-# Borkum.dayvalues_notification =  'source copyright @ Borkum'
-# Borkum.dir_dayvalues          =  os.path.join( dir_data, 'borkum' ) # ie. Create map borkum in the data map
-# Borkum.file_zip_dayvalues     =  os.path.join( Borkum.dir_dayvalues, 'tag.zip' )
-# Borkum.file_txt_dayvalues     =  os.path.join( Borkum.dir_dayvalues, 'tag.txt' )
-# Borkum.data_url               =  r'https://my.borkum.de/data/tag.zip'
-# stations = np.append( stations, Borkum ) # Add to list
-
-# Sort station list on place name
-stations = np.array( sorted( stations, key=lambda station: station.place ) )
-
 # Not all data is correct or available
 # Give here the allowed percentage of missed data in a given time period
 allowed_perc_data_errors = 10
@@ -200,24 +120,26 @@ html_popup_table_cnt_rows = 25 # -1 for all rows
 # Give a max number for preventing possible html files becoming very large
 html_popup_table_val_10 = 20 # -1 for all rows
 
-# Set Debugging on or of for development
-debug = False
-log   = True
+fl_max = sys.float_info.min # Minimum possible value
+fl_min = sys.float_info.max # Maximum possible value
 
 # Plotting default values
-default_values = 'no' # Use of default values (below) ? Or add values at runtime ?
-plot_width     = 1280 # Width plotted image
-plot_height    =  720 # Height plotted image
+plot_default      = 'n'  # Use of default values (below) ? Or add values at runtime ?
+plot_show         = 'n'  # Show the plot directly -> matplotlib.show(). yess (y) or no (n)
+plot_tight_layout = 'n'  # Use of matplotlib.tight_layout(). yess (y) or no (n)
+plot_width        = 1280 # Width plotted image
+plot_height       =  720 # Height plotted image
+
 # Images dpi (dots per inches) for printing on paper
-plot_dpi         =  100 # Higher will increase de point size. Make width/height higher too
-plot_image_type  = 'png'
-plot_graph_type  = 'line'  # bar or line
-plot_line_width  =  1      # Width line
-plot_line_style  = 'solid'  # Linestyle
-plot_marker_size =  3      # Dot sizes
-plot_marker_type =  'o'    # Type marker
-plot_cummul_val  = 'n'     # Cummulative values
-plot_climate_ave = 'n'     # Adding climate averages to plot
+plot_dpi          =  100 # Higher will increase de point size. Make width/height higher too
+plot_image_type   = 'png'
+plot_graph_type   = 'line'  # bar or line
+plot_line_width   =  1      # Width line
+plot_line_style   = 'solid'  # Linestyle
+plot_marker_size  =  3      # Dot sizes
+plot_marker_type  =  'o'    # Type marker
+plot_cummul_val   = 'n'     # Cummulative values. yess (y) or no (n)
+plot_climate_ave  = 'n'     # Adding climate averages to plot. yess (y) or no (n)
 plot_clima_line_style  = 'dotted'
 plot_clima_line_width  = 1
 plot_clima_marker_type = '.'
@@ -234,7 +156,7 @@ plot_clima_marker_size = 1
 plt_style = False #'fivethirtyeight' # Set to False for no default styling
 
 # Style for marker texts
-plot_marker_txt   = 'y'  # Select 'y' for markertext or 'n' for no
+plot_marker_txt   = 'y'  # Markertext. yess (y) or no (n)
 plot_marker_color = '#333333'
 plot_marker_font  = { 'family'  : 'consolas',
                       'weight'  : 'normal',
@@ -287,9 +209,9 @@ plot_legend_facecolor = None
 plot_legend_shadow    = False
 plot_legend_frameon   = False
 plot_legend_fancybox  = False
-strip_html_output    = True
+strip_html_output     = True
 
 # Asked for char
-answer_quit = np.array(['q', 'quit'])
-answer_yes  = np.array(['yes', 'y', 'j', 'ok', 'oke', 'oké'])
-answer_no   = np.array(['no', 'n', 'nope'])
+answer_quit = ['q', 'quit']
+answer_yes  = ['yes', 'y', 'j', 'ok', 'oke', 'oké']
+answer_no   = ['no', 'n', 'nope']
