@@ -8,16 +8,15 @@ __version__    =  '0.1.1'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
-import numpy as np, config
-import model.stats as stats
-import model.daydata as daydata
-import model.utils as utils
-import model.station as station
-import view.log as log
-import view.html as view_html
-import view.dayvalues as dayvalues
-import view.translate as tr
-import view.icon as icon
+import numpy as np, config, stations
+import sources.model.stats as stats
+import sources.model.daydata as daydata
+import sources.model.utils as utils
+import sources.view.log as log
+import sources.view.html as view_html
+import sources.view.dayvalues as dayvalues
+import sources.view.translate as tr
+import sources.view.icon as icon
 
 def query_simple( data, query ):
     ent, op, val = query.split(' ')
@@ -125,9 +124,9 @@ def query_advanced( data, query ):
     # All selected (unique)  days
     return sel
 
-def process( stations, period, query ):
+def process( places, period, query ):
     # Read all data stations in a given period
-    data = daydata.read_stations_period( stations, period )
+    data = daydata.read_stations_period( places, period ) #= numpy array
 
     # Get all the days to search for
     log.console(f'Executing query: {query}', True)
@@ -136,12 +135,11 @@ def process( stations, period, query ):
     else:
         return query_advanced( data, query ) # Process query with and, or
 
-def calculate(stations, period, query, type, fname):
-    data = process( stations, period, query ) # All days for the terms given
+def calculate(places, period, query, type, fname):
+    data = process( places, period, query ) # All days for the terms given
 
     # Make path if it is a html or txt file
-    path = ''
-    fname = f'{fname}.{type}'
+    dir, path, fname = '', '', f'{fname}.{type}'
     if type == 'html':
         dir = config.dir_html_search_for_days
     elif type == 'txt':
@@ -153,7 +151,7 @@ def calculate(stations, period, query, type, fname):
         title = f'Days {query}'
 
         # Proces data in html table
-        colspan = 29
+        colspan = 30
         html  = f'''
         <table id="stats">
             <thead>
@@ -167,6 +165,7 @@ def calculate(stations, period, query, type, fname):
                     </th>
                 </tr>
                 <tr>
+                    <th title="copyright data_notification"> </th>
                     <th> place {icon.home(size='fa-sm')}</th>
                     <th> state {icon.flag(size='fa-sm')}</th>
                     <th> periode {icon.cal_period(size='fa-sm')}</th>
@@ -208,15 +207,19 @@ def calculate(stations, period, query, type, fname):
                 rhxh, pg, px, pxh, pn, pnh, vvn, vvnh, vvx, vvxh, ng, ug, \
                 ux, uxh, un, unh, ev24 = dayvalues.ents( day )
 
-                place = station.from_wmo_to_name(stn)
-                state = station.from_wmo_to_province(stn)
+                place = stations.from_wmo_to_name(stn)
+                state = stations.from_wmo_to_province(stn)
+                station = stations.from_wmo_to_station(stn)
                 date = f'{day[daydata.YYYYMMDD]:.0f}'
                 html += f'''
                 <tr>
+                    <td title="{station.data_notification.lower()}">
+                            {icon.copy_light(size='fa-xs')}
+                    </td>
                     <td> <span class="val">{place}</span> </td>
                     <td> <span class="val">{state}</span> </td>
                     <td> <span class="val">{period}</span> </td>
-                    <td> <span class="val">{date}</span> </td>
+                    <td title="{utils.ymd_to_txt(date)}"> <span class="val">{date}</span> </td>
                     <td> <span class="val">{tx}</span> <br> <small>{txh}</small> </td>
                     <td> <span class="val">{tg}</span> </td>
                     <td> <span class="val">{tn}</span> <br> <small>{tnh}</small> </td>
@@ -255,7 +258,7 @@ def calculate(stations, period, query, type, fname):
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="{colspan}"> {config.knmi_dayvalues_notification} </td>
+                    <td colspan="{colspan}">{utils.now_created_notification()}</td>
                 </tr>
             </tfoot>
         </table>
