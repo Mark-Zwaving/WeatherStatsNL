@@ -10,11 +10,11 @@ __status__     =  "Development"
 
 import config, math, time, re
 import numpy as np
-import model.daydata as daydata
-import model.utils as utils
-import view.translate as tr
-import view.log as log
-import view.txt as view_txt
+import sources.model.daydata as daydata
+import sources.model.utils as utils
+import sources.view.translate as tr
+import sources.view.log as log
+import sources.view.txt as view_txt
 
 def clean_up( t ):
     t = t.strip()
@@ -34,6 +34,11 @@ def padding( t, align='center', spaces=35):
 
     return res
 
+def enter_default(default):
+    return f'Press <enter> for default (={default})'
+
+def enter_back_to_main():
+    return "Press 'q' to go back to the main menu... "
 
 def ent_to_title(ent):
     e = ent.strip().upper()
@@ -183,7 +188,7 @@ def txt_main( day ):
 
     return f'{txt}\n'
 
-def process_time_ext(txt, delta_ns):
+def process_time_ext(t='', delta_ns=0):
     '''Function gives a time string from nano seconds till days '''
     dag_sec, uur_sec, min_sec = 86400, 3600, 60
     delta_sec = delta_ns / 1000000000
@@ -205,22 +210,22 @@ def process_time_ext(txt, delta_ns):
 
     # Make nice output. Give emthpy string if 0
     # Only print to screen when counted amount > 0
-    if dag > 0: txt += str(dag) + (' days '    if dag > 1 else ' day ')
-    if uur > 0: txt += str(uur) + (' hours '   if uur > 1 else ' hour ')
-    if min > 0: txt += str(min) + (' minutes ' if min > 1 else ' minute ')
+    if dag > 0: t += str(dag) + (' days '    if dag > 1 else ' day ')
+    if uur > 0: t += str(uur) + (' hours '   if uur > 1 else ' hour ')
+    if min > 0: t += str(min) + (' minutes ' if min > 1 else ' minute ')
 
     smile = utils.add_zero_less_1000(mill)
     if sec > 0:
-        txt += f'{sec}.{smile} ' + ('seconds ' if sec > 1 else 'second ')
+        t += f'{sec}.{smile} ' + ('second ' if sec == 1 else 'seconds ')
     else:
-        txt += f'0.{smile} second '
+        t += f'0.{smile} second '
 
     # if micr > 0: txt += f'{micr} {"microseconds" if micr>1 else "microsecond"} '
     # if nano > 0: txt += f'{nano} {"nanoseconds" if nano>1 else "nanosecond"} '
 
-    return txt
+    return t
 
-def show_process_time(st):
-    et = time.time_ns()
-    txt = view_txt.process_time_ext('Total processing time is: ', et-st)
-    log.console( txt, True)
+def process_time(t='', st=time.time_ns()):
+    delta = time.time_ns() - st
+    t = view_txt.process_time_ext(t, delta)
+    return t
