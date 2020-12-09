@@ -4,27 +4,25 @@ __author__     =  'Mark Zwaving'
 __email__      =  'markzwaving@gmail.com'
 __copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
 __license__    =  'GNU Lesser General Public License (LGPL)'
-__version__    =  '0.0.2'
+__version__    =  '0.0.3'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
-import config
-import numpy as np
-import model.utils as utils
-import model.daydata as daydata
-import view.html as view_html
-import view.log as log
+import config, numpy as np
+import sources.model.utils as utils
+import sources.model.daydata as daydata
+import sources.view.html as view_html
+import sources.view.log as log
 
 def calculate(data, ymd, station, type, fname):
     log.console(f'Station: {station.wmo} {station.place}', True)
     log.console(f'Date: {utils.ymd_to_txt(ymd)}', True)
 
-    day = data[np.where(data[:,daydata.YYYYMMDD] == int(ymd))][0]
-    txt_date = utils.ymd_to_txt(ymd)
-    footer = station.dayvalues_notification.lower()
+    sel = np.where(data[:,daydata.YYYYMMDD] == float(ymd))
+    day = data[sel][0]
 
     # Make path if it is a html or txt file
-    path  = ''
+    dir, path  = '', ''
     fname = f'{fname}.{type}'
     if type == 'html':
         dir = config.dir_html_dayvalues
@@ -36,14 +34,14 @@ def calculate(data, ymd, station, type, fname):
     if type == 'html':
         header  = f'<i class="text-info fas fa-home"></i> '
         header += f'{station.wmo} - {station.place} '
-        header += f'{station.province} - {txt_date} '
+        header += f'{station.province} - {utils.ymd_to_txt(ymd)} '
 
         page = view_html.Template()
         page.title  = f'{station.place}-{ymd}'
         page.header = header
         page.strip  = True
         page.main   = view_html.main_ent( day )
-        page.footer = footer
+        page.footer = view_html.footer_data_notification(station)
         page.set_path( dir, fname )
         # Styling
         page.add_css_file(dir='./../static/css/', name='default.css')
@@ -57,6 +55,6 @@ def calculate(data, ymd, station, type, fname):
         title = txt_date
         main  = view_dayvalues.txt_main( day )
         txt   = f'{title}\n{main}'
-        path  = utils.mk_path( config.dir_txt_dayvalues, name )
+        path  = utils.mk_path( station.dayvalues_dir_txt, fname )
 
     return path
