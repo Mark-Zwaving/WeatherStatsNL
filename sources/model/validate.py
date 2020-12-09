@@ -11,30 +11,28 @@ __status__     =  "Development"
 import datetime, config
 import sources.view.log as log
 import sources.view.translate as tr
+import sources.view.txt as vt
 
 def yyyymmdd( ymd ):
     '''Function validates date'''
     ok = False
     ymd = str(ymd)
+    log.console(f'Validate {ymd}')
     if  len(ymd) != 8:
-        log.console(f'Date: {ymd} has wrong length.')
-        log.console(tr.txt('Use format of yyyymmdd with length is 8'))
+        log.console('Date has wrong length. Use format of yyyymmdd with length is 8')
     elif not ymd.isdigit():
-        log.console(f'Date: {ymd} has wrong chars.')
-        log.console(tr.txt('Date must only contain digits'))
+        log.console('Date has wrong chars. Date must only contain digits')
     else:
         try:
             y, m, d = int(ymd[:4]), int(ymd[4:6]), int(ymd[6:8])
             date = datetime.datetime(y, m, d)
         except Exception as e:
-            log.console(f"Error: {ymd} {e}")
+            log.console(vt.error('Validate', e))
         else:
             # Geen datum in de toekomst
             if date > datetime.datetime.now():
-                t  = f'Date: {ymd} is in the future. '
-                t += tr.txt('Try again later... ;-)')
-                log.console(t)
+                log.console('Date is in the future. Try again later... ;-)')
             else:
+                log.console(vt.succes('Validate'))
                 ok = True
-
     return ok
