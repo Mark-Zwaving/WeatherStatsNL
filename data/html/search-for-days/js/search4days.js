@@ -16,6 +16,7 @@
      sort_num         =  'num', // Identifier sort num-based
      sort_txt         =  'txt', // Identifier sort txt-based
      row_nr           =  2,     // Row tr num for click to sort
+     diff_col         =  1,     // hack
      // Reg expression for grepping a float number from a td cell.
      // Result float is used for numeric sorting in a td cell.
      // Update here reg expression for extracting floats in td cell, if needed
@@ -40,32 +41,32 @@
  }
 
 let col_titles = {
-    PLACE: obj('PLACE', sort_txt, ascending,  row_nr,  1),
-    STATE: obj('STATE', sort_txt, ascending,  row_nr,  2),
-    DATE:  obj('DATE',  sort_num, descending, row_nr,  4),
-    TX:    obj('TX',    sort_num, descending, row_nr,  5),
-    TG:	   obj('TG',    sort_num, descending, row_nr,  6),
-    TN:    obj('TN',    sort_num, descending, row_nr,  7),
-    T10N:  obj('T10N',  sort_num, descending, row_nr,  8),
-    SQ:    obj('SQ',    sort_num, descending, row_nr,  9),
-    SP:    obj('SP',    sort_num, descending, row_nr, 10),
-    RH:    obj('RH',    sort_num, descending, row_nr, 11),
-    RHX:   obj('RHX',   sort_num, descending, row_nr, 12),
-    DR:    obj('DR',    sort_num, descending, row_nr, 13),
-    PG:    obj('PG',    sort_num, descending, row_nr, 14),
-    PX:    obj('PX',    sort_num, descending, row_nr, 15),
-    PN:    obj('PN',    sort_num, descending, row_nr, 16),
-    UG:    obj('UG',    sort_num, descending, row_nr, 17),
-    UX:    obj('UX',    sort_num, descending, row_nr, 18),
-    UN:    obj('UN',    sort_num, descending, row_nr, 19),
-    NG:    obj('NG',    sort_num, descending, row_nr, 20),
-    DDVEC: obj('DDVEC', sort_num, ascending,  row_nr, 21),
-    FHVEC: obj('FHVEC', sort_num, descending, row_nr, 22),
-    FG:    obj('FG',    sort_num, descending, row_nr, 23),
-    FHX:   obj('FHX',   sort_num, descending, row_nr, 24),
-    FHN:   obj('FHN',   sort_num, descending, row_nr, 25),
-    FXX:   obj('FXX',   sort_num, descending, row_nr, 26),
-    VVX:   obj('VVX',   sort_num, descending, row_nr, 27),
-    VVN:   obj('VVN',   sort_num, descending, row_nr, 28),
-    Q:     obj('Q',     sort_num, descending, row_nr, 29),
+    PLACE: obj('PLACE', sort_txt, ascending,  row_nr,  2),
+    STATE: obj('STATE', sort_txt, ascending,  row_nr,  3),
+    DATE:  obj('DATE',  sort_num, descending, row_nr,  5),
+    TX:    obj('TX',    sort_num, descending, row_nr,  6),
+    TG:	   obj('TG',    sort_num, descending, row_nr,  7),
+    TN:    obj('TN',    sort_num, descending, row_nr,  8),
+    T10N:  obj('T10N',  sort_num, descending, row_nr,  9),
+    SQ:    obj('SQ',    sort_num, descending, row_nr, 10),
+    SP:    obj('SP',    sort_num, descending, row_nr, 11),
+    RH:    obj('RH',    sort_num, descending, row_nr, 12),
+    RHX:   obj('RHX',   sort_num, descending, row_nr, 13),
+    DR:    obj('DR',    sort_num, descending, row_nr, 14),
+    PG:    obj('PG',    sort_num, descending, row_nr, 15),
+    PX:    obj('PX',    sort_num, descending, row_nr, 16),
+    PN:    obj('PN',    sort_num, descending, row_nr, 17),
+    UG:    obj('UG',    sort_num, descending, row_nr, 18),
+    UX:    obj('UX',    sort_num, descending, row_nr, 19),
+    UN:    obj('UN',    sort_num, descending, row_nr, 20),
+    NG:    obj('NG',    sort_num, descending, row_nr, 21),
+    DDVEC: obj('DDVEC', sort_num, ascending,  row_nr, 22),
+    FHVEC: obj('FHVEC', sort_num, descending, row_nr, 23),
+    FG:    obj('FG',    sort_num, descending, row_nr, 24),
+    FHX:   obj('FHX',   sort_num, descending, row_nr, 25),
+    FHN:   obj('FHN',   sort_num, descending, row_nr, 26),
+    FXX:   obj('FXX',   sort_num, descending, row_nr, 27),
+    VVX:   obj('VVX',   sort_num, descending, row_nr, 28),
+    VVN:   obj('VVN',   sort_num, descending, row_nr, 29),
+    Q:     obj('Q',     sort_num, descending, row_nr, 30),
 }

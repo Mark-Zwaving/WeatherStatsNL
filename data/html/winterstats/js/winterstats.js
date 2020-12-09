@@ -16,6 +16,7 @@ let table_tbody      =  'table#stats>tbody',
     sort_num         =  'num', // Identifier sort num-based
     sort_txt         =  'txt', // Identifier sort txt-based
     row_nr           =  2,     // Row tr num for click to sort
+    diff_col         =  2,     // hack
     // Reg expression for grepping a float number from a td cell.
     // Result float is used for numeric sorting in a td cell.
     // Update here reg expression for extracting floats in td cell, if needed
@@ -41,22 +42,22 @@ let obj = ( name, type, dir, row, col ) =>
 
 // Column titles to sort
 let col_titles = {
-    PLACE:    obj( 'PLACE',    sort_txt,  ascending,   row_nr,   1 ),
-    PROVINCE: obj( 'PROVINCE', sort_txt,  ascending,   row_nr,   2 ),
-    TG:       obj( 'TG',       sort_num,  descending,  row_nr,   4 ),
-    HELLMANN: obj( 'HELLMANN', sort_num,  descending,   row_nr,   5 ),
-    IJNSEN:   obj( 'IJNSEN',   sort_num,  descending,   row_nr,   6 ),
-    FROSTSUM: obj( 'FROST_SUM', sort_num, descending,  row_nr,   7 ),
-    TX_MIN:   obj( 'TX_MIN',   sort_num,  ascending,   row_nr,   8 ),
-    TG_MIN:	  obj( 'TG_MIN',   sort_num,  ascending,   row_nr,   9 ),
-    TN_MIN:   obj( 'TN_MIN',   sort_num,  ascending,   row_nr,  10 ),
-    SUN:      obj( 'SUN',      sort_num,  ascending,   row_nr,  11 ),
-    RAIN:     obj( 'RAIN',     sort_num,  ascending,   row_nr,  12 ),
-    TXlt0:    obj( 'TXlt0',    sort_num,  descending,  row_nr,  13 ),
-    TGlt0:    obj( 'TGlt0',    sort_num,  descending,  row_nr,  14 ),
-    TNlt0:    obj( 'TNlt0',    sort_num,  descending,  row_nr,  15 ),
-    TNlt_5:   obj( 'TNlt_5',   sort_num,  descending,  row_nr,  16 ),
-    TNlt_10:  obj( 'TNlt_10',  sort_num,  descending,  row_nr,  17 ),
-    TNlt_15:  obj( 'TNlt_15',  sort_num,  descending,  row_nr,  18 ),
-    TNlt_20:  obj( 'TNlt_20',  sort_num,  descending,  row_nr,  19 )
+    PLACE:    obj( 'PLACE',    sort_txt,  ascending,   row_nr,   2 ),
+    PROVINCE: obj( 'PROVINCE', sort_txt,  ascending,   row_nr,   3 ),
+    TG:       obj( 'TG',       sort_num,  descending,  row_nr,   5 ),
+    HELLMANN: obj( 'HELLMANN', sort_num,  descending,  row_nr,   6 ),
+    IJNSEN:   obj( 'IJNSEN',   sort_num,  descending,  row_nr,   7 ),
+    FROSTSUM: obj( 'FROST_SUM', sort_num, descending,  row_nr,   8 ),
+    TX_MIN:   obj( 'TX_MIN',   sort_num,  ascending,   row_nr,   9 ),
+    TG_MIN:	  obj( 'TG_MIN',   sort_num,  ascending,   row_nr,  10 ),
+    TN_MIN:   obj( 'TN_MIN',   sort_num,  ascending,   row_nr,  11 ),
+    SUN:      obj( 'SUN',      sort_num,  ascending,   row_nr,  12 ),
+    RAIN:     obj( 'RAIN',     sort_num,  ascending,   row_nr,  13 ),
+    TXlt0:    obj( 'TXlt0',    sort_num,  descending,  row_nr,  14 ),
+    TGlt0:    obj( 'TGlt0',    sort_num,  descending,  row_nr,  15 ),
+    TNlt0:    obj( 'TNlt0',    sort_num,  descending,  row_nr,  16 ),
+    TNlt_5:   obj( 'TNlt_5',   sort_num,  descending,  row_nr,  17 ),
+    TNlt_10:  obj( 'TNlt_10',  sort_num,  descending,  row_nr,  18 ),
+    TNlt_15:  obj( 'TNlt_15',  sort_num,  descending,  row_nr,  19 ),
+    TNlt_20:  obj( 'TNlt_20',  sort_num,  descending,  row_nr,  20 )
 }
