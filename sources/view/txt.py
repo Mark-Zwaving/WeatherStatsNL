@@ -30,6 +30,10 @@ def succes(t):
     t = f'{t} success.'
     return t
 
+def strip_all(s):
+    t = re.sub('\t|\r|\n| |\s', '', t)
+    return t
+
 def clean_up( t ):
     t = t.strip()
     t = re.sub(r'(\n\n)\n+', '\n\n', t)
