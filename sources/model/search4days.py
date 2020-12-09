@@ -13,7 +13,7 @@ import sources.model.stats as stats
 import sources.model.daydata as daydata
 import sources.model.utils as utils
 import sources.view.log as log
-import sources.view.html as view_html
+import sources.view.html as vhtml
 import sources.view.dayvalues as dayvalues
 import sources.view.translate as tr
 import sources.view.icon as icon
@@ -265,7 +265,7 @@ def calculate(places, period, query, type, fname):
         '''
 
         # Write to html, screen, console
-        page           =  view_html.Template()
+        page           =  vhtml.Template()
         page.title     =  title
         page.main      =  html
         page.strip     =  True
