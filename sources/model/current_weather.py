@@ -8,16 +8,16 @@ __version__    =  "0.0.3"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config, model.download as download, re
-import view.fix as fix
-import view.txt as txt
+import config, re
+import sources.view.fix as fix
+import sources.view.txt as txt
+import sources.control.fio as fio
 
 def buienradar_table_current_weather_stations(l, cols=8, spaces=33):
     entities = [ 'stationname', 'timestamp', 'weatherdescription', 'temperature',
                  'feeltemperature', 'windspeedBft', 'winddirection',
                  'precipitation', 'humidity', 'airpressure', 'sunpower' ]
                  # 'winddirectiondegrees',
-
     t, ndx, end, max = '\n', 0, cols, len(l)
     while True:
         part = l[ndx:end]
@@ -76,7 +76,7 @@ def buienradar_table_current_weather_stations(l, cols=8, spaces=33):
 
 def buienradar_stations():
     t = ''
-    ok, js = download.request_json( config.buienradar_json_data )
+    ok, js = fio.request_json( config.buienradar_json_data )
 
     if ok: # If download is oke, prepare the results
         stations = js['actual']['stationmeasurements']
@@ -127,7 +127,7 @@ def buienradar_table_forecast(l, spaces=30):
             if enties == 'day':
                 el = el[:10]
 
-            el_t += txt.padding( el, align='center', spaces=27 )
+            el_t += txt.padding( el, align='center', spaces=28 )
 
         t += el_t + '\n'
 
@@ -135,10 +135,10 @@ def buienradar_table_forecast(l, spaces=30):
 
 def buienradar_weather():
     t = ''
-    ok, js = download.request_json(config.buienradar_json_data)
+    ok, js = fio.request_json(config.buienradar_json_data)
     if ok:
         report = js['forecast']['weatherreport']
-        text = report['text'].replace('.', '. ')
+        text = report['text'].replace('.', '. ').replace('&agrave;', 'à')
         l = re.sub('\t|  |&nbsp;', ' ', text).split(' ')
         word, max_word = 1, 13  # Count words
         zin, max_zin = 1, 8   # Count sentence
@@ -219,7 +219,7 @@ def knmi_table_current_weather_stations(l, cols=8, spaces=33):
 def knmi_stations():
     t = ''
     url = config.knmi_json_data_10min
-    ok, js = download.request_json( url )
+    ok, js = fio.request_json( url )
 
     if ok: # If download is oke, prepare the results
 
