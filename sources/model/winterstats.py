@@ -273,6 +273,8 @@ def calculate( stations, period, name, type='html' ):
             </table>
             '''
 
+    log.console('\nWrite/print results...', True)
+
     # Write to file or console
     output = f'{title}\n{main}\n{footer}'
     if type == 'cmd':

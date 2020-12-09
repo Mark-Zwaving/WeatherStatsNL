@@ -14,6 +14,14 @@ import sources.model.daydata as daydata
 import sources.model.utils as utils
 import sources.view.log as log
 
+def separator(cnt=0):
+    t = ' '
+    while cnt > 0:
+        t += '\n'
+        cnt -= 1
+
+    return t
+
 def error(t, err):
     t = f'{t} failed.\nError {err}'
     return t

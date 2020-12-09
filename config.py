@@ -38,7 +38,7 @@ dir_txt_forecasts    =  os.path.abspath( os.path.join(dir_txt, 'forecasts') )
 
 # Give language for app. Under contruction.
 # 'NL' for Netherlands/Dutch, 'EN' for English, Default is English
-language  = 'NL'  # Select language
+language  = 'EN'  # Select language 
 translate = True  # Translation active or not
 # Default output type file. 'html'for html file.  'cmd' for commandline
 # 'txt' for a text file. Only html is available at this moment

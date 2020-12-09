@@ -264,6 +264,8 @@ def calculate(places, period, query, type, fname):
         </table>
         '''
 
+        log.console('\nWrite/print results...', True)
+
         # Write to html, screen, console
         page           =  vhtml.Template()
         page.title     =  title
