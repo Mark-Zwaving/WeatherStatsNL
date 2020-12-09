@@ -7,7 +7,7 @@ __version__    =  "0.1.0"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import config, math, threading
+import config, math
 import numpy as np
 import matplotlib.pyplot as plt
 import sources.model.stats as stats
@@ -15,9 +15,8 @@ import sources.model.daydata as daydata
 import sources.model.utils as utils
 import sources.model.convert as convert
 import sources.view.fix as fix
-import sources.view.txt as view_txt
-import sources.view.translate as tr
-import sources.view.color as view_color
+import sources.view.txt as vt
+import sources.view.color as vcol
 import sources.view.log as log
 
 def text_diff( l ):
@@ -65,7 +64,7 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
     # Color handling
     rnd_col = True if len(stations) > 1 else False
     if rnd_col:
-        col_list = utils.shuffle_list(view_color.save_colors, level=2)
+        col_list = utils.shuffle_list(vcol.save_colors, level=2)
         col_ndx, col_cnt = 0, len(col_list) - 1
 
     min, max = config.fl_min, config.fl_max
@@ -95,12 +94,12 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
 
                 # Make correct output values
                 l_val = [ fix.rounding(v, el) for v in f_val.tolist() ]
-                label = f'{station.place} {view_txt.ent_to_title(el)}'
-                color = col_list[col_ndx] if rnd_col else view_color.ent_to_color(el)
+                label = f'{station.place} {vt.ent_to_title(el)}'
+                color = col_list[col_ndx] if rnd_col else vcol.ent_to_color(el)
 
                 if utils.is_yes(options['plot_climate_ave']):
                     l_clima = []
-                    label_clima = f'Day climate {station.place} {view_txt.ent_to_title(el)}'
+                    label_clima = f'Day climate {station.place} {vt.ent_to_title(el)}'
                     clima_ymd = days[:, daydata.YYYYMMDD ].astype(
                                         np.int, copy=False ).astype(
                                         np.str, copy=False ).tolist()
@@ -163,7 +162,7 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                                       alpha=config.plot_marker_alpha
                                     )
         else:
-            print('Read not oke in graphs.py -> plot')
+            log.console('Read not oke in graphs.py -> plot')
 
     if config.plt_style != False:
         plt.style.use(config.plt_style)
