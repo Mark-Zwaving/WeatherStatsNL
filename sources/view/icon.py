@@ -48,3 +48,6 @@ def binoculars(color='', extra='', size=''): return i('fas fa-binoculars', color
 def minus(color='', extra='', size=''): return i('fas fa-minus', color, extra, size)
 def plus(color='', extra='', size=''): return i('fas fa-plus', color, extra, size)
 def wave_square(color='', extra='', size=''): return i('fas fa-wave-square', color, extra, size)
+
+def copy(color='', extra='', size=''): return i('fas fa-copyright', color, extra, size)
+def copy_light(color='', extra='', size=''): return i('far fa-copyright', color, extra, size)
