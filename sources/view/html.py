@@ -14,7 +14,7 @@ import sources.control.fio as fio
 import sources.view.log as log
 import sources.view.icon as icon
 import sources.view.translate as tr
-import sources.view.txt as view_txt
+import sources.view.txt as vt
 import sources.view.dayvalues as dayvalues
 import sources.view.fix as fix
 import sources.model.utils as utils
@@ -82,20 +82,13 @@ class Template():
         return ok
 
     def save(self):
-        ok = False
-
-        try:
-            ok = self.create( )
+        ok = self.create()
+        if ok:
             html = self.html
             if config.strip_html_output:
                 html = re.sub('\n|\r|\t', '', html)
                 html = re.sub('\s+', ' ', html)
             ok = fio.write( self.file_path, html )
-        except Exception as e:  # ERROR ?????
-            log.console( f'Error: {e}' )
-        else:
-            log.console( f'Creating file: {self.file_path} succesfull' )
-            ok = True
 
         return ok
 
@@ -160,32 +153,32 @@ def main_ent( day ):
     if ev24  !=  no:  ev24  =  f'{icon.sweat(color="text-warning")} {ev24}'
 
     main  = ''
-    main += div_ent( view_txt.ent_to_title('TX'), tx, txh )
-    main += div_ent( view_txt.ent_to_title('TG'), tg, False )
-    main += div_ent( view_txt.ent_to_title('TN'), tn, tnh )
-    main += div_ent( view_txt.ent_to_title('T10N'), t10n, t10nh )
-    main += div_ent( view_txt.ent_to_title('DDVEC'), ddvec, False )
-    main += div_ent( view_txt.ent_to_title('FG'), fg, False )
-    main += div_ent( view_txt.ent_to_title('RH'), rh, False )
-    main += div_ent( view_txt.ent_to_title('SQ'), sq, False )
-    main += div_ent( view_txt.ent_to_title('PG'), pg, False )
-    main += div_ent( view_txt.ent_to_title('UG'), ug, False )
-    main += div_ent( view_txt.ent_to_title('FXX'), fxx, fxxh )
-    main += div_ent( view_txt.ent_to_title('FHVEC'), fhvec, False )
-    main += div_ent( view_txt.ent_to_title('FHX'), fhx, fhxh )
-    main += div_ent( view_txt.ent_to_title('FHN'), fhn, fhnh )
-    main += div_ent( view_txt.ent_to_title('SP'), sp, False )
-    main += div_ent( view_txt.ent_to_title('Q'), q, False )
-    main += div_ent( view_txt.ent_to_title('DR'), dr, False )
-    main += div_ent( view_txt.ent_to_title('RHX'), rhx, rhxh )
-    main += div_ent( view_txt.ent_to_title('PX'), px, pxh )
-    main += div_ent( view_txt.ent_to_title('PN'), pn, pnh )
-    main += div_ent( view_txt.ent_to_title('VVN'), vvn, vvnh )
-    main += div_ent( view_txt.ent_to_title('VVX'), vvx, vvxh )
-    main += div_ent( view_txt.ent_to_title('NG'), ng, False )
-    main += div_ent( view_txt.ent_to_title('UX'), ux, uxh )
-    main += div_ent( view_txt.ent_to_title('UN'), un, unh )
-    main += div_ent( view_txt.ent_to_title('EV24'), ev24, False )
+    main += div_ent( vt.ent_to_title('TX'), tx, txh )
+    main += div_ent( vt.ent_to_title('TG'), tg, False )
+    main += div_ent( vt.ent_to_title('TN'), tn, tnh )
+    main += div_ent( vt.ent_to_title('T10N'), t10n, t10nh )
+    main += div_ent( vt.ent_to_title('DDVEC'), ddvec, False )
+    main += div_ent( vt.ent_to_title('FG'), fg, False )
+    main += div_ent( vt.ent_to_title('RH'), rh, False )
+    main += div_ent( vt.ent_to_title('SQ'), sq, False )
+    main += div_ent( vt.ent_to_title('PG'), pg, False )
+    main += div_ent( vt.ent_to_title('UG'), ug, False )
+    main += div_ent( vt.ent_to_title('FXX'), fxx, fxxh )
+    main += div_ent( vt.ent_to_title('FHVEC'), fhvec, False )
+    main += div_ent( vt.ent_to_title('FHX'), fhx, fhxh )
+    main += div_ent( vt.ent_to_title('FHN'), fhn, fhnh )
+    main += div_ent( vt.ent_to_title('SP'), sp, False )
+    main += div_ent( vt.ent_to_title('Q'), q, False )
+    main += div_ent( vt.ent_to_title('DR'), dr, False )
+    main += div_ent( vt.ent_to_title('RHX'), rhx, rhxh )
+    main += div_ent( vt.ent_to_title('PX'), px, pxh )
+    main += div_ent( vt.ent_to_title('PN'), pn, pnh )
+    main += div_ent( vt.ent_to_title('VVN'), vvn, vvnh )
+    main += div_ent( vt.ent_to_title('VVX'), vvx, vvxh )
+    main += div_ent( vt.ent_to_title('NG'), ng, False )
+    main += div_ent( vt.ent_to_title('UX'), ux, uxh )
+    main += div_ent( vt.ent_to_title('UN'), un, unh )
+    main += div_ent( vt.ent_to_title('EV24'), ev24, False )
 
     return main
 
