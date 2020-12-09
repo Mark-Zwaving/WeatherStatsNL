@@ -38,7 +38,7 @@ dir_txt_forecasts    =  os.path.abspath( os.path.join(dir_txt, 'forecasts') )
 
 # Give language for app. Under contruction.
 # 'NL' for Netherlands/Dutch, 'EN' for English, Default is English
-language  = 'EN'  # Select language 
+language  = 'EN'  # Select language
 translate = True  # Translation active or not
 # Default output type file. 'html'for html file.  'cmd' for commandline
 # 'txt' for a text file. Only html is available at this moment
@@ -48,7 +48,7 @@ help_info = True  # If True al (extra) info is shown
 no_data_given = '...' # Replacement for no output
 check_internet_url = 'www.google.com'  # Url to check for an internet connection
 # The years/period for the calculations of climate averages
-climate_period = '1990-2019'
+climate_period = '1991-2020'
 
 data_comment_sign = '#'
 
@@ -127,9 +127,10 @@ fl_min = sys.float_info.max # Maximum possible value
 plot_default      = 'n'  # Use of default values (below) ? Or add values at runtime ?
 plot_show         = 'n'  # Show the plot directly -> matplotlib.show(). yess (y) or no (n)
 plot_tight_layout = 'n'  # Use of matplotlib.tight_layout(). yess (y) or no (n)
-plot_width        = 1280 # Width plotted image
-plot_height       =  720 # Height plotted image
-
+# Plot resolutions default.
+# Example month -> width 1600 x height 900. More days need more width
+plot_width        = 1280 # Width (px) plotted image
+plot_height       =  720 # Height (px) plotted image
 # Images dpi (dots per inches) for printing on paper
 plot_dpi          =  100 # Higher will increase de point size. Make width/height higher too
 plot_image_type   = 'png'
