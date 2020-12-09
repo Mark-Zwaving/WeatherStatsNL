@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.2"
+__version__    =  "0.0.3"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
