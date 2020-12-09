@@ -9,15 +9,14 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config
-import os, threading, time, urllib.request, calendar
-import numpy as np, array
-from zipfile import ZipFile, BadZipfile
+import os, threading, time, urllib.request, calendar, numpy as np, array
+import sources.model.validate as validate
+import sources.model.utils as utils
+import sources.view.log as log
+import sources.view.txt as view_txt
+import sources.view.translate as tr
+import sources.control.fio as fio
 from datetime import datetime
-import model.validate as validate
-import model.utils as utils
-import view.log as log
-import view.txt as view_txt
-import view.translate as tr
 
 # Dayvalues data KNMI / Keys for dayvalues
 STN      =  0 # WMO number for nl weatherstation
@@ -70,8 +69,6 @@ entities = np.array( [
     'EV24'
     ] )
 
-lock = threading.Lock()
-
 def is_ent( ent ):
     '''Check if a value is a dayvalue entity'''
     e  = ent.strip().upper()
@@ -83,7 +80,7 @@ def ndx_ent( ent ):
     e = ent.strip().upper()
     key, ndx= -1, 0
     for el in entities:
-        if ent == el:
+        if el == e:
             key = ndx
             break
         ndx += 1
@@ -121,18 +118,20 @@ def day( station, yyyymmdd ):
 
 def read( station ):
     '''Reads data dayvalues from the knmi into a list'''
-    ok, file_name = False, station.file_txt_dayvalues
+    ok, data, file_name = '', False, station.data_txt_path
 
-    with lock:
+    with threading.Lock():
         try:
             data = np.genfromtxt( file_name,
                                   dtype=np.float64,
-                                  delimiter=config.knmi_dayvalues_delimiter,
-                                  missing_values=config.knmi_dayvalues_missing_val,
+                                  delimiter=station.data_delimiter,
+                                  missing_values=station.data_missing,
                                   filling_values=np.nan,
-                                  skip_header=config.knmi_dayvalues_skip_rows,
-                                  usemask=True
-                                  )
+                                  skip_header=station.data_skip_header,
+                                  skip_footer=station.data_skip_footer,
+                                  comments=station.data_comments_sign,
+                                  autostrip=True,
+                                  usemask=True  )
         except Exception as e:
             log.console(tr.txt('Failed to read') + f': {file_name}\n{e}' )
         else:
@@ -144,7 +143,7 @@ def read( station ):
 # Numpy methode didnt work. For now using normal list -> TODO
 def update_minus_1( data ):
     l = data.tolist()
-    low_val = config.knmi_dayvalues_low_measure_val
+    low_val = config.knmi_dayvalues_low_measure_val #
     ndx_rh  = ndx_ent('rh')
     ndx_rhx = ndx_ent('rhx')
     ndx_sq  = ndx_ent('sq')
@@ -437,54 +436,37 @@ def read_stations_period( stations, per ):
 
     return data
 
-def unzip( station ):
-    ok  = False
-    zip = station.file_zip_dayvalues
-    txt = station.file_txt_dayvalues
-    dir = station.dir_dayvalues
-    ts  = time.time_ns()
-    with lock:
-        try:
-            log.console( f'Unzip {zip}')
-            with ZipFile(zip, 'r') as z:
-                z.extractall(dir)
-        except BadZipfile as e:
-            log.console(tr.txt('Failed to unzip file') + ': {zip}\n{e}')
-        else:
-            txt = f'Unzip successful, time to unzip is '
-            log.console(view_txt.process_time_ext(txt, time.time_ns()-ts))
-            ok = True
-
-    return ok
-
-def download ( station ):
-    '''Function downloads etmgeg file from knmi.nl'''
-    ok   = False
-    zip  = station.file_zip_dayvalues
-    url  = station.dayvalues_url
-    ts   = time.time_ns()
-    with lock:
-        log.console(f'Download {url}')
-        try:
-            response = urllib.request.urlretrieve( url, zip )
-        except urllib.error.URLError as e:
-            log.console(tr.txt('Download failed') + f': {url}\n{e}')
-        else:
-            txt = 'Download successful, time to download is '
-            log.console(view_txt.process_time_ext(txt, time.time_ns()-ts))
-            ok = True
-
-    return ok
-
 def process_data( station ):
     '''Function processes (downloading en unzipping) a data file'''
-    log.console(f'Process data for station: {station.place}')
-    ok = download(station)
-    if ok:
-        ok = unzip(station)
-        print('')
 
-    return ok
+    if station.data_download: # Only downloadable stations
+        ok = False
+        log.console(f'Process data for station: {station.place}', True)
+
+        st = time.time_ns()
+        zip = station.data_zip_path
+        url = station.data_url
+        txt = station.data_txt_path
+
+        if not url:
+            log.console('Download skipped...', True)
+        else:
+            ok = fio.download(url, zip)
+            if ok:
+                log.console(view_txt.process_time('Download in ', st))
+                st = time.time_ns()
+                ok = fio.unzip(zip, txt)
+                if ok:
+                    log.console(view_txt.process_time('Unzip in ', st))
+
+            if ok:
+                t = f'Process data {station.place} success.'
+            else:
+                t = f'Process data {station.place} failed.'
+
+            log.console(t, True)
+
+        return ok
 
 def process_all():
     '''Function processes (downloading en unzipping) files from the selected stations'''
