@@ -9,8 +9,8 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import datetime, config
-import view.log as log
-import view.translate as tr
+import sources.view.log as log
+import sources.view.translate as tr
 
 def yyyymmdd( ymd ):
     '''Function validates date'''
@@ -31,8 +31,9 @@ def yyyymmdd( ymd ):
         else:
             # Geen datum in de toekomst
             if date > datetime.datetime.now():
-                log.console(f'Date: {ymd} is in the future.')
-                log.console(tr.txt('Maybe try again later ;-)'))
+                t  = f'Date: {ymd} is in the future. '
+                t += tr.txt('Try again later... ;-)')
+                log.console(t)
             else:
                 ok = True
 
