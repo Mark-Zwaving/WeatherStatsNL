@@ -4,15 +4,14 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.7"
+__version__    =  "0.0.8"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import config
-import threading, urllib, requests, json, math, time, os, threading
+import threading, urllib, json, os
 import sources.view.log as log
-import sources.model.utils as utils
-import sources.view.translate as tr
+import sources.view.txt as vt
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -26,13 +25,13 @@ def check(fname):
         if Path(path).exists():  # Check if is there file
             ok = True
         else:
-            raise ValueError( f'File does not exist' )
+            raise ValueError(f'File does not exist')
     except ValueError as e:
-        log.console(f'Check failed.\nError {e}')
+        log.console(vt.error('Check', e))
     except Exception as e:
-        log.console(f'Check failed.\nError {e}')
+        log.console(vt.error('Check', e))
     else:
-        log.console(f'Check success.')
+        log.console(vt.succes('Check'))
 
     return ok
 
@@ -45,9 +44,9 @@ def write(fname='dummy.txt', content='', prefix='w', encoding='utf-8'):
         with open( fname, prefix, encoding=encoding ) as f:
             f.write(content)
     except Exception as e:
-        log.console(f'Write failed.\nError {e}')
+        log.console(vt.error('Write', e))
     else:
-        log.console(f'Write success.')
+        log.console(vt.succes('Write'))
         ok = True
 
     return ok
@@ -67,9 +66,9 @@ def read(fname):
             with open(fname, 'r') as f:
                 t = f.read()
         except Exception as e:
-            log.console(f'Read failed.\nError {e}')
+            log.console(vt.error('Read', e))
         else:
-            log.console(f'Read success.')
+            log.console(vt.succes('Read'))
             ok = True
 
     return ok, t
@@ -82,13 +81,12 @@ def delete(fname):
         try:
             Path(fname).unlink()  # Remove file
         except Exception as e:
-            log.console(f'Delete failed.\nError {e}')
+            log.console(vt.error('Delete', e))
         else:
-            log.console(f'Delete succes.')
+            log.console(vt.succes('Delete'))
             ok = True
     else:
         log.console(f'Delete failed. File does not exist')
-
 
     return ok
 
@@ -103,9 +101,9 @@ def unzip( zip, txt ):
             with ZipFile(zip, 'r') as z:
                 z.extractall(dir)
         except Exception as e:
-            log.console(tr.txt('Unzip failed.') + f'\nError {e}')
+            log.console(vt.error('Unzip', e))
         else:
-            log.console(f'Unzip success.')
+            log.console(vt.succes('Unzip'))
             ok = True
 
     return ok
@@ -119,9 +117,9 @@ def download( url, file ):
         try:
             urllib.request.urlretrieve( url, file )
         except Exception as e:
-            log.console(f'Download failed.\nError: {e}')
+            log.console(vt.error('Download', e))
         else:
-            log.console(f'Download success.')
+            log.console(vt.succes('Download'))
             ok = True
 
     return ok
@@ -142,9 +140,9 @@ def request( url, type='txt'):
             elif type == 'json':
                 t = json.loads(data)
         except Exception as e:
-            log.console(f'Request failed.\nError: {e}')
+            log.console(vt.error('Request', e))
         else:
-            log.console(f'Request success.')
+            log.console(vt.succes('Request'))
             ok = True
 
     return ok, t
