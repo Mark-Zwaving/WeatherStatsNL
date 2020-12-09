@@ -37,16 +37,18 @@ def climate_periode( station, periode,  ent):
 
     return ave
 
-def climate_day( station, mmdd, ent ):
+def climate_day( station, mmdd, ent, period ):
     '''Function calculate climate averages for a day for a station'''
-    ys, ye = config.climate_period.split('-')  # Get climate years
+    ys, ye = period.split('-')  # Get climate years
     per  = f'{ys}{mmdd}-{ye}*{mmdd}'  # Special period for a day during the years
-    data = daydata.read_station_period( station, per )  # Get all the days in clima period
-    # data = process_list( data, ent )  # Remove nan values
+    d1 = daydata.read_station_period( station, per )  # Get all the days in clima period
+    d2 = process_list( d1[1], ent )  # Remove nan values
+    # print('D1: ' + str(d1))
+    # print('D2: ' + str(d2))
     # HACK for sel_period. Because of added mask
-    data = data[1]
-
-    ave = average( data, ent )  # Calculate averages
+    # data = data[1]
+    ave = average( d2, ent )  # Calculate averages
+    # print(ave)
     return ave
 
 def process_list( data, entity ):
