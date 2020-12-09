@@ -8,8 +8,8 @@ __version__    =  "0.4.3"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
-import view.translate as tr
 import config
+import sources.view.translate as tr
 
 # Convert temperatures
 celsius_to_fahrenheit = lambda c:   float(c) * 1.8 + 32.0
