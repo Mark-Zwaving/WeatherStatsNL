@@ -141,21 +141,6 @@ def read( station ):
 
     return ok, data
 
-# Numpy methode didnt work. For now using normal list -> TODO
-def update_minus_1( data ):
-    l = data.tolist()
-    low_val = config.knmi_dayvalues_low_measure_val #
-    ndx_rh  = ndx_ent('rh')
-    ndx_rhx = ndx_ent('rhx')
-    ndx_sq  = ndx_ent('sq')
-    l_ndx   = [ ndx_rh, ndx_rhx, ndx_sq ]
-    for x, row in enumerate(l):
-        for y, kol in enumerate(row):
-            if kol == -1.0 and (y in l_ndx):
-                data[x,y] = low_val
-
-    return data
-
 def sel_tuple(l):
     '''Function puts keys in a where clausule tuple'''
     return ( (array.array(l), np.int64), )
@@ -374,8 +359,8 @@ def sel_keys_days ( ymd, per ):
 
             # ADVANCED OPTIONS for more different periods in a given period
             # OPTION YYYYMMDD-YYYY*MMDD  A certain day in a year. From startyear to endyear.
-            elif s_per.isdigit() and len(e_per) == 9 and e_per[4] == '*' and \
-               ye.isdigit() and f'{ye}{e_per[5:9]}'.isdigit():
+            elif s_per.isdigit() and  len(e_per) == 9 and e_per[4] == '*' and \
+                 ye.isdigit()    and  f'{ye}{e_per[5:9]}'.isdigit():
                 md    = f'{ms}{ds}'
                 years = range(int(ys), int(ye)+1)
                 for y in years:
@@ -415,16 +400,30 @@ def sel_keys_days ( ymd, per ):
     sel = np.where( (ymd >= sp) & (ymd <= ep) )
     return sel
 
+# Numpy methode didnt work. For now using normal list -> TODO
+def update_minus_1( data ):
+    ndx_rh  = ndx_ent('rh')
+    ndx_rhx = ndx_ent('rhx')
+    ndx_sq  = ndx_ent('sq')
+    l_ndx   = [ ndx_rh, ndx_rhx, ndx_sq ]
+    l_data  = data.tolist()
+    for x, row in enumerate(l_data):
+        for y, kol in enumerate(row):
+            if kol == -1.0 and (y in l_ndx):
+                data[x,y] = config.knmi_dayvalues_low_measure_val
+    return data
+
 def period( data, per ):
     '''Function selects days by start and end dates'''
-    ymd  = data[:, YYYYMMDD]   # Get the dates array
-    sel  = sel_keys_days ( ymd, per )  # Get the keys list
-    data = update_minus_1( data[sel] )    # Update/correct values -1
+    ymd  = data[:, YYYYMMDD] # Get the dates array
+    sel  = sel_keys_days ( ymd, per ) # Get the keys list with the correct dates
+    data = update_minus_1( data[sel] ) # Update/correct values -1
     return data
 
 def read_station_period ( station, per ):
     ok, data = read(station)
-    if ok: data = period( data, per )
+    if ok:
+        data = period( data, per )
     return ok, data
 
 def read_stations_period( stations, per ):
