@@ -14,7 +14,7 @@ import sources.model.daydata as daydata
 import sources.model.utils as utils
 import sources.view.log as log
 
-def separator(cnt=0):
+def separator( cnt=0 ):
     t = ' '
     while cnt > 0:
         t += '\n'
