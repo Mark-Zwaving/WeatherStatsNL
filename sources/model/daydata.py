@@ -416,7 +416,7 @@ def update_minus_1( data ):
 def period( data, per ):
     '''Function selects days by start and end dates'''
     ymd  = data[:, YYYYMMDD] # Get the dates array
-    sel  = sel_keys_days ( ymd, per ) # Get the keys list with the correct dates
+    sel  = sel_keys_days( ymd, per ) # Get the keys list with the correct dates
     data = update_minus_1( data[sel] ) # Update/correct values -1
     return data
 
