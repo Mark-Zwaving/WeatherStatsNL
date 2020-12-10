@@ -19,10 +19,10 @@ if config.dir_app not in sys.path:
 
 # Main programm
 if __name__== '__main__':
-    log.header( 'Welcome to WeatherStatsNL', True )
+    log.console('\nWelcome to WeatherStatsNL', True )
     if len(stations.list) == 0:
         menu.error_no_stations_found()
     else:
         menu.main_menu()
 
-    log.footer('Good bye', True )
+    log.console('\nGood bye', True )
