@@ -72,6 +72,7 @@ knmi_dayvalues_delimiter    = ','
  # Give replacement value for -1 here
 knmi_dayvalues_low_measure_val = 0.025
 
+knmi_data_format   = 'knmi' # used for data format
 created_by_notification = 'Created by WeatherstatsNL at %s'
 
 # Buienradar JSON data url
