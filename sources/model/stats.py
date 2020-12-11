@@ -180,7 +180,7 @@ def frost_sum(data):
        tn  = tn_0[:,ndx]  #  Make TN list only
        frostie += abs( np.sum(tn) )
     if tx_cnt > 0:
-       ndx = daydata.ndx_ent( 'TX' )  # Get index for TN in matrix
+       ndx = daydata.ndx_ent( 'TX' )  # Get index for TX in matrix
        tx  = tx_0[:,ndx]  #  Make TX list only
        frostie += abs( np.sum(tx) )
 
