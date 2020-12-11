@@ -46,6 +46,8 @@ class Template():
         self.base_dir  = os.path.dirname(os.path.abspath(__file__))
         self.file_dir  = self.base_dir
         self.file_path = utils.mk_path( self.file_dir, self.file_name )
+        self.diff_path = './'
+        self.html_strip_output = config.html_strip_output
 
     def set_path(self, dir, name):
         self.file_path = utils.mk_path( dir, name )
@@ -78,6 +80,7 @@ class Template():
             self.html = self.html.replace('{{%footer%}}', self.footer)
             self.html = self.html.replace('{{%script_files%}}', js)
             self.html = self.html.replace('{{%script_code%}}', self.script_code)
+            self.html = self.html.replace('{{%diffpath%}}', self.diff_path)
 
         return ok
 
@@ -85,7 +88,7 @@ class Template():
         ok = self.create()
         if ok:
             html = self.html
-            if config.strip_html_output:
+            if self.html_strip_output:
                 html = re.sub('\n|\r|\t', '', html)
                 html = re.sub('\s+', ' ', html)
             ok = fio.write( self.file_path, html )
