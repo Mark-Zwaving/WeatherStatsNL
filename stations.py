@@ -17,7 +17,7 @@ import sources.model.utils as utils
 
 class Station:
     '''Class defines a (knmi) weatherstation'''
-    def __init__(self, wmo = ' ', place = ' ', province = ' ', country='', info = ' '):
+    def __init__(self, wmo = ' ', place = ' ', province = ' ', country='', info = ' ', format='knmi', ):
         self.wmo      = wmo
         self.place    = place
         self.province = province
@@ -25,6 +25,7 @@ class Station:
         self.country  = country
         self.info     = info
 
+        self.data_format        = config.knmi_data_format     # For data standards
         self.data_skip_header   = config.knmi_dayvalues_skip_header
         self.data_skip_footer   = config.knmi_dayvalues_skip_footer
         self.data_dummy_val     = config.knmi_dayvalues_dummy_val
@@ -50,7 +51,7 @@ Maastricht.data_skip_header  = config.knmi_dayvalues_skip_header  # (=49, KNMI)
 Maastricht.data_dummy_val    = config.knmi_dayvalues_dummy_val
 Maastricht.data_empthy_val   = config.knmi_dayvalues_missing_val
 Maastricht.data_notification = config.knmi_dayvalues_notification
-Maastricht.data_dir          = config.dir_data_dayvalues
+Maastricht.data_format       = config.knmi_data_format
 Maastricht.data_zip_path     = os.path.join( Maastricht.data_dir, 'etmgeg_380.zip' )
 Maastricht.data_txt_path     = os.path.join( Maastricht.data_dir, 'etmgeg_380.txt' )
 Maastricht.data_dayvalus_url  = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/daggegevens/etmgeg_380.zip'
@@ -186,18 +187,18 @@ def find_by_wmo( wmo, l=False):
 
 def find_by_wmo_or_name(name_or_wmo, l=False):
     if name_or_wmo:
-        station_name = find_by_name( name_or_wmo, l )
-        if station_name != False:
-            return station_name
+        name = find_by_name( name_or_wmo, l )
+        if name != False:
+            return name
 
-        station_wmo = find_by_wmo( name_or_wmo, l )
-        if station_wmo != False:
-            return station_wmo
+        wmo = find_by_wmo( name_or_wmo, l )
+        if wmo != False:
+            return wmo
 
     return False
 
 def check_if_station_already_in_list( station, l ):
-    for check in l:
-        if check.wmo == station.wmo and check.place.lower() == station.place.lower():
+    for el in l:
+        if el.wmo == station.wmo and check.place.lower() == station.place.lower():
             return True
     return False
