@@ -461,9 +461,7 @@ def table_winterstats():
         ok, period, places, type, name = cask.ask_period_stations_type_name(
                                             'winter'
                                             )
-        if not ok:
-            cask.ask_back_to_main_menu()
-            break
+        if not ok: break
 
         log.header(f'CALCULATING WINTER STATISTICS...', True)
 
@@ -495,9 +493,7 @@ def table_summerstats():
         ok, period, places, type, name = cask.ask_period_stations_type_name(
                                             'summer'
                                             )
-        if not ok:
-            cask.ask_back_to_main_menu()
-            break
+        if not ok: break
 
         log.header('CALCULATING SUMMER STATISTICS...', True)
 
@@ -530,9 +526,7 @@ def table_allstats():
         ok, period, places, type, name = cask.ask_period_stations_type_name(
                                             'all'
                                             )
-        if not ok:
-            cask.ask_back_to_main_menu()
-            break
+        if not ok: break
 
         log.header(f'CALCULATING ALL STATISTICS...', True)
 
