@@ -22,38 +22,11 @@ import sources.view.log as log
 
 def text_diff( l ):
     mp, mm = max(l), min(l)
-    return (mp - mm) / 20.0
-
-class G:
-    x          = np.array([])
-    y          = np.array([])
-    color      = 'green'
-    label      = 'legend'
-    marker     = 'o'
-    linestyle  = 'solid'
-    linewidth  = 1
-    markersize = 3
-
-    def __init__(self):
-        pass
+    return (mp - mm) / 10.0
 
 def plot( stations, entities, period, title, ylabel, fname, options ):
-    # # Make option list
-    # graph_options = {
-    #     "plot_width"       = config.plot_width,
-    #     "plot_height"      = config.plot_height,
-    #     "plot_graph_type"  = config.plot_graph_type,
-    #     "plot_line_width"  = config.plot_line_width,
-    #     "plot_marker_size" = config.plot_marker_size,
-    #     "plot_cummul_val"  = config.plot_cummul_val,
-    #     "plot_marker_txt"  = config.plot_marker_txt,
-    #     "plot_climate_ave" = config.plot_climate_ave,
-    #     "plot_image_type"  = config.plot_image_type,
-    #     "plot_dpi"         = config.plot_dpi
-    # }
-
     if utils.is_yes(options['plot_climate_ave']):
-        log.console('Calculating climate data might take a while...\n', True)
+        log.console('Calculating climate values for days might take a while...\n', True)
 
     path = utils.mk_path( config.dir_img_period, fname + f'.{config.plot_image_type}' )
 
@@ -69,20 +42,44 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
         col_ndx, col_cnt = 0, len(col_list) - 1
 
     min, max = config.fl_min, config.fl_max
+
+    period_extremes, clima_averages = list(), list()
     for station in stations:
         log.console(f'Calculate weatherdata for {station.place}', True)
-        ok, data = daydata.read( station )
+        ok, data = daydata.read(station)
         if ok:
-            days = daydata.period( data, period )
+            days = daydata.period(data, period)
             ymd = days[:, daydata.ndx_ent('YYYYMMDD')].astype(
                             np.int, copy=False
-                            ).astype(
-                                np.str, copy=False
-                                ).tolist() # Convert to list
+                            ).astype( np.str, copy=False
+                            ).tolist() # Convert to list
+            s_ymd, e_ymd = ymd[0], ymd[-1]
+            sy, sm, sd  = s_ymd[0:4], s_ymd[4:6], s_ymd[6:8]
+            ey, em, ed  = e_ymd[0:4], e_ymd[4:6], e_ymd[6:8]
+
+            cs_ymd, ce_ymd = options['plot_climate_per'].split('-')
+            scy, ecy = cs_ymd[0:4], ce_ymd[0:4]
 
             for ent in entities:
+                ent = ent.upper()
                 # Get the values needed for the graph
                 f_val = days[:, daydata.ndx_ent(ent)]
+                log.console(f'{ent} data values: {str(f_val)}')
+
+                if utils.is_yes( options['plot_min_max_ave_period'] ):
+                    # Calculate extremes
+                    min_per = stats.min(days, ent) # slow
+                    max_per = stats.max(days, ent)
+                    ave_per = stats.average(days, ent)
+                    # Correct output
+                    s_max = f'highest={fix.ent(max_per, ent)}'
+                    s_min = f'lowest={fix.ent(min_per, ent)}'
+                    s_ave = f'average={fix.ent(ave_per, ent)}'
+                    s_ext  = f'For {sy}-{sm}-{sd} to {ey}-{em}-{ed} '
+                    s_ext += f'{ent} {s_max}, {s_min} & {s_ave}'
+                    period_extremes.append( s_ext )
+                    log.console(s_ext)
+
                 # Cumulative sum of values, if chosen
                 if utils.is_yes(options['plot_cummul_val']):
                     f_val = np.cumsum( f_val )
@@ -99,29 +96,50 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                 color = col_list[col_ndx] if rnd_col else vcol.ent_to_color(ent)
 
                 if utils.is_yes(options['plot_climate_ave']):
-                    l_clima = []
                     label_clima = f'Day climate {station.place} {vt.ent_to_title(ent)}'
-                    clima_ymd = days[:, daydata.YYYYMMDD ].astype(
-                                        np.int, copy=False ).astype(
-                                        np.str, copy=False ).tolist()
-                    cli_txt = f"Calculate climate data '{ent.upper()}' for {station.place}"
+                    clima_ymd = days[:, daydata.YYYYMMDD ].tolist()
+                    cli_txt = f"Calculate climate value '{ent}' for {station.place}"
                     log.console(cli_txt, True)
+
+                    l_clima = [] # numpy array
                     for d in clima_ymd:
-                        mmdd = d[4:8] # What day it is ?
-                        sdat = datetime.strptime(d, '%Y%m%d').strftime('%B %d').lower()
-                        log.console(f'Calculate climate {ent} for day {sdat}')
-                        clima_val = stats.climate_day( station, mmdd, ent,
-                                                 options['plot_climate_per']
-                                                 )
-                        clima_rounded = fix.rounding( clima_val, ent )
-                        log.console(f'Calculated clima value {ent} for {sdat} is {clima_rounded}\n')
-                        # Append with correct rounding
-                        l_clima.append( clima_rounded )
+                        ds =  utils.f_to_s(d)
+                        mmdd = ds[4:8] # What day it is ?
+                        sdat = datetime.strptime(ds, '%Y%m%d').strftime('%B %d').lower()
+                        val  = stats.climate_average_for_day(
+                                        station, mmdd, ent, options['plot_climate_per']
+                                    )
+                        s_clima = fix.rounding(val, ent)
+                        log.console(f'Climate value {ent} for {sdat} is {s_clima}')
+                        # Append raw data without correct rounding
+                        l_clima.append(val)
+
+                    if utils.is_yes( options['plot_min_max_ave_period'] ):
+                        # Clima average round correctly based on entity
+                        if len(l_clima) > 0:
+                            # Calculate average
+                            sum = 0.0
+                            for el in l_clima:
+                                sum += el
+                            ave = sum / len(l_clima)
+                            s_ave  = f'Climate average {ent} from '
+                            s_ave += f'{sm}-{sd} to {em}-{ed} for the '
+                            s_ave += f'years {scy} through {ecy} '
+                            s_ave += f'is {fix.ent(ave, ent)}'
+                            clima_averages.append(s_ave)
+                            log.console(s_ave)
+                        else:
+                            log.console('List with clima values is empthy.')
+
+                    # Round correctly al climate values based on ent
+                    for ndx, val in enumerate(l_clima):
+                        l_clima[ndx] = fix.rounding( val, ent )
 
                     log.console(' ')
 
                 if options['plot_graph_type'] == 'line':  # bar or line
-                    plt.plot( ymd, l_val, label = label,
+                    plt.plot(ymd, l_val,
+                              label = label,
                               color      = color,
                               marker     = config.plot_marker_type,
                               linestyle  = config.plot_line_style,
@@ -129,7 +147,8 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                               markersize = options['plot_marker_size'] )
 
                     if utils.is_yes(options['plot_climate_ave']):
-                        plt.plot(ymd, l_clima, label = label_clima,
+                        plt.plot(ymd, l_clima,
+                                 label = label_clima,
                                  color      = color,
                                  marker     = config.plot_clima_marker_type,
                                  linestyle  = config.plot_clima_line_style,
@@ -195,15 +214,29 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                   linestyle=config.plot_grid_linestyle,
                   linewidth=config.plot_grid_linewidth )
 
-    diff_max = max*0.1
-    diff_max = 1.5 if diff_max < 1.5 else diff_max
-    max  = math.ceil( max + diff_max )  # 10% upperrange extra
-    min  = math.floor( min*0.98 ) #  2% underrange extra
-    diff = max - min
-    step = math.floor(diff/10-0.5)
-    step = 1 if step == 0 else step
+    diff_max = abs(max * 0.10)  # 10% upperrange extra
+    diff_min = abs(min * 0.98)  #  2% underrange extra
+    # Extra space above for legend based on station and entities
+    diff_max = diff_max * (len(stations) + len(entities))
+    print('DIFF_MIN: ' + str(diff_min))
+    print('DIFF_MAX: ' + str(diff_max))
+    # Diff_max = 1.5 if diff_max < 1.5 else diff_max
+    max_tick   = math.ceil( max + diff_max )  # upperrange extra
+    min_tick   = math.ceil( min - diff_min ) #  underrange extra
+    print('MAX_TICK: ' + str(max_tick))
+    print('MIN_TICK: ' + str(min_tick))
 
-    yticks = np.arange( min, max, step ) # 1-10 % ranges
+    # Update steps
+    diff = max_tick - min_tick
+    step = math.floor( diff / 10 - 0.5 )
+    step = 1 if step == 0 else step
+    print('STEP: ' + str(step))
+    input()
+
+    pos_extr_y = max_tick - step / 2  # Is y position of min/max texts. Just below top
+    print('POS_EXTR_Y: ' + str(pos_extr_y))
+
+    yticks = np.arange( min_tick, max_tick + step, step ) # 1-10 % ranges
     plt.yticks( yticks,
                 **config.plot_xas_font,
                 color=config.plot_xas_color
@@ -215,16 +248,42 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                 rotation=config.plot_xas_rotation
                 )
 
+    # Min max extremes
+    if utils.is_yes( options['plot_min_max_ave_period'] ):
+        # build a rectangle in axes coords
+        left, width = .25, .5
+        bottom, height = .25, .5
+        right = left + width
+        top = bottom + height
+        pos = max
+
+        t = ''
+        for el in period_extremes:
+            t += el + '\n'
+
+        # Clima calculations too
+        if utils.is_yes(options['plot_climate_ave']):
+            for el in clima_averages:
+                t += el + '\n'
+
+        plt.text( ymd[0],
+                  pos_extr_y, # Most left and at the top
+                  t,
+                  style='italic',
+                  horizontalalignment='left',
+                  verticalalignment='top',
+                  fontsize=config.plot_legend_fontsize,
+                  color='#444444' )
+
     plt.legend( loc=config.plot_legend_loc,
                 fontsize=config.plot_legend_fontsize,
                 facecolor=config.plot_legend_facecolor,
                 shadow=config.plot_legend_shadow,
                 frameon=config.plot_legend_frameon,
-                fancybox=config.plot_legend_fancybox
-                )
+                fancybox=config.plot_legend_fancybox )
 
     if utils.is_yes(config.plot_tight_layout):
-        plt.tight_layout( )
+        plt.tight_layout()
 
     plt.savefig( path, dpi=options['plot_dpi'], format=options['plot_image_type'] )
 
