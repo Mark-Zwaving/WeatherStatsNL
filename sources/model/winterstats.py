@@ -57,6 +57,10 @@ class Stats:
         self.days_hellmann  = self.days_tg_lt_0
         self.sum_hellmann   = stats.hellmann( data )
         self.frost_sum      = stats.frost_sum( data )
+        self.frost_sum_data = np.unique( np.concatenate( ( self.days_tn_lt_0,
+                                                           self.days_tx_lt_0 ),
+                                                           axis=0 ),
+                                                           axis=0 )
         self.ijnsen         = stats.ijnsen( data )
 
 def sort( l, ent, pm = '+' ):
@@ -180,12 +184,15 @@ def calculate( stations, period, name, type='html' ):
                     <td> <span class="val"> {tg_gem} </span> </td>
                     <td>
                         <span class="val"> {hellmann} </span>
-                        {vhtml.table_days_count( s.days_tg_lt_0, 'TG', 'TGH' )}
+                        {vhtml.table_hellmann( s.days_tg_lt_0 )}
                     </td>
                     <td>
                         <span class="val"> {ijnsen} </span>
                     </td>
-                    <td> <span class="val"> {f_sum} </span> </td>
+                    <td>
+                        <span class="val"> {f_sum} </span>
+                        {vhtml.table_frost_sum( s.frost_sum_data )}
+                    </td>
                     <td>
                         <span class="val"> {tx_min} </span>
                         {vhtml.table_days( s.tx_min_sort, 'TX', 'TXH' )}
@@ -201,7 +208,6 @@ def calculate( stations, period, name, type='html' ):
                     <td>
                         <span class="val"> {sq_sum} </span>
                         {vhtml.table_days( s.sq_sort, 'SQ' )}
-
                     </td>
                     <td>
                         <span class="val"> {rh_sum} </span>

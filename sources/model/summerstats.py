@@ -207,7 +207,7 @@ def calculate( stations, period, name=False, type='html' ):
                     <td> <span class="val"> {tg_gem} </span> </td>
                     <td>
                         <span class="val"> {heat} </span>
-                        {vhtml.table_days(s.days_heat_ndx, 'TG')}
+                        {vhtml.table_heat_ndx(s.days_heat_ndx, 'TG')}
                     </td>
                     <td>
                         <span class="val"> {tx_max} </span>

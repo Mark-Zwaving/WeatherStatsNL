@@ -72,6 +72,10 @@ class Stats:
         self.days_hellmann = self.days_tg_lt_0
         self.ijnsen = stats.ijnsen(data)
         self.frost_sum = stats.frost_sum(data)
+        self.frost_sum_data = np.unique( np.concatenate( ( self.days_tn_lt_0,
+                                                           self.days_tx_lt_0 ),
+                                                           axis=0 ),
+                                                           axis=0 )
 
 def sort( l, pm = '+' ):
     l = np.array( sorted(np.array(l), key=lambda stats: stats.tg_ave) ).tolist() # Sort on average
@@ -280,7 +284,7 @@ def calculate( stations, period, name=False, type='html' ):
                     </td>
                     <td>
                         <span class="val"> {heat_ndx} </span>
-                        {html.table_days( s.days_heat_ndx, 'TG' )}
+                        {html.table_heat_ndx( s.days_heat_ndx, 'TG' )}
                     </td>
                     <td>
                         <span class="val"> {np.size(s.days_tx_gte_20, axis=0)} </span>
@@ -320,13 +324,14 @@ def calculate( stations, period, name=False, type='html' ):
                     </td>
                     <td>
                         <span class="val"> {hellmann} </span>
-                        {html.table_days( s.days_hellmann, 'TG' )}
+                        {html.table_hellmann( s.days_hellmann )}
                     </td>
                     <td>
                         <span class="val"> {ijnsen} </span>
                     </td>
                     <td>
                         <span class="val"> {f_sum} </span>
+                        {html.table_frost_sum( s.frost_sum_data )}
                     </td>
                     <td>
                         <span class="val"> {np.size( s.days_tx_lt_0, axis=0 )} </span>

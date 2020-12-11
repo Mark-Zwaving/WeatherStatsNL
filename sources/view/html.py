@@ -202,7 +202,7 @@ def table_days(days, entity, time_ent=''):
                         <tr>
                             <th>pos</th>
                             <th>date</th>
-                            <th>value</th>
+                            <th>val</th>
                             {th_time_cell}
                         </tr>
                     </thead>
@@ -211,7 +211,7 @@ def table_days(days, entity, time_ent=''):
 
         pos, max = 1, config.html_popup_table_val_10
         if max == -1:
-            max = Total
+            max = total
 
         for day in days:
             ymd  = int(day[daydata.YYYYMMDD]) # Get data int format
@@ -255,7 +255,7 @@ def table_days_count(days, entity, time_ent=''):
                     <thead>
                         <tr>
                             <th>date</th>
-                            <th>value</th>
+                            <th>val</th>
                             {th_time_cell}
                             <th>cnt</th>
                         </tr>
@@ -293,6 +293,59 @@ def table_days_count(days, entity, time_ent=''):
 
     return html
 
+
+def table_day_sum(days, entity=''):
+    html = ''
+    total = np.size(days, axis=0)
+    if total > 0:
+        # HTML table header
+        html += f'''
+                <table class="popup">
+                    <thead>
+                        <tr>
+                            <th>date</th>
+                            <th>val</th>
+                            <th>sum</th>
+                            <th>cnt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                '''
+
+        # Prepare values
+        l, sum, cnt = list(), 0.0, 1
+        ndx_ent  = daydata.ndx_ent(entity) # Index of value
+        for day in days:
+            ymd  = int(day[daydata.YYYYMMDD]) # Get data int format
+            symd = utils.ymd_to_txt(ymd) # Get date string format
+            raw  = day[ndx_ent]
+            sum += raw
+            l.append( f'''
+                        <tr>
+                            <td title="{symd}">{ymd}</td>
+                            <td>{fix.ent(raw,  entity)}</td>
+                            <td>{fix.rounding(sum,  entity)}</td>
+                            <td>{cnt}</td>
+                        </tr>
+                    ''' )
+            cnt += 1
+
+        l.reverse() # Reverse list
+        # Put to html until max
+        cnt, max = 1, config.html_popup_table_val_10
+        if max == -1: max = total
+        for el in l:
+            html += el
+            if cnt == max:
+                break
+            else:
+                cnt += 1
+
+        html += '''
+                </tbody>
+            </table>
+                '''
+
 def table_extremes(l, max):
     html = ''
     if l:
@@ -317,55 +370,186 @@ def table_extremes(l, max):
 
     return html
 
-def table_hellmann ( l, max ):
+def table_frost_sum( days, entity='TN' ):
     html = ''
-    if l:
-        if max is not 0:
-            l.reverse()
-            cnt = len(l)
-            max = cnt if max == -1 else max # -1 for all!
-            end = cnt if max > cnt else max # check bereik
-            html += '<table class="popup">'
-            html += '<thead><tr><th>datum</th><th>getal</th><th>totaal</th><th>aantal</th></tr></thead>'
-            html += '<tbody>'
+    total = np.size(days, axis=0)
+    if total > 0:
+        # HTML table header
+        html += f'''
+                <table class="popup">
+                    <thead>
+                        <tr>
+                            <th>date</th>
+                            <th>tx</th>
+                            <th>txh</th>
+                            <th>tn</th>
+                            <th>tnh</th>
+                            <th>val</th>
+                            <th>sum</th>
+                            <th>cnt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                '''
 
-            for e in l[:end]:
-                sdt = d.Datum(e.datum).tekst()
-                get = fn.rm_s(fn.fix(e.getal, 'hellmann'))
-                som = fn.rm_s(fn.fix(e.som, 'hellmann'))
-                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{som}</td>'
-                html += f'<td>{get}</td><td>{e.aantal}</td></tr>'
+        # Prepare values
+        l, tot, cnt = list(), 0.0, 1
+        for day in days:
+            ymd  = int(day[daydata.YYYYMMDD]) # Get data int format
+            symd = utils.ymd_to_txt( ymd ) # Get date string format
+            tx   = day[daydata.TX]
+            txh  = day[daydata.TXH]
+            tn   = day[daydata.TN]
+            tnh  = day[daydata.TNH]
 
-            html += '</tbody>'
-            html += '</table>'
+            # Calculate frost sum
+            dsum = 0.0
+            if tx < 0: dsum += abs(tx)
+            if tn < 0: dsum += abs(tn)
+            tot += dsum
 
+            l.append( f'''
+                        <tr>
+                            <td title="{symd}">{ymd}</td>
+                            <td>{fix.ent(tx,  entity)}</td>
+                            <td>{fix.ent(txh, 'TXH')}</td>
+                            <td>{fix.ent(tn,  entity)}</td>
+                            <td>{fix.ent(tnh, 'TNH')}</td>
+                            <td>{fix.rounding(dsum, entity)}</td>
+                            <td>{fix.rounding(tot,  entity)}</td>
+                            <td>{cnt}</td>
+                        </tr>
+                    ''' )
+            cnt += 1
+
+        l.reverse() # Reverse list
+        # Put to html until max
+        cnt, max = 1, config.html_popup_table_val_10
+        if max == -1: max = total
+        for el in l:
+            html += el
+            if cnt == max:
+                break
+            else:
+                cnt += 1
+
+        html += '''
+                </tbody>
+            </table>
+                '''
     return html
 
-def table_heat_ndx( l, max ):
+def table_hellmann(days, entity='TG'):
     html = ''
-    if l:
-        if max is not 0:
-            l.reverse()
-            cnt = len(l)
-            max = cnt if max == -1 else max # -1 for all!
-            end = cnt if max > cnt else max # check bereik
-            html += '<table class="popup">'
-            html += '<thead><tr><th>datum</th><th>tg</th><th>getal</th>'
-            html += '<th>totaal</th><th>aantal</th></tr></thead>'
-            html += '<tbody>'
+    total = np.size(days, axis=0)
+    if total > 0:
+        # HTML table header
+        html += f'''
+                <table class="popup">
+                    <thead>
+                        <tr>
+                            <th>date</th>
+                            <th>tg</th>
+                            <th>val</th>
+                            <th>sum</th>
+                            <th>cnt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                '''
 
-            for e in l[:end]:
-                sdt = d.Datum(e.datum).tekst()
-                tg  = fn.rm_s(fn.fix(e.tg, 'tg'))
-                get = fn.rm_s(fn.fix(e.getal, 'heat_ndx'))
-                som = fn.rm_s(fn.fix(e.totaal, 'heat_ndx'))
-                html += f'<tr><td title="{sdt}">{e.datum}</td><td>{tg}</td>'
-                html += f'<td>{get}</td><td>{som}</td><td>{e.aantal}</td></tr>'
+        # Prepare values
+        l, sum, cnt = list(), 0.0, 1
+        ndx_ent  = daydata.ndx_ent(entity) # Index of value
+        for day in days:
+            ymd  = int(day[daydata.YYYYMMDD]) # Get data int format
+            symd = utils.ymd_to_txt( ymd ) # Get date string format
+            raw  = day[daydata.TG]
+            hman = abs(raw)
+            sum += hman
+            l.append( f'''
+                        <tr>
+                            <td title="{symd}">{ymd}</td>
+                            <td>{fix.ent(raw,  entity)}</td>
+                            <td>{fix.rounding(hman, entity)}</td>
+                            <td>{fix.rounding(sum,  entity)}</td>
+                            <td>{cnt}</td>
+                        </tr>
+                    ''' )
+            cnt += 1
 
-            html += '</tbody>'
-            html += '</table>'
+        l.reverse() # Reverse list
+        # Put to html until max
+        cnt, max = 1, config.html_popup_table_val_10
+        if max == -1: max = total
+        for el in l:
+            html += el
+            if cnt == max:
+                break
+            else:
+                cnt += 1
 
+        html += '''
+                </tbody>
+            </table>
+                '''
     return html
+
+def table_heat_ndx(days, entity='TG'):
+    html = ''
+    total = np.size(days, axis=0)
+    if total > 0:
+        # HTML table header
+        html += f'''
+                <table class="popup">
+                    <thead>
+                        <tr>
+                            <th>date</th>
+                            <th>tg</th>
+                            <th>heat</th>
+                            <th>sum</th>
+                            <th>cnt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                '''
+
+        # Prepare values
+        l, sum, cnt = list(), 0.0, 1
+        for day in days:
+            ymd  = int( day[daydata.YYYYMMDD] ) # Get data int format
+            symd = utils.ymd_to_txt( ymd ) # Get date string format
+            raw  = day[daydata.TG]
+            heat = raw - 180.0
+            sum += heat
+            l.append( f'''
+                        <tr>
+                            <td title="{symd}">{ymd}</td>
+                            <td>{fix.ent(raw,  entity)}</td>
+                            <td>{fix.rounding(heat, entity)}</td>
+                            <td>{fix.rounding(sum,  entity)}</td>
+                            <td>{cnt}</td>
+                        </tr>
+                    ''' )
+            cnt += 1
+
+        l.reverse() # Reverse list
+        # Put to html until max
+        cnt, max = 1, config.html_popup_table_val_10
+        if max == -1: max = total
+        for el in l:
+            html += el
+            if cnt == max:
+                break
+            else:
+                cnt += 1
+
+        html += '''
+                </tbody>
+            </table>
+                '''
+    return html
+
 
 def table_list_heatwave_days( l, max ):
     html = ''
