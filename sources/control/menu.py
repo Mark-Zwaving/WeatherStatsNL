@@ -201,46 +201,40 @@ def get_dayvalues_by_date():
     while True:
         log.header('START: SEARCHING AND PREPARING DAY VALUES...', True)
         # Ask for station
-        place = cask.ask_for_one_station('Select a weather station ? ')
-        if not place:
-            cask.ask_back_to_main_menu()
-            break
-        elif utils.is_quit(place):
-            break
 
-        ymd, data = cask.ask_for_date_with_check_data(
-                                place, '\nSelect a date <yyyymmdd> ?'
-                            )
-        if utils.is_quit(ymd):
-            break
+        places = cask.ask_for_stations('\nSelect one or more weather stations ?')
+        if not places: break
+        elif utils.is_quit(places): break
 
-        type = cask.ask_for_file_type(
-                    '\nSelect output filetype ? ', config.default_output
-                )
-        if utils.is_quit(type):
-            break
+        cnt_places = len(places)
+
+        period = cask.ask_for_period( '\nSelect one date or period(s) for the dayvalues ? ' )
+        if utils.is_quit(period): break
+
+        type = cask.ask_for_file_type( '\nSelect output filetype ? ', config.default_output )
+        if utils.is_quit(type): break
 
         # Ask for a file name
+        fname = ''
         if type != 'cmd':
-            fname = f'dayvalues-{place.place.lower()}-{ymd}-{utils.now_for_file()}'
-            fname = cask.ask_for_file_name (
-                        f'\nGive a name for the {type} file ?', fname
-                    )
-            if utils.is_quit(fname):
-                break
+            if cnt_places == 1:
+                fname = f'dayvalues-{places[0].wmo}-{period}-{utils.now_for_file()}'
+                fname = cask.ask_for_file_name ( f'\nGive a name for the {type} file ?', fname )
+                if utils.is_quit(fname): break
 
         st = time.time_ns()
-        path = mdayval.calculate(data, ymd, place, type, fname)
+        path = mdayval.calculate(places, period, type, fname)
         log.console(vt.process_time('Total processing time is ', st), True)
 
-        fopen = cask.ask_to_open_with_app(
-                    f'\nOpen the file (type={type}) with your default application ?'
-                )
+        fopen = cask.ask_to_open_with_app (
+                    f'\nOpen the (last made) file (type={type}) with your default application ?'
+                    )
         if fopen:
             webbrowser.open_new_tab(path)
 
         # Always ask for going back
-        again = cask.ask_again(f'\nDo you want to select another station and date ?')
+        t = f'\nDo you want to select another period(s) and or station(s) ?'
+        again = cask.ask_again(t)
         if utils.is_quit(again):
             break
 
@@ -252,11 +246,8 @@ def search_for_days():
     while True:
         log.header('START SEARCHING FOR SPECIFIC DAYS...', True)
 
-        period = cask.ask_for_period(
-                    'For which time periode do you want to search ? '
-                    )
-        if utils.is_quit(period):
-            break
+        period = cask.ask_for_period( '\nFor which time periode do you want to search ? ' )
+        if utils.is_quit(period): break
 
         places = cask.ask_for_stations('\nSelect one or more weather stations ?')
         if not places:
@@ -346,7 +337,8 @@ def graph_period():
             'plot_climate_ave' : config.plot_climate_ave,
             'plot_climate_per' : config.climate_period,
             'plot_image_type'  : config.plot_image_type,
-            'plot_dpi'         : config.plot_dpi
+            'plot_dpi'         : config.plot_dpi,
+            'plot_min_max_ave_period' : config.plot_min_max_ave_period
         }
 
         if utils.is_no(default):
@@ -402,8 +394,15 @@ def graph_period():
             if utils.is_quit(plot_marker_txt): break
             else: options['plot_marker_txt'] = plot_marker_txt[0] # Take first yess or no
 
+
+            plot_min_max_ave_period = cask.ask_for_yn(
+                                        '\nCalculate min, max and average value in period too ? ',
+                                        config.plot_min_max_ave_period )
+            if utils.is_quit(plot_min_max_ave_period): break
+            else: options['plot_min_max_ave_period'] = plot_min_max_ave_period[0] # Take first yess or no
+
             plot_climate_ave = cask.ask_for_yn(
-                                        '\nCalculate and add climate averages too ? ',
+                                        '\nCalculate and plot the climate averages too ? ',
                                         config.plot_climate_ave )
             if utils.is_quit(plot_climate_ave): break
             else: options['plot_climate_ave'] = plot_climate_ave[0] # Take first yess or no
