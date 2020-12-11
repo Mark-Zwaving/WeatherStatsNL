@@ -47,8 +47,7 @@ timezone = 'Europe/Amsterdam'  # Set the time zone
 help_info = True  # If True al (extra) info is shown
 no_data_given = '...' # Replacement for no output
 check_internet_url = 'www.google.com'  # Url to check for an internet connection
-# The years/period for the calculations of climate averages
-climate_period = '1991-2020'
+climate_period = '1981-2010' # The years/period for the calculations of climate averages
 
 data_comment_sign = '#'
 
@@ -120,6 +119,9 @@ html_popup_table_cnt_rows = 25 # -1 for all rows
 # Give a max number for preventing possible html files becoming very large
 html_popup_table_val_10 = 20 # -1 for all rows
 
+# Remove white from html source code
+html_strip_output = True
+
 fl_max = sys.float_info.min # Minimum possible value
 fl_min = sys.float_info.max # Maximum possible value
 
@@ -141,6 +143,7 @@ plot_marker_size  =  3      # Dot sizes
 plot_marker_type  =  'o'    # Type marker
 plot_cummul_val   = 'n'     # Cummulative values. yess (y) or no (n)
 plot_climate_ave  = 'n'     # Adding climate averages to plot. yess (y) or no (n)
+plot_min_max_ave_period  = 'y'     # Adding climate averages to plot. yess (y) or no (n)
 plot_clima_line_style  = 'dotted'
 plot_clima_line_width  = 1
 plot_clima_marker_type = '.'
@@ -204,13 +207,12 @@ plot_xas_font    = { 'family'  : 'consolas',
                     }
 plot_xas_rotation = 40
 # Style legend
-plot_legend_loc       = 'best'
+plot_legend_loc       = 'upper right'
 plot_legend_fontsize  = 'small'
 plot_legend_facecolor = None
 plot_legend_shadow    = False
 plot_legend_frameon   = False
 plot_legend_fancybox  = False
-strip_html_output     = True
 
 # Asked for char
 answer_quit = ['q', 'quit']
