@@ -37,7 +37,7 @@ def climate_periode( station, periode,  ent):
 
     return ave
 
-def climate_day( station, mmdd, ent, period ):
+def climate_average_for_day( station, mmdd, ent, period ):
     '''Function calculate climate averages for a day for a station'''
     ys, ye = period.split('-')  # Get climate years
     per  = f'{ys}{mmdd}-{ye}*{mmdd}'  # Special period for a day during the years
