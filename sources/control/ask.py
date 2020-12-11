@@ -151,12 +151,12 @@ def ask_for_entities( txt, space=False):
 
     return l
 
-def ask_for_one_station( txt, l=False, space=False):
+def ask_for_one_station( txt, l_map=False, space=False):
     result = False
-    if l == False:
-        l = utils.only_existing_stations_in_map() # Update l
+    if l_map == False:
+        l_map = utils.only_existing_stations_in_map() # Update l
 
-    if len(l) != 0:
+    if len(l_map) != 0:
         t  = f'{txt}\n'
         t += vt.knmi_stations(l, 3, 25)
         t += 'To add a station, give a wmo-number or a city name'
@@ -165,11 +165,12 @@ def ask_for_one_station( txt, l=False, space=False):
 
             if utils.is_empthy(answ):
                 log.console('Please type in something ...', True)
-                continue
             elif utils.is_quit(answ):
-                return config.answer_quit[0] # Return first el for quit
-            elif stations.name_in_list(answ, l) or stations.wmo_in_list(answ, l):
-               result = stations.find_by_wmo_or_name(answ, l)
+                result = config.answer_quit[0] # Return first el for quit
+                break
+            elif stations.name_in_list(answ, l_map) or \
+                 stations.wmo_in_list(answ, l_map):
+               result = stations.find_by_wmo_or_name(answ, l_map)
                log.console(f'{result.wmo}: {result.place} {result.province} selected', True)
                break
             else:
@@ -180,50 +181,52 @@ def ask_for_one_station( txt, l=False, space=False):
 
     return result
 
-def ask_for_stations( txt, l=False, space=False):
+def ask_for_stations( txt, l_map=False, space=False):
     result = list()
-    if l == False:
-        l = utils.only_existing_stations_in_map() # Update l
+    if l_map == False:
+        l_map = utils.only_existing_stations_in_map() # Update l
 
-    if len(l) != 0:
+    cnt_map = len(l_map)
+    if cnt_map > 0:
         t  = f'{txt}\n'
-        t += vt.knmi_stations( l, 3, 25 )
+        t += vt.knmi_stations( l_map, 3, 25 )
         t += 'To add one station, give a wmo-number or a city name\n'
         t += 'To add more stations, give a wmo-number or a city name separated by a comma\n'
         t += "Press '*' to add all available weather stations"
 
         while True:
             ask_txt = t
-            if len(result) > 0:
+            cnt_result = len(result)
+            if cnt_result > 0:
                 ask_txt += "\nPress 'n' to move to the next !"
 
-            answ = ask_for_txt( ask_txt, default=False, space=space )
-            log.console(' ', True)
+            answ = ask_for_txt( ask_txt + '\n', default=False, space=space )
 
             if utils.is_empthy(answ):
                 log.console('Please type in something ...', True)
-                continue
             elif utils.is_quit(answ):
-                return config.answer_quit[0] # Return first el for quit
+                result = config.answer_quit[0] # Return first el for quit
+                break
             elif answ == '*':
-                result =  l
-            elif answ == 'n' and len(result) > 0:
-                return result
+                result =  l_map
+                break
+            elif answ == 'n' and cnt_result > 0:
+                break
             else:
                 ll = list() # Make a list with stations
                 if answ.find(',') != -1:
                     ll = [clear(e) for e in answ.split(',')] # Clean input
                 else:
-                    if stations.name_in_list(answ, l):
+                    if stations.name_in_list(answ, l_map):
                         ll.append(answ)
-                    elif stations.wmo_in_list(answ, l):
+                    elif stations.wmo_in_list(answ, l_map):
                         ll.append(answ)
                     else:
                         log.console(f'Station: {answ} is unknown !')
 
                 # Add all added stations
                 for s in ll:
-                    st = stations.find_by_wmo_or_name(s, l)
+                    st = stations.find_by_wmo_or_name(s, l_map)
                     if st != False:
                         all = f'{st.wmo} {st.place} {st.province}'
                         if stations.check_if_station_already_in_list( st, result ) != True:
@@ -234,22 +237,22 @@ def ask_for_stations( txt, l=False, space=False):
                     else:
                         log.console(f'Station: {answ} not found...')
 
-            if len(result) == len(l):
+            cnt_result = len(result) # New count
+            if cnt_result == cnt_map:
                 log.console('\nAll available weatherstations added...', True)
                 break
-            elif len(result) > 0:
+            elif cnt_result > 0:
                 log.console('\nAll weatherstation(s) who are added are: ', True)
 
                 for s in result:
                     log.console(f'{s.wmo}: {s.place} {s.province}', True)
-            else:
-                continue
+
     else:
         t = 'No weatherdata found in data map. Download weatherdata first.'
         log.console(t, True)
-        return False
+        result = False
 
-    return l
+    return result
 
 def ask_for_date( txt, space=False):
     while True:
@@ -259,11 +262,14 @@ def ask_for_date( txt, space=False):
             log.console('Please type in something ...', True)
             continue
         elif utils.is_quit(answ):
-            return config.answer_quit[0] # Return first el for quit
+            answ = config.answer_quit[0] # Return first el for quit
+            break
         elif validate.yyyymmdd(answ):
-            return answ
+            break
         else:
             log.console(f'Error in date: {answ}\n', True)
+
+    return answ
 
 def ask_for_period( txt='', space=False ):
     info = False
@@ -298,15 +304,19 @@ def ask_for_period( txt='', space=False ):
         if utils.is_empthy(answ):
             log.console('Please type in something ...', True)
         elif utils.is_quit(answ):
-            return config.answer_quit[0] # Return first el for quit
+            answ = config.answer_quit[0] # Return first el for quit
+            break
         elif answ == 'i':
             info = True
         else:
-            if daydata.check_periode( answ ):
-                return answ.replace(' ', '')
+            if daydata.check_periode( answ ): # TODO
+                answ = answ.replace(' ', '')
+                break
             else:
                 err  = f'Period of format {answ} is unknown... Press a key... '
                 ask(err)
+
+    return answ
 
 def ask_for_date_with_check_data( stat, txt, space=False ):
     log.console(f'Loading data {stat.place} ...')
