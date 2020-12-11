@@ -4,57 +4,109 @@ __author__     =  'Mark Zwaving'
 __email__      =  'markzwaving@gmail.com'
 __copyright__  =  'Copyright 2020 (C) Mark Zwaving. All rights reserved.'
 __license__    =  'GNU Lesser General Public License (LGPL)'
-__version__    =  '0.0.3'
+__version__    =  '0.0.5'
 __maintainer__ =  'Mark Zwaving'
 __status__     =  'Development'
 
 import config, numpy as np
+import sources.control.fio as fio
 import sources.model.utils as utils
 import sources.model.daydata as daydata
-import sources.view.html as view_html
+import sources.view.html as vhtml
 import sources.view.log as log
 
-def calculate(data, ymd, station, type, fname):
-    log.console(f'Station: {station.wmo} {station.place}', True)
-    log.console(f'Date: {utils.ymd_to_txt(ymd)}', True)
+def calculate(places, period, type, name=''):
+    log.console(f'\nStart make dayvalues...\n', True)
+    cnt_places = len(places)
+    first = True
 
-    sel = np.where(data[:,daydata.YYYYMMDD] == float(ymd))
-    day = data[sel][0]
+    for place in places:
 
-    # Make path if it is a html or txt file
-    dir, path  = '', ''
-    fname = f'{fname}.{type}'
-    if type == 'html':
-        dir = config.dir_html_dayvalues
-    elif type == 'txt':
-        dir = config.dir_txt_dayvalues
-    path = utils.mk_path(dir, fname)
+        log.console(f'Station: {place.wmo} {place.place}', True)
+        d1 = daydata.read_station_period(place, period)[1]
+        dates = d1[:,daydata.YYYYMMDD]
+        cnt_dates = len(dates)
 
-    # Make output
-    if type == 'html':
-        header  = f'<i class="text-info fas fa-home"></i> '
-        header += f'{station.wmo} - {station.place} '
-        header += f'{station.province} - {utils.ymd_to_txt(ymd)} '
+        # Base directory
+        if type == 'html':
+            dir = config.dir_html_dayvalues
+        elif type == 'txt':
+            dir = config.dir_txt_dayvalues
 
-        page = view_html.Template()
-        page.title  = f'{station.place}-{ymd}'
-        page.header = header
-        page.strip  = True
-        page.main   = view_html.main_ent( day )
-        page.footer = view_html.footer_data_notification(station)
-        page.set_path( dir, fname )
-        # Styling
-        page.add_css_file(dir='./../static/css/', name='default.css')
-        page.add_css_file(dir='./css/', name='dayvalues.css')
-        # Scripts
-        page.add_script_file(dir='./js/', name='dayvalues.js')
-        page.add_script_file(dir='./../static/js/', name='default.js')
-        page.save()
+        # Make paths
+        w_dir = utils.mk_path(dir, place.wmo)
 
-    elif type == 'txt':
-        title = txt_date
-        main  = view_dayvalues.txt_main( day )
-        txt   = f'{title}\n{main}'
-        path  = utils.mk_path( station.dayvalues_dir_txt, fname )
+        # Make directory
+        fio.mk_dir(w_dir)
+
+        for yyyymmdd in dates:
+            ymd = utils.f_to_s(yyyymmdd)
+            log.console(f'Date: {utils.ymd_to_txt(ymd)}', True)
+
+            # Get year, month and day
+            y, m, d = ymd[:4], ymd[4:6], ymd[6:8]
+
+            # Make paths
+            y_dir = utils.mk_path(w_dir, y)
+            m_dir = utils.mk_path(y_dir, m)
+
+            # Make directories
+            fio.mk_dir(y_dir)
+            fio.mk_dir(m_dir)
+
+            # Make file name
+            if cnt_places > 1 or cnt_dates > 1:
+                if first:
+                    if name != '':
+                        t  = '\nYour one default name for the file cannot be used. '
+                        t += 'Because more than one date is given.\n'
+                        t += 'Now a default name for the file (based on wmo and '
+                        t += 'date) will be used.'
+                        log.console(t, True)
+                        input('Press a key to continue...\n')
+                    first = False
+                name = f'dayvalues-{place.wmo}-{y}-{m}-{d}' # Default
+            fname = f'{name}.{type}'
+
+            # Make path
+            path = utils.mk_path(m_dir, fname)
+
+            # Get correct day
+            day = d1[np.where(dates == yyyymmdd)][0]
+
+            map_diff = './../../../'
+
+            # Make output
+            if type == 'html':
+                header  = f'<i class="text-info fas fa-home"></i> '
+                header += f'{place.wmo} - {place.place} '
+                header += f'{place.province} - {utils.ymd_to_txt(ymd)} '
+
+                page = vhtml.Template()
+                page.title  = f'{place.wmo} {place.place} {ymd}'
+                page.header = header
+                page.strip  = True
+                page.main   = vhtml.main_ent( day )
+                page.footer = vhtml.footer_data_notification(place)
+                page.file_path = path
+                page.diff_path = map_diff
+                # Styling
+                page.css_files = [ f'{map_diff}../static/css/default.css',
+                                   f'{map_diff}css/dayvalues.css' ]
+                page.script_files = [ f'{map_diff}js/dayvalues.js',
+                                      f'{map_diff}../static/js/default.js']
+                ok = page.save()
+
+            if ok:
+                log.console(f'Successfull made {path}', True)
+            else:
+                log.console(f'Failed to make {path}', True)
+            log.console(' ', True)
+
+            # elif type == 'txt':
+            #     title = txt_date
+            #     main  = view_dayvalues.txt_main( day )
+            #     txt   = f'{title}\n{main}'
+            #     path  = utils.mk_path( station.dayvalues_dir_txt, fname )
 
     return path
