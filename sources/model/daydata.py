@@ -443,26 +443,30 @@ def process_data( station ):
         ok = False
         log.console(f'Process data for station: {station.place}', True)
 
-        st = time.time_ns()
-        zip = station.data_zip_path
         url = station.data_url
-        txt = station.data_txt_path
-
         if not url:
             log.console('Download skipped...', True)
         else:
-            ok = fio.download(url, zip)
-            if ok:
-                log.console(vt.process_time('Download in ', st))
+            if station.data_format == config.knmi_data_format:
                 st = time.time_ns()
-                ok = fio.unzip(zip, txt)
+                zip = station.data_zip_path
+                txt = station.data_txt_path
+                ok = fio.download( url, zip )
                 if ok:
-                    log.console(vt.process_time('Unzip in ', st))
+                    log.console(vt.process_time('Download in ', st))
+                    st = time.time_ns()
+                    ok = fio.unzip(zip, txt)
+                    if ok:
+                        log.console(vt.process_time('Unzip in ', st))
 
-            if ok:
-                t = f'Process data {station.place} success.'
+                if ok:
+                    t = f'Process data {station.place} success.'
+                else:
+                    t = f'Process data {station.place} failed.'
             else:
-                t = f'Process data {station.place} failed.'
+                # Stations with other Formats
+                # Needs to converted to knmi data format format
+                pass
 
             log.console(t, True)
 
