@@ -138,7 +138,8 @@ def buienradar_weather():
     ok, js = fio.request_json(config.buienradar_json_data)
     if ok:
         report = js['forecast']['weatherreport']
-        text = report['text'].replace('.', '. ').replace('&agrave;', 'à').replace('&rsquo;', '\'')
+        text = report['text'].replace('.', '. ').replace('&agrave;', 'à').
+        text = text.replace('&rsquo;', '\'').replace('&euml;', 'ë')
         l = re.sub('\t|  |&nbsp;', ' ', text).split(' ')
         word, max_word = 1, 13  # Count words
         zin, max_zin = 1, 8   # Count sentence
