@@ -214,27 +214,28 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                   linestyle=config.plot_grid_linestyle,
                   linewidth=config.plot_grid_linewidth )
 
-    diff_max = abs(max * 0.10)  # 10% upperrange extra
-    diff_min = abs(min * 0.98)  #  2% underrange extra
+    diff_max = abs(max * 0.15)  # 10% upperrange extra
+    diff_min = abs(min * 0.98)  #  2% underrange extra unused
     # Extra space above for legend based on station and entities
     diff_max = diff_max * (len(stations) + len(entities))
-    print('DIFF_MIN: ' + str(diff_min))
-    print('DIFF_MAX: ' + str(diff_max))
+    # DEBUG for optimalisation
+    # print('DIFF_MIN: ' + str(diff_min))
+    # print('DIFF_MAX: ' + str(diff_max))
     # Diff_max = 1.5 if diff_max < 1.5 else diff_max
     max_tick   = math.ceil( max + diff_max )  # upperrange extra
-    min_tick   = math.ceil( min - diff_min ) #  underrange extra
-    print('MAX_TICK: ' + str(max_tick))
-    print('MIN_TICK: ' + str(min_tick))
+    min_tick   = math.floor( min ) #  underrange extra a litlle bit
+    # print('max_tick: ' + str(max_tick))
+    # print('min_tick: ' + str(min_tick))
 
     # Update steps
     diff = max_tick - min_tick
     step = math.floor( diff / 10 - 0.5 )
     step = 1 if step == 0 else step
-    print('STEP: ' + str(step))
-    input()
+    # print('STEP: ' + str(step))
+    # input()
 
     pos_extr_y = max_tick - step / 2  # Is y position of min/max texts. Just below top
-    print('POS_EXTR_Y: ' + str(pos_extr_y))
+    # print('pos txt: ' + str(pos_extr_y))
 
     yticks = np.arange( min_tick, max_tick + step, step ) # 1-10 % ranges
     plt.yticks( yticks,
