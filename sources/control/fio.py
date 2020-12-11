@@ -4,7 +4,7 @@ __author__     =  "Mark Zwaving"
 __email__      =  "markzwaving@gmail.com"
 __copyright__  =  "Copyright 2020 (C) Mark Zwaving. All rights reserved."
 __license__    =  "GNU Lesser General Public License (LGPL)"
-__version__    =  "0.0.8"
+__version__    =  "0.0.9"
 __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
@@ -87,6 +87,24 @@ def delete(fname):
             ok = True
     else:
         log.console(f'Delete failed. File does not exist')
+
+    return ok
+
+def mk_dir(path):
+    '''Function makes a map if not already exists'''
+    ok = False
+    log.console(f'Make dir: {path}')
+    try:
+        if os.path.isdir(path):
+            log.console('Map not made because it already exists.')
+            return True
+        else:
+            os.mkdir(path)
+    except Exception as e:
+        log.console(vt.error('Make directory', e))
+    else:
+        log.console(vt.succes('Make directory'))
+        ok = True
 
     return ok
 
