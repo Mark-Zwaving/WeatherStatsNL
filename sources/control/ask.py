@@ -302,7 +302,7 @@ def ask_for_period( txt='', space=False ):
         answ = ask_for_txt( t, default=False, space=space )
 
         if utils.is_empthy(answ):
-            log.console('Please type in something ...', True)
+            log.console('\nPlease type in something...\n', True)
         elif utils.is_quit(answ):
             answ = config.answer_quit[0] # Return first el for quit
             break
