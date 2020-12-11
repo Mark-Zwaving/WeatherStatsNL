@@ -57,10 +57,7 @@ class Stats:
         self.days_hellmann  = self.days_tg_lt_0
         self.sum_hellmann   = stats.hellmann( data )
         self.frost_sum      = stats.frost_sum( data )
-        self.frost_sum_data = np.unique( np.concatenate( ( self.days_tn_lt_0,
-                                                           self.days_tx_lt_0 ),
-                                                           axis=0 ),
-                                                           axis=0 )
+        self.frost_sum_data = self.days_tn_lt_0 # All days with a T < 0
         self.ijnsen         = stats.ijnsen( data )
 
 def sort( l, ent, pm = '+' ):
