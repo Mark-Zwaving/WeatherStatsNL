@@ -156,7 +156,7 @@ def ent(val, entity):
     # Wind direction
     elif e in [ 'ddvec' ]:
         if f == 0.0:
-            return f'{f:.0f}° {tr.txt(VAR)}'
+            return f'{f:.0f}° {tr.txt("VAR")}'
         else:
             # From degrees to direction
             # Source: https://www.campbellsci.com/blog/convert-wind-directions
