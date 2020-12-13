@@ -6,13 +6,14 @@
         <meta charset="{{%charset%}}">
         <meta name="author" content="{{%author%}}">
         <meta name="viewport" content="{{%viewport%}}">
-        <link rel="stylesheet" type="text/css" href="{{%diffpath%}}../../thirdparty/css/bootstrap.css">
-        <link rel="stylesheet" type="text/css" href="{{%diffpath%}}../../thirdparty/css/font-awesome-5.min.css">
+        <link rel="stylesheet" type="text/css" href="{{%path_to_root%}}thirdparty/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="{{%path_to_root%}}thirdparty/css/font-awesome-5.min.css">
         {{%css_files%}}
     </head>
     <body>
-        <article class="container-fluid m-3 mx-auto">
-          <header class="m-2 p-3">
+        <article class="container-fluid m-1 mx-auto">
+          <header id="menu" style="display:none"> </header>
+          <header class="p-3">
               <h5>{{%header%}}</h5>
           </header>
           <main class="row text-center m-2">
@@ -25,10 +26,10 @@
           </footer>
         </article>
 
-        <script src="{{%diffpath%}}../../thirdparty/js/jquery-3.2.1.slim.min.js"></script>
-        <script src="{{%diffpath%}}../../thirdparty/js/popper.min.js"></script>
-        <script src="{{%diffpath%}}../../thirdparty/js/bootstrap.js"></script>
-        <script src="{{%diffpath%}}../../thirdparty/js/font-awesome-5.min.js"></script>
+        <script src="{{%path_to_root%}}thirdparty/js/jquery-3.2.1.slim.min.js"></script>
+        <script src="{{%path_to_root%}}thirdparty/js/popper.min.js"></script>
+        <script src="{{%path_to_root%}}thirdparty/js/bootstrap.js"></script>
+        <script src="{{%path_to_root%}}thirdparty/js/font-awesome-5.min.js"></script>
         {{%script_files%}}
     </body>
 </html>

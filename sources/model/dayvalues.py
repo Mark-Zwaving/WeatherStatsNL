@@ -74,7 +74,7 @@ def calculate(places, period, type, name=''):
             # Get correct day
             day = d1[np.where(dates == yyyymmdd)][0]
 
-            map_diff = './../../../'
+            path_to_root = './../../../../'
 
             # Make output
             if type == 'html':
@@ -89,12 +89,12 @@ def calculate(places, period, type, name=''):
                 page.main   = vhtml.main_ent( day )
                 page.footer = vhtml.footer_data_notification(place)
                 page.file_path = path
-                page.diff_path = map_diff
+                page.path_to_root = path_to_root
                 # Styling
-                page.css_files = [ f'{map_diff}../static/css/default.css',
-                                   f'{map_diff}css/dayvalues.css' ]
-                page.script_files = [ f'{map_diff}js/dayvalues.js',
-                                      f'{map_diff}../static/js/default.js']
+                page.css_files = [ f'{path_to_root}/dayvalues/static/css/default.css',
+                                   f'{path_to_root}/dayvalues/css/dayvalues.css' ]
+                page.script_files = [ f'{path_to_root}/dayvalues/js/dayvalues.js',
+                                      f'{path_to_root}/dayvalues/static/js/default.js']
                 ok = page.save()
 
             if ok:
