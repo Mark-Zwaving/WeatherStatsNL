@@ -264,6 +264,7 @@ def calculate(places, period, query, type, fname):
         </table>
         '''
 
+        path_to_root = './../' # Path to html root
         log.console('\nWrite/print results... ', True)
 
         # Write to html, screen, console
@@ -271,16 +272,16 @@ def calculate(places, period, query, type, fname):
         page.title     =  title
         page.main      =  html
         page.strip     =  True
+        page.path_to_root = path_to_root
         page.set_path(dir, fname)
         # Styling
-        page.add_css_file(dir='./../static/css/', name='table-statistics.css')
-        page.add_css_file(dir='./../static/css/', name='default.css')
-        page.add_css_file(dir='./css/', name='search4days.css')
+        page.css_files = [ f'{path_to_root}search-for-days/css/default.css',
+                           f'{path_to_root}static/css/table-statistics.css',
+                           f'{path_to_root}search-for-days/css/search4days.css' ]
         # Scripts
-        page.add_script_file(dir='./js/', name='search4days.js')
-        page.add_script_file(dir='./../static/js/', name='sort-col.js')
-        page.add_script_file(dir='./../static/js/', name='default.js')
-
+        page.script_files = [ f'{path_to_root}search-for-days/js/search4days.js',
+                              f'{path_to_root}static/js/sort-col.js',
+                              f'{path_to_root}static/js/default.js' ]
         page.save()
 
     elif type == 'text':

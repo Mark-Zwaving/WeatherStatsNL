@@ -276,6 +276,7 @@ def calculate( stations, period, name, type='html' ):
             </table>
             '''
 
+    path_to_root = './../' # Path to html root
     log.console('\nWrite/print results... ', True)
 
     # Write to file or console
@@ -288,15 +289,16 @@ def calculate( stations, period, name, type='html' ):
         page.title     =  table_title
         page.main      =  output
         page.strip     =  True
+        page.path_to_root = path_to_root
         page.set_path( dir, f'{name}.html' )
         # Styling
-        page.add_css_file(dir='./../static/css/', name='table-statistics.css')
-        page.add_css_file(dir='./../static/css/', name='default.css')
-        page.add_css_file(dir='./css/', name='winterstats.css')
+        page.css_files = [ f'{path_to_root}winterstats/css/default.css',
+                           f'{path_to_root}static/css/table-statistics.css',
+                           f'{path_to_root}winterstats/css/winterstats.css' ]
         # Scripts
-        page.add_script_file(dir='./js/', name='winterstats.js')
-        page.add_script_file(dir='./../static/js/', name='sort-col.js')
-        page.add_script_file(dir='./../static/js/', name='default.js')
+        page.script_files = [ f'{path_to_root}winterstats/js/winterstats.js',
+                              f'{path_to_root}static/js/sort-col.js',
+                              f'{path_to_root}static/js/default.js' ]
         page.save()
 
     elif type == 'txt':

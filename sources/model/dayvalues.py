@@ -91,10 +91,10 @@ def calculate(places, period, type, name=''):
                 page.file_path = path
                 page.path_to_root = path_to_root
                 # Styling
-                page.css_files = [ f'{path_to_root}/dayvalues/static/css/default.css',
+                page.css_files = [ f'{path_to_root}/dayvalues/css/default.css',
                                    f'{path_to_root}/dayvalues/css/dayvalues.css' ]
                 page.script_files = [ f'{path_to_root}/dayvalues/js/dayvalues.js',
-                                      f'{path_to_root}/dayvalues/static/js/default.js']
+                                      f'{path_to_root}/static/js/default.js']
                 ok = page.save()
 
             if ok:

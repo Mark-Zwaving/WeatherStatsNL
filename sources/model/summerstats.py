@@ -286,6 +286,8 @@ def calculate( stations, period, name=False, type='html' ):
 
     log.console('\nWrite/print results... ', True)
 
+    path_to_root = './../' # Path to html root
+
     # Write to file or console
     output = f'{title}\n{main}\n{footer}'
     if type == 'cmd':
@@ -296,16 +298,16 @@ def calculate( stations, period, name=False, type='html' ):
         page.title     =  table_title
         page.main      =  output
         page.strip     =  True
+        page.path_to_root = path_to_root
         page.set_path(dir, f'{name}.html')
         # Styling
-        page.add_css_file(dir='./../static/css/', name='table-statistics.css')
-        page.add_css_file(dir='./../static/css/', name='default.css')
-        page.add_css_file(dir='./css/', name='summerstats.css')
+        page.css_files = [ f'{path_to_root}summerstats/css/default.css',
+                           f'{path_to_root}static/css/table-statistics.css',
+                           f'{path_to_root}summerstats/css/summerstats.css' ]
         # Scripts
-        page.add_script_file(dir='./js/', name='summerstats.js')
-        page.add_script_file(dir='./../static/js/', name='sort-col.js')
-        page.add_script_file(dir='./../static/js/', name='default.js')
-
+        page.script_files = [ f'{path_to_root}summerstats/js/summerstats.js',
+                              f'{path_to_root}static/js/sort-col.js',
+                              f'{path_to_root}static/js/default.js' ]
         page.save()
 
     elif type == 'txt':

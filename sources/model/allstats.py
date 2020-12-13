@@ -376,7 +376,8 @@ def calculate( stations, period, name=False, type='html' ):
             </tfoot>
             </table>
         '''
-
+        
+    path_to_root = './../' # Path to html root
     log.console('\nWrite/print results... ', True)
 
     # Write to file or console
@@ -389,16 +390,16 @@ def calculate( stations, period, name=False, type='html' ):
         page.title     =  table_title
         page.main      =  output
         page.strip     =  True
+        page.path_to_root = path_to_root
         page.set_path(dir, f'{name}.html')
         # Styling
-        page.add_css_file(dir='./../static/css/', name='table-statistics.css')
-        page.add_css_file(dir='./../static/css/', name='default.css')
-        page.add_css_file(dir='./css/', name='allstats.css')
-        # Scripting
-        page.add_script_file(dir='./js/', name='allstats.js')
-        page.add_script_file(dir='./../static/js/', name='sort-col.js')
-        page.add_script_file(dir='./../static/js/', name='default.js')
-
+        page.css_files = [ f'{path_to_root}allstats/css/default.css',
+                           f'{path_to_root}allstats/css/table-statistics.css',
+                           f'{path_to_root}allstats/css/allstats.css' ]
+        # Scripts
+        page.script_files = [ f'{path_to_root}allstats/js/allstats.js',
+                              f'{path_to_root}static/js/sort-col.js',
+                              f'{path_to_root}static/js/default.js' ]
         page.save()
 
     elif type == 'txt':
