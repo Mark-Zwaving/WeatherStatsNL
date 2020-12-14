@@ -12,7 +12,7 @@ import numpy as np, config, stations
 import sources.model.stats as stats
 import sources.model.daydata as daydata
 import sources.model.utils as utils
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.html as vhtml
 import sources.view.dayvalues as dayvalues
 import sources.view.translate as tr
@@ -129,7 +129,7 @@ def process( places, period, query ):
     data = daydata.read_stations_period( places, period ) #= numpy array
 
     # Get all the days to search for
-    log.console(f'Executing query: {query}', True)
+    console.log(f'Executing query: {query}', True)
     if query.find('and') == -1 and query.find('or') == -1:
         return query_simple( data, query ) # Process only one simple query
     else:
@@ -139,13 +139,7 @@ def calculate(places, period, query, type, fname):
     data = process( places, period, query ) # All days for the terms given
 
     # Make path if it is a html or txt file
-    dir, path, fname = '', '', f'{fname}.{type}'
-    if type == 'html':
-        dir = config.dir_html_search_for_days
-    elif type == 'txt':
-        dir = config.dir_txt_search_for_days
-
-    path = utils.mk_path(dir, fname)
+    path = utils.mk_path(utils.mk_path(config.dir_search4days, type), f'{fname}.{type}')
 
     if type =='html':
         title = f'Days {query}'
@@ -264,8 +258,8 @@ def calculate(places, period, query, type, fname):
         </table>
         '''
 
-        path_to_root = './../' # Path to html root
-        log.console('\nWrite/print results... ', True)
+        path_to_root = './../../' # Path to html root
+        console.log('\nWrite/print results... ', True)
 
         # Write to html, screen, console
         page           =  vhtml.Template()
@@ -273,13 +267,13 @@ def calculate(places, period, query, type, fname):
         page.main      =  html
         page.strip     =  True
         page.path_to_root = path_to_root
-        page.set_path(dir, fname)
+        page.file_path = path
         # Styling
-        page.css_files = [ f'{path_to_root}search-for-days/css/default.css',
+        page.css_files = [ f'{path_to_root}search4days/css/default.css',
                            f'{path_to_root}static/css/table-statistics.css',
-                           f'{path_to_root}search-for-days/css/search4days.css' ]
+                           f'{path_to_root}search4days/css/search4days.css' ]
         # Scripts
-        page.script_files = [ f'{path_to_root}search-for-days/js/search4days.js',
+        page.script_files = [ f'{path_to_root}search4days/js/search4days.js',
                               f'{path_to_root}static/js/sort-col.js',
                               f'{path_to_root}static/js/default.js' ]
         page.save()

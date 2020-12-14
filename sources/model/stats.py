@@ -12,7 +12,7 @@ import config
 import numpy as np
 import numpy.ma as ma
 import sources.model.daydata as daydata
-import sources.view.log as log
+import sources.view.console as console
 
 # All allowed input operators
 operators = np.array( [
@@ -127,9 +127,9 @@ def terms_days( data, entity, operator, value ):
         elif op in ['le', '<=', '≤']:  sel = np.where( data[:,ndx] <= f )
         elif op in ['ne', '!=', '<>']: sel = np.where( data[:,ndx] != f )
         else:
-            log.console(f'Error in operator {op} in terms for day...')
+            console.log(f'Error in operator {op} in terms for day...')
     else:  # Wrong input
-        log.console(f'Error. Operator {op} is unknown...')
+        console.log(f'Error. Operator {op} is unknown...')
 
     return data[sel]  # Return all days where the selected terms are true
 

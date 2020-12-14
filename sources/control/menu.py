@@ -19,7 +19,7 @@ import sources.model.dayvalues as mdayval
 import sources.model.current_weather as mcurweather
 import sources.control.ask as cask
 import sources.control.fio as fio
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.translate as tr
 import sources.view.txt as vt
 import sources.view.color as vcol
@@ -28,22 +28,22 @@ import sources.view.graphs as vg
 # Menu choice 1
 def process_knmi_dayvalues_all():
     '''Function downloads, unzipped  all knmi stations in the list'''
-    log.header('START DOWNLOADING ALL DATA DAYVALUES KNMI STATIONS...', True)
+    console.header('START DOWNLOADING ALL DATA DAYVALUES KNMI STATIONS...', True)
 
     st = time.time_ns()
     for stat in stations.list:
         daydata.process_data( stat )
-        log.console(' ', True)
+        console.log(' ', True)
 
-    log.console(vt.process_time('Total processing time is ', st), True)
+    console.log(vt.process_time('Total processing time is ', st), True)
 
-    log.footer('END DOWNLOADING ALL STATIONS KNMI DATA DAY VALUES', True)
+    console.footer('END DOWNLOADING ALL STATIONS KNMI DATA DAY VALUES', True)
     cask.ask_back_to_main_menu()
 
 # Menu choice 2
 def process_knmi_dayvalues_selected():
     '''Function asks for one or more wmo numbers to download their data'''
-    log.header('START DOWNLOAD STATION(S) KNMI DATA DAY VALUES...', True )
+    console.header('START DOWNLOAD STATION(S) KNMI DATA DAY VALUES...', True )
 
     done, max = 0, (stations.list)
     while True:
@@ -58,43 +58,43 @@ def process_knmi_dayvalues_selected():
         st = time.time_ns()
         for stat in places:
             daydata.process_data( stat )
-            log.console(' ', True)
+            console.log(' ', True)
 
-        log.console(vt.process_time('Total processing time is ', st), True)
+        console.log(vt.process_time('Total processing time is ', st), True)
 
         again = cask.ask_again(f'Do you want to download more stations ?', True)
         if utils.is_quit(again):
             break
 
-    log.footer('END DOWNLOAD STATION(S) KNMI DATA DAY VALUES...', True )
+    console.footer('END DOWNLOAD STATION(S) KNMI DATA DAY VALUES...', True )
 
 # Menu optie
 def process_weather_knmi_global():
     '''Function downloads and print a global weather forecast from the website from the knmi'''
-    log.header('START DOWNLOAD KNMI GLOBAL FORECAST...', True)
+    console.header('START DOWNLOAD KNMI GLOBAL FORECAST...', True)
 
     ok, t = False, ''
     if utils.has_internet():
         sd   = utils.loc_date_now().strftime('%Y%m%d')
         url  = config.knmi_forecast_global_url
-        file = utils.mk_path(config.dir_txt_forecasts, f'basisverwachting-{sd}.txt')
+        file = utils.mk_path(config.dir_forecasts_txt, f'basisverwachting-{sd}.txt')
         ok = fio.download( url, file )
         if ok:
             ok, t = fio.read(file)
             if ok:
                 t = '\n' + vt.clean_up( t )
-                log.console(t, True)
+                console.log(t, True)
             else:
-                log.console('Not ok. Something went wrong along the way.')
+                console.log('Not ok. Something went wrong along the way.')
     else:
-        log.console('No internet connection...', True)
+        console.log('No internet connection...', True)
 
-    log.footer('END DOWNLOAD KNMI GLOBAL FORECAST...', True)
+    console.footer('END DOWNLOAD KNMI GLOBAL FORECAST...', True)
     cask.ask_back_to_main_menu()
 
 def process_weather_buienradar_global():
     '''Function downloads and print a global weather forecast from the website from the knmi'''
-    log.header('START DOWNLOAD BUIENRADAR GLOBAL FORECAST...', True)
+    console.header('START DOWNLOAD BUIENRADAR GLOBAL FORECAST...', True)
 
     ok = False
     if utils.has_internet():
@@ -102,111 +102,109 @@ def process_weather_buienradar_global():
         ok, t = mcurweather.buienradar_weather()
         if ok:
             t = '\n' + vt.clean_up( t )
-            log.console(t, True)
+            console.log(t, True)
         else:
-            log.console('Not ok. Something went wrong along the way.')
+            console.log('Not ok. Something went wrong along the way.')
     else:
-        log.console('No internet connection...', True)
+        console.log('No internet connection...', True)
 
-    log.footer('END DOWNLOAD BUIENRADAR GLOBAL FORECAST...', True)
+    console.footer('END DOWNLOAD BUIENRADAR GLOBAL FORECAST...', True)
     cask.ask_back_to_main_menu()
 
 def process_weather_knmi_model():
     '''Function downloads and prints a discussion about the weather models from the website from the knmi'''
-    log.header('START DOWNLOAD KNMI DISCUSSION WEATHER MODELS...', True)
+    console.header('START DOWNLOAD KNMI DISCUSSION WEATHER MODELS...', True)
 
     ok, t = False, ''
     if utils.has_internet():
         sd   = utils.loc_date_now().strftime('%Y%m%d')
         url  = config.knmi_forecast_model_url
         name = f'guidance_model-{sd}.txt'
-        file = utils.mk_path(config.dir_txt_forecasts, name)
+        file = utils.mk_path(config.dir_forecasts_txt, name)
         ok = fio.download( url, file )
         if ok:
             ok, t = fio.read(file)
             if ok:
                 t = '\n' + vt.clean_up( t )
-                log.console(t, True)
+                console.log(t, True)
             else:
-                log.console('Not ok. Something went wrong along the way.')
+                console.log('Not ok. Something went wrong along the way.')
     else:
-        log.console('No internet connection...', True)
+        console.log('No internet connection...', True)
 
-    log.footer('END DOWNLOAD KNMI DISCUSSION WEATHER MODELS...', True)
+    console.footer('END DOWNLOAD KNMI DISCUSSION WEATHER MODELS...', True)
     cask.ask_back_to_main_menu()
 
 def process_weather_knmi_current():
     '''Function downloads and print a actual weather values to the screen'''
-    log.header('START DOWNLOAD CURRENT VALUES KNMI WEATHERSTATIONS...', True)
+    console.header('START DOWNLOAD CURRENT VALUES KNMI WEATHERSTATIONS...', True)
 
     ok, t = False, ''
     if utils.has_internet():
         ok, t = mcurweather.knmi_stations()
         if ok:
             t = '\n' + vt.clean_up( t )
-            log.console(t, True)
+            console.log(t, True)
         else:
-            log.console('Not ok. Something went wrong along the way.')
+            console.log('Not ok. Something went wrong along the way.')
     else:
-        log.console('No internet connection...', True)
+        console.log('No internet connection...', True)
 
-    log.footer('END DOWNLOAD CURRENT VALUES KNMI WEATHERSTATIONS...', True)
+    console.footer('END DOWNLOAD CURRENT VALUES KNMI WEATHERSTATIONS...', True)
     cask.ask_back_to_main_menu()
 
 def process_weather_buienradar_current():
     '''Function downloads and print a actual weather values to the screen'''
-    log.header('START DOWNLOAD CURRENT VALUES BUIENRADAR WEATHERSTATIONS...', True)
+    console.header('START DOWNLOAD CURRENT VALUES BUIENRADAR WEATHERSTATIONS...', True)
 
     ok, t = False, ''
     if utils.has_internet():
         ok, t = mcurweather.buienradar_stations()
         if ok:
             t = '\n' + vt.clean_up( t )
-            log.console(t, True)
+            console.log(t, True)
         else:
-            log.console('Not ok. Something went wrong along the way.')
+            console.log('Not ok. Something went wrong along the way.')
     else:
-        log.console('No internet connection...', True)
+        console.log('No internet connection...', True)
 
-    log.footer('END DOWNLOAD CURRENT VALUES BUIENRADAR WEATHERSTATIONS...', True)
+    console.footer('END DOWNLOAD CURRENT VALUES BUIENRADAR WEATHERSTATIONS...', True)
     cask.ask_back_to_main_menu()
 
 def process_weather_knmi_guidance():
     '''Function downloads and prints a global a more in depth forecast from the website from the knmi'''
-    log.header('START DOWNLOAD KNMI GUIDANCE...', True)
+    console.header('START DOWNLOAD KNMI GUIDANCE...', True)
 
     ok, t = False, ''
     if utils.has_internet():
         sd   = utils.loc_date_now().strftime('%Y%m%d')
         url  = config.knmi_forecast_guidance_url
         name = f'guidance_meerdaagse-{sd}.txt'
-        file = utils.mk_path(config.dir_txt_forecasts, name)
+        file = utils.mk_path(config.dir_forecasts_txt, name)
         ok = fio.download(url, file)
         if ok:
             ok, t = fio.read(file)
             if ok:
                 t = '\n' + vt.clean_up( t )
-                log.console(t, True)
+                console.log(t, True)
             else:
-                log.console('Not ok. Something went wrong along the way.')
+                console.log('Not ok. Something went wrong along the way.')
     else:
-        log.console('No internet connection...', True)
+        console.log('No internet connection...', True)
 
-    log.footer('END DOWNLOAD KNMI GUIDANCE...', True)
+    console.footer('END DOWNLOAD KNMI GUIDANCE...', True)
     cask.ask_back_to_main_menu()
 
 # Menu choice 3
 def get_dayvalues_by_date():
     '''Funtion gets day values from data knmi '''
     while True:
-        log.header('START: SEARCHING AND PREPARING DAY VALUES...', True)
+        console.header('START: SEARCHING AND PREPARING DAY VALUES...', True)
         # Ask for station
 
-        places = cask.ask_for_stations('\nSelect one or more weather stations ?')
+        places = cask.ask_for_stations('\nSelect one or more weather stations ?')# QUESTION: # QUESTION:
         if not places: break
         elif utils.is_quit(places): break
-
-        cnt_places = len(places)
 
         period = cask.ask_for_period( '\nSelect one date or period(s) for the dayvalues ? ' )
         if utils.is_quit(period): break
@@ -214,17 +212,20 @@ def get_dayvalues_by_date():
         type = cask.ask_for_file_type( '\nSelect output filetype ? ', config.default_output )
         if utils.is_quit(type): break
 
-        # Ask for a file name
-        fname = ''
-        if type != 'cmd':
-            if cnt_places == 1:
-                fname = f'dayvalues-{places[0].wmo}-{period}-{utils.now_for_file()}'
-                fname = cask.ask_for_file_name ( f'\nGive a name for the {type} file ?', fname )
-                if utils.is_quit(fname): break
+        download = cask.ask_for_yn( '\nDo you want to download the data first ?', 'no' )
+        if utils.is_quit(download): break
+        download = True if utils.is_yes(download) else False
+
+        check = cask.ask_type_options( '\nDo you want to add only new files or rewrite it all ? ',
+                                       ['add', 'rewrite'], 'add' )
+        if utils.is_quit(check): break
+        console.log('CHECK-1: ' + str(check) )
+        check = True if check == 'add' else False
+        console.log('CHECK-2: ' + str(check) )
 
         st = time.time_ns()
-        path = mdayval.calculate(places, period, type, fname)
-        log.console(vt.process_time('Total processing time is ', st), True)
+        path = mdayval.calculate( places, period, type, check, download )
+        console.log(vt.process_time('Total processing time is ', st), True)
 
         fopen = cask.ask_to_open_with_app (
                     f'\nOpen the (last made) file (type={type}) with your default application ?'
@@ -238,13 +239,13 @@ def get_dayvalues_by_date():
         if utils.is_quit(again):
             break
 
-    log.footer('END SEARCHING AND PREPARING DAY VALUES...', True)
+    console.footer('END SEARCHING AND PREPARING DAY VALUES...', True)
 
 # Menu choice 4
 def search_for_days():
     '''Funtion searches files for days with specific values. ie > 30 degrees'''
     while True:
-        log.header('START SEARCHING FOR SPECIFIC DAYS...', True)
+        console.header('START SEARCHING FOR SPECIFIC DAYS...', True)
 
         period = cask.ask_for_period( '\nFor which time periode do you want to search ? ' )
         if utils.is_quit(period): break
@@ -276,7 +277,7 @@ def search_for_days():
 
         st = time.time_ns()
         path = search4days.calculate(places, period, query, type, fname)
-        log.console(vt.process_time('Total processing time is ', st), True)
+        console.log(vt.process_time('Total processing time is ', st), True)
 
         if type in [ 'text', 'html' ]:
             fopen = cask.ask_to_open_with_app(
@@ -290,12 +291,12 @@ def search_for_days():
         if utils.is_quit(again):
             break
 
-    log.footer('END SEARCH FOR DAYS...', True)
+    console.footer('END SEARCH FOR DAYS...', True)
 
 def graph_period():
     '''Funtion makes images for a period from the data of the knmi'''
     while True:
-        log.header('START MAKING A IMAGE GRAPH...', True)
+        console.header('START MAKING A IMAGE GRAPH...', True)
 
         period = cask.ask_for_period('What time periode ?')
         if utils.is_quit(period):
@@ -312,7 +313,7 @@ def graph_period():
         if utils.is_quit(entities):
             break
 
-        log.console('Fill in the parameters for the image', False)
+        console.log('Fill in the parameters for the image', False)
         title  = cask.ask_for_txt('\nGive a title for the graph')
         ylabel = cask.ask_for_txt('\nGive a y-as label for the graph')
 
@@ -386,26 +387,26 @@ def graph_period():
                                     '\nDo you want cummulative values for the graph ? ',
                                     config.plot_cummul_val )
             if utils.is_quit(plot_cummul_val): break
-            else: options['plot_cummul_val'] = plot_cummul_val[0] # Take first yess or no
+            else: options['plot_cummul_val'] = plot_cummul_val # Take first yess or no
 
             plot_marker_txt = cask.ask_for_yn(
                                         '\nValues next to the markers ? ',
                                         config.plot_marker_txt )
             if utils.is_quit(plot_marker_txt): break
-            else: options['plot_marker_txt'] = plot_marker_txt[0] # Take first yess or no
+            else: options['plot_marker_txt'] = plot_marker_txt # Take first yess or no
 
 
             plot_min_max_ave_period = cask.ask_for_yn(
                                         '\nCalculate min, max and average value in period too ? ',
                                         config.plot_min_max_ave_period )
             if utils.is_quit(plot_min_max_ave_period): break
-            else: options['plot_min_max_ave_period'] = plot_min_max_ave_period[0] # Take first yess or no
+            else: options['plot_min_max_ave_period'] = plot_min_max_ave_period # Take first yess or no
 
             plot_climate_ave = cask.ask_for_yn(
                                         '\nCalculate and plot the climate averages too ? ',
                                         config.plot_climate_ave )
             if utils.is_quit(plot_climate_ave): break
-            else: options['plot_climate_ave'] = plot_climate_ave[0] # Take first yess or no
+            else: options['plot_climate_ave'] = plot_climate_ave # Take first yess or no
 
             if utils.is_yes(options['plot_climate_ave']):
                 sy, ey = config.climate_period.split('-')
@@ -435,10 +436,10 @@ def graph_period():
         if utils.is_quit(fname):
             break
 
-        log.header( 'PREPARING IMAGES...', True )
+        console.header( 'PREPARING IMAGES...', True )
         st = time.time_ns()
         path = vg.plot( places, entities, period, title, ylabel, fname, options )
-        log.console(vt.process_time('Total processing time is ', st), True)
+        console.log(vt.process_time('Total processing time is ', st), True)
 
         fopen = cask.ask_to_open_with_app(
                 f'\nOpen the file (type={options["plot_image_type"]}) with your default application ?'
@@ -450,24 +451,24 @@ def graph_period():
         if utils.is_quit(again):
             break
 
-    log.footer('END MAKING A IMAGE GRAPH...', True)
+    console.footer('END MAKING A IMAGE GRAPH...', True)
 
 # Menu choice 5
 def table_winterstats():
     '''Function makes calculations for winterstatistics'''
     while True:
-        log.header('START CALCULATE WINTER STATISTICS...', True)
+        console.header('START CALCULATE WINTER STATISTICS...', True)
         # Ask for all in one
         ok, period, places, type, name = cask.ask_period_stations_type_name(
                                             'winter'
                                             )
         if not ok: break
 
-        log.header(f'CALCULATING WINTER STATISTICS...', True)
+        console.header(f'CALCULATING WINTER STATISTICS...', True)
 
         st = time.time_ns()
         path = winstats.calculate( places, period, name, type )
-        log.console(vt.process_time('Total processing time is ', st), True)
+        console.log(vt.process_time('Total processing time is ', st), True)
 
         if type != 'cmd':
             fopen = cask.ask_to_open_with_app(
@@ -483,23 +484,23 @@ def table_winterstats():
         if utils.is_quit(again):
             break
 
-    log.footer(f'END CALCULATE WINTER STATISTICS...', True)
+    console.footer(f'END CALCULATE WINTER STATISTICS...', True)
 
 # Menu choice 6
 def table_summerstats():
     '''Function makes calculations for winterstatistics'''
     while True:
-        log.header('START CALCULATE SUMMER STATISTICS...', True)
+        console.header('START CALCULATE SUMMER STATISTICS...', True)
         ok, period, places, type, name = cask.ask_period_stations_type_name(
                                             'summer'
                                             )
         if not ok: break
 
-        log.header('CALCULATING SUMMER STATISTICS...', True)
+        console.header('CALCULATING SUMMER STATISTICS...', True)
 
         st = time.time_ns()
         path = sumstats.calculate( places, period, name, type )
-        log.console(vt.process_time('Total processing time is ', st), True)
+        console.log(vt.process_time('Total processing time is ', st), True)
 
         if type != 'cmd':
             fopen = cask.ask_to_open_with_app(
@@ -515,24 +516,24 @@ def table_summerstats():
         if utils.is_quit(again):
             break
 
-    log.footer(f'END CALCULATE SUMMER STATISTICS...', True)
+    console.footer(f'END CALCULATE SUMMER STATISTICS...', True)
 
 # Menu choice 7
 def table_allstats():
     '''Function makes calculations for all statistics'''
     while True:
-        log.header('START CALCULATE ALL STATISTICS...', True)
+        console.header('START CALCULATE ALL STATISTICS...', True)
         # Ask for all in one
         ok, period, places, type, name = cask.ask_period_stations_type_name(
                                             'all'
                                             )
         if not ok: break
 
-        log.header(f'CALCULATING ALL STATISTICS...', True)
+        console.header(f'CALCULATING ALL STATISTICS...', True)
 
         st = time.time_ns()
         path = allstats.calculate( places, period, name, type )
-        log.console(vt.process_time('Total processing time is ', st), True)
+        console.log(vt.process_time('Total processing time is ', st), True)
 
         if type != 'cmd':
             fopen = cask.ask_to_open_with_app(
@@ -547,18 +548,18 @@ def table_allstats():
         if utils.is_quit(again):
             break
 
-    log.footer(f'END CALCULATE ALL STATISTICS...', True)
+    console.footer(f'END CALCULATE ALL STATISTICS...', True)
 
 # # Menu choice 7
 # def table_heatwaves():
 #     while True:
-#         log.header('START CALCULATE HEATWAVES...', True)
+#         console.header('START CALCULATE HEATWAVES...', True)
 #         ok, period, places, type, name = cask.ask_period_stations_type_name(True)
 #
 #         if not ok:
 #             break
 #         else:
-#             log.header('CALCULATING HEATWAVES...', True)
+#             console.header('CALCULATING HEATWAVES...', True)
 #
 #             st = time.time_ns()
 #             # path = hs.alg_heatwaves(l, sd, ed, type, name)
@@ -579,18 +580,18 @@ def table_allstats():
 #             if utils.is_quit(again):
 #                 break
 #
-#     log.footer(f'END CALCULATE HEATWAVES...', True)
+#     console.footer(f'END CALCULATE HEATWAVES...', True)
 #
 # # Menu choice 7
 # def table_coldwaves():
 #     while True:
-#         log.header('START CALCULATE COLDWAVES...', True)
+#         console.header('START CALCULATE COLDWAVES...', True)
 #         ok, period, places, type, name = cask.ask_period_stations_type_name(True)
 #
 #         if not ok:
 #             break
 #         else:
-#             log.header('CALCULATING COLDWAVES...', True)
+#             console.header('CALCULATING COLDWAVES...', True)
 #
 #             st = time.time_ns()
 #             # path = hs.alg_heatwaves(l, sd, ed, type, name)
@@ -610,4 +611,4 @@ def table_allstats():
 #             if utils.is_quit(again):
 #                 break
 #
-#     log.footer(f'END CALCULATE COLDWAVES...', True)
+#     console.footer(f'END CALCULATE COLDWAVES...', True)

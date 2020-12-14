@@ -12,7 +12,7 @@ import math, time, re
 import numpy as np
 import sources.model.daydata as daydata
 import sources.model.utils as utils
-import sources.view.log as log
+import sources.view.console as console
 
 def separator( cnt=0 ):
     t = ' '

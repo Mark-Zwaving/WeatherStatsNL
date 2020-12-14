@@ -11,7 +11,7 @@ __status__     =  'Development'
 import os, re, config, datetime
 import numpy as np
 import sources.control.fio as fio
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.icon as icon
 import sources.view.translate as tr
 import sources.view.txt as vt
@@ -42,7 +42,7 @@ class Template():
         dt    = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
         self.file_name = f'{title}-{dt}.html'
 
-        self.template  = utils.mk_path( config.dir_html_templates, 'template.html' )
+        self.template  = utils.mk_path( config.dir_templates_html, 'template.html' )
         self.base_dir  = os.path.dirname(os.path.abspath(__file__))
         self.file_dir  = self.base_dir
         self.file_path = utils.mk_path( self.file_dir, self.file_name )

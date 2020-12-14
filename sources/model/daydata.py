@@ -12,7 +12,7 @@ import config
 import os, threading, time, urllib.request, calendar, numpy as np, array
 import sources.model.validate as validate
 import sources.model.utils as utils
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.txt as vt
 import sources.view.translate as tr
 import sources.control.fio as fio
@@ -107,10 +107,10 @@ def day( station, yyyymmdd ):
             # Check ranges and correct anyway
             if ymd < s_ymd:
                 ymd = s_ymd
-                log.console(f'Date {s_ymd} out range of data. First available date {ymd} used.', True)
+                console.log(f'Date {s_ymd} out range of data. First available date {ymd} used.', True)
             elif ymd > s_ymd:
                 ymd = e_ymd
-                log.console(f'Date {e_ymd} out range of data. First available date {ymd} used.', True)
+                console.log(f'Date {e_ymd} out range of data. First available date {ymd} used.', True)
 
             data = data[np.where(data[:,ndx] == ymd)] # Get values correct date
 
@@ -119,7 +119,7 @@ def day( station, yyyymmdd ):
 def read( station ):
     '''Reads data dayvalues from the knmi into a list'''
     ok, data, file_name = '', False, station.data_txt_path
-    log.console(f'Read {station.wmo} {station.place}')
+    console.log(f'Read {station.wmo} {station.place}')
 
     with threading.Lock():
         try:
@@ -134,9 +134,9 @@ def read( station ):
                                   autostrip=True,
                                   usemask=True  )
         except Exception as e:
-            log.console(vt.error('Read', e))
+            console.log(vt.error('Read', e))
         else:
-            log.console(vt.succes('Read'))
+            console.log(vt.succes('Read'))
             ok = True
 
     return ok, data
@@ -429,7 +429,7 @@ def read_station_period ( station, per ):
 def read_stations_period( stations, per ):
     data = np.array([])
     for station in stations:
-        log.console(f'Read station {station.place}', True)
+        console.log(f'Read station {station.place}', True)
         ok, data_station = read_station_period ( station, per )
         if ok:
             data = data_station if data.size == 0 else np.concatenate( (data, data_station) )
@@ -441,23 +441,24 @@ def process_data( station ):
 
     if station.data_download: # Only downloadable stations
         ok = False
-        log.console(f'Process data for station: {station.place}', True)
+        console.log(f'Process data for station: {station.place}', True)
 
         url = station.data_url
         if not url:
-            log.console('Download skipped...', True)
+            console.log('Download skipped...', True)
         else:
             if station.data_format == config.knmi_data_format:
                 st = time.time_ns()
                 zip = station.data_zip_path
                 txt = station.data_txt_path
-                ok = fio.download( url, zip )
+                # ok = fio.download( url, zip )
+                ok = True
                 if ok:
-                    log.console(vt.process_time('Download in ', st))
+                    console.log(vt.process_time('Download in ', st))
                     st = time.time_ns()
                     ok = fio.unzip(zip, txt)
                     if ok:
-                        log.console(vt.process_time('Unzip in ', st))
+                        console.log(vt.process_time('Unzip in ', st))
 
                 if ok:
                     t = f'Process data {station.place} success.'
@@ -468,7 +469,7 @@ def process_data( station ):
                 # Needs to converted to knmi data format format
                 pass
 
-            log.console(t, True)
+            console.log(t, True)
 
         return ok
 

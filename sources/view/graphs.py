@@ -18,7 +18,7 @@ import sources.model.convert as convert
 import sources.view.fix as fix
 import sources.view.txt as vt
 import sources.view.color as vcol
-import sources.view.log as log
+import sources.view.console as console
 
 def text_diff( l ):
     mp, mm = max(l), min(l)
@@ -26,9 +26,9 @@ def text_diff( l ):
 
 def plot( stations, entities, period, title, ylabel, fname, options ):
     if utils.is_yes(options['plot_climate_ave']):
-        log.console('Calculating climate values for days might take a while...\n', True)
+        console.log('Calculating climate values for days might take a while...\n', True)
 
-    path = utils.mk_path( config.dir_img_period, fname + f'.{config.plot_image_type}' )
+    path = utils.mk_path( config.dir_period_img, fname + f'.{config.plot_image_type}' )
 
     # Size values are inches. And figure always in front
     plt.figure( figsize=( convert.pixel_to_inch(options['plot_width']),
@@ -45,7 +45,7 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
 
     period_extremes, clima_averages = list(), list()
     for station in stations:
-        log.console(f'Calculate weatherdata for {station.place}', True)
+        console.log(f'Calculate weatherdata for {station.place}', True)
         ok, data = daydata.read(station)
         if ok:
             days = daydata.period(data, period)
@@ -64,7 +64,7 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                 ent = ent.upper()
                 # Get the values needed for the graph
                 f_val = days[:, daydata.ndx_ent(ent)]
-                log.console(f'{ent} data values: {str(f_val)}')
+                console.log(f'{ent} data values: {str(f_val)}')
 
                 if utils.is_yes( options['plot_min_max_ave_period'] ):
                     # Calculate extremes
@@ -72,13 +72,13 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                     max_per = stats.max(days, ent)
                     ave_per = stats.average(days, ent)
                     # Correct output
-                    s_max = f'highest={fix.ent(max_per, ent)}'
-                    s_min = f'lowest={fix.ent(min_per, ent)}'
-                    s_ave = f'average={fix.ent(ave_per, ent)}'
+                    s_max = f'highest {fix.ent(max_per, ent)}'
+                    s_min = f'lowest {fix.ent(min_per, ent)}'
+                    s_ave = f'average {fix.ent(ave_per, ent)}'
                     s_ext  = f'For {sy}-{sm}-{sd} to {ey}-{em}-{ed} '
                     s_ext += f'{ent} {s_max}, {s_min} & {s_ave}'
                     period_extremes.append( s_ext )
-                    log.console(s_ext)
+                    console.log(s_ext)
 
                 # Cumulative sum of values, if chosen
                 if utils.is_yes(options['plot_cummul_val']):
@@ -99,7 +99,7 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                     label_clima = f'Day climate {station.place} {vt.ent_to_title(ent)}'
                     clima_ymd = days[:, daydata.YYYYMMDD ].tolist()
                     cli_txt = f"Calculate climate value '{ent}' for {station.place}"
-                    log.console(cli_txt, True)
+                    console.log(cli_txt, True)
 
                     l_clima = [] # numpy array
                     for d in clima_ymd:
@@ -110,7 +110,7 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                                         station, mmdd, ent, options['plot_climate_per']
                                     )
                         s_clima = fix.rounding(val, ent)
-                        log.console(f'Climate value {ent} for {sdat} is {s_clima}')
+                        console.log(f'Climate value {ent} for {sdat} is {s_clima}')
                         # Append raw data without correct rounding
                         l_clima.append(val)
 
@@ -122,20 +122,20 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                             for el in l_clima:
                                 sum += el
                             ave = sum / len(l_clima)
-                            s_ave  = f'Climate average {ent} from '
+                            s_ave  = f'Climate mean {ent} from '
                             s_ave += f'{sm}-{sd} to {em}-{ed} for the '
                             s_ave += f'years {scy} through {ecy} '
                             s_ave += f'is {fix.ent(ave, ent)}'
                             clima_averages.append(s_ave)
-                            log.console(s_ave)
+                            console.log(s_ave)
                         else:
-                            log.console('List with clima values is empthy.')
+                            console.log('List with clima values is empthy.')
 
                     # Round correctly al climate values based on ent
                     for ndx, val in enumerate(l_clima):
                         l_clima[ndx] = fix.rounding( val, ent )
 
-                    log.console(' ')
+                    console.log(' ')
 
                 if options['plot_graph_type'] == 'line':  # bar or line
                     plt.plot(ymd, l_val,
@@ -188,7 +188,7 @@ def plot( stations, entities, period, title, ylabel, fname, options ):
                                       alpha=config.plot_marker_alpha
                                     )
         else:
-            log.console('Read not oke in graphs.py -> plot')
+            console.log('Read not oke in graphs.py -> plot')
 
     if config.plt_style != False:
         plt.style.use(config.plt_style)

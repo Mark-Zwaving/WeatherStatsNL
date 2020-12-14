@@ -11,7 +11,7 @@ __status__     =  "Development"
 
 import config, threading
 import sources.model.utils as utils
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.translate as tr
 import sources.control.ask as ask
 import sources.control.menu as cmenu
@@ -67,9 +67,9 @@ def check_menu_options():
     return ok_web, ok_data, loc_menu
 
 def error_no_stations_found():
-    log.header('No weatherstations found in configuration file !', True )
-    log.console('Add one or more weatherstations in config.py', True )
-    log.footer('Press a key to quit...', True )
+    console.header('No weatherstations found in configuration file !', True )
+    console.log('Add one or more weatherstations in config.py', True )
+    console.footer('Press a key to quit...', True )
     input('...')
 
 def fn_exec( choice, loc_menu ):
@@ -84,14 +84,14 @@ def main_menu():
     while True:  # Main menu
         ok_web, ok_data, loc_menu = check_menu_options()
         num = 1
-        log.header('MAIN MENU', True )
+        console.header('MAIN MENU', True )
 
         for el in loc_menu:
             title, options = el[0], el[1]
-            log.console(f'\t{title}', True)
+            console.log(f'\t{title}', True)
             for option in options:
                 title, fn = option[0], option[1]
-                log.console(f'\t\t{num}) {title}', True)
+                console.log(f'\t\t{num}) {title}', True)
                 num += 1
             print('')
 
@@ -100,8 +100,8 @@ def main_menu():
             t += '\tFirst.  Try to have a working internet connection.\n'
             t += '\tSecond. Press a key to reload the menu or restart the application.\n'
             t += '\tThird.  Download weatherdata from the download options in the menu.'
-            log.console(t, True)
-            log.footer("\tPress a key to reload menu or press 'q' to quit...", True )
+            console.log(t, True)
+            console.footer("\tPress a key to reload menu or press 'q' to quit...", True )
             answ = ask.ask(' ? ')
             if answ in config.answer_quit:
                 break
@@ -110,13 +110,13 @@ def main_menu():
         else:
             if ok_web == False:
                 t = '\tNo internet connection. Get an working internet connection for more menu options.'
-                log.console(t, True )
+                console.log(t, True )
             elif ok_data == False:
                 t = '\tNo data found. Download the weather data (option 1 & 2) for more menu options.'
-                log.console(t, True )
+                console.log(t, True )
 
-            log.console(f'\tChoose one of the following options: 1...{num-1}', True )
-            log.footer('Your choice is ? ', True )
+            console.log(f'\tChoose one of the following options: 1...{num-1}', True )
+            console.footer('Your choice is ? ', True )
             answ = ask.ask(' ? ')  # Make a choice
 
         if not answ:
@@ -127,9 +127,9 @@ def main_menu():
             try:
                 choice = int(answ)
             except ValueError:
-                log.console(f'\nOption "{answ}" unknown...', True ) # Input was not a number
+                console.log(f'\nOption "{answ}" unknown...', True ) # Input was not a number
             else:
                 if choice in range( 1, num ):
                     fn_exec(choice, loc_menu)
                 else:
-                    log.console(f'\nOption "{answ}" out of reach', True )
+                    console.log(f'\nOption "{answ}" out of reach', True )

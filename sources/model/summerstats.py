@@ -10,7 +10,7 @@ __status__     =  "Development"
 
 import config
 import numpy as np
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.html as vhtml
 import sources.view.fix as fix
 import sources.view.icon as icon
@@ -70,26 +70,22 @@ def calculate( stations, period, name=False, type='html' ):
     # Make data list with station and summerstatistics
     summer = list()
     for station in stations:
-        log.console(f'Calculate statistics: {station.place}', True)
+        console.log(f'Calculate statistics: {station.place}', True)
         ok, data = daydata.read( station )  # Get data stations
         if ok:
             days = daydata.period( data, period ) # Get days of period
             if days.size != 0: # Skip station
                 summer.append( Stats( station, days ) ) # Create summerstats object
 
-    log.console(f'\nPreparing output: {type}', True)
+    console.log(f'\nPreparing output: {type}', True)
 
     # Update name if there is none yet
     if not name:
         name = utils.mk_name('summerstatistics', period)
 
     # Make path if it is a html or txt file
-    path = ''
-    if type == 'html':
-        dir = config.dir_html_summerstats
-    elif type == 'txt':
-        dir = config.dir_txt_summerstats
-    path = utils.mk_path(dir, f'{name}.{type}')
+    path = utils.mk_path( utils.mk_path(config.dir_summerstats, type),
+                          f'{name}.{type}' )
 
     # Sort on TG
     summer = sort( summer, '+' )
@@ -165,7 +161,7 @@ def calculate( stations, period, name=False, type='html' ):
 
     # Walkthrough all cities
     for s in summer:
-        log.console(f'Make {type} output for: {s.station.place}', True)
+        console.log(f'Make {type} output for: {s.station.place}', True)
         heat   = fix.ent( s.heat_ndx, 'heat_ndx' )
         tg_gem = fix.ent( s.tg_gem, 'tg' )
         tx_max = fix.ent( s.tx_max, 'tx' )
@@ -284,14 +280,13 @@ def calculate( stations, period, name=False, type='html' ):
             </table>
         '''
 
-    log.console('\nWrite/print results... ', True)
-
-    path_to_root = './../' # Path to html root
+    console.log('\nWrite/print results... ', True)
+    path_to_root = './../../' # Path to html root
 
     # Write to file or console
     output = f'{title}\n{main}\n{footer}'
     if type == 'cmd':
-        log.console( output, True )
+        console.log( output, True )
 
     elif type == 'html':
         page           =  vhtml.Template()
@@ -299,7 +294,7 @@ def calculate( stations, period, name=False, type='html' ):
         page.main      =  output
         page.strip     =  True
         page.path_to_root = path_to_root
-        page.set_path(dir, f'{name}.html')
+        page.file_path = path
         # Styling
         page.css_files = [ f'{path_to_root}summerstats/css/default.css',
                            f'{path_to_root}static/css/table-statistics.css',

@@ -14,7 +14,7 @@ import sources.model.utils as utils
 import sources.model.stats as stats
 import sources.model.daydata as daydata
 import sources.view.fix as fix
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.html as html
 import sources.view.icon as icon
 
@@ -88,24 +88,22 @@ def calculate( stations, period, name=False, type='html' ):
     # Make data list with station and summerstatistics
     allstats = list()
     for station in stations:
-        log.console(f'Calculate statistics: {station.place}', True)
+        console.log(f'Calculate statistics: {station.place}', True)
         ok, data = daydata.read( station )  # Get data stations
         if ok:
             days = daydata.period( data, period ) # Get days of period
             if days.size != 0: # Skip station
                 allstats.append( Stats( station, days ) ) # Create summerstats object
 
-    log.console(f'\nPreparing output: {type}', True)
+    console.log(f'\nPreparing output: {type}', True)
 
     # Update name if there is none yet
     if not name:
         name = utils.mk_name('all-statistics', period)
 
     # Make path if it is a html or txt file
-    path = ''
-    if   type == 'html': dir = config.dir_html_allstats
-    elif type ==  'txt': dir = config.dir_txt_allstats
-    path = utils.mk_path(dir, f'{name}.{type}')
+    path = utils.mk_path( utils.mk_path(config.dir_allstats, type),
+                          f'{name}.{type}' )
 
     # Sort on TG
     allstats = sort( allstats, '+' )
@@ -198,7 +196,7 @@ def calculate( stations, period, name=False, type='html' ):
 
     # Walkthrough all cities
     for s in allstats:
-        log.console(f'Make {type} output for: {s.station.place}', True)
+        console.log(f'Make {type} output for: {s.station.place}', True)
         heat_ndx = fix.ent( s.heat_ndx, 'heat_ndx' )
         tg_ave   = fix.ent( s.tg_ave, 'tg' )
         tx_max   = fix.ent( s.tx_max, 'tx' )
@@ -376,14 +374,15 @@ def calculate( stations, period, name=False, type='html' ):
             </tfoot>
             </table>
         '''
-        
-    path_to_root = './../' # Path to html root
-    log.console('\nWrite/print results... ', True)
+
+
+    path_to_root = './../../' # Path to html root
+    console.log('\nWrite/print results... ', True)
 
     # Write to file or console
     output = f'{title}\n{main}\n{footer}'
     if type == 'cmd':
-        log.console( output, True )
+        console.log( output, True )
 
     elif type == 'html':
         page           =  html.Template()
@@ -391,10 +390,10 @@ def calculate( stations, period, name=False, type='html' ):
         page.main      =  output
         page.strip     =  True
         page.path_to_root = path_to_root
-        page.set_path(dir, f'{name}.html')
+        page.file_path = path
         # Styling
         page.css_files = [ f'{path_to_root}allstats/css/default.css',
-                           f'{path_to_root}allstats/css/table-statistics.css',
+                           f'{path_to_root}static/css/table-statistics.css',
                            f'{path_to_root}allstats/css/allstats.css' ]
         # Scripts
         page.script_files = [ f'{path_to_root}allstats/js/allstats.js',

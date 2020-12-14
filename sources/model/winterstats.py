@@ -10,7 +10,7 @@ __status__     =  'Development'
 
 import config
 import numpy as np
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.html as vhtml
 import sources.view.fix as fix
 import sources.view.icon as icon
@@ -69,34 +69,28 @@ def sort( l, ent, pm = '+' ):
 
 def calculate( stations, period, name, type='html' ):
     '''Function to calculate winterstatistics'''
-    log.console(f'Preparing output...')
+    console.log(f'Preparing output...')
     colspan = 20
 
     # Make data list with station and stats
     winter = list()
     for station in stations:
-        log.console(f'Calculate statistics: {station.place}', True)
+        console.log(f'Calculate statistics: {station.place}', True)
         ok, data = daydata.read( station )  # Get data stations
         if ok:
             days = daydata.period( data, period ) # Get days of period
             if days.size != 0:
                 winter.append( Stats( station, days ) ) # Create winterstats object
 
-    log.console(f'\nPreparing output: {type}', True)
+    console.log(f'\nPreparing output: {type}', True)
 
     # Update name if there is none yet
     if not name:
         name = utils.mk_name('winterstatistics', period)
 
     # Make path if it is a html or txt file
-    path = ''
-    if type in ['html','txt']:
-        if type == 'html':
-            dir = config.dir_html_winterstats
-        elif type == 'txt':
-            dir = config.dir_txt_winterstats
-
-        path = utils.mk_path(dir, f'{name}.{type}')
+    path = utils.mk_path( utils.mk_path(config.dir_winterstats, type),
+                          f'{name}.{type}' )
 
     # Sort on hellmann
     winter = sort( winter, '+' )
@@ -155,7 +149,7 @@ def calculate( stations, period, name, type='html' ):
             '''
     # Calculate values
     for s in winter:
-        log.console(f'Make {type} output for: {s.station.place}', True)
+        console.log(f'Make {type} output for: {s.station.place}', True)
 
         tg_gem    = fix.ent( s.tg_gem, 'TG' )
         tx_min    = fix.ent( s.tx_min, 'TX' )
@@ -276,13 +270,13 @@ def calculate( stations, period, name, type='html' ):
             </table>
             '''
 
-    path_to_root = './../' # Path to html root
-    log.console('\nWrite/print results... ', True)
+    path_to_root = './../../' # Path to html root
+    console.log('\nWrite/print results... ', True)
 
     # Write to file or console
     output = f'{title}\n{main}\n{footer}'
     if type == 'cmd':
-        log.console( output, True )
+        console.log( output, True )
 
     elif type == 'html':
         page           =  vhtml.Template()
@@ -290,7 +284,7 @@ def calculate( stations, period, name, type='html' ):
         page.main      =  output
         page.strip     =  True
         page.path_to_root = path_to_root
-        page.set_path( dir, f'{name}.html' )
+        page.file_path = path
         # Styling
         page.css_files = [ f'{path_to_root}winterstats/css/default.css',
                            f'{path_to_root}static/css/table-statistics.css',

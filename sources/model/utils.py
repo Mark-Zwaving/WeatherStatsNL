@@ -13,9 +13,9 @@ import http.client as httplib, numpy as np
 from datetime import datetime
 from dateutil import rrule
 from pytz import timezone
-import sources.view.translate as tr
 import sources.control.fio as fio
-import sources.view.log as log
+import sources.view.console as console
+import sources.view.translate as tr
 
 rnd_digit = lambda min,max  : random.randint(min, max)
 file_path = lambda dir,file : os.path.join(dir, file)
@@ -75,7 +75,7 @@ def is_float( val ):
         else:
             f = float(val)
     except Exception as e:
-        log.console(f'Digit {val} is no float.')
+        console.log(f'Digit {val} is no float.')
         ok = False
 
     return ok
@@ -95,7 +95,7 @@ def has_internet(url=config.check_internet_url, timeout=0.1):
     return ok
 
 def is_data_map_empthy():
-    ok, dir = False, config.dir_data_dayvalues
+    ok, dir = False, config.dir_dayvalues_txt
     with threading.Lock():
         if os.path.exists(dir):
             l = os.listdir(dir)
@@ -112,7 +112,7 @@ def is_data_map_empthy():
     return ok
 
 def only_existing_stations_in_map():
-    l, dir = list(), config.dir_data_dayvalues
+    l, dir = list(), config.dir_dayvalues_txt
     with threading.Lock():
         if os.path.exists(dir):
             paths = [os.path.join(dir, el) for el in os.listdir(dir)]
@@ -156,7 +156,7 @@ def s_to_bytes( s, charset, errors ):
     try:
         b = s.encode(encoding=charset, errors=errors)
     except Exception as e:
-        log.console(f'Fail convert to bytes with charset {charset}\nError {e}', True)
+        console.log(f'Fail convert to bytes with charset {charset}\nError {e}', True)
     else:
         return b
     return s
@@ -165,7 +165,7 @@ def bytes_to_s( b, charset, errors ):
     try:
         s =  b.decode(encoding=charset, errors=errors)
     except Exception as e:
-        log.console(f'Fail convert to string with charset {charset}.\nError:{e}', True)
+        console.log(f'Fail convert to string with charset {charset}.\nError:{e}', True)
     else:
         return s
     return b
@@ -185,7 +185,7 @@ def download_and_read_file(url, file):
         if ok:
             ok, t = fio.read(file)
     else:
-        log.console('No internet connection...', True)
+        console.log('No internet connection...', True)
 
     return ok, t
 

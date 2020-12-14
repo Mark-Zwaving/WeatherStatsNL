@@ -13,35 +13,33 @@ import sources.control.fio as fio
 import sources.model.utils as utils
 import sources.model.daydata as daydata
 import sources.view.html as vhtml
-import sources.view.log as log
+import sources.view.console as console
+import stations
+from pathlib import Path
 
-def calculate(places, period, type, name=''):
-    log.console(f'\nStart make dayvalues...\n', True)
+def calculate(places, period, type, check=False, download=False):
+    console.log(f'\nStart make dayvalues...\n', True)
     cnt_places = len(places)
-    first = True
 
     for place in places:
+        console.log(f'Station: {place.wmo} {place.place}', True)
 
-        log.console(f'Station: {place.wmo} {place.place}', True)
+        if download:
+            daydata.process_data( stations.from_wmo_to_station(place.wmo) )
+            console.log(' ')
+
         d1 = daydata.read_station_period(place, period)[1]
         dates = d1[:,daydata.YYYYMMDD]
         cnt_dates = len(dates)
 
         # Base directory
-        if type == 'html':
-            dir = config.dir_html_dayvalues
-        elif type == 'txt':
-            dir = config.dir_txt_dayvalues
+        dir = utils.mk_path(config.dir_dayvalues, type)
 
         # Make paths
         w_dir = utils.mk_path(dir, place.wmo)
 
-        # Make directory
-        fio.mk_dir(w_dir)
-
         for yyyymmdd in dates:
             ymd = utils.f_to_s(yyyymmdd)
-            log.console(f'Date: {utils.ymd_to_txt(ymd)}', True)
 
             # Get year, month and day
             y, m, d = ymd[:4], ymd[4:6], ymd[6:8]
@@ -50,31 +48,28 @@ def calculate(places, period, type, name=''):
             y_dir = utils.mk_path(w_dir, y)
             m_dir = utils.mk_path(y_dir, m)
 
-            # Make directories
-            fio.mk_dir(y_dir)
-            fio.mk_dir(m_dir)
-
-            # Make file name
-            if cnt_places > 1 or cnt_dates > 1:
-                if first:
-                    if name != '':
-                        t  = '\nYour one default name for the file cannot be used. '
-                        t += 'Because more than one date is given.\n'
-                        t += 'Now a default name for the file (based on wmo and '
-                        t += 'date) will be used.'
-                        log.console(t, True)
-                        input('Press a key to continue...\n')
-                    first = False
-                name = f'dayvalues-{place.wmo}-{y}-{m}-{d}' # Default
-            fname = f'{name}.{type}'
-
             # Make path
-            path = utils.mk_path(m_dir, fname)
+            path = utils.mk_path(m_dir, f'dayvalues-{place.wmo}-{y}-{m}-{d}.{type}')
+
+            # if fio.path = Path(fname)  # Python 3.4
+            if check:
+                if Path(path).exists():  # Check if there is a file
+                    console.log(f'Path for file {path} found and skipped...', True)
+                    continue
+
+            console.log(f'A file for station {place.place} for the date {ymd} will be made...', True)
+
+            # Check and make directories
+            ok = fio.mk_dir(m_dir)
+            if not ok:
+                ok = fio.mk_dir(y_dir)
+                if not ok:
+                    fio.mk_dir(w_dir)
 
             # Get correct day
             day = d1[np.where(dates == yyyymmdd)][0]
 
-            path_to_root = './../../../../'
+            path_to_root = './../../../../../'
 
             # Make output
             if type == 'html':
@@ -90,18 +85,20 @@ def calculate(places, period, type, name=''):
                 page.footer = vhtml.footer_data_notification(place)
                 page.file_path = path
                 page.path_to_root = path_to_root
+                page.template = utils.mk_path( config.dir_templates_html, 'dayvalues.html' )
                 # Styling
-                page.css_files = [ f'{path_to_root}/dayvalues/css/default.css',
-                                   f'{path_to_root}/dayvalues/css/dayvalues.css' ]
-                page.script_files = [ f'{path_to_root}/dayvalues/js/dayvalues.js',
-                                      f'{path_to_root}/static/js/default.js']
+                page.css_files = [ f'{path_to_root}dayvalues/css/default.css',
+                                   f'{path_to_root}dayvalues/css/dayvalues.css' ]
+                page.script_files = [
+                                      f'{path_to_root}dayvalues/js/default.js',
+                                      f'{path_to_root}static/js/default.js']
                 ok = page.save()
 
             if ok:
-                log.console(f'Successfull made {path}', True)
+                console.log(f'Successfull made {path}', True)
             else:
-                log.console(f'Failed to make {path}', True)
-            log.console(' ', True)
+                console.log(f'Failed to make {path}', True)
+            console.log(' ', True)
 
             # elif type == 'txt':
             #     title = txt_date

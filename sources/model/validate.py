@@ -9,7 +9,7 @@ __maintainer__ =  "Mark Zwaving"
 __status__     =  "Development"
 
 import datetime, config
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.translate as tr
 import sources.view.txt as vt
 
@@ -17,22 +17,22 @@ def yyyymmdd( ymd ):
     '''Function validates date'''
     ok = False
     ymd = str(ymd)
-    log.console(f'Validate {ymd}')
+    console.log(f'Validate {ymd}')
     if  len(ymd) != 8:
-        log.console('Date has wrong length. Use format of yyyymmdd with length is 8')
+        console.log('Date has wrong length. Use format of yyyymmdd with length is 8')
     elif not ymd.isdigit():
-        log.console('Date has wrong chars. Date must only contain digits')
+        console.log('Date has wrong chars. Date must only contain digits')
     else:
         try:
             y, m, d = int(ymd[:4]), int(ymd[4:6]), int(ymd[6:8])
             date = datetime.datetime(y, m, d)
         except Exception as e:
-            log.console(vt.error('Validate', e))
+            console.log(vt.error('Validate', e))
         else:
             # Geen datum in de toekomst
             if date > datetime.datetime.now():
-                log.console('Date is in the future. Try again later... ;-)')
+                console.log('Date is in the future. Try again later... ;-)')
             else:
-                log.console(vt.succes('Validate'))
+                console.log(vt.succes('Validate'))
                 ok = True
     return ok

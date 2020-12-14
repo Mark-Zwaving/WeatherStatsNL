@@ -13,7 +13,7 @@ import numpy as np
 import sources.model.utils as utils
 import sources.model.daydata as daydata
 import sources.model.validate as validate
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.txt as vt
 import sources.view.translate as tr
 
@@ -23,9 +23,9 @@ def clear( s ):
     return s if s else False
 
 def ask_back_to_main_menu(space=False):
-    if space: log.console(' ')
+    if space: console.log(' ')
     input("Press a 'key' to go back to the main menu... ")
-    if space: log.console(' ')
+    if space: console.log(' ')
 
 def ask(txt='?', space=False):
     t = clear(txt)
@@ -34,9 +34,9 @@ def ask(txt='?', space=False):
     else:
         t = ' ... ? '
 
-    if space: log.console(' ')
+    if space: console.log(' ')
     res = input(t)
-    if space: log.console(' ')
+    if space: console.log(' ')
 
     return res
 
@@ -47,14 +47,14 @@ def ask_for_txt(txt='?', default=False, space=False):
     t += vt.enter_back_to_main() + '\n'
     t += ' ? '
 
-    if space: log.console(' ')
+    if space: console.log(' ')
     answ = ask(t, space)
-    if space: log.console(' ')
+    if space: console.log(' ')
 
     return answ
 
 def ask_for_int(txt, default=False, space=False):
-    if space: log.console(' ')
+    if space: console.log(' ')
     while True:
         answ = ask_for_txt(txt, default=default, space=space)
 
@@ -67,12 +67,12 @@ def ask_for_int(txt, default=False, space=False):
             try:
                 answ_i = int(answ)
             except ValueError:
-                log.console('Give an real integer  ... ', True)
+                console.log('Give an real integer  ... ', True)
                 continue
             else:
                 break
 
-    if space: log.console(' ')
+    if space: console.log(' ')
 
     return answ_i
 
@@ -84,7 +84,7 @@ def stop():
 
     if answ:
         if utils.is_quit(answ):
-            log.footer('Application stopped...', True )
+            console.footer('Application stopped...', True )
             sys.exit()
 
 def ask_again(txt, space=False):
@@ -121,7 +121,7 @@ def ask_for_entities( txt, space=False):
         answ = answ = ask_for_txt( ask_txt, default=False, space=space )
 
         if utils.is_empthy(answ):
-            log.console('Please type in something ...', True)
+            console.log('Please type in something ...', True)
             continue # Again
         elif utils.is_quit(answ):
             return config.answer_quit[0] # Return first el for quit
@@ -138,7 +138,7 @@ def ask_for_entities( txt, space=False):
             if ok:
                 l.append(ent)
             else:
-                log.console(f"Unknown option {ent} given. Fill in one or more entities separated by an ',' ", True)
+                console.log(f"Unknown option {ent} given. Fill in one or more entities separated by an ',' ", True)
 
         if len(l) > 0:
             cnt, kol, t = 1, 10, 'All weather entities who are added are: '
@@ -147,7 +147,7 @@ def ask_for_entities( txt, space=False):
                 if cnt % kol == 0:
                     t += '\n'
             t = t[0:-2] # Remove space and comma
-            log.console( t, True )
+            console.log( t, True )
 
     return l
 
@@ -164,20 +164,20 @@ def ask_for_one_station( txt, l_map=False, space=False):
             answ = ask_for_txt( t, default=False, space=space )
 
             if utils.is_empthy(answ):
-                log.console('Please type in something ...', True)
+                console.log('Please type in something ...', True)
             elif utils.is_quit(answ):
                 result = config.answer_quit[0] # Return first el for quit
                 break
             elif stations.name_in_list(answ, l_map) or \
                  stations.wmo_in_list(answ, l_map):
                result = stations.find_by_wmo_or_name(answ, l_map)
-               log.console(f'{result.wmo}: {result.place} {result.province} selected', True)
+               console.log(f'{result.wmo}: {result.place} {result.province} selected', True)
                break
             else:
                 ask( f'Station: {answ} unknown !\nPress a key to try again...', True )
     else:
         t = 'No weatherdata found in data map. Download weatherdata first.'
-        log.console(t, True)
+        console.log(t, True)
 
     return result
 
@@ -203,7 +203,7 @@ def ask_for_stations( txt, l_map=False, space=False):
             answ = ask_for_txt( ask_txt + '\n', default=False, space=space )
 
             if utils.is_empthy(answ):
-                log.console('Please type in something ...', True)
+                console.log('Please type in something ...', True)
             elif utils.is_quit(answ):
                 result = config.answer_quit[0] # Return first el for quit
                 break
@@ -222,7 +222,7 @@ def ask_for_stations( txt, l_map=False, space=False):
                     elif stations.wmo_in_list(answ, l_map):
                         ll.append(answ)
                     else:
-                        log.console(f'Station: {answ} is unknown !')
+                        console.log(f'Station: {answ} is unknown !')
 
                 # Add all added stations
                 for s in ll:
@@ -231,25 +231,25 @@ def ask_for_stations( txt, l_map=False, space=False):
                         all = f'{st.wmo} {st.place} {st.province}'
                         if stations.check_if_station_already_in_list( st, result ) != True:
                             result.append(st)
-                            log.console(f'Station: {all} added...')
+                            console.log(f'Station: {all} added...')
                         else:
-                            log.console(f'Station: {all} already added...')
+                            console.log(f'Station: {all} already added...')
                     else:
-                        log.console(f'Station: {answ} not found...')
+                        console.log(f'Station: {answ} not found...')
 
             cnt_result = len(result) # New count
             if cnt_result == cnt_map:
-                log.console('\nAll available weatherstations added...', True)
+                console.log('\nAll available weatherstations added...', True)
                 break
             elif cnt_result > 0:
-                log.console('\nAll weatherstation(s) who are added are: ', True)
+                console.log('\nAll weatherstation(s) who are added are: ', True)
 
                 for s in result:
-                    log.console(f'{s.wmo}: {s.place} {s.province}', True)
+                    console.log(f'{s.wmo}: {s.place} {s.province}', True)
 
     else:
         t = 'No weatherdata found in data map. Download weatherdata first.'
-        log.console(t, True)
+        console.log(t, True)
         result = False
 
     return result
@@ -259,7 +259,7 @@ def ask_for_date( txt, space=False):
         answ = ask_for_txt( txt, default=False, space=space )
 
         if utils.is_empthy(answ):
-            log.console('Please type in something ...', True)
+            console.log('Please type in something ...', True)
             continue
         elif utils.is_quit(answ):
             answ = config.answer_quit[0] # Return first el for quit
@@ -267,7 +267,7 @@ def ask_for_date( txt, space=False):
         elif validate.yyyymmdd(answ):
             break
         else:
-            log.console(f'Error in date: {answ}\n', True)
+            console.log(f'Error in date: {answ}\n', True)
 
     return answ
 
@@ -302,7 +302,7 @@ def ask_for_period( txt='', space=False ):
         answ = ask_for_txt( t, default=False, space=space )
 
         if utils.is_empthy(answ):
-            log.console('\nPlease type in something...\n', True)
+            console.log('\nPlease type in something...\n', True)
         elif utils.is_quit(answ):
             answ = config.answer_quit[0] # Return first el for quit
             break
@@ -319,7 +319,7 @@ def ask_for_period( txt='', space=False ):
     return answ
 
 def ask_for_date_with_check_data( stat, txt, space=False ):
-    log.console(f'Loading data {stat.place} ...')
+    console.log(f'Loading data {stat.place} ...')
     ok, data = daydata.read( stat )
     if not ok:
         input(f'Error reading data! {stat.place}')
@@ -342,7 +342,7 @@ def ask_for_date_with_check_data( stat, txt, space=False ):
                 pass
             else:
                 if ymd < sd or ymd > ed:
-                    log.console(f'Date {ymd} is out of range for {stat.place}')
+                    console.log(f'Date {ymd} is out of range for {stat.place}')
                 else:
                     return answ, data
 
@@ -378,7 +378,7 @@ def ask_for_yn( txt, default, space=False ):
                 elif answi == 2:
                     return config.answer_no[0]
 
-        log.console(f'Unknown option: {answ} ?\nTry again.', True)
+        console.log(f'Unknown option: {answ} ?\nTry again.', True)
 
 def ask_type_options(txt, l, default=config.default_output, space=False):
     t = f'{txt}\n'
@@ -417,7 +417,7 @@ def ask_type_options(txt, l, default=config.default_output, space=False):
                         return l[i]
                     i += 1
 
-                log.console(f'Unknown option: {answ} ?\nTry again.', True)
+                console.log(f'Unknown option: {answ} ?\nTry again.', True)
 
 def ask_for_file_type(txt, default=config.default_output, space=False):
     l = ['txt TODO', 'html', 'cmd TODO']
@@ -515,7 +515,7 @@ def ask_for_query( txt, space=False ):
         # TODO MAKE ADVANCED CHECKS
 
         if utils.is_empthy(answ):
-            log.console('Please type in something ...', True)
+            console.log('Please type in something ...', True)
         elif answ == 'i':
             info = True
         elif utils.is_quit(answ):
