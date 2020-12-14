@@ -10,7 +10,6 @@
 let activate_menu = true,  // Gloabal setter any menu Set: true for 'yess'  false for 'no'
     activate_menu_dropdown = true, // Dropdown menu (slow)
     activate_menu_form = true,  // Form menu
-    menu_links_max = 10,  // How many links in one block
     path_to_root = './' , // ->  {}/wmo/yyyy/mm/
     jan=1, febr=2, march=3, april=4, mai=5, june=6,
     july=7, aug=8, sept=9, oct=10, nov=11, dec=12,
@@ -21,7 +20,7 @@ let activate_menu = true,  // Gloabal setter any menu Set: true for 'yess'  fals
 
     menu_font_size = '0.7rem',
     id_iframe = 'dayvalues_page',
-    date_act  = '19900704',
+    date_act  = '20200101',
     wmo_act   = '280';
 
 // Helper fn
@@ -30,8 +29,7 @@ let show  = ( id ) => docid(id).style.display = 'inline-block';
 let hide  = ( id ) => docid(id).style.display = 'none';
 let add_zero  = ( i ) => i < 10 ? `0${i}` : `${i}`;
 let is_leap_year = ( y ) => y % 100 === 0 ? y % 400 === 0 : y % 4 === 0;
-let open_url_in_iframe = ( url ) => docid(id_iframe).src = url
-let get_day_in_month = ( y, m ) => [ 31, is_leap_year(y) ? 29 : 28,
+let get_days_in_month = ( y, m ) => [ 31, is_leap_year(y) ? 29 : 28,
                                      31, 30, 31, 30, 31, 31, 30, 31, 30, 31
                                     ][m-1];
 
@@ -69,75 +67,99 @@ let get_day_before = ( d ) =>
             mm = 12
             yy -= 1
         }
-        dd = get_day_in_month(yy, mm);
+        dd = get_days_in_month(yy, mm);
     }
 
-    let edate = `${yy}${add_zero(mm)}${add_zero(dd)}`;
-    return edate;
+    return `${yy}${add_zero(mm)}${add_zero(dd)}`;
+}
+
+let get_month_before = ( d ) =>
+{
+    let    l  = split_date( d ),
+          yy  = parseInt( l[0], 10 ),
+          mm  = parseInt( l[1], 10 ) - 1,
+          dd  = parseInt( l[2], 10 );
+
+    if ( mm == 0 )
+        mm = dec, yy -= 1;
+
+    let max = get_days_in_month(yy,mm);
+
+    if ( dd > max )
+        dd = max
+
+    return `${yy}${add_zero(mm)}${add_zero(dd)}`;
+}
+
+let get_year_before = ( d ) =>
+{
+    let  l = split_date( d ),
+        yy = parseInt( l[0], 10 ) - 1,
+        mm = parseInt( l[1], 10 ),
+        dd = parseInt( l[2], 10 );
+
+    if ( mm == 2 && dd == 29 )
+        dd = 28;
+
+    return `${yy}${add_zero(mm)}${add_zero(dd)}`;
 }
 
 let get_day_next = ( d ) =>
 {
+    let  l  = split_date( d ),
+        yy  = parseInt(l[0], 10),
+        mm  = parseInt(l[1], 10),
+        dd  = parseInt(l[2], 10) + 1,  // Next
+        max = get_days_in_month(yy, mm);
+
+    if ( dd > max )
+        mm += 1, dd = 1;
+
+    if ( mm == 13 )
+        mm = jan;
+
+    return `${yy}${add_zero(mm)}${add_zero(dd)}`;
+}
+
+let get_month_next = ( d ) =>
+{
     let    l  = split_date( d ),
-          yy  = parseInt(l[0], 10 ),
-          mm  = parseInt(l[1], 10 ),
-          dd  = parseInt(l[2], 10 ) + 1,  // Next
-          max = get_day_in_month(yy, mm);
+          yy  = parseInt( l[0], 10 ),
+          mm  = parseInt( l[1], 10 ) + 1,
+          dd  = parseInt( l[2], 10 );
 
-    switch ( mm )
-    {
-        case jan:
-            if ( dd > max )
-                dd = 1, mm = febr;
-            break;
-        case febr:
-            if ( dd > max )
-                dd = 1, mm = march;
-            break;
-        case march:
-            if ( dd > max )
-                dd = 1, mm = april;
-            break;
-        case april:
-            if ( dd > max )
-                dd = 1, mm = mai;
-            break;
-        case mai:
-           if ( dd > max )
-                dd = 1, mm = june;
-           break;
-        case june:
-            if ( dd > max )
-                dd = 1, mm = july;
-            break;
-        case july:
-            if ( dd > max )
-                dd = 1, mm = aug;
-            break;
-        case aug:
-            if ( dd > max )
-                dd = 1, mm = sept;
-            break;
-        case sept:
-            if ( dd > max )
-                dd = 1, mm = oct;
-            break;
-        case oct:
-            if ( dd > max )
-                dd = 1, mm = sept;
-            break;
-        case nov:
-            if ( dd > max )
-                dd = 1, mm = dec;
-            break;
-        case dec:
-            if ( dd > max )
-                dd = 1, mm = jan, yy += 1;
-            break;
-    }
+    if ( mm == 13 )
+        mm = jan, yy += 1;
 
-    let edate = `${yy}${add_zero(mm)}${add_zero(dd)}`;
-    return edate;
+    let max = get_days_in_month(yy,mm);
+
+    if ( dd > max )
+        dd = max
+
+    return `${yy}${add_zero(mm)}${add_zero(dd)}`;
+}
+
+let get_year_next = ( d ) =>
+{
+    let  l = split_date( d ),
+        yy = parseInt( l[0], 10 ) + 1,
+        mm = parseInt( l[1], 10 ),
+        dd = parseInt( l[2], 10 );
+
+    if ( mm == 2 && dd == 29 )
+        dd = 28;
+
+    return `${yy}${add_zero(mm)}${add_zero(dd)}`;
+}
+
+let max_date_menu = () =>
+{
+    let  now = get_yyyymmdd_now(),
+        yday = get_day_before(now),
+           l = split_date(yday),
+          yy = [0], mm = [1], dd = [2];
+
+    return `${yy}-${mm}-${dd}`;
 }
 
 /**
@@ -151,7 +173,7 @@ class Station
         this.name = name;
         this.sdate = sdate;             // Start date of data
         this.edate = get_day_before(get_yyyymmdd_now()); // Max date of data
-        this.base_url = `${path_to_root}${wmo}`;
+        this.base_url = `./${wmo}`;
         this.base_file = `dayvalues-${wmo}`;
     }
 }
@@ -227,7 +249,7 @@ let html_menu_dropdown = () =>
                                 style="font-size:${menu_font_size};"> ${months[i_m-1]} </a>
                                 <ul class="dropdown-menu">`;
                   let i_d   = 1,
-                      i_max = get_day_in_month(i_y, i_m),
+                      i_max = get_days_in_month(i_y, i_m),
                       mm = add_zero(i_m);
 
                   while ( i_d <= i_max )
@@ -243,9 +265,7 @@ let html_menu_dropdown = () =>
                       let i_date_s = parseInt(get_day_next(ymd), 10);
                       if ( i_date_s > i_date_e )
                       {   // Set all to max
-                          i_y = i_e;
-                          i_d = i_max;
-                          i_m = 12
+                          i_y = i_e, i_d = i_max, i_m = 12
                       }
                       ++i_d;
                   }
@@ -274,6 +294,24 @@ let get_station_from_list_by_wmo = ( wmo ) =>
     return station;
 }
 
+let open_url = ( url ) =>
+{
+    let i_act = parseInt(date_act, 10),
+        i_max = parseInt(get_day_before(get_yyyymmdd_now()), 10);
+
+    date_act = (i_act > i_max ? i_max : i_act).toString();
+
+    let l = split_date(date_act),
+        y = l[0],
+        m = l[1],
+        d = l[2];
+
+    // docid(date_form_id).value = `${y}-${m}-${d}`;
+
+    console.log(`Open url ${url}`);
+    docid(id_iframe).src = url
+}
+
 let make_url = (wmo, date) =>
 {
     let       l = split_date( date ),
@@ -288,68 +326,117 @@ let make_url = (wmo, date) =>
 let onclick_dropdown_menu = ( wmo, date ) =>
 {
     let url = make_url(wmo, date);
-    console.log(url);
 
     // Update globals
     date_act = date;
     wmo_act  = wmo;
 
-    // console.log( 'Station is: ' + wmo );
-    // console.log( 'Date is: ' + date );
-    // console.log( 'Url is: ' + url);
-    open_url_in_iframe(url);  // Open the url
+    open_url(url);  // Open the url
 }
 
 let onclick_go_btn = ( ) =>
 {
-    let wmo  = document.getElementById('station_form_id').value,
+    let  wmo = document.getElementById('station_form_id').value,
         date = document.getElementById('date_form_id').value,
            l = date.split('-'),
-         ymd = `${l[0]}${l[1]}${l[2]}`,
-        url  = make_url( wmo, ymd );
-
-    console.log(document.getElementById('station_form_id').value);
-    console.log(document.getElementById('date_form_id').value);
-    console.log(ymd);
-    console.log(url);
+           y = parseInt(l[0], 10),
+           m = add_zero(parseInt(l[1],10)),
+           d = add_zero(parseInt(l[2],10)),
+         ymd = `${y}${m}${d}`,
+         url = make_url( wmo, ymd );
 
     // Update globals
     date_act = ymd;
     wmo_act  = wmo;
 
-    // console.log( 'Station is: ' + wmo );
-    // console.log( 'Date is: ' + date );
-    // console.log( 'Url is: ' + url);
-    open_url_in_iframe(url);  // Open the url
+    open_url(url);  // Open the url
 }
 
-let onclick_next = () =>
-{
-    date_act = get_day_next( date_act );
-    let url = make_url(wmo_act, date_act);
-    console.log(url);
-    open_url_in_iframe(url);  // Open the url
-}
-
-let onclick_back = () =>
+let onclick_day_before = () =>
 {
     date_act = get_day_before( date_act );
     let url = make_url(wmo_act, date_act);
-    console.log(url);
-    open_url_in_iframe(url);  // Open the url
+    open_url(url);  // Open the url
+}
+
+let onclick_month_before = () =>
+{
+    date_act = get_month_before( date_act );
+    let url = make_url(wmo_act, date_act);
+    open_url(url);  // Open the url
+}
+
+let onclick_year_before = () =>
+{
+    date_act = get_year_before( date_act );
+    let url = make_url(wmo_act, date_act);
+    open_url(url);  // Open the url
+}
+
+let onclick_day_next = () =>
+{
+    date_act = get_day_next( date_act );
+    let url = make_url(wmo_act, date_act);
+    open_url(url);  // Open the url
+}
+
+let onclick_month_next = () =>
+{
+    date_act = get_month_next( date_act );
+    let url = make_url(wmo_act, date_act);
+    open_url(url);  // Open the url
+}
+
+let onclick_year_next = () =>
+{
+    date_act = get_year_next( date_act );
+    let url = make_url(wmo_act, date_act);
+    open_url(url);  // Open the url
 }
 
 let html_menu_form = () =>
 {
     let html = `<form class="form-inline" style="font-size:${menu_font_size};">
       <div class="form-group mr-2">
-        <button type="submit" class="btn btn-info btn-sm" style="font-size:${menu_font_size};"
-                onclick="onclick_back(); return false;"> <i class="fas fa-chevron-circle-left"></i> </button>
+          <button type="submit" class="btn btn-info btn-sm" style="font-size:${menu_font_size};"
+                  onclick="onclick_year_before(); return false;">
+                      <i class="fa fa-fast-backward" aria-hidden="true"></i>
+          </button>
       </div>
+      <div class="form-group mr-2">
+          <button type="submit" class="btn btn-info btn-sm" style="font-size:${menu_font_size};"
+                  onclick="onclick_month_before(); return false;">
+                      <i class="fa fa-step-backward" aria-hidden="true"></i>
+          </button>
+      </div>
+      <div class="form-group mr-2">
+          <button type="submit" class="btn btn-info btn-sm" style="font-size:${menu_font_size};"
+                  onclick="onclick_day_before(); return false;">
+                      <i class="fa fa-caret-left" aria-hidden="true"></i>
+          </button>
+      </div>
+      <div class="form-group mr-2">
+          <button type="submit" class="btn btn-info btn-sm" style="font-size:${menu_font_size};"
+                  onclick="onclick_day_next(); return false;">
+                        <i class="fa fa-caret-right" aria-hidden="true"></i>
+          </button>
+      </div>
+
+      <div class="form-group mr-2">
+          <button type="submit" class="btn btn-info btn-sm" style="font-size:${menu_font_size};"
+                  onclick="onclick_month_next(); return false;">
+                      <i class="fa fa-step-forward" aria-hidden="true"></i>
+          </button>
+      </div>
+
       <div class="form-group mr-5">
-        <button type="submit" class="btn btn-info btn-sm" style="font-size:${menu_font_size};"
-                onclick="onclick_next(); return false;"> <i class="fas fa-chevron-circle-right"></i> </button>
+          <button type="submit" class="btn btn-info btn-sm" style="font-size:${menu_font_size};"
+                  onclick="onclick_year_next(); return false;">
+                      <i class="fa fa-fast-forward" aria-hidden="true"></i>
+          </button>
       </div>
+
+      <div class="h-divider"> </div>
 
       <div class="form-group mr-2">
         <select id="station_form_id" class="form-control custom-select" style="font-size:${menu_font_size};">
@@ -359,9 +446,9 @@ let html_menu_form = () =>
         html += `<option value="${item.wmo}"> ${item.wmo} ${item.name} </option>`;
     } );
 
-    html += `</select></div>
+    html += `</select>
+     </div>
         <div class="form-group mr-2">
-          <label for="validationServerUsername"></label>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="inputGroupPrepend3">
@@ -369,12 +456,15 @@ let html_menu_form = () =>
               </span>
             </div>
             <input type="date" id="date_form_id" class="form-control form-control-sm"
+                   min="1906-01-01" max="${max_date_menu()}"
                    aria-describedby="inputGroupPrepend3" style="font-size:${menu_font_size};" required>
           </div>
         </div>
         <div class="form-group">
-          <button type="submit" class="btn btn-success btn-sm" style="font-size:${menu_font_size};"
-                  onclick="onclick_go_btn(); return false;"> GO </button>
+          <button type="submit" class="btn btn-info btn-sm" style="font-size:${menu_font_size};"
+                  onclick="onclick_go_btn(); return false;">
+                    <i class="fa fa-external-link-square" aria-hidden="true"></i>
+          </button>
         </div>
       </div>
     </form>`;
@@ -418,6 +508,9 @@ let add_menus_to_page = () =>
         console.log('Start putting menu on screen');
         docid(id_menu).innerHTML = html //.replace( /\s+/g, ' ' );
         console.log('End putting menu on screen');
+    }
+    else {
+          docid(id_menu).innerHTML = ' ' //.replace( /\s+/g, ' ' );
     }
 };
 
