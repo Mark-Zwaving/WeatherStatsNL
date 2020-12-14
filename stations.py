@@ -32,14 +32,12 @@ class Station:
         self.data_missing       = config.knmi_dayvalues_missing_val
         self.data_notification  = config.knmi_dayvalues_notification
         self.data_delimiter     = config.knmi_dayvalues_delimiter
-        self.data_dir           = config.dir_data_dayvalues
         self.data_zip_file      = f'etmgeg_{self.wmo}.zip'
         self.data_txt_file      = f'etmgeg_{self.wmo}.txt'
-        self.data_zip_path      = os.path.join(self.data_dir, self.data_zip_file)
-        self.data_txt_path      = os.path.join(self.data_dir, self.data_txt_file)
+        self.data_zip_path      = os.path.join(config.dir_dayvalues_zip, self.data_zip_file)
+        self.data_txt_path      = os.path.join(config.dir_dayvalues_txt, self.data_txt_file)
         self.data_url           = config.knmi_dayvalues_url.format(self.wmo)
         self.data_comments_sign = config.data_comment_sign
-        self.data_dayvalues_txt_path = self.data_txt_path # Unused, yet
         self.data_download      = True
 
 # Make list with stations
@@ -52,8 +50,8 @@ Maastricht.data_dummy_val    = config.knmi_dayvalues_dummy_val
 Maastricht.data_empthy_val   = config.knmi_dayvalues_missing_val
 Maastricht.data_notification = config.knmi_dayvalues_notification
 Maastricht.data_format       = config.knmi_data_format
-Maastricht.data_zip_path     = os.path.join( Maastricht.data_dir, 'etmgeg_380.zip' )
-Maastricht.data_txt_path     = os.path.join( Maastricht.data_dir, 'etmgeg_380.txt' )
+Maastricht.data_zip_path     = os.path.join( config.dir_dayvalues_zip, 'etmgeg_380.zip' )
+Maastricht.data_txt_path     = os.path.join( config.dir_dayvalues_txt, 'etmgeg_380.txt' )
 Maastricht.data_dayvalus_url  = r'https://cdn.knmi.nl/knmi/map/page/klimatologie/gegevens/daggegevens/etmgeg_380.zip'
 list.append( Maastricht ) # Add to list
 
