@@ -13,28 +13,31 @@ import os, sys, numpy as np
 # Config base maps
 dir_app              =  os.path.dirname( os.path.abspath(__file__) )
 dir_sources          =  os.path.abspath( os.path.join(dir_app, 'sources') )
-dir_view             =  os.path.abspath( os.path.join(dir_app, 'view') )
-dir_control          =  os.path.abspath( os.path.join(dir_app, 'control') )
-dir_model            =  os.path.abspath( os.path.join(dir_app, 'model') )
 dir_data             =  os.path.abspath( os.path.join(dir_app, 'data') )
-dir_txt              =  os.path.abspath( os.path.join(dir_data, 'text' ) )
-dir_html             =  os.path.abspath( os.path.join(dir_data, 'html' ) )
-dir_img              =  os.path.abspath( os.path.join(dir_data, 'images' ) )
-dir_thirdparty       =  os.path.abspath( os.path.join(dir_data, 'thirdparty') )
-dir_data_dayvalues   =  os.path.abspath( os.path.join(dir_data, 'dayvalues' ) )
-dir_img_dayvalues    =  os.path.abspath( os.path.join(dir_img, 'dayvalues' ) )
-dir_img_period       =  os.path.abspath( os.path.join(dir_img, 'period' ) )
-dir_txt_dayvalues    =  os.path.abspath( os.path.join(dir_txt, 'dayvalues' ) )
-dir_html_templates   =  os.path.abspath( os.path.join(dir_html, 'templates' ) )
-dir_html_dayvalues   =  os.path.abspath( os.path.join(dir_html, 'dayvalues' ) )
-dir_html_winterstats =  os.path.abspath( os.path.join(dir_html, 'winterstats' ) )
-dir_html_summerstats =  os.path.abspath( os.path.join(dir_html, 'summerstats' ) )
-dir_html_allstats    =  os.path.abspath( os.path.join(dir_html, 'allstats' ) )
-dir_html_search_for_days =  os.path.abspath( os.path.join(dir_html, 'search-for-days'))
-dir_txt_winterstats  =  os.path.abspath( os.path.join(dir_txt, 'winterstats' ) )
-dir_thirdparty_css   =  os.path.abspath( os.path.join(dir_thirdparty, 'css') )
-dir_thirdparty_js    =  os.path.abspath( os.path.join(dir_thirdparty, 'js') )
-dir_txt_forecasts    =  os.path.abspath( os.path.join(dir_txt, 'forecasts') )
+
+dir_winterstats      = os.path.abspath( os.path.join(dir_data, 'winterstats' ) )
+dir_summerstats      = os.path.abspath( os.path.join(dir_data, 'summerstats' ) )
+dir_dayvalues        = os.path.abspath( os.path.join(dir_data, 'dayvalues' ) )
+dir_search4days      = os.path.abspath( os.path.join(dir_data, 'search4days' ) )
+dir_allstats         = os.path.abspath( os.path.join(dir_data, 'allstats' ) )
+dir_thirdparty       = os.path.abspath( os.path.join(dir_data, 'thirdparty') )
+dir_img              = os.path.abspath( os.path.join(dir_data, 'images' ) )
+dir_pdf              = os.path.abspath( os.path.join(dir_data, 'pdf' ) )
+dir_txt              = os.path.abspath( os.path.join(dir_data, 'text' ) )
+dir_forecasts        = os.path.abspath( os.path.join(dir_data, 'forecasts' ) )
+dir_templates        = os.path.abspath( os.path.join(dir_data, 'templates') )
+dir_period           = os.path.abspath( os.path.join(dir_data, 'period') )
+dir_static           = os.path.abspath( os.path.join(dir_data, 'static') )
+
+dir_dayvalues_zip   = os.path.abspath( os.path.join(dir_dayvalues, 'zip' ) )
+dir_dayvalues_txt   = os.path.abspath( os.path.join(dir_dayvalues, 'txt' ) )
+dir_forecasts_txt   = os.path.abspath( os.path.join(dir_forecasts, 'txt' ) )
+dir_templates_html  = os.path.abspath( os.path.join(dir_templates, 'html') )
+dir_period_img      = os.path.abspath( os.path.join(dir_period, 'images') )
+
+dir_view             =  os.path.abspath( os.path.join(dir_sources, 'view') )
+dir_control          =  os.path.abspath( os.path.join(dir_sources, 'control') )
+dir_model            =  os.path.abspath( os.path.join(dir_sources, 'model') )
 
 # Give language for app. Under contruction.
 # 'NL' for Netherlands/Dutch, 'EN' for English, Default is English
@@ -216,6 +219,6 @@ plot_legend_frameon   = False
 plot_legend_fancybox  = False
 
 # Asked for char
-answer_quit = ['q', 'quit']
-answer_yes  = ['yes', 'y', 'j', 'ok', 'oke', 'oké']
-answer_no   = ['no', 'n', 'nope']
+answer_quit = ['q', 'quit', 'stop']
+answer_yes  = ['yes', 'y', 'yess', 'j', 'ok', 'oke', 'oké', 'ja']
+answer_no   = ['no', 'n', 'nope', 'nee']
