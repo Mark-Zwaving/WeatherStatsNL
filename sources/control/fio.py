@@ -10,7 +10,7 @@ __status__     =  "Development"
 
 import config
 import threading, urllib, json, os
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.txt as vt
 from pathlib import Path
 from zipfile import ZipFile
@@ -18,35 +18,35 @@ from zipfile import ZipFile
 def check(fname):
     '''Function checks a file for existence'''
     ok = False
-    log.console(f'Check: {fname}')
+    console.log(f'Check: {fname}')
 
     try:
         path = Path(fname)  # Python 3.4
-        if Path(path).exists():  # Check if is there file
+        if path.exists():  # Check if is there file
             ok = True
         else:
             raise ValueError(f'File does not exist')
     except ValueError as e:
-        log.console(vt.error('Check', e))
+        console.log(vt.error('Check', e))
     except Exception as e:
-        log.console(vt.error('Check', e))
+        console.log(vt.error('Check', e))
     else:
-        log.console(vt.succes('Check'))
+        console.log(vt.succes('Check'))
 
     return ok
 
 def write(fname='dummy.txt', content='', prefix='w', encoding='utf-8'):
     '''Function writes or makes a file'''
     ok = False
-    log.console(f'Write: {fname}')
+    console.log(f'Write: {fname}')
 
     try:
         with open( fname, prefix, encoding=encoding ) as f:
             f.write(content)
     except Exception as e:
-        log.console(vt.error('Write', e))
+        console.log(vt.error('Write', e))
     else:
-        log.console(vt.succes('Write'))
+        console.log(vt.succes('Write'))
         ok = True
 
     return ok
@@ -59,16 +59,16 @@ def read(fname):
     '''Reads data content from a file'''
     ok = False
     t  = ''
-    log.console(f'Read: {fname}')
+    console.log(f'Read: {fname}')
 
     if check(fname):
         try:
             with open(fname, 'r') as f:
                 t = f.read()
         except Exception as e:
-            log.console(vt.error('Read', e))
+            console.log(vt.error('Read', e))
         else:
-            log.console(vt.succes('Read'))
+            console.log(vt.succes('Read'))
             ok = True
 
     return ok, t
@@ -76,68 +76,68 @@ def read(fname):
 def delete(fname):
     '''Function deletes a file if exists'''
     ok = False
-    log.console(f'Delete: {fname}')
+    console.log(f'Delete: {fname}')
     if check(fname):
         try:
             Path(fname).unlink()  # Remove file
         except Exception as e:
-            log.console(vt.error('Delete', e))
+            console.log(vt.error('Delete', e))
         else:
-            log.console(vt.succes('Delete'))
+            console.log(vt.succes('Delete'))
             ok = True
     else:
-        log.console(f'Delete failed. File does not exist')
+        console.log(f'Delete cannot. File does not exist')
 
     return ok
 
 def mk_dir(path):
     '''Function makes a map if not already exists'''
     ok = False
-    log.console(f'Make dir: {path}')
+    console.log(f'Make dir: {path}')
     try:
         if os.path.isdir(path):
-            log.console('Map not made because it already exists.')
+            console.log('Map not made because it already exists.')
             return True
         else:
             os.mkdir(path)
     except Exception as e:
-        log.console(vt.error('Make directory', e))
+        console.log(vt.error('Make directory', e))
     else:
-        log.console(vt.succes('Make directory'))
+        console.log(vt.succes('Make directory'))
         ok = True
 
     return ok
 
 def unzip( zip, txt ):
     ok = False
-    log.console(f'Unzip: {zip}')
-    log.console(f'To: {txt}') # TODO force to txt file
+    console.log(f'Unzip: {zip}')
+    console.log(f'To: {txt}') # TODO force to txt file
 
     with threading.Lock():
         try:
-            dir = os.path.dirname(txt)
+            dir_txt = os.path.dirname(txt)
             with ZipFile(zip, 'r') as z:
-                z.extractall(dir)
+                z.extractall(dir_txt)
         except Exception as e:
-            log.console(vt.error('Unzip', e))
+            console.log(vt.error('Unzip', e))
         else:
-            log.console(vt.succes('Unzip'))
+            console.log(vt.succes('Unzip'))
             ok = True
 
     return ok
 
 def download( url, file ):
     ok = False
-    log.console(f'Download: {url}')
-    log.console(f'To: {file}')
+    console.log(f'Download: {url}')
+    console.log(f'To: {file}')
 
     with threading.Lock():
         try:
             urllib.request.urlretrieve( url, file )
         except Exception as e:
-            log.console(vt.error('Download', e))
+            console.log(vt.error('Download', e))
         else:
-            log.console(vt.succes('Download'))
+            console.log(vt.succes('Download'))
             ok = True
 
     return ok
@@ -147,7 +147,7 @@ def request( url, type='txt'):
        The return values are: ok, True if success else False... And the text From
        the request.'''
     ok, t = False, ''
-    log.console(f'Request: {url}')
+    console.log(f'Request: {url}')
 
     with threading.Lock():
         try:
@@ -158,9 +158,9 @@ def request( url, type='txt'):
             elif type == 'json':
                 t = json.loads(data)
         except Exception as e:
-            log.console(vt.error('Request', e))
+            console.log(vt.error('Request', e))
         else:
-            log.console(vt.succes('Request'))
+            console.log(vt.succes('Request'))
             ok = True
 
     return ok, t
