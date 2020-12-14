@@ -42,8 +42,31 @@
     margin-top:-6px;
 }
 
-/* rotate caret on hover */
-.dropdown-menu > li > a:hover:after {
-    text-decoration: underline;
-    transform: rotate(-90deg);
+/* @keyframes spinner {
+    0% {
+        transform: translate3d(-50%, -50%, 0) rotate(0deg);
+    }
+    100% {
+         transform: translate3d(-50%, -50%, 0) rotate(360deg);
+    }
+} */
+
+.load_txt {
+		color: #777777;
+		font-style: italic;
+}
+
+@keyframes spinning {
+	from { transform: rotate(0deg) }
+	to { transform: rotate(360deg) }
+}
+
+.spin {
+	width: 64px;
+	height: 64px;
+	animation-name: spinning;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+	/* linear | ease | ease-in | ease-out | ease-in-out */
+	animation-timing-function: linear;
 }
