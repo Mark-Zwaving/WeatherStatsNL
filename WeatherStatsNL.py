@@ -10,7 +10,7 @@ __status__     =  'Development'
 
 # Import libraries
 import config, sys, stations
-import sources.view.log as log
+import sources.view.console as console
 import sources.view.menu as menu
 
 # Add dir (from this) app to system path, if not already there.
@@ -19,10 +19,10 @@ if config.dir_app not in sys.path:
 
 # Main programm
 if __name__== '__main__':
-    log.console('\nWelcome to WeatherStatsNL', True )
+    console.log('\nWelcome to WeatherStatsNL', True )
     if len(stations.list) == 0:
         menu.error_no_stations_found()
     else:
         menu.main_menu()
 
-    log.console('\nGood bye', True )
+    console.log('\nGood bye', True )
